@@ -7,7 +7,6 @@ export const defaultLesson: Lesson = {
   author: "Anonymous",
   level: "Beginner",
   duration: 30,
-  themeId: "default", // Set default theme
   slides: [
     {
       id: `slide-${Date.now()}`,

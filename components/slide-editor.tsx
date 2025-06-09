@@ -149,7 +149,7 @@ export function SlideEditor({ slide, updateSlide, addComponent, isMobile = false
   // Mobile UI
   if (isMobile) {
     return (
-      <div className="flex-1 p-4 overflow-hidden flex flex-col slide-canvas" ref={drop}>
+      <div className="flex-1 p-4 overflow-hidden flex flex-col" ref={drop}>
         <div className="mb-4">
           <Input
             value={slide.title}
@@ -214,7 +214,7 @@ export function SlideEditor({ slide, updateSlide, addComponent, isMobile = false
   // Desktop UI
   return (
     <div className="flex flex-1 overflow-hidden">
-      <div className="flex-1 p-4 overflow-hidden flex flex-col slide-canvas" ref={drop}>
+      <div className="flex-1 p-4 overflow-hidden flex flex-col" ref={drop}>
         <div className="mb-4">
           <Input
             value={slide.title}
@@ -347,29 +347,19 @@ function DraggableComponent({
     <div
       id={`component-${component.id}`}
       ref={ref}
-      className={`relative group component-card p-4 transition-colors ${isDragging ? "opacity-50" : ""}`}
+      className={`relative group border rounded-md p-4 hover:border-primary transition-colors ${
+        isDragging ? "opacity-50" : ""
+      }`}
     >
       <div className="absolute right-2 top-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setEditingComponentId(component.id)}
-          title="Edit Component"
-          className="hover:bg-opacity-10 hover:bg-primary"
-        >
-          <Settings className="h-4 w-4 themed-text-primary" />
+        <Button variant="ghost" size="icon" onClick={() => setEditingComponentId(component.id)} title="Edit Component">
+          <Settings className="h-4 w-4" />
         </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => deleteComponent(component.id)}
-          title="Delete Component"
-          className="hover:bg-opacity-10 hover:bg-error"
-        >
-          <Trash2 className="h-4 w-4 themed-error" />
+        <Button variant="ghost" size="icon" onClick={() => deleteComponent(component.id)} title="Delete Component">
+          <Trash2 className="h-4 w-4" />
         </Button>
         <div className="cursor-move" title="Drag to Reorder">
-          <GripVertical className="h-4 w-4 themed-text-secondary" />
+          <GripVertical className="h-4 w-4" />
         </div>
       </div>
 

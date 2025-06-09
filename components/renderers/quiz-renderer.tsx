@@ -182,8 +182,8 @@ export function QuizRenderer({
               className={`flex items-center space-x-2 p-2 rounded ${
                 isSubmitted && option.id === selectedOption
                   ? option.isCorrect
-                    ? "bg-green-50 dark:bg-green-900/20 border-l-4 border-success"
-                    : "bg-red-50 dark:bg-red-900/20 border-l-4 border-error"
+                    ? "bg-green-50 dark:bg-green-900/20"
+                    : "bg-red-50 dark:bg-red-900/20"
                   : ""
               }`}
             >
@@ -197,12 +197,12 @@ export function QuizRenderer({
               {isSubmitted &&
                 option.id === selectedOption &&
                 (option.isCorrect ? (
-                  <CheckCircle2 className="h-5 w-5 themed-success" />
+                  <CheckCircle2 className="h-5 w-5 text-green-500" />
                 ) : (
-                  <XCircle className="h-5 w-5 themed-error" />
+                  <XCircle className="h-5 w-5 text-red-500" />
                 ))}
               {isSubmitted && option.id !== selectedOption && option.isCorrect && (
-                <CheckCircle2 className="h-5 w-5 themed-success" />
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
               )}
             </div>
           ))}

@@ -10,8 +10,6 @@ import { SlideEditor } from "@/components/slide-editor"
 import { SlidePreview } from "@/components/slide-preview"
 import { LessonControls } from "@/components/lesson-controls"
 import { SlideNavigator } from "@/components/slide-navigator"
-import { ThemeSelector } from "@/components/theme-selector"
-import { useTheme } from "@/components/theme-provider"
 import { useMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
@@ -39,19 +37,8 @@ export function LessonBuilder() {
   const [previewMode, setPreviewMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSidebar, setActiveSidebar] = useState<"slides" | "components">("slides")
-  const [showThemeSetup, setShowThemeSetup] = useState(false)
-
-  const { theme, setTheme } = useTheme()
   const { toast } = useToast()
   const isMobile = useMobile()
-
-  // Apply lesson theme when lesson changes
-  useEffect(() => {
-    // Apply the lesson's theme when the component mounts
-    if (lesson.themeId) {
-      setTheme(lesson.themeId)
-    }
-  }, [])
 
   // Save lesson to localStorage whenever it changes
   useEffect(() => {
@@ -206,11 +193,6 @@ export function LessonBuilder() {
         // Completely replace the current lesson
         setLesson(updatedLesson)
 
-        // Apply the lesson's theme if it has one
-        if (updatedLesson.themeId) {
-          setTheme(updatedLesson.themeId)
-        }
-
         // Reset to the first slide
         setCurrentSlideIndex(0)
 
@@ -233,7 +215,7 @@ export function LessonBuilder() {
         })
       }
     },
-    [toast, setTheme],
+    [toast],
   )
 
   // Add component to current slide
@@ -285,16 +267,6 @@ export function LessonBuilder() {
     }
   }
 
-  const handleThemeChange = (themeId: string) => {
-    setTheme(themeId)
-    // Update the lesson with the new theme
-    setLesson((prevLesson) => ({
-      ...prevLesson,
-      themeId,
-      updatedAt: new Date().toISOString(),
-    }))
-  }
-
   const Backend = isMobile ? TouchBackend : HTML5Backend
 
   // Mobile UI
@@ -339,27 +311,18 @@ export function LessonBuilder() {
               <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
                 <SheetContent side="left" className="p-0 w-[300px] sm:w-[350px]">
                   {activeSidebar === "slides" ? (
-                    <>
-                      <SlideNavigator
-                        slides={lesson.slides}
-                        currentSlideIndex={currentSlideIndex}
-                        setCurrentSlideIndex={(index) => {
-                          setCurrentSlideIndex(index)
-                          setSidebarOpen(false)
-                        }}
-                        addSlide={addSlide}
-                        deleteSlide={deleteSlide}
-                        reorderSlides={reorderSlides}
-                        isMobile={isMobile}
-                      />
-                      <div className="p-4 border-t">
-                        <ThemeSelector
-                          currentThemeId={lesson.themeId || theme.id}
-                          onThemeChange={handleThemeChange}
-                          isMobile={true}
-                        />
-                      </div>
-                    </>
+                    <SlideNavigator
+                      slides={lesson.slides}
+                      currentSlideIndex={currentSlideIndex}
+                      setCurrentSlideIndex={(index) => {
+                        setCurrentSlideIndex(index)
+                        setSidebarOpen(false)
+                      }}
+                      addSlide={addSlide}
+                      deleteSlide={deleteSlide}
+                      reorderSlides={reorderSlides}
+                      isMobile={isMobile}
+                    />
                   ) : (
                     <ComponentLibrary isMobile={isMobile} onAddComponent={addComponent} />
                   )}
@@ -378,18 +341,15 @@ export function LessonBuilder() {
   return (
     <DndProvider backend={Backend}>
       <div className="flex flex-col h-screen">
-        <div className="flex justify-between items-center border-b bg-background p-2">
-          <LessonControls
-            lesson={lesson}
-            updateLessonMetadata={updateLessonMetadata}
-            exportLesson={exportLesson}
-            importLesson={importLesson}
-            previewMode={previewMode}
-            setPreviewMode={setPreviewMode}
-            isMobile={isMobile}
-          />
-          <ThemeSelector currentThemeId={theme.id} onThemeChange={handleThemeChange} />
-        </div>
+        <LessonControls
+          lesson={lesson}
+          updateLessonMetadata={updateLessonMetadata}
+          exportLesson={exportLesson}
+          importLesson={importLesson}
+          previewMode={previewMode}
+          setPreviewMode={setPreviewMode}
+          isMobile={isMobile}
+        />
 
         <div className="flex flex-1 overflow-hidden">
           {!previewMode ? (

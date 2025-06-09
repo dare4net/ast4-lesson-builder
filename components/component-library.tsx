@@ -235,22 +235,17 @@ function ClickableComponent({ component, onAddComponent }) {
   }
 
   return (
-    <div className="component-library-card p-3 cursor-pointer">
+    <div className="p-3 border rounded-md bg-card hover:border-primary transition-colors">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg themed-text-primary">{component.icon}</span>
+          <span className="text-lg">{component.icon}</span>
           <div>
             <h3 className="text-sm font-medium">{component.label}</h3>
             <p className="text-xs text-muted-foreground line-clamp-1">{component.description}</p>
           </div>
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={handleAddClick}
-          className="h-8 w-8 p-0 hover:bg-opacity-10 hover:bg-primary"
-        >
-          <Plus className="h-4 w-4 themed-text-primary" />
+        <Button size="sm" variant="ghost" onClick={handleAddClick} className="h-8 w-8 p-0">
+          <Plus className="h-4 w-4" />
         </Button>
       </div>
     </div>
@@ -285,19 +280,21 @@ function DraggableComponent({ component, onAddComponent }) {
   return (
     <div
       ref={drag}
-      className={`component-library-card p-3 cursor-pointer group ${isDragging ? "opacity-50" : "opacity-100"}`}
+      className={`p-3 border rounded-md cursor-pointer bg-card hover:border-primary transition-colors group ${
+        isDragging ? "opacity-50" : "opacity-100"
+      }`}
       onClick={handleClick}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-lg themed-text-primary">{component.icon}</span>
+          <span className="text-lg">{component.icon}</span>
           <div>
             <h3 className="text-sm font-medium">{component.label}</h3>
             <p className="text-xs text-muted-foreground line-clamp-1">{component.description}</p>
           </div>
         </div>
         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-          <Plus className="h-4 w-4 themed-text-primary" />
+          <Plus className="h-4 w-4 text-muted-foreground" />
         </div>
       </div>
       <div className="mt-1 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">

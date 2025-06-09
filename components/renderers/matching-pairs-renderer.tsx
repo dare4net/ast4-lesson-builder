@@ -200,11 +200,11 @@ export function MatchingPairsRenderer({
               return (
                 <div
                   key={`left-${item.id}`}
-                  className={`p-3 rounded transition-colors cursor-pointer ${
+                  className={`p-3 rounded border transition-colors cursor-pointer ${
                     isMatched
-                      ? "bg-green-50 border-l-4 border-success dark:bg-green-900/20"
+                      ? "bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800"
                       : isSelected
-                        ? "bg-blue-50 border-l-4 border-primary dark:bg-blue-900/20"
+                        ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
                         : "hover:bg-muted"
                   }`}
                   onClick={() => handleLeftClick(item.id)}

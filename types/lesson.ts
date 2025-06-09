@@ -6,7 +6,6 @@ export interface Lesson {
   level: string
   duration: number
   slides: Slide[]
-  themeId?: string // Add theme to lesson configuration
   createdAt: string
   updatedAt: string
 }

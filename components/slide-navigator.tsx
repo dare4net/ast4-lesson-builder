@@ -70,7 +70,7 @@ export function SlideNavigator({
                           {...provided.draggableProps}
                           className={`p-3 rounded-md cursor-pointer flex items-center group ${
                             index === currentSlideIndex
-                              ? "slide-nav-active" // Use themed class
+                              ? "bg-primary text-primary-foreground"
                               : "bg-card hover:bg-muted"
                           }`}
                           onClick={() => handleSlideClick(index)}
@@ -136,7 +136,7 @@ export function SlideNavigator({
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         className={`p-3 rounded-md cursor-pointer flex items-center group ${
-                          index === currentSlideIndex ? "slide-nav-active" : "bg-card hover:bg-muted"
+                          index === currentSlideIndex ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
                         }`}
                         onClick={() => handleSlideClick(index)}
                       >

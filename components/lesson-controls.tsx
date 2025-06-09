@@ -27,8 +27,6 @@ import type { Lesson } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { ThemeSelector } from "@/components/theme-selector"
-import { useTheme } from "next-themes"
 
 interface LessonControlsProps {
   lesson: Lesson
@@ -54,8 +52,6 @@ export function LessonControls({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
-  const { setTheme } = useTheme()
-  const { theme } = useTheme()
 
   const handleImportClick = () => {
     fileInputRef.current?.click()
@@ -180,19 +176,6 @@ export function LessonControls({
                   Import Lesson
                 </Button>
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
-
-                {/* Add Theme Selector */}
-                <div className="pt-2 border-t mt-2">
-                  <ThemeSelector
-                    currentThemeId={lesson.themeId || theme.id}
-                    onThemeChange={(themeId) => {
-                      setTheme(themeId)
-                      updateLessonMetadata({ themeId })
-                      setIsMobileMenuOpen(false)
-                    }}
-                    isMobile={true}
-                  />
-                </div>
               </div>
             </SheetContent>
           </Sheet>

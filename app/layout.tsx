@@ -1,17 +1,9 @@
 import type React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { Inter, Poppins } from "next/font/google"
+import { Inter } from "next/font/google"
 import "./globals.css"
 
-// Load Poppins font for our themed components
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
-})
-
-// Keep Inter as a fallback
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
@@ -27,11 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-      </head>
-      <body className={`${poppins.variable} ${inter.className}`}>
-        <ThemeProvider>
+      <body className={inter.className}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           {children}
           <Toaster />
         </ThemeProvider>

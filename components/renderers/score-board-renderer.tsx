@@ -77,7 +77,7 @@ export function ScoreBoardRenderer({
       <CardContent>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-3xl font-bold score-display">{isEditing ? editingScore : displayScore}</span>
+            <span className="text-3xl font-bold">{isEditing ? editingScore : displayScore}</span>
 
             <div className="text-right">
               {showTotal && <div>out of {isEditing ? editingTotal : totalPossible}</div>}
@@ -88,7 +88,7 @@ export function ScoreBoardRenderer({
             </div>
           </div>
 
-          <Progress value={isEditing ? editingPercentage : percentage} className="progress-themed" />
+          <Progress value={isEditing ? editingPercentage : percentage} />
 
           {!isEditing && scoreContext && (
             <div className="text-sm text-muted-foreground text-center mt-2">
