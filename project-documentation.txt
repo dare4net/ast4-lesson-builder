@@ -1,0 +1,133 @@
+# Afterschool Tech Lesson Builder - Project Documentation
+
+## Project Overview
+The Afterschool Tech Lesson Builder is an interactive web application that allows educators to create engaging, interactive lessons for students without writing code. The platform features a drag-and-drop interface on desktop and a touch-friendly interface on mobile, a variety of interactive components, and a preview mode to test lessons.
+
+## Core Features Implemented
+
+### Lesson Structure
+- Lesson metadata (title, description, author, level, duration)
+- Multiple slides with reordering (drag-and-drop on desktop, manual reordering on mobile)
+- Import/export functionality for lessons (JSON format)
+
+### Component System
+- Desktop: Drag-and-drop component placement and reordering
+- Mobile: Click-to-add components and touch-friendly editing
+- Component settings editor with responsive design
+- Rich text editing for text components
+
+### Interactive Components
+- **Content Components**: 
+  - Paragraph (formatted text)
+  - Heading (with multiple levels)
+  - Bullet List (ordered and unordered)
+  - Image (with caption)
+
+- **Interactive Components**: 
+  - Quiz (multiple choice with scoring)
+  - Matching Pairs (match items between columns)
+  - Drag & Drop (arrange items in correct order)
+  - Flashcards (flip cards for memorization)
+  - Hotspot Image (clickable regions on images)
+  - Fill in the Blank (text with input fields)
+  - Code Editor (interactive code execution)
+
+### Gamification
+- Global scoring system across all interactive components
+- Score display and tracking
+
+### UI/UX
+- Edit and preview modes
+- Responsive design for desktop and mobile
+- Mobile-optimized interface with slide-out panels
+- Component library with categories and search
+
+## Recent Improvements
+- Implemented fully responsive mobile UI
+- Added click-to-add component functionality for mobile devices
+- Fixed component reordering in the canvas
+- Fixed drag-and-drop functionality in preview mode
+- Implemented proper list item editor with drag-and-drop reordering
+- Fixed scrolling on the hotspot image setup
+- Implemented global scoring system
+- Added new interactive components (fill in the blank, code editor)
+- Fixed scrolling issues in the component editor settings pane
+
+## Current Issues
+- Component editor settings pane scrolling can be inconsistent on some devices
+- Some complex interactive components may need further mobile optimization
+
+## Pending Features
+- Component duplication
+- Slide duplication
+- Undo/redo functionality
+- Lesson templates
+- Lesson publishing
+- Lesson export to HTML
+- Component templates
+
+## Technical Details
+- Built with Next.js and React
+- Uses Tailwind CSS for styling
+- Uses shadcn/ui component library
+- Uses react-dnd for drag-and-drop functionality (desktop)
+- Uses click-based interactions for mobile
+- Uses local storage for saving lesson progress
+
+## Component Structure
+The application has the following main components:
+- LessonBuilder: Main container component
+- LessonControls: Top bar with lesson metadata and actions
+- SlideNavigator: Left sidebar for slide management
+- ComponentLibrary: Left sidebar for component selection
+- SlideEditor: Main editing area for the current slide
+- ComponentEditor: Right sidebar for editing component properties
+- SlidePreview: Preview mode for testing the lesson
+
+## Mobile-Specific Implementation
+- Uses Sheet components for slide-out panels
+- Implements click-to-add instead of drag-and-drop for components
+- Optimizes UI layout for smaller screens
+- Uses modal dialogs for component editing
+- Provides touch-friendly controls and buttons
+
+## State Management
+- Lesson state is managed in the LessonBuilder component
+- Component state is managed in the SlideEditor component
+- Component properties are managed in the ComponentEditor component
+- Global score is tracked in the SlidePreview component
+
+## Drag and Drop Implementation
+- Uses react-dnd for drag and drop functionality on desktop
+- Components can be dragged from the ComponentLibrary to the SlideEditor
+- Components can be reordered within a slide
+- Slides can be reordered in the SlideNavigator
+
+## Responsive Design
+- Uses media queries to detect mobile devices
+- Implements different UI patterns based on screen size
+- Ensures all interactive elements are appropriately sized for touch
+- Maintains functionality across device sizes
+
+## CSS Structure
+- Uses Tailwind CSS for styling
+- Uses shadcn/ui component library
+- Custom CSS for specific components like flashcards
+- Custom CSS for fixing scrolling issues
+
+## Known Issues and Workarounds
+- The component editor settings pane has scrolling issues on some devices
+- The hotspot editor has scrolling issues on small screens
+- The TabsContent component doesn't handle height properly in some cases
+- Some components need specific CSS fixes for proper scrolling
+
+## Future Development
+- Add more interactive components
+- Implement undo/redo functionality
+- Add component duplication
+- Add slide duplication
+- Implement lesson templates
+- Add lesson publishing
+- Add component templates
+- Add lesson export to HTML
+- Further optimize mobile experience
