@@ -27,6 +27,8 @@ import type { Lesson } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
+import { FeedbackSettings } from "@/components/ui/feedback-settings"
 
 interface LessonControlsProps {
   lesson: Lesson
@@ -36,6 +38,7 @@ interface LessonControlsProps {
   previewMode: boolean
   setPreviewMode: (mode: boolean) => void
   isMobile: boolean
+  className?: string
 }
 
 export function LessonControls({
@@ -46,6 +49,7 @@ export function LessonControls({
   previewMode,
   setPreviewMode,
   isMobile,
+  className
 }: LessonControlsProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportOpen, setIsImportOpen] = useState(false)
@@ -145,7 +149,7 @@ export function LessonControls({
   // Mobile UI
   if (isMobile) {
     return (
-      <header className="border-b bg-background p-2 flex items-center justify-between">
+      <header className={cn("border-b bg-background p-2 flex items-center justify-between", className)}>
         <div className="flex items-center gap-2">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
@@ -197,66 +201,60 @@ export function LessonControls({
         </Button>
 
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Lesson Settings</DialogTitle>
-              <DialogDescription>Configure the metadata for your lesson</DialogDescription>
+              <DialogTitle>Lesson Configuration</DialogTitle>
+              <DialogDescription>
+                Configure your lesson settings and feedback preferences
+              </DialogDescription>
             </DialogHeader>
 
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={lesson.title}
-                  onChange={(e) => updateLessonMetadata({ title: e.target.value })}
-                />
-              </div>
+            <div className="space-y-6">
+              {/* Lesson Settings */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Lesson Details</h3>
+                <div className="space-y-2">
+                  <Label htmlFor="title">Title</Label>
+                  <Input
+                    id="title"
+                    value={lesson.title}
+                    onChange={(e) => updateLessonMetadata({ title: e.target.value })}
+                    placeholder="Enter lesson title"
+                  />
+                </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={lesson.description}
-                  onChange={(e) => updateLessonMetadata({ description: e.target.value })}
-                  rows={3}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={lesson.description}
+                    onChange={(e) => updateLessonMetadata({ description: e.target.value })}
+                    placeholder="Enter lesson description"
+                  />
+                </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
+                <div className="space-y-2">
                   <Label htmlFor="author">Author</Label>
                   <Input
                     id="author"
                     value={lesson.author}
                     onChange={(e) => updateLessonMetadata({ author: e.target.value })}
-                  />
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="level">Level</Label>
-                  <Input
-                    id="level"
-                    value={lesson.level}
-                    onChange={(e) => updateLessonMetadata({ level: e.target.value })}
+                    placeholder="Enter author name"
                   />
                 </div>
               </div>
 
-              <div className="grid gap-2">
-                <Label htmlFor="duration">Duration (minutes)</Label>
-                <Input
-                  id="duration"
-                  type="number"
-                  value={lesson.duration}
-                  onChange={(e) => updateLessonMetadata({ duration: Number(e.target.value) })}
-                  min={1}
-                />
+              {/* Feedback Settings */}
+              <div className="border-t pt-6">
+                <h3 className="font-semibold mb-4">Feedback Preferences</h3>
+                <FeedbackSettings />
               </div>
             </div>
 
             <DialogFooter>
-              <Button onClick={() => setIsSettingsOpen(false)}>Save Changes</Button>
+              <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+                Close
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -266,7 +264,7 @@ export function LessonControls({
 
   // Desktop UI
   return (
-    <header className="border-b bg-background p-2 flex items-center justify-between">
+    <header className={cn("border-b bg-background p-2 flex items-center justify-between", className)}>
       <div className="flex items-center gap-2">
         <h1 className="font-bold text-lg">{lesson.title || "Untitled Lesson"}</h1>
 
@@ -319,66 +317,60 @@ export function LessonControls({
       </div>
 
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Lesson Settings</DialogTitle>
-            <DialogDescription>Configure the metadata for your lesson</DialogDescription>
+            <DialogTitle>Lesson Configuration</DialogTitle>
+            <DialogDescription>
+              Configure your lesson settings and feedback preferences
+            </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                value={lesson.title}
-                onChange={(e) => updateLessonMetadata({ title: e.target.value })}
-              />
-            </div>
+          <div className="space-y-6">
+            {/* Lesson Settings */}
+            <div className="space-y-4">
+              <h3 className="font-semibold">Lesson Details</h3>
+              <div className="space-y-2">
+                <Label htmlFor="title">Title</Label>
+                <Input
+                  id="title"
+                  value={lesson.title}
+                  onChange={(e) => updateLessonMetadata({ title: e.target.value })}
+                  placeholder="Enter lesson title"
+                />
+              </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={lesson.description}
-                onChange={(e) => updateLessonMetadata({ description: e.target.value })}
-                rows={3}
-              />
-            </div>
+              <div className="space-y-2">
+                <Label htmlFor="description">Description</Label>
+                <Textarea
+                  id="description"
+                  value={lesson.description}
+                  onChange={(e) => updateLessonMetadata({ description: e.target.value })}
+                  placeholder="Enter lesson description"
+                />
+              </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
+              <div className="space-y-2">
                 <Label htmlFor="author">Author</Label>
                 <Input
                   id="author"
                   value={lesson.author}
                   onChange={(e) => updateLessonMetadata({ author: e.target.value })}
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="level">Level</Label>
-                <Input
-                  id="level"
-                  value={lesson.level}
-                  onChange={(e) => updateLessonMetadata({ level: e.target.value })}
+                  placeholder="Enter author name"
                 />
               </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="duration">Duration (minutes)</Label>
-              <Input
-                id="duration"
-                type="number"
-                value={lesson.duration}
-                onChange={(e) => updateLessonMetadata({ duration: Number(e.target.value) })}
-                min={1}
-              />
+            {/* Feedback Settings */}
+            <div className="border-t pt-6">
+              <h3 className="font-semibold mb-4">Feedback Preferences</h3>
+              <FeedbackSettings />
             </div>
           </div>
 
           <DialogFooter>
-            <Button onClick={() => setIsSettingsOpen(false)}>Save Changes</Button>
+            <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

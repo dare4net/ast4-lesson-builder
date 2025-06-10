@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { cn } from "@/lib/utils"
+import { CheckCircle2 } from "lucide-react"
 
 interface ScoreBoardRendererProps {
   title?: string
@@ -77,22 +79,53 @@ export function ScoreBoardRenderer({
       <CardContent>
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-3xl font-bold">{isEditing ? editingScore : displayScore}</span>
+            <span className={cn(
+              "text-3xl font-bold",
+              !isEditing && percentage === 100 && "text-[#2E7D32]"
+            )}>
+              {isEditing ? editingScore : displayScore}
+            </span>
 
             <div className="text-right">
-              {showTotal && <div>out of {isEditing ? editingTotal : totalPossible}</div>}
+              {showTotal && (
+                <div className={cn(
+                  !isEditing && percentage === 100 && "text-[#2E7D32]"
+                )}>
+                  out of {isEditing ? editingTotal : totalPossible}
+                </div>
+              )}
 
               {showPercentage && (
-                <div className="text-muted-foreground">{isEditing ? editingPercentage : Math.round(percentage)}%</div>
+                <div className={cn(
+                  "text-muted-foreground",
+                  !isEditing && percentage === 100 && "text-[#4CAF50]"
+                )}>
+                  {isEditing ? editingPercentage : Math.round(percentage)}%
+                </div>
               )}
             </div>
           </div>
 
-          <Progress value={isEditing ? editingPercentage : percentage} />
+          <Progress 
+            value={isEditing ? editingPercentage : percentage} 
+            className={cn(
+              !isEditing && percentage === 100 && "bg-[#E8F5E9]",
+              "[&>div]:bg-[#4CAF50]"
+            )}
+          />
 
           {!isEditing && scoreContext && (
-            <div className="text-sm text-muted-foreground text-center mt-2">
-              This score represents your progress across all interactive components in this lesson.
+            <div className="flex items-center justify-center gap-2 text-sm mt-2">
+              {percentage === 100 ? (
+                <>
+                  <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
+                  <span className="text-[#2E7D32] font-medium">You Rock! 🎉 Perfect score!</span>
+                </>
+              ) : (
+                <span className="text-muted-foreground">
+                  This score represents your progress across all interactive components in this lesson.
+                </span>
+              )}
             </div>
           )}
         </div>

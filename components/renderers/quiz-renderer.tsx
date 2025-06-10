@@ -1,250 +1,229 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle2, XCircle, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { CheckCircle2, XCircle } from 'lucide-react';
+import { useFeedback } from '@/lib/feedback-context';
+import { cn } from '@/lib/utils';
 
 interface QuizOption {
-  id: string
-  text: string
-  isCorrect: boolean
+  id: string;
+  text: string;
+  isCorrect: boolean;
 }
 
-interface QuizQuestion {
-  id: string
-  question: string
-  options: QuizOption[]
-  explanation?: string
+export interface QuizQuestion {
+  id: string;
+  question: string;
+  options: QuizOption[];
+  explanation?: string;
 }
 
 interface QuizRendererProps {
-  questions?: QuizQuestion[]
-  question?: string
-  options?: QuizOption[]
-  explanation?: string
-  showExplanation?: boolean
-  shuffleOptions?: boolean
-  points?: number
-  isEditing?: boolean
+  title?: string;
+  questions: QuizQuestion[];
+  points?: number;
+  isEditing?: boolean;
   scoreContext?: {
-    score: number
-    totalPossible: number
-    addPoints: (points: number) => void
-  }
+    score: number;
+    totalPossible: number;
+    addPoints: (points: number) => void;
+  };
+  onScoreUpdate?: (score: number) => void;
 }
 
 export function QuizRenderer({
+  title = 'Quiz',
   questions = [],
-  question = "",
-  options = [],
-  explanation = "",
-  showExplanation = true,
-  shuffleOptions = false,
-  points = 10,
+  points = 15,
   isEditing = false,
   scoreContext,
+  onScoreUpdate,
 }: QuizRendererProps) {
-  // Convert legacy format to new format if needed
-  const allQuestions = questions.length > 0 ? questions : [{ id: "q1", question, options, explanation }]
+  const [mounted, setMounted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [score, setScore] = useState(0);
+  const [animationClass, setAnimationClass] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
+  const { playFeedback } = useFeedback();
 
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, string | null>>({})
-  const [submittedQuestions, setSubmittedQuestions] = useState<Record<string, boolean>>({})
-  const [displayedOptions, setDisplayedOptions] = useState<Record<string, QuizOption[]>>({})
-  const [score, setScore] = useState(0)
-  const [totalPoints, setTotalPoints] = useState(points * allQuestions.length)
-
-  const currentQuestion = allQuestions[currentQuestionIndex]
-
-  // Initialize displayed options
   useEffect(() => {
-    const newDisplayedOptions: Record<string, QuizOption[]> = {}
+    setMounted(true);
+  }, []);
 
-    allQuestions.forEach((q) => {
-      if (shuffleOptions && !isEditing) {
-        newDisplayedOptions[q.id] = [...q.options].sort(() => Math.random() - 0.5)
-      } else {
-        newDisplayedOptions[q.id] = [...q.options]
-      }
-    })
+  const handleAnswerSelect = async (optionId: string) => {
+    if (isAnswered) return;
+    setSelectedAnswer(optionId);
+    await playFeedback('click', { animation: false });
+  };
 
-    setDisplayedOptions(newDisplayedOptions)
-    setTotalPoints(points * allQuestions.length)
-  }, [allQuestions, shuffleOptions, isEditing, points])
+  const handleCheckAnswer = async () => {
+    if (selectedAnswer === null || isAnswered) return;
 
-  const handleOptionSelect = (questionId: string, optionId: string) => {
-    if (submittedQuestions[questionId]) return
-
-    setSelectedOptions({
-      ...selectedOptions,
-      [questionId]: optionId,
-    })
-  }
-
-  const handleSubmit = (questionId: string) => {
-    if (!selectedOptions[questionId] || submittedQuestions[questionId]) return
-
-    const question = allQuestions.find((q) => q.id === questionId)
-    if (!question) return
-
-    const selectedOption = question.options.find((o) => o.id === selectedOptions[questionId])
-    const isCorrect = selectedOption?.isCorrect || false
-
-    setSubmittedQuestions({
-      ...submittedQuestions,
-      [questionId]: true,
-    })
+    const selectedOption = questions[currentQuestion].options.find(opt => opt.id === selectedAnswer);
+    const isCorrect = selectedOption?.isCorrect ?? false;
+    setIsAnswered(true);
 
     if (isCorrect) {
-      setScore((prevScore) => prevScore + points)
-
-      // Add points to global score if correct and scoreContext is available
-      if (scoreContext) {
-        scoreContext.addPoints(points)
+      setScore(score + 1);
+      if (scoreContext?.addPoints) {
+        scoreContext.addPoints(Math.floor(points / questions.length));
       }
+      await playFeedback('correct');
+    } else {
+      await playFeedback('incorrect');
     }
-  }
 
-  const handleNext = () => {
-    if (currentQuestionIndex < allQuestions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
+    if (onScoreUpdate) {
+      onScoreUpdate(isCorrect ? score + 1 : score);
     }
-  }
+  };
 
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1)
+  const handleNextQuestion = async () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
+      await playFeedback('click', { animation: false });
+    } else {
+      setIsComplete(true);
+      await playFeedback('complete');
+      // Score is not reset to allow the final score to be displayed
     }
+  };
+
+  if (!mounted) {
+    return null;
   }
 
-  const handleReset = () => {
-    setSelectedOptions({})
-    setSubmittedQuestions({})
-    setScore(0)
-    setCurrentQuestionIndex(0)
-  }
-
-  // In editing mode, just show a simplified version
   if (isEditing) {
     return (
-      <div className="border p-4 rounded-md">
-        <h3 className="font-semibold mb-2">
-          Quiz ({allQuestions.length} question{allQuestions.length !== 1 ? "s" : ""})
-        </h3>
-        <div className="space-y-4">
-          {allQuestions.map((q, index) => (
-            <div key={q.id} className="border-t pt-2">
-              <p className="font-medium">
-                Q{index + 1}: {q.question}
-              </p>
-              <ul className="mt-1 space-y-1 pl-5">
-                {q.options.map((option) => (
-                  <li key={option.id} className="flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full border inline-block"></span>
-                    <span>{option.text}</span>
-                    {option.isCorrect && <CheckCircle2 className="h-4 w-4 text-green-500" />}
-                  </li>
-                ))}
-              </ul>
-              {q.explanation && <p className="mt-1 text-sm text-muted-foreground">Explanation: {q.explanation}</p>}
-            </div>
-          ))}
-        </div>
+      <div className="duo-card space-y-4">
+        <h3 className="text-xl font-bold">{title}</h3>
+        <p className="text-muted-foreground">
+          {questions.length} question{questions.length !== 1 ? 's' : ''} • {points} points
+        </p>
       </div>
-    )
+    );
   }
 
-  const isSubmitted = submittedQuestions[currentQuestion.id]
-  const selectedOption = selectedOptions[currentQuestion.id]
-  const currentOptions = displayedOptions[currentQuestion.id] || currentQuestion.options
+  const question = questions[currentQuestion];
+  if (!question) return null;
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{currentQuestion.question}</CardTitle>
-        <div className="text-sm text-muted-foreground">
-          Question {currentQuestionIndex + 1} of {allQuestions.length}
+    <div className={cn("duo-card space-y-6", animationClass)}>
+      {/* Progress bar */}
+      <div className="duo-progress-bar">
+        <div
+          className="duo-progress-bar-fill"
+          style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+        />
         </div>
-      </CardHeader>
-      <CardContent>
-        <RadioGroup
-          value={selectedOption || ""}
-          onValueChange={(value) => handleOptionSelect(currentQuestion.id, value)}
-          disabled={isSubmitted}
-        >
-          {currentOptions.map((option) => (
-            <div
-              key={option.id}
-              className={`flex items-center space-x-2 p-2 rounded ${
-                isSubmitted && option.id === selectedOption
-                  ? option.isCorrect
-                    ? "bg-green-50 dark:bg-green-900/20"
-                    : "bg-red-50 dark:bg-red-900/20"
-                  : ""
-              }`}
-            >
-              <RadioGroupItem value={option.id} id={`${currentQuestion.id}-${option.id}`} disabled={isSubmitted} />
-              <Label
-                htmlFor={`${currentQuestion.id}-${option.id}`}
-                className={`flex-1 ${isSubmitted ? "cursor-default" : "cursor-pointer"}`}
+
+      {/* Question */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold">{question.question}</h3>
+        
+        {/* Options */}
+        <div className="space-y-3">
+          {question.options.map((option) => {
+            const isSelected = selectedAnswer === option.id;
+            const isCorrectAnswer = option.isCorrect;
+            const showCorrect = isAnswered && isCorrectAnswer;
+            const showIncorrect = isAnswered && isSelected && !isCorrectAnswer;
+            
+            return (
+              <button
+                key={option.id}
+                className={cn(
+                  'w-full p-4 text-left duo-button relative',
+                  isSelected && !isAnswered && 'bg-secondary/20',
+                  showCorrect && 'bg-[#E8F5E9] border-[#4CAF50] text-[#2E7D32]',
+                  showIncorrect && 'bg-destructive/20 border-destructive',
+                  isAnswered && 'cursor-not-allowed',
+                  !isAnswered && 'hover:bg-secondary/10'
+                )}
+                onClick={() => handleAnswerSelect(option.id)}
+                disabled={isAnswered}
               >
-                {option.text}
-              </Label>
-              {isSubmitted &&
-                option.id === selectedOption &&
-                (option.isCorrect ? (
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                ) : (
-                  <XCircle className="h-5 w-5 text-red-500" />
-                ))}
-              {isSubmitted && option.id !== selectedOption && option.isCorrect && (
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-              )}
-            </div>
-          ))}
-        </RadioGroup>
+                <div className="flex items-center justify-between">
+                  <span>{option.text}</span>
+                  {showCorrect && <CheckCircle2 className="w-5 h-5 text-[#4CAF50]" />}
+                  {showIncorrect && <XCircle className="w-5 h-5 text-destructive" />}
+                </div>
+              </button>
+            );
+          })}
+        </div>
 
-        {isSubmitted && showExplanation && currentQuestion.explanation && (
-          <Alert className="mt-4">
-            <AlertDescription>{currentQuestion.explanation}</AlertDescription>
-          </Alert>
+        {/* Feedback */}
+        {isAnswered && (
+          <div className={cn(
+            'p-4 rounded-xl',
+            selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect 
+              ? 'bg-[#E8F5E9]' 
+              : 'bg-destructive/10'
+          )}>
+            {currentQuestion === questions.length - 1 && selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect ? (
+              <div className="space-y-2">
+                <p className="font-medium flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-[#4CAF50]" />
+                  You Rock! 🎉
+                </p>
+                <p className="text-sm text-muted-foreground">Final Score: {score + 1}/{questions.length}</p>
+              </div>
+            ) : (
+              <>
+                <p className="font-medium flex items-center gap-2">
+                  {selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect ? (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 text-[#4CAF50]" />
+                      <span className="text-[#2E7D32]">Great job!</span>
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-5 h-5 text-destructive" />
+                      <span className="text-destructive">Not quite right</span>
+                    </>
+                  )}
+                </p>
+                {question.explanation && (
+                  <p className="text-sm text-muted-foreground mt-1">{question.explanation}</p>
+                )}
+              </>
+            )}
+          </div>
         )}
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex gap-2">
-          {!isSubmitted ? (
-            <Button onClick={() => handleSubmit(currentQuestion.id)} disabled={!selectedOption}>
-              Submit Answer
-            </Button>
-          ) : (
-            <Button onClick={handleReset} variant="outline">
-              Reset Quiz
-            </Button>
+
+        {/* Action button */}
+        <Button
+          className={cn(
+            'w-full duo-button',
+            !isAnswered && selectedAnswer !== null && 'bg-primary text-white hover:bg-primary/90',
+            isAnswered && currentQuestion === questions.length - 1 && 'bg-success text-white hover:bg-success/90',
+            isAnswered && currentQuestion < questions.length - 1 && 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
           )}
-        </div>
+          onClick={isAnswered ? handleNextQuestion : handleCheckAnswer}
+          disabled={selectedAnswer === null && !isAnswered}
+        >
+          {isAnswered
+            ? currentQuestion < questions.length - 1
+              ? 'Continue'
+              : 'Complete!'
+            : 'Check'}
+        </Button>
 
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleNext}
-            disabled={currentQuestionIndex === allQuestions.length - 1}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+        {/* Score display */}
+        {(isAnswered || currentQuestion > 0) && (
+          <div className="flex justify-center">
+            <span className="duo-badge">
+              Score: {score}/{questions.length}
+            </span>
+          </div>
+        )}
+      </div>
         </div>
-
-        <div className="text-sm text-muted-foreground">
-          Score: {score}/{totalPoints}
-        </div>
-      </CardFooter>
-    </Card>
-  )
+  );
 }

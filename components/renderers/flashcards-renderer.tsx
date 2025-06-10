@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, RotateCw } from "lucide-react"
+import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface Flashcard {
   id: string
@@ -86,6 +87,14 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
+        {/* Progress bar */}
+        <div className="duo-progress-bar mb-4">
+          <div
+            className="duo-progress-bar-fill"
+            style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
+          />
+        </div>
+
         <div className="relative perspective-1000">
           <div
             className={`relative w-full h-64 cursor-pointer transition-transform duration-500 transform-style-preserve-3d ${
@@ -93,9 +102,10 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
             }`}
             onClick={flipCard}
           >
+            {/* Front of card */}
             <div
               className={`absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md ${
-                isFlipped ? "opacity-0" : "opacity-100"
+                isFlipped ? "opacity-0" : "opacity-100 bg-white hover:bg-secondary/10"
               }`}
             >
               <div className="text-center">
@@ -103,9 +113,10 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
                 <div className="mt-4 text-sm text-muted-foreground">Click to flip</div>
               </div>
             </div>
+            {/* Back of card */}
             <div
               className={`absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md rotate-y-180 ${
-                isFlipped ? "opacity-100" : "opacity-0"
+                isFlipped ? "opacity-100 bg-[#E8F5E9] text-[#2E7D32] border-[#4CAF50]" : "opacity-0"
               }`}
             >
               <div className="text-center">
@@ -114,6 +125,20 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
               </div>
             </div>
           </div>
+        </div>
+
+        {currentCardIndex === cards.length - 1 && isFlipped && (
+          <div className="mt-4 p-4 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-2">
+            <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
+            <p className="font-medium">You Rock! 🎉 You've completed all flashcards!</p>
+          </div>
+        )}
+
+        {/* Card count indicator */}
+        <div className="mt-4 flex justify-center">
+          <span className="duo-badge">
+            Card {currentCardIndex + 1} of {cards.length}
+          </span>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
@@ -127,9 +152,6 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
           <Button variant="outline" size="icon" onClick={goToNextCard} disabled={currentCardIndex === cards.length - 1}>
             <ChevronRight className="h-4 w-4" />
           </Button>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          Card {currentCardIndex + 1} of {cards.length}
         </div>
       </CardFooter>
     </Card>

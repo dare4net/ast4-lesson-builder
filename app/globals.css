@@ -1,51 +1,69 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '../styles/animations.css';
 
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 200 20% 20%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 200 20% 20%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 200 20% 20%;
+    
+    --primary: 130 70% 45%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 45 100% 50%;
+    --secondary-foreground: 200 20% 20%;
+    
+    --muted: 210 20% 95%;
+    --muted-foreground: 215 20% 65%;
+    
+    --accent: 200 100% 45%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 130 70% 45%;
+    
+    --radius: 1rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 200 20% 20%;
+    --foreground: 0 0% 100%;
+    
+    --card: 200 25% 25%;
+    --card-foreground: 0 0% 100%;
+    
+    --popover: 200 25% 25%;
+    --popover-foreground: 0 0% 100%;
+    
+    --primary: 130 60% 40%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 45 90% 45%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 200 25% 30%;
+    --muted-foreground: 215 20% 75%;
+    
+    --accent: 200 90% 40%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 200 25% 30%;
+    --input: 200 25% 30%;
+    --ring: 130 60% 40%;
   }
 }
 
@@ -58,7 +76,59 @@
   }
 }
 
-/* Flashcards styles */
+@layer components {
+  /* Duolingo-style button */
+  .duo-button {
+    @apply rounded-2xl font-bold transition-all duration-200 transform hover:scale-105 active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+  }
+
+  /* Duolingo-style card */
+  .duo-card {
+    @apply rounded-3xl bg-card p-6 shadow-lg transition-all duration-200;
+    @apply hover:shadow-xl;
+  }
+
+  /* Duolingo-style input */
+  .duo-input {
+    @apply rounded-xl border-2 border-input bg-background px-4 py-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary;
+    @apply placeholder:text-muted-foreground;
+  }
+
+  /* Duolingo-style progress bar */
+  .duo-progress-bar {
+    @apply h-2 rounded-full bg-muted overflow-hidden;
+  }
+
+  .duo-progress-bar-fill {
+    @apply h-full bg-primary transform origin-left;
+    animation: progress-fill 0.5s ease-out forwards;
+  }
+
+  /* Duolingo-style badge */
+  .duo-badge {
+    @apply rounded-full px-3 py-1 text-sm font-bold;
+    @apply bg-secondary text-secondary-foreground;
+  }
+
+  /* Duolingo-style tooltip */
+  .duo-tooltip {
+    @apply rounded-xl bg-popover p-2 text-sm font-medium shadow-lg;
+    @apply text-popover-foreground;
+  }
+}
+
+@keyframes progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Keep existing utility classes */
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -68,7 +138,7 @@
 }
 
 .transform-style-preserve-3d {
-  transform-style: preserve_3d;
+  transform-style: preserve-3d;
 }
 
 .rotate-y-180 {
@@ -129,20 +199,15 @@
   overflow-y: auto;
 }
 
-/* Highlight animation for newly added components */
 @keyframes highlight-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(var(--primary) / 0.7);
+  0%, 100% {
+    opacity: 1;
   }
-  70% {
-    box-shadow: 0 0 0 10px rgba(var(--primary) / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(var(--primary) / 0);
+  50% {
+    opacity: 0.5;
   }
 }
 
 .highlight-new-component {
-  animation: highlight-pulse 1.5s ease-out;
-  border-color: hsl(var(--primary));
+  animation: highlight-pulse 2s ease-in-out infinite;
 }

@@ -1,10 +1,15 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import type { Component } from "@/types/lesson"
+import type { Component, ComponentType } from "@/types/lesson"
+import { createElement } from "react"
+
+type ComponentRenderers = {
+  [K in ComponentType | 'fallback']?: React.ComponentType<any>;
+};
 
 // Dynamically import all component renderers
-const componentRenderers = {
+const componentRenderers: ComponentRenderers = {
   // Content Components
   paragraph: dynamic(() => import("@/components/renderers/paragraph-renderer").then((mod) => mod.ParagraphRenderer)),
   heading: dynamic(() => import("@/components/renderers/heading-renderer").then((mod) => mod.HeadingRenderer)),
@@ -55,13 +60,32 @@ interface ComponentRendererProps {
   }
 }
 
+interface QuizQuestion {
+  id: string;
+  question: string;
+  options: Array<{
+    id: string;
+    text: string;
+    isCorrect: boolean;
+  }>;
+  explanation?: string;
+}
+
+interface QuizProps {
+  title?: string;
+  questions: QuizQuestion[];
+  isEditing?: boolean;
+  onScoreUpdate?: (score: number) => void;
+}
+
 export function ComponentRenderer({ component, isEditing = false, onClick, scoreContext }: ComponentRendererProps) {
   // Get the appropriate renderer or use fallback
   const Renderer = componentRenderers[component.type] || componentRenderers.fallback
+  if (!Renderer) return null;
 
   return (
     <div className={isEditing ? "cursor-pointer" : ""} onClick={isEditing ? onClick : undefined}>
-      <Renderer {...component.props} isEditing={isEditing} scoreContext={scoreContext} />
+      {createElement(Renderer, { ...component.props, isEditing, scoreContext })}
     </div>
   )
 }

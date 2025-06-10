@@ -75,8 +75,13 @@ export function DragDropEditor({ items, onChange }: DragDropEditorProps) {
     <DndProvider backend={HTML5Backend}>
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label>Items (in correct order)</Label>
-          <Button size="sm" variant="outline" onClick={addItem}>
+          <Label className="text-[#2E7D32]">Items (in correct order)</Label>
+          <Button 
+            size="sm" 
+            variant="outline" 
+            onClick={addItem}
+            className="border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
+          >
             <Plus className="h-4 w-4 mr-1" />
             Add Item
           </Button>
@@ -130,13 +135,15 @@ function DraggableEditorItem({ index, item, updateItem, deleteItem, moveItem, is
   return (
     <div
       ref={(node) => drag(drop(node))}
-      className={`flex items-center gap-2 ${isDragging ? "opacity-50" : "opacity-100"}`}
+      className={`flex items-center gap-2 ${
+        isDragging ? "opacity-50" : "opacity-100"
+      } bg-white hover:bg-[#E8F5E9] rounded-lg border border-[#4CAF50] p-2`}
     >
       <div className="cursor-move p-2">
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="h-4 w-4 text-[#4CAF50]" />
       </div>
 
-      <div className="w-6 h-6 flex items-center justify-center bg-muted rounded-full text-xs font-medium">
+      <div className="w-6 h-6 flex items-center justify-center bg-[#E8F5E9] text-[#2E7D32] rounded-full text-xs font-medium border border-[#4CAF50]">
         {index + 1}
       </div>
 
@@ -144,10 +151,16 @@ function DraggableEditorItem({ index, item, updateItem, deleteItem, moveItem, is
         value={item.text}
         onChange={(e) => updateItem(index, e.target.value)}
         placeholder={`Item ${index + 1}`}
-        className="flex-1"
+        className="flex-1 border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
       />
 
-      <Button variant="ghost" size="icon" onClick={() => deleteItem(index)} disabled={isLastItem}>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        onClick={() => deleteItem(index)} 
+        disabled={isLastItem}
+        className="text-[#4CAF50] hover:bg-[#E8F5E9] hover:text-[#2E7D32]"
+      >
         <Trash2 className="h-4 w-4" />
       </Button>
     </div>

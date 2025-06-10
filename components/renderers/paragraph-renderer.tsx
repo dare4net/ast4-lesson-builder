@@ -1,5 +1,7 @@
 "use client"
 
+import { cn } from "@/lib/utils"
+
 interface ParagraphRendererProps {
   content: string
   align?: "left" | "center" | "right" | "justify"
@@ -14,5 +16,13 @@ export function ParagraphRenderer({ content, align = "left", isEditing = false }
     justify: "text-justify",
   }
 
-  return <div className={`${alignmentClasses[align]}`} dangerouslySetInnerHTML={{ __html: content }} />
+  return (
+    <div
+      className={cn(
+        "leading-7 [&:not(:first-child)]:mt-6",
+        alignmentClasses[align]
+      )}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  )
 }

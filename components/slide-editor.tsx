@@ -1,10 +1,8 @@
 "use client"
 
-import React from "react"
-
-import { useState, useCallback, useEffect } from "react"
-import { useDrop } from "react-dnd"
-import { useDrag } from "react-dnd"
+import React, { useRef, useCallback, useEffect } from "react"
+import { useState } from "react"
+import { useDrop, useDrag, DropTargetMonitor, ConnectDragSource, ConnectDropTarget } from "react-dnd"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,357 +11,158 @@ import { Trash2, GripVertical, Settings } from "lucide-react"
 import type { Slide, Component } from "@/types/lesson"
 import { ComponentRenderer } from "@/components/component-renderer"
 import { ComponentEditor } from "@/components/component-editor"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
+import type { XYCoord } from 'react-dnd'
+import dynamic from "next/dynamic"
+import { useFeedback } from "@/lib/feedback-context"
+
+// Import DraggableComponent dynamically to avoid SSR issues
+const DraggableComponent = dynamic(
+  () => import("@/components/client-only-dnd").then(mod => mod.DraggableComponent),
+  { ssr: false }
+)
 
 interface SlideEditorProps {
-  slide: Slide
-  updateSlide: (slide: Slide) => void
-  addComponent: (type: string, defaultProps: Record<string, any>) => string
-  isMobile?: boolean
+  slide: Slide;
+  updateSlide: (slide: Slide) => Promise<void>;
+  deleteSlide: (index: number) => Promise<void>;
+  slideIndex: number;
+  className?: string;
 }
 
-export function SlideEditor({ slide, updateSlide, addComponent, isMobile = false }: SlideEditorProps) {
-  const [editingComponentId, setEditingComponentId] = useState<string | null>(null)
-  const [isComponentEditorOpen, setIsComponentEditorOpen] = useState(false)
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
 
-  // Reset editing component when slide changes
+// Helper function to generate stable IDs
+const generateStableId = (prefix: string, index: number) => `${prefix}-${index}`;
+
+export function SlideEditor({ slide, updateSlide, deleteSlide, slideIndex, className }: SlideEditorProps) {
+  const [mounted, setMounted] = useState(false);
+  const [editingComponentId, setEditingComponentId] = useState<string | null>(null);
+  const [isComponentEditorOpen, setIsComponentEditorOpen] = useState(false);
+  const { playFeedback } = useFeedback();
+
   useEffect(() => {
-    setEditingComponentId(null)
-    setIsComponentEditorOpen(false)
-  }, [slide.id])
+    setMounted(true);
+  }, []);
 
-  const [{ isOver }, drop] = useDrop(
-    () => ({
-      accept: "COMPONENT",
-      drop: (item: { type: string; defaultProps: Record<string, any> }) => {
-        console.log("Component dropped:", item.type, "on slide:", slide.id)
-        const newComponentId = addComponent(item.type, item.defaultProps)
-        setEditingComponentId(newComponentId)
-        if (isMobile) {
-          setIsComponentEditorOpen(true)
-        }
-        return { addedTo: slide.id }
-      },
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-      }),
-    }),
-    [slide.id, addComponent, isMobile],
-  )
+  const handleTitleChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await updateSlide({ ...slide, title: e.target.value });
+    await playFeedback('click', { animation: false });
+  }, [slide, updateSlide, playFeedback]);
 
-  const handleAddParagraph = useCallback(() => {
-    console.log("Adding paragraph component")
-    const newComponentId = addComponent("paragraph", { content: "Enter your text here..." })
-    setEditingComponentId(newComponentId)
-    if (isMobile) {
-      setIsComponentEditorOpen(true)
-    }
-  }, [addComponent, isMobile])
-
-  const updateComponent = useCallback(
-    (componentId: string, updatedProps: Record<string, any>) => {
-      console.log("Updating component:", componentId)
-      const updatedComponents = slide.components.map((component) =>
-        component.id === componentId ? { ...component, props: updatedProps } : component,
-      )
-
-      updateSlide({
-        ...slide,
-        components: updatedComponents,
-      })
-    },
-    [slide, updateSlide],
-  )
-
-  const deleteComponent = useCallback(
-    (componentId: string) => {
-      console.log("Deleting component:", componentId)
-      const updatedComponents = slide.components.filter((component) => component.id !== componentId)
-
-      updateSlide({
-        ...slide,
-        components: updatedComponents,
-      })
-
-      if (editingComponentId === componentId) {
-        setEditingComponentId(null)
-        setIsComponentEditorOpen(false)
-      }
-    },
-    [slide, updateSlide, editingComponentId],
-  )
+  const handleDeleteClick = useCallback(async () => {
+    await deleteSlide(slideIndex);
+    await playFeedback('click');
+  }, [deleteSlide, slideIndex, playFeedback]);
 
   const moveComponent = useCallback(
-    (dragIndex: number, hoverIndex: number) => {
-      const dragComponent = slide.components[dragIndex]
-      const updatedComponents = [...slide.components]
-      updatedComponents.splice(dragIndex, 1)
-      updatedComponents.splice(hoverIndex, 0, dragComponent)
-
-      updateSlide({
-        ...slide,
-        components: updatedComponents,
-      })
+    async (dragIndex: number, hoverIndex: number) => {
+      const newComponents = [...slide.components];
+      const dragComponent = newComponents[dragIndex];
+      newComponents.splice(dragIndex, 1);
+      newComponents.splice(hoverIndex, 0, dragComponent);
+      await updateSlide({ ...slide, components: newComponents });
+      await playFeedback('click');
     },
-    [slide, updateSlide],
-  )
+    [slide, updateSlide, playFeedback]
+  );
 
-  const updateSlideTitle = useCallback(
-    (title: string) => {
-      updateSlide({
-        ...slide,
-        title,
-      })
+  const deleteComponent = useCallback(
+    async (id: string) => {
+      const newComponents = slide.components.filter(c => c.id !== id);
+      await updateSlide({ ...slide, components: newComponents });
+      await playFeedback('click');
     },
-    [slide, updateSlide],
-  )
+    [slide, updateSlide, playFeedback]
+  );
 
-  const currentComponent = slide.components.find((component) => component.id === editingComponentId)
+  const handleComponentClick = useCallback(async (componentId: string) => {
+    setEditingComponentId(componentId);
+    setIsComponentEditorOpen(true);
+    await playFeedback('click', { animation: false });
+  }, [playFeedback]);
 
-  const addNewComponent = useCallback(
-    (type: string, defaultProps: Record<string, any>) => {
-      console.log("Adding paragraph component")
-      const newComponentId = addComponent(type, defaultProps)
-      setEditingComponentId(newComponentId)
-      if (isMobile) {
-        setIsComponentEditorOpen(true)
-      }
+  const handleComponentUpdate = useCallback(async (props: Record<string, any>) => {
+    if (!editingComponentId) return;
+    
+    const newComponents = slide.components.map(c =>
+      c.id === editingComponentId ? { ...c, props } : c
+    );
+    await updateSlide({ ...slide, components: newComponents });
+    await playFeedback('click', { animation: false });
+  }, [editingComponentId, slide, updateSlide, playFeedback]);
 
-      // Show a visual indicator for the newly added component
-      setTimeout(() => {
-        const element = document.getElementById(`component-${newComponentId}`)
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" })
-          element.classList.add("highlight-new-component")
-          setTimeout(() => {
-            element.classList.remove("highlight-new-component")
-          }, 1500)
-        }
-      }, 100)
+  const handleEditorClose = useCallback(async () => {
+    setEditingComponentId(null);
+    setIsComponentEditorOpen(false);
+    await playFeedback('click', { animation: false });
+  }, [playFeedback]);
 
-      return newComponentId
-    },
-    [addComponent, isMobile],
-  )
+  const editingComponent = editingComponentId 
+    ? slide.components.find(c => c.id === editingComponentId)
+    : null;
 
-  // Mobile UI
-  if (isMobile) {
+  if (!mounted) {
+    return null; // Return null on server-side and first render
+  }
+
     return (
-      <div className="flex-1 p-4 overflow-hidden flex flex-col" ref={drop}>
-        <div className="mb-4">
-          <Input
-            value={slide.title}
-            onChange={(e) => updateSlideTitle(e.target.value)}
-            className="text-lg font-semibold"
-            placeholder="Slide Title"
-          />
-        </div>
+    <div className={cn("flex flex-1 overflow-hidden", className)}>
+      <ScrollArea className="flex-1">
+        <div className="p-4 space-y-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Input
+              placeholder="Enter slide title..."
+              value={slide.title}
+              onChange={handleTitleChange}
+              className="text-lg font-semibold flex-1"
+            />
+            <Button 
+              variant="ghost"
+              size="icon"
+              className="hover:bg-destructive/90 hover:text-destructive-foreground"
+              onClick={handleDeleteClick}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
 
-        <Card className={`flex-1 overflow-hidden ${isOver ? "border-primary border-dashed" : ""}`}>
-          <CardContent className="p-4 h-full">
-            <ScrollArea className="h-full">
-              {slide.components.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 text-center text-muted-foreground">
-                  <p>Drag and drop components here</p>
-                  <p className="text-sm">or</p>
-                  <Button variant="outline" className="mt-2" onClick={handleAddParagraph}>
-                    Add Paragraph
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {slide.components.map((component, index) => (
+          {slide.components.map((component, index) => (
                     <DraggableComponent
                       key={component.id}
                       component={component}
                       index={index}
                       moveComponent={moveComponent}
-                      deleteComponent={deleteComponent}
-                      setEditingComponentId={(id) => {
-                        setEditingComponentId(id)
-                        setIsComponentEditorOpen(true)
-                      }}
-                      isMobile={isMobile}
+              onDelete={() => deleteComponent(component.id)}
+              onClick={() => handleComponentClick(component.id)}
+              id={component.id}
                     />
                   ))}
                 </div>
-              )}
             </ScrollArea>
-          </CardContent>
-        </Card>
 
-        {currentComponent && (
-          <Sheet open={isComponentEditorOpen} onOpenChange={setIsComponentEditorOpen} side="right">
-            <SheetContent className="p-0 w-full sm:max-w-md">
+      {editingComponent && (
+        <Sheet 
+          open={isComponentEditorOpen} 
+          onOpenChange={setIsComponentEditorOpen}
+        >
+          <SheetContent className="w-[400px] sm:w-[540px]">
+            <SheetHeader>
+              <SheetTitle>Edit Component</SheetTitle>
+            </SheetHeader>
               <ComponentEditor
-                component={currentComponent}
-                updateComponent={(props) => updateComponent(currentComponent.id, props)}
-                onClose={() => {
-                  setIsComponentEditorOpen(false)
-                  setEditingComponentId(null)
-                }}
-                isMobile={isMobile}
+              component={editingComponent}
+              updateComponent={handleComponentUpdate}
+              onClose={handleEditorClose}
               />
             </SheetContent>
           </Sheet>
         )}
       </div>
-    )
-  }
-
-  // Desktop UI
-  return (
-    <div className="flex flex-1 overflow-hidden">
-      <div className="flex-1 p-4 overflow-hidden flex flex-col" ref={drop}>
-        <div className="mb-4">
-          <Input
-            value={slide.title}
-            onChange={(e) => updateSlideTitle(e.target.value)}
-            className="text-lg font-semibold"
-            placeholder="Slide Title"
-          />
-        </div>
-
-        <Card className={`flex-1 overflow-hidden ${isOver ? "border-primary border-dashed" : ""}`}>
-          <CardContent className="p-6 h-full">
-            <ScrollArea className="h-full">
-              {slide.components.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 text-center text-muted-foreground">
-                  <p>Drag and drop components here</p>
-                  <p className="text-sm">or</p>
-                  <Button variant="outline" className="mt-2" onClick={handleAddParagraph}>
-                    Add Paragraph
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {slide.components.map((component, index) => (
-                    <DraggableComponent
-                      key={component.id}
-                      component={component}
-                      index={index}
-                      moveComponent={moveComponent}
-                      deleteComponent={deleteComponent}
-                      setEditingComponentId={setEditingComponentId}
-                      isMobile={isMobile}
-                    />
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          </CardContent>
-        </Card>
-      </div>
-
-      {currentComponent && (
-        <ComponentEditor
-          component={currentComponent}
-          updateComponent={(props) => updateComponent(currentComponent.id, props)}
-          onClose={() => setEditingComponentId(null)}
-          isMobile={isMobile}
-        />
-      )}
-    </div>
-  )
-}
-
-interface DraggableComponentProps {
-  component: Component
-  index: number
-  moveComponent: (dragIndex: number, hoverIndex: number) => void
-  deleteComponent: (id: string) => void
-  setEditingComponentId: (id: string | null) => void
-  isMobile?: boolean
-}
-
-function DraggableComponent({
-  component,
-  index,
-  moveComponent,
-  deleteComponent,
-  setEditingComponentId,
-  isMobile = false,
-}: DraggableComponentProps) {
-  const ref = React.useRef<HTMLDivElement>(null)
-
-  const [{ isDragging }, drag] = useDrag({
-    type: "COMPONENT_REORDER",
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
-
-  const [, drop] = useDrop({
-    accept: "COMPONENT_REORDER",
-    hover: (item: { index: number }, monitor) => {
-      if (!ref.current) {
-        return
-      }
-      const dragIndex = item.index
-      const hoverIndex = index
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect()
-
-      // Get vertical middle
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset()
-
-      // Get pixels to the top
-      const hoverClientY = clientOffset!.y - hoverBoundingRect.top
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return
-      }
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return
-      }
-
-      // Time to actually perform the action
-      moveComponent(dragIndex, hoverIndex)
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex
-    },
-  })
-
-  drag(drop(ref))
-
-  return (
-    <div
-      id={`component-${component.id}`}
-      ref={ref}
-      className={`relative group border rounded-md p-4 hover:border-primary transition-colors ${
-        isDragging ? "opacity-50" : ""
-      }`}
-    >
-      <div className="absolute right-2 top-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button variant="ghost" size="icon" onClick={() => setEditingComponentId(component.id)} title="Edit Component">
-          <Settings className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" onClick={() => deleteComponent(component.id)} title="Delete Component">
-          <Trash2 className="h-4 w-4" />
-        </Button>
-        <div className="cursor-move" title="Drag to Reorder">
-          <GripVertical className="h-4 w-4" />
-        </div>
-      </div>
-
-      <ComponentRenderer component={component} isEditing={true} onClick={() => setEditingComponentId(component.id)} />
-    </div>
-  )
+  );
 }

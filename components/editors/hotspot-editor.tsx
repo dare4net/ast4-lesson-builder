@@ -77,11 +77,14 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <Label>Hotspots</Label>
+        <Label className="text-[#2E7D32]">Hotspots</Label>
         <Button
           size="sm"
           variant={isAddingHotspot ? "default" : "outline"}
           onClick={() => setIsAddingHotspot(!isAddingHotspot)}
+          className={isAddingHotspot 
+            ? "bg-[#4CAF50] text-white hover:bg-[#43A047]"
+            : "border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"}
         >
           {isAddingHotspot ? (
             "Cancel"
@@ -95,116 +98,98 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
       </div>
 
       {isAddingHotspot && (
-        <div className="border rounded-md p-2 bg-muted/20">
-          <p className="text-sm mb-2">Click on the image to place a hotspot</p>
+        <div className="border border-[#4CAF50] rounded-md p-2 bg-[#E8F5E9]">
+          <p className="text-sm mb-2 text-[#2E7D32]">Click on the image to place a hotspot</p>
         </div>
       )}
 
-      <div className="border rounded-md overflow-auto" style={{ maxHeight: "250px" }}>
-        <div className="relative">
-          <img
-            ref={imageRef}
-            src={image || "/placeholder.svg?height=300&width=400"}
-            alt="Hotspot image"
-            className={`w-full h-auto ${isAddingHotspot ? "cursor-crosshair" : ""}`}
-            onClick={handleImageClick}
-          />
-
-          {hotspots.map((hotspot, index) => (
-            <div
-              key={hotspot.id}
-              className={`absolute w-6 h-6 rounded-full flex items-center justify-center text-xs ${
-                index === activeHotspotIndex
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-primary/50 text-primary-foreground"
-              }`}
-              style={{
-                left: `${hotspot.x * 100}%`,
-                top: `${hotspot.y * 100}%`,
-                transform: "translate(-50%, -50%)",
-              }}
-              onClick={() => setActiveHotspotIndex(index)}
-            >
-              {index + 1}
-            </div>
-          ))}
-        </div>
+      <div className="relative">
+        <img
+          ref={imageRef}
+          src={image}
+          alt="Hotspot image"
+          className={`w-full h-auto border border-[#4CAF50] rounded-md ${isAddingHotspot ? 'cursor-crosshair' : ''}`}
+          onClick={handleImageClick}
+        />
+        {hotspots.map((hotspot, index) => (
+          <div
+            key={hotspot.id}
+            style={{
+              position: "absolute",
+              left: `${hotspot.x * 100}%`,
+              top: `${hotspot.y * 100}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+            className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer border-2 text-sm ${
+              index === activeHotspotIndex
+                ? "bg-[#4CAF50] border-[#2E7D32] text-white"
+                : "bg-white border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9]"
+            }`}
+            onClick={() => setActiveHotspotIndex(index)}
+          >
+            {index + 1}
+          </div>
+        ))}
       </div>
 
       {hotspots.length > 0 && (
-        <div className="overflow-auto" style={{ maxHeight: "250px" }}>
-          <Tabs
-            value={activeHotspotIndex.toString()}
-            onValueChange={(value) => setActiveHotspotIndex(Number.parseInt(value))}
-          >
-            <TabsList className="h-9 overflow-x-auto w-auto">
+        <Card className="border-[#4CAF50]">
+          <CardContent className="p-4">
+            <Tabs 
+              value={activeHotspotIndex.toString()} 
+              onValueChange={(value) => setActiveHotspotIndex(Number.parseInt(value))}
+            >
+              <TabsList className="w-full h-auto flex-wrap bg-[#E8F5E9] mb-4">
+                {hotspots.map((hotspot, index) => (
+                  <TabsTrigger
+                    key={hotspot.id}
+                    value={index.toString()}
+                    className="flex-1 h-8 data-[state=active]:bg-[#4CAF50] data-[state=active]:text-white text-[#2E7D32] hover:text-[#2E7D32] hover:bg-[#E8F5E9]/80"
+                  >
+                    Hotspot {index + 1}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
               {hotspots.map((hotspot, index) => (
-                <TabsTrigger key={hotspot.id} value={index.toString()} className="px-3 h-8">
-                  {index + 1}
-                </TabsTrigger>
+                <TabsContent key={hotspot.id} value={index.toString()} className="m-0 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h4 className="text-sm font-medium text-[#2E7D32]">Hotspot {index + 1}</h4>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => deleteHotspot(index)}
+                      className="text-[#4CAF50] hover:bg-[#E8F5E9] hover:text-[#2E7D32]"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[#2E7D32]">Label</Label>
+                    <Input
+                      value={hotspot.label}
+                      onChange={(e) => updateHotspot(index, "label", e.target.value)}
+                      placeholder="Hotspot label"
+                      className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[#2E7D32]">Content</Label>
+                    <Textarea
+                      value={hotspot.content}
+                      onChange={(e) => updateHotspot(index, "content", e.target.value)}
+                      placeholder="Hotspot content"
+                      rows={3}
+                      className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
+                    />
+                  </div>
+                </TabsContent>
               ))}
-            </TabsList>
-
-            {hotspots.map((hotspot, index) => (
-              <TabsContent key={hotspot.id} value={index.toString()} className="m-0 space-y-4">
-                <Card>
-                  <CardContent className="p-4 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h4 className="text-sm font-medium">Hotspot {index + 1}</h4>
-                      <Button variant="ghost" size="icon" onClick={() => deleteHotspot(index)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Label</Label>
-                      <Input
-                        value={hotspot.label}
-                        onChange={(e) => updateHotspot(index, "label", e.target.value)}
-                        placeholder="Hotspot label"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label>Content</Label>
-                      <Textarea
-                        value={hotspot.content}
-                        onChange={(e) => updateHotspot(index, "content", e.target.value)}
-                        placeholder="Hotspot content"
-                        rows={3}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label>X Position</Label>
-                        <Input
-                          type="number"
-                          value={hotspot.x}
-                          onChange={(e) => updateHotspot(index, "x", Number.parseFloat(e.target.value))}
-                          min={0}
-                          max={1}
-                          step={0.01}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Y Position</Label>
-                        <Input
-                          type="number"
-                          value={hotspot.y}
-                          onChange={(e) => updateHotspot(index, "y", Number.parseFloat(e.target.value))}
-                          min={0}
-                          max={1}
-                          step={0.01}
-                        />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
+            </Tabs>
+          </CardContent>
+        </Card>
       )}
     </div>
   )

@@ -2,27 +2,34 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, XCircle } from "lucide-react"
+import { useFeedback } from "@/lib/feedback-context"
+import { cn } from "@/lib/utils"
 
 interface MatchingPair {
-  id: string
-  left: string
-  right: string
+  id: string;
+  left: string;
+  right: string;
 }
 
 interface MatchingPairsRendererProps {
-  title?: string
-  pairs: MatchingPair[]
-  shuffled?: boolean
-  points?: number
-  isEditing?: boolean
+  title?: string;
+  pairs: MatchingPair[];
+  shuffled?: boolean;
+  points?: number;
+  isEditing?: boolean;
   scoreContext?: {
-    score: number
-    totalPossible: number
-    addPoints: (points: number) => void
-  }
+    score: number;
+    totalPossible: number;
+    addPoints: (points: number) => void;
+  };
 }
+
+// Generate a random pastel color
+const generatePastelColor = () => {
+  const hue = Math.floor(Math.random() * 360);
+  return `hsl(${hue}, 70%, 85%)`;
+};
 
 export function MatchingPairsRenderer({
   title = "Match the items",
@@ -32,28 +39,36 @@ export function MatchingPairsRenderer({
   isEditing = false,
   scoreContext,
 }: MatchingPairsRendererProps) {
-  const [leftItems, setLeftItems] = useState<(MatchingPair & { selected: boolean })[]>([])
-  const [rightItems, setRightItems] = useState<(MatchingPair & { selected: boolean })[]>([])
-  const [selectedLeft, setSelectedLeft] = useState<string | null>(null)
-  const [selectedRight, setSelectedRight] = useState<string | null>(null)
-  const [matches, setMatches] = useState<Record<string, string>>({})
-  const [isComplete, setIsComplete] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
+  const { playFeedback } = useFeedback();
+  const [mounted, setMounted] = useState(false);
+  const [leftItems, setLeftItems] = useState<(MatchingPair & { selected: boolean })[]>([]);
+  const [rightItems, setRightItems] = useState<(MatchingPair & { selected: boolean })[]>([]);
+  const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
+  const [selectedRight, setSelectedRight] = useState<string | null>(null);
+  const [matches, setMatches] = useState<Record<string, { rightId: string; color: string }>>({});
+  const [isChecking, setIsChecking] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [matchStats, setMatchStats] = useState({
+    correctCount: 0,
+    noneCorrect: false,
+    someCorrect: false
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Initialize the game
   useEffect(() => {
     if (isEditing) {
-      // In editing mode, just show the pairs in order
       setLeftItems(pairs.map((pair) => ({ ...pair, selected: false })))
       setRightItems(pairs.map((pair) => ({ ...pair, selected: false })))
       return
     }
 
-    // Create left and right arrays
     const leftArray = pairs.map((pair) => ({ ...pair, selected: false }))
     let rightArray = pairs.map((pair) => ({ ...pair, selected: false }))
 
-    // Shuffle the right array if needed
     if (shuffled) {
       rightArray = [...rightArray].sort(() => Math.random() - 0.5)
     }
@@ -61,89 +76,86 @@ export function MatchingPairsRenderer({
     setLeftItems(leftArray)
     setRightItems(rightArray)
     setMatches({})
-    setIsComplete(false)
+    setIsChecking(false)
     setIsCorrect(false)
   }, [pairs, shuffled, isEditing])
-
-  const handleLeftClick = (id: string) => {
-    if (isComplete || Object.keys(matches).includes(id)) return
-
-    // If there was a previously selected left item, deselect it
-    if (selectedLeft) {
-      setSelectedLeft(null)
+  const handleLeftClick = async (id: string) => {
+    // Play click sound immediately if item is clickable
+    if (!(isChecking || Object.keys(matches).includes(id))) {
+      await playFeedback('click', { sound: true, animation: false });
     }
 
-    setSelectedLeft(id)
+    if (isChecking || Object.keys(matches).includes(id)) return;
 
-    // If right is already selected, check for a match
+    setSelectedLeft(id);
     if (selectedRight) {
-      const leftPair = pairs.find((pair) => pair.id === id)
-      const rightPair = pairs.find((pair) => pair.id === selectedRight)
+      const color = generatePastelColor();
+      setMatches(prev => ({ ...prev, [id]: { rightId: selectedRight, color } }));
+      setSelectedLeft(null);
+      setSelectedRight(null);
+    }
+  };
 
-      if (leftPair && rightPair && leftPair.id === rightPair.id) {
-        // Match found
-        setMatches((prev) => ({ ...prev, [id]: selectedRight }))
-        // Reset selections after a match
-        setSelectedLeft(null)
-        setSelectedRight(null)
-      } else {
-        // No match, keep left selected but clear right
-        setSelectedRight(null)
+  const handleRightClick = async (id: string) => {
+    // Play click sound immediately if item is clickable
+    if (!(isChecking || Object.values(matches).some(m => m.rightId === id))) {
+      await playFeedback('click', { sound: true, animation: false });
+    }
+
+    if (isChecking || Object.values(matches).some(m => m.rightId === id)) return;
+
+    setSelectedRight(id);
+    if (selectedLeft) {
+      const color = generatePastelColor();
+      setMatches(prev => ({ ...prev, [selectedLeft]: { rightId: id, color } }));
+      setSelectedLeft(null);
+      setSelectedRight(null);
+    }
+  };  // Function to check if a match is correct
+  const validateMatch = (leftId: string, rightId: string) => {
+    const leftItem = leftItems.find(item => item.id === leftId);
+    const rightItem = rightItems.find(item => item.id === rightId);
+    // A match is correct if both items have the same original ID
+    return leftItem && rightItem && leftItem.id === rightItem.id;
+  };
+
+  // Function to check all matches
+  const checkAllMatches = () => {
+    const results = Object.entries(matches).map(([leftId, { rightId }]) => 
+      validateMatch(leftId, rightId)
+    );
+    
+    const correctCount = results.filter(Boolean).length;
+    const allCorrect = correctCount === pairs.length && Object.keys(matches).length === pairs.length;
+    const noneCorrect = correctCount === 0;
+    const someCorrect = correctCount > 0 && !allCorrect;
+
+    return { correctCount, allCorrect, noneCorrect, someCorrect };
+  };
+
+  const handleCheck = async () => {
+    setIsChecking(true);
+    
+    const { correctCount, allCorrect, noneCorrect, someCorrect } = checkAllMatches();
+
+    setIsCorrect(allCorrect);
+    setMatchStats({
+      correctCount,
+      noneCorrect,
+      someCorrect
+    });
+
+    if (allCorrect) {
+      await playFeedback('complete');
+      if (scoreContext) {
+        scoreContext.addPoints(points);
       }
+    } else {
+      await playFeedback('incorrect');
     }
   }
 
-  const handleRightClick = (id: string) => {
-    if (isComplete || Object.values(matches).includes(id)) return
-
-    // If there was a previously selected right item, deselect it
-    if (selectedRight) {
-      setSelectedRight(null)
-    }
-
-    setSelectedRight(id)
-
-    // If left is already selected, check for a match
-    if (selectedLeft) {
-      const leftPair = pairs.find((pair) => pair.id === selectedLeft)
-      const rightPair = pairs.find((pair) => pair.id === id)
-
-      if (leftPair && rightPair && leftPair.id === rightPair.id) {
-        // Match found
-        setMatches((prev) => ({ ...prev, [selectedLeft]: id }))
-        // Reset selections after a match
-        setSelectedLeft(null)
-        setSelectedRight(null)
-      } else {
-        // No match, keep right selected but clear left
-        setSelectedLeft(null)
-      }
-    }
-  }
-
-  // Check if all pairs are matched
-  useEffect(() => {
-    if (Object.keys(matches).length === pairs.length) {
-      setIsComplete(true)
-
-      // Check if all matches are correct
-      const allCorrect = Object.entries(matches).every(([leftId, rightId]) => {
-        const leftPair = pairs.find((pair) => pair.id === leftId)
-        const rightPair = pairs.find((pair) => pair.id === rightId)
-        return leftPair && rightPair && leftPair.id === rightPair.id
-      })
-
-      setIsCorrect(allCorrect)
-
-      // Add points if all correct and scoreContext is available
-      if (allCorrect && scoreContext) {
-        scoreContext.addPoints(points)
-      }
-    }
-  }, [matches, pairs, points, scoreContext])
-
-  const resetGame = () => {
-    // Reinitialize the game
+  const resetGame = async () => {
     const leftArray = pairs.map((pair) => ({ ...pair, selected: false }))
     let rightArray = pairs.map((pair) => ({ ...pair, selected: false }))
 
@@ -156,15 +168,19 @@ export function MatchingPairsRenderer({
     setSelectedLeft(null)
     setSelectedRight(null)
     setMatches({})
-    setIsComplete(false)
+    setIsChecking(false)
     setIsCorrect(false)
+    await playFeedback('click', { animation: false })
   }
 
-  // In editing mode, show a simplified version
+  if (!mounted) {
+    return null;
+  }
+
   if (isEditing) {
     return (
-      <div className="border p-4 rounded-md">
-        <h3 className="font-semibold mb-2">{title}</h3>
+      <div className="duo-card space-y-4">
+        <h3 className="text-xl font-bold">{title}</h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             {pairs.map((pair) => (
@@ -185,90 +201,164 @@ export function MatchingPairsRenderer({
     )
   }
 
+  const allPairsMatched = Object.keys(matches).length === pairs.length
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="duo-card space-y-6">
+      {/* Progress indicator */}
+      <div className="duo-progress-bar">
+        <div
+          className="duo-progress-bar-fill"
+          style={{ width: `${(Object.keys(matches).length / pairs.length) * 100}%` }}
+        />
+      </div>
+
+      <div className="space-y-6">
+        <h3 className="text-xl font-bold">{title}</h3>
+
         <div className="grid grid-cols-2 gap-6">
+          {/* Left items */}
           <div className="space-y-2">
             {leftItems.map((item) => {
-              const isMatched = Object.keys(matches).includes(item.id)
+              const match = matches[item.id]
+              const isMatched = !!match
               const isSelected = selectedLeft === item.id
 
-              return (
-                <div
+              return (                <button
                   key={`left-${item.id}`}
-                  className={`p-3 rounded border transition-colors cursor-pointer ${
-                    isMatched
-                      ? "bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800"
-                      : isSelected
-                        ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
-                        : "hover:bg-muted"
-                  }`}
+                  className={cn(
+                    'w-full p-4 text-left duo-button transition-all relative',
+                    isMatched && !isChecking && { backgroundColor: match.color },
+                    isSelected && 'bg-primary text-primary-foreground',
+                    isChecking && isMatched && (
+                      item.id === match.rightId 
+                        ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#4CAF50]'
+                        : 'bg-destructive/20 text-destructive border-destructive'
+                    ),
+                    (isMatched || isChecking) && 'cursor-not-allowed'
+                  )}
                   onClick={() => handleLeftClick(item.id)}
+                  disabled={isMatched || isChecking}
+                  style={isMatched && !isChecking ? { backgroundColor: match.color } : undefined}
                 >
                   {item.left}
-                </div>
+                  {isChecking && isMatched && (
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transition-opacity opacity-100">
+                      {item.id === match.rightId ? (
+                        <CheckCircle2 className="w-5 h-5 text-[#4CAF50] animate-in fade-in duration-300" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-destructive animate-in fade-in duration-300" />
+                      )}
+                    </span>
+                  )}
+                </button>
               )
             })}
           </div>
 
+          {/* Right items */}
           <div className="space-y-2">
             {rightItems.map((item) => {
-              const isMatched = Object.values(matches).includes(item.id)
+              const matchEntry = Object.entries(matches).find(([_, m]) => m.rightId === item.id)
+              const isMatched = !!matchEntry
               const isSelected = selectedRight === item.id
+              const match = matchEntry ? matches[matchEntry[0]] : null
 
               return (
-                <div
-                  key={`right-${item.id}`}
-                  className={`p-3 rounded border transition-colors cursor-pointer ${
-                    isMatched
-                      ? "bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800"
-                      : isSelected
-                        ? "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
-                        : "hover:bg-muted"
-                  }`}
+                <button
+                  key={`right-${item.id}`}                  className={cn(
+                    'w-full p-4 text-left duo-button transition-all relative',
+                    isMatched && !isChecking && { backgroundColor: match?.color },
+                    isSelected && 'bg-primary text-primary-foreground',
+                    isChecking && isMatched && (
+                      matchEntry?.[0] === item.id
+                        ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#4CAF50]'
+                        : 'bg-destructive/20 text-destructive border-destructive'
+                    ),
+                    (isMatched || isChecking) && 'cursor-not-allowed'
+                  )}
                   onClick={() => handleRightClick(item.id)}
+                  disabled={isMatched || isChecking}
+                  style={isMatched && !isChecking ? { backgroundColor: match?.color } : undefined}
                 >
                   {item.right}
-                </div>
+                  {isChecking && isMatched && (
+                    <span className="absolute right-2 top-1/2 -translate-y-1/2 transition-opacity opacity-100">
+                      {matchEntry?.[0] === item.id ? (
+                        <CheckCircle2 className="w-5 h-5 text-[#4CAF50] animate-in fade-in duration-300" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-destructive animate-in fade-in duration-300" />
+                      )}
+                    </span>
+                  )}
+                </button>
               )
             })}
           </div>
         </div>
 
-        {isComplete && (
-          <div
-            className={`mt-4 p-3 rounded flex items-center ${
-              isCorrect
-                ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300"
-                : "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300"
-            }`}
-          >
-            {isCorrect ? (
-              <>
-                <CheckCircle2 className="h-5 w-5 mr-2" />
-                <span>Great job! All matches are correct.</span>
-              </>
-            ) : (
-              <>
-                <XCircle className="h-5 w-5 mr-2" />
-                <span>Some matches are incorrect. Try again!</span>
-              </>
-            )}
-          </div>
-        )}
-      </CardContent>
+        {/* Action buttons */}
+        <div className="space-y-4">
+          {!isChecking && allPairsMatched && (
+            <Button
+              className="w-full duo-button bg-primary text-primary-foreground"
+              onClick={handleCheck}
+            >
+              Check
+            </Button>
+          )}
 
-      <CardFooter>
-        <Button onClick={resetGame} variant={isComplete ? "default" : "outline"}>
-          Reset
-        </Button>
+          {isChecking && (
+            <>
+              <div className={cn(
+                'p-4 rounded-xl flex items-center gap-2',
+                isCorrect ? 'bg-[#E8F5E9]' : 'bg-destructive/10',
+                'transition-all animate-in fade-in duration-300'
+              )}>
+                {isCorrect ? (
+                  <>
+                    <CheckCircle2 className="w-5 h-5 text-[#4CAF50]" />
+                    <p className="font-medium text-[#2E7D32]">You Rock! 🎉 All matches are correct!</p>
+                  </>
+                ) : (
+                  <>
+                    <XCircle className="w-5 h-5 text-destructive" />
+                    <p className="font-medium text-destructive">
+                      {matchStats.noneCorrect 
+                        ? "Oops! None of the matches are correct. Try again!" 
+                        : matchStats.someCorrect 
+                          ? `You're getting there! Some matches are correct!`
+                          : "Not quite right. Try different matches!"}
+                    </p>
+                  </>
+                )}
+              </div>
+              {isCorrect ? (
+                <Button
+                  className="w-full duo-button bg-success text-success-foreground"
+                  disabled
+                >
+                  You Rock! 🎉
+                </Button>
+              ) : (
+                <Button
+                  className="w-full duo-button bg-secondary text-secondary-foreground"
+                  onClick={resetGame}
+                >
+                  Try Again
+                </Button>
+              )}
+            </>
+          )}
+        </div>
 
-        {points > 0 && <div className="ml-auto text-sm text-muted-foreground">Points: {points}</div>}
-      </CardFooter>
-    </Card>
+        {/* Score badge */}
+        <div className="flex justify-center">
+          <span className="duo-badge">
+            Matched: {Object.keys(matches).length}/{pairs.length}
+          </span>
+        </div>
+      </div>
+    </div>
   )
 }

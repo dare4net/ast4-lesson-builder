@@ -1,9 +1,6 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { DndProvider } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
-import { TouchBackend } from "react-dnd-touch-backend"
 import { useToast } from "@/components/ui/use-toast"
 import { ComponentLibrary } from "@/components/component-library"
 import { SlideEditor } from "@/components/slide-editor"
@@ -13,9 +10,12 @@ import { SlideNavigator } from "@/components/slide-navigator"
 import { useMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { LayoutGrid, Layers } from "lucide-react"
-import type { Lesson, Slide, Component } from "@/types/lesson"
+import { LayoutGrid } from "lucide-react"
+import type { Lesson, Slide, Component, ComponentType } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
+import { CustomDndProvider } from "@/components/dnd-provider"
+import { useFeedback } from "@/lib/feedback-context"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function LessonBuilder() {
   // Initialize with default lesson or from localStorage
@@ -36,9 +36,10 @@ export function LessonBuilder() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [previewMode, setPreviewMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [activeSidebar, setActiveSidebar] = useState<"slides" | "components">("slides")
+  const [activeSidebar, setActiveSidebar] = useState<"components">("components")
   const { toast } = useToast()
   const isMobile = useMobile()
+  const { playFeedback } = useFeedback()
 
   // Save lesson to localStorage whenever it changes
   useEffect(() => {
@@ -58,7 +59,7 @@ export function LessonBuilder() {
   const currentSlide = lesson.slides[currentSlideIndex] || lesson.slides[0]
 
   // Add a new slide
-  const addSlide = useCallback(() => {
+  const addSlide = useCallback(async () => {
     const newSlide: Slide = {
       id: `slide-${Date.now()}`,
       title: `Slide ${lesson.slides.length + 1}`,
@@ -73,15 +74,18 @@ export function LessonBuilder() {
     // Set the current slide to the new slide
     setCurrentSlideIndex(lesson.slides.length)
 
+    // Play feedback
+    await playFeedback('complete')
+
     toast({
       title: "Slide added",
       description: `Added new slide: ${newSlide.title}`,
     })
-  }, [lesson.slides.length, toast])
+  }, [lesson.slides.length, toast, playFeedback])
 
   // Update a slide
   const updateSlide = useCallback(
-    (updatedSlide: Slide) => {
+    async (updatedSlide: Slide) => {
       setLesson((prevLesson) => {
         // Create a new slides array with the updated slide
         const updatedSlides = prevLesson.slides.map((slide, index) =>
@@ -94,14 +98,18 @@ export function LessonBuilder() {
           slides: updatedSlides,
         }
       })
+
+      // Play feedback
+      await playFeedback('click', { animation: false })
     },
-    [currentSlideIndex],
+    [currentSlideIndex, playFeedback],
   )
 
   // Delete a slide
   const deleteSlide = useCallback(
-    (index: number) => {
+    async (index: number) => {
       if (lesson.slides.length <= 1) {
+        await playFeedback('incorrect')
         toast({
           title: "Cannot delete slide",
           description: "A lesson must have at least one slide",
@@ -126,16 +134,19 @@ export function LessonBuilder() {
         setCurrentSlideIndex((prevIndex) => prevIndex - 1)
       }
 
+      // Play feedback
+      await playFeedback('click')
+
       toast({
         title: "Slide deleted",
         description: `Deleted slide: ${lesson.slides[index].title}`,
       })
     },
-    [currentSlideIndex, lesson.slides, toast],
+    [currentSlideIndex, lesson.slides, toast, playFeedback],
   )
 
   // Reorder slides
-  const reorderSlides = useCallback((startIndex: number, endIndex: number) => {
+  const reorderSlides = useCallback(async (startIndex: number, endIndex: number) => {
     setLesson((prevLesson) => {
       const slides = Array.from(prevLesson.slides)
       const [removed] = slides.splice(startIndex, 1)
@@ -148,18 +159,20 @@ export function LessonBuilder() {
     })
 
     setCurrentSlideIndex(endIndex)
-  }, [])
+    await playFeedback('click')
+  }, [playFeedback])
 
   // Update lesson metadata
-  const updateLessonMetadata = useCallback((metadata: Partial<Omit<Lesson, "slides">>) => {
+  const updateLessonMetadata = useCallback(async (metadata: Partial<Omit<Lesson, "slides">>) => {
     setLesson((prevLesson) => ({
       ...prevLesson,
       ...metadata,
     }))
-  }, [])
+    await playFeedback('click', { animation: false })
+  }, [playFeedback])
 
   // Export lesson
-  const exportLesson = useCallback(() => {
+  const exportLesson = useCallback(async () => {
     const dataStr = JSON.stringify(lesson, null, 2)
     const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(dataStr)}`
     const exportFileDefaultName = `${lesson.title.replace(/\s+/g, "-").toLowerCase()}.json`
@@ -169,15 +182,17 @@ export function LessonBuilder() {
     linkElement.setAttribute("download", exportFileDefaultName)
     linkElement.click()
 
+    await playFeedback('complete')
+
     toast({
       title: "Lesson exported",
       description: `Saved as ${exportFileDefaultName}`,
     })
-  }, [lesson, toast])
+  }, [lesson, toast, playFeedback])
 
   // Import lesson
   const importLesson = useCallback(
-    (importedLesson: Lesson) => {
+    async (importedLesson: Lesson) => {
       try {
         // Validate the imported lesson has the required structure
         if (!importedLesson.id || !Array.isArray(importedLesson.slides)) {
@@ -202,12 +217,15 @@ export function LessonBuilder() {
           setLesson((prev) => ({ ...prev }))
         }, 100)
 
+        await playFeedback('complete')
+
         toast({
           title: "Lesson imported",
           description: `Loaded lesson: ${importedLesson.title}`,
         })
       } catch (error) {
         console.error("Import error:", error)
+        await playFeedback('incorrect')
         toast({
           title: "Import failed",
           description: "The selected file is not a valid lesson",
@@ -215,132 +233,133 @@ export function LessonBuilder() {
         })
       }
     },
-    [toast],
+    [toast, playFeedback],
   )
 
-  // Add component to current slide
-  const addComponent = useCallback(
-    (type: string, defaultProps: Record<string, any>) => {
+  // Add component to the current slide
+  const addComponent = useCallback(async (type: string, defaultProps: Record<string, any> = {}) => {
       const newComponent: Component = {
-        id: `component-${Date.now()}`,
-        type: type as any,
-        props: { ...defaultProps },
+      id: `${type}-${Date.now()}`,
+      type: type as ComponentType,
+      props: defaultProps,
+    };
+
+    updateSlide({
+      ...currentSlide,
+      components: [...currentSlide.components, newComponent],
+    });
+
+    await playFeedback('click')
+
+    toast({
+      title: "Component added",
+      description: `Added new ${type} component`,
+    });
+  }, [currentSlide, updateSlide, toast, playFeedback]);
+
+  const handleNextSlide = useCallback(async () => {
+    if (currentSlideIndex < lesson.slides.length - 1) {
+      setCurrentSlideIndex(prev => prev + 1)
+      // Only play sound when completing the last slide
+      if (currentSlideIndex === lesson.slides.length - 2) {
+        await playFeedback('complete')
       }
-
-      setLesson((prevLesson) => {
-        // Create a new slides array with the updated slide
-        const updatedSlides = prevLesson.slides.map((slide, index) => {
-          if (index === currentSlideIndex) {
-            // Create a new slide with the updated components
-            return {
-              ...slide,
-              components: [...slide.components, newComponent],
-            }
-          }
-          return slide
-        })
-
-        // Return a new lesson object with the updated slides
-        return {
-          ...prevLesson,
-          slides: updatedSlides,
-          updatedAt: new Date().toISOString(),
-        }
-      })
-
-      // Close the sidebar on mobile after adding a component
-      if (isMobile) {
-        setSidebarOpen(false)
-      }
-
-      return newComponent.id
-    },
-    [currentSlideIndex, isMobile],
-  )
-
-  const toggleSidebar = (type: "slides" | "components") => {
-    if (sidebarOpen && activeSidebar === type) {
-      setSidebarOpen(false)
     } else {
-      setActiveSidebar(type)
-      setSidebarOpen(true)
+      toast({
+        title: "You've reached the end!",
+        description: "Great job completing all slides!",
+      })
     }
-  }
+  }, [currentSlideIndex, lesson.slides.length, toast, playFeedback])
 
-  const Backend = isMobile ? TouchBackend : HTML5Backend
+  const handlePrevSlide = useCallback(() => {
+    if (currentSlideIndex > 0) {
+      setCurrentSlideIndex(prev => prev - 1)
+    }
+  }, [currentSlideIndex])
 
-  // Mobile UI
-  if (isMobile) {
-    return (
-      <DndProvider backend={Backend}>
-        <div className="flex flex-col h-screen">
-          <LessonControls
-            lesson={lesson}
-            updateLessonMetadata={updateLessonMetadata}
-            exportLesson={exportLesson}
-            importLesson={importLesson}
-            previewMode={previewMode}
-            setPreviewMode={setPreviewMode}
-            isMobile={isMobile}
-          />
+  const handleAddSlide = useCallback(async () => {
+    const newSlide: Slide = {
+      id: `slide-${Date.now()}`,
+      title: `Slide ${lesson.slides.length + 1}`,
+      components: [],
+    }
 
-          {!previewMode ? (
-            <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="border-b p-2 flex justify-between items-center bg-muted/30">
-                <Button variant="outline" size="sm" onClick={() => toggleSidebar("slides")}>
-                  <Layers className="h-4 w-4 mr-2" />
-                  Slides
-                </Button>
-                <div className="text-sm font-medium">
-                  Slide {currentSlideIndex + 1} of {lesson.slides.length}
-                </div>
-                <Button variant="outline" size="sm" onClick={() => toggleSidebar("components")}>
-                  <LayoutGrid className="h-4 w-4 mr-2" />
-                  Components
-                </Button>
-              </div>
+    setLesson((prevLesson) => ({
+          ...prevLesson,
+      slides: [...prevLesson.slides, newSlide],
+    }))
 
-              <SlideEditor
-                key={`slide-editor-${currentSlideIndex}`}
-                slide={currentSlide}
-                updateSlide={updateSlide}
-                addComponent={addComponent}
-                isMobile={isMobile}
-              />
+    setCurrentSlideIndex(lesson.slides.length)
+    await playFeedback('click')
+  }, [lesson.slides.length, toast, playFeedback])
 
-              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                <SheetContent side="left" className="p-0 w-[300px] sm:w-[350px]">
-                  {activeSidebar === "slides" ? (
-                    <SlideNavigator
-                      slides={lesson.slides}
-                      currentSlideIndex={currentSlideIndex}
-                      setCurrentSlideIndex={(index) => {
-                        setCurrentSlideIndex(index)
-                        setSidebarOpen(false)
-                      }}
-                      addSlide={addSlide}
-                      deleteSlide={deleteSlide}
-                      reorderSlides={reorderSlides}
-                      isMobile={isMobile}
-                    />
-                  ) : (
-                    <ComponentLibrary isMobile={isMobile} onAddComponent={addComponent} />
-                  )}
-                </SheetContent>
-              </Sheet>
-            </div>
-          ) : (
-            <SlidePreview lesson={lesson} initialSlideIndex={currentSlideIndex} isMobile={isMobile} />
-          )}
-        </div>
-      </DndProvider>
-    )
-  }
+  const handleDeleteSlide = useCallback(async () => {
+    if (lesson.slides.length <= 1) {
+      toast({
+        title: "Cannot delete slide",
+        description: "A lesson must have at least one slide",
+        variant: "destructive",
+      })
+      await playFeedback('incorrect')
+      return
+    }
 
-  // Desktop UI
+    const newSlides = lesson.slides.filter((_, index) => index !== currentSlideIndex)
+    setLesson((prevLesson) => ({
+      ...prevLesson,
+      slides: newSlides,
+    }))
+
+    if (currentSlideIndex === lesson.slides.length - 1) {
+      setCurrentSlideIndex(prev => prev - 1)
+    }
+  }, [currentSlideIndex, lesson.slides, toast, playFeedback])
+
+  const handleSaveLesson = useCallback(async () => {
+    // Save lesson logic here
+    toast({
+      title: "Lesson saved!",
+      description: "Your lesson has been saved successfully.",
+    })
+    await playFeedback('complete')
+  }, [lesson, toast, playFeedback])
+
+  const handlePublishLesson = useCallback(async () => {
+    // Validate lesson
+    const hasEmptySlides = lesson.slides.some(slide => slide.components.length === 0)
+    if (hasEmptySlides) {
+      toast({
+        title: "Cannot publish lesson",
+        description: "Some slides are empty. Add content to all slides before publishing.",
+        variant: "destructive",
+      })
+      await playFeedback('incorrect')
+      return
+    }
+
+    // Publish lesson logic here
+    toast({
+      title: "Lesson published!",
+      description: "Your lesson is now available to students.",
+    })
+    await playFeedback('complete')
+  }, [toast, playFeedback])
+
+  const handleUpdateSlideTitle = useCallback(async (newTitle: string) => {
+    if (!currentSlide) return
+
+    const updatedSlide = {
+      ...currentSlide,
+      title: newTitle,
+    }
+
+    updateSlide(updatedSlide)
+  }, [currentSlide, updateSlide, toast, playFeedback])
+
   return (
-    <DndProvider backend={Backend}>
-      <div className="flex flex-col h-screen">
+    <CustomDndProvider>
+      <div className="flex flex-col h-screen max-h-screen overflow-hidden">
         <LessonControls
           lesson={lesson}
           updateLessonMetadata={updateLessonMetadata}
@@ -349,38 +368,108 @@ export function LessonBuilder() {
           previewMode={previewMode}
           setPreviewMode={setPreviewMode}
           isMobile={isMobile}
+          className="flex-shrink-0"
         />
-
-        <div className="flex flex-1 overflow-hidden">
-          {!previewMode ? (
-            <>
-              <SlideNavigator
-                slides={lesson.slides}
-                currentSlideIndex={currentSlideIndex}
-                setCurrentSlideIndex={setCurrentSlideIndex}
-                addSlide={addSlide}
-                deleteSlide={deleteSlide}
-                reorderSlides={reorderSlides}
-                isMobile={isMobile}
-              />
-
-              <div className="flex flex-1 overflow-hidden">
-                <ComponentLibrary isMobile={isMobile} onAddComponent={addComponent} />
-
-                <SlideEditor
-                  key={`slide-editor-${currentSlideIndex}`}
-                  slide={currentSlide}
-                  updateSlide={updateSlide}
-                  addComponent={addComponent}
-                  isMobile={isMobile}
+        <div className="flex flex-1 min-h-0 overflow-hidden">
+          {/* Far left - Slide Navigator */}
+          {!isMobile && (
+            <div className="w-[240px] border-r flex flex-col h-full bg-muted/10">
+              <ScrollArea className="flex-1">
+                <SlideNavigator
+                  slides={lesson.slides}
+                  currentSlideIndex={currentSlideIndex}
+                  setCurrentSlideIndex={setCurrentSlideIndex}
+                  addSlide={handleAddSlide}
+                  deleteSlide={handleDeleteSlide}
+                  reorderSlides={reorderSlides}
                 />
+              </ScrollArea>
+            </div>
+          )}
+
+          {/* Components Sidebar */}
+          {isMobile ? (
+            <>
+              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                <SheetContent side="left" className="w-[320px] sm:w-[400px] p-0 overflow-hidden">
+                  {activeSidebar === "components" ? (
+                    <ScrollArea className="h-full">
+                      <ComponentLibrary addComponent={addComponent} />
+                    </ScrollArea>
+                  ) : (
+                    <ScrollArea className="h-full">
+                      <SlideNavigator
+                        slides={lesson.slides}
+                        currentSlideIndex={currentSlideIndex}
+                        setCurrentSlideIndex={(index) => {
+                          setCurrentSlideIndex(index);
+                          setSidebarOpen(false);
+                        }}
+                        addSlide={handleAddSlide}
+                        deleteSlide={handleDeleteSlide}
+                        reorderSlides={reorderSlides}
+                      />
+                    </ScrollArea>
+                  )}
+                </SheetContent>
+              </Sheet>
+              
+              {/* Mobile FABs */}
+              <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-12 w-12 rounded-full shadow-lg"
+                  onClick={() => {
+                    setActiveSidebar("components");
+                    setSidebarOpen(true);
+                  }}
+                >
+                  <LayoutGrid className="h-6 w-6" />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-12 w-12 rounded-full shadow-lg"
+                  onClick={() => {
+                    setActiveSidebar("slides");
+                    setSidebarOpen(true);
+                  }}
+                >
+                  <span className="text-lg font-medium">
+                    {currentSlideIndex + 1}
+                  </span>
+                </Button>
               </div>
             </>
           ) : (
-            <SlidePreview lesson={lesson} initialSlideIndex={currentSlideIndex} isMobile={isMobile} />
+            <div className="w-[320px] border-r flex flex-col h-full">
+                <ComponentLibrary addComponent={addComponent} />
+            </div>
           )}
+
+          {/* Main content area */}
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+            {previewMode ? (
+              <SlidePreview
+                slide={currentSlide}
+                onNext={handleNextSlide}
+                onPrev={handlePrevSlide}
+                isFirst={currentSlideIndex === 0}
+                isLast={currentSlideIndex === lesson.slides.length - 1}
+              />
+            ) : (
+              <SlideEditor
+                slide={currentSlide}
+                updateSlide={updateSlide}
+                deleteSlide={deleteSlide}
+                slideIndex={currentSlideIndex}
+                className="duo-animated h-full"
+              />
+            )}
+          </div>
         </div>
       </div>
-    </DndProvider>
+    </CustomDndProvider>
   )
 }

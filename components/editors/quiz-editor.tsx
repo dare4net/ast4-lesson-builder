@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Plus, Trash2, Check, X } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface QuizOption {
   id: string
@@ -119,14 +120,26 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
         onValueChange={(value) => setActiveQuestionIndex(Number.parseInt(value))}
       >
         <div className="flex items-center justify-between mb-2">
-          <TabsList className="h-9 overflow-x-auto w-auto">
+          <TabsList className="h-9 overflow-x-auto w-auto bg-muted/50">
             {questions.map((q, index) => (
-              <TabsTrigger key={q.id} value={index.toString()} className="px-3 h-8">
+              <TabsTrigger
+                key={q.id}
+                value={index.toString()}
+                className={cn(
+                  "px-3 h-8 data-[state=active]:bg-[#E8F5E9] data-[state=active]:text-[#2E7D32]",
+                  "transition-colors"
+                )}
+              >
                 Q{index + 1}
               </TabsTrigger>
             ))}
           </TabsList>
-          <Button size="sm" variant="outline" onClick={addQuestion}>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={addQuestion}
+            className="hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
+          >
             <Plus className="h-4 w-4 mr-1" />
             Add Question
           </Button>
@@ -136,12 +149,13 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
           <TabsContent key={question.id} value={qIndex.toString()} className="m-0">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between py-2">
-                <CardTitle className="text-base">Question {qIndex + 1}</CardTitle>
+                <CardTitle className="text-base font-medium">Question {qIndex + 1}</CardTitle>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => deleteQuestion(qIndex)}
                   disabled={questions.length <= 1}
+                  className="hover:bg-destructive/10 hover:text-destructive"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -153,13 +167,19 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
                     value={question.question}
                     onChange={(e) => updateQuestion(qIndex, "question", e.target.value)}
                     placeholder="Enter your question"
+                    className="focus-visible:ring-[#4CAF50]"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>Answer Options</Label>
-                    <Button size="sm" variant="outline" onClick={() => addOption(qIndex)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => addOption(qIndex)}
+                      className="hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
+                    >
                       <Plus className="h-3 w-3 mr-1" />
                       Add Option
                     </Button>
@@ -171,12 +191,15 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
                         <Button
                           variant={option.isCorrect ? "default" : "outline"}
                           size="icon"
-                          className="h-8 w-8 shrink-0"
+                          className={cn(
+                            "h-8 w-8 shrink-0",
+                            option.isCorrect ? "bg-[#4CAF50] hover:bg-[#43A047]" : "hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
+                          )}
                           onClick={() => setCorrectOption(qIndex, oIndex)}
                           title={option.isCorrect ? "Correct Answer" : "Mark as Correct"}
                         >
                           {option.isCorrect ? (
-                            <Check className="h-4 w-4" />
+                            <Check className="h-4 w-4 text-white" />
                           ) : (
                             <div className="h-4 w-4 rounded-full border-2" />
                           )}
@@ -186,7 +209,11 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
                           value={option.text}
                           onChange={(e) => updateOption(qIndex, oIndex, "text", e.target.value)}
                           placeholder={`Option ${oIndex + 1}`}
-                          className="flex-1"
+                          className={cn(
+                            "flex-1",
+                            option.isCorrect && "focus-visible:ring-[#4CAF50]",
+                            "transition-colors"
+                          )}
                         />
 
                         <Button
@@ -194,7 +221,7 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
                           size="icon"
                           onClick={() => deleteOption(qIndex, oIndex)}
                           disabled={question.options.length <= 2}
-                          className="h-8 w-8"
+                          className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
                         >
                           <X className="h-4 w-4" />
                         </Button>

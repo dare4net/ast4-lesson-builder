@@ -125,94 +125,101 @@ export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChang
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label>Text with Blanks</Label>
-        <div className="flex items-center gap-2 mb-2">
-          <p className="text-sm text-muted-foreground">
-            Use &#123;&#123;blank&#125;&#125; where you want an input field to appear
-          </p>
-          <Button size="sm" variant="outline" onClick={addBlank}>
-            <Plus className="h-3 w-3 mr-1" />
-            Add Blank
-          </Button>
+        <Label className="text-[#2E7D32]">Text Content</Label>
+        <div className="space-y-1">
+          <p className="text-sm text-[#2E7D32]">Use {'{{'} blank {'}}' } to mark blank spaces</p>
+          <Textarea
+            value={text}
+            onChange={(e) => handleTextChange(e.target.value)}
+            placeholder="Enter text with {{blank}} placeholders..."
+            rows={5}
+            className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
+          />
         </div>
-        <Textarea
-          value={text}
-          onChange={(e) => handleTextChange(e.target.value)}
-          placeholder="Enter text with {{blank}} placeholders"
-          rows={4}
-        />
       </div>
 
-      <div className="border rounded-md p-3 bg-muted/20">
-        <Label className="mb-1 block">Preview</Label>
-        <p>{previewText}</p>
+      <div className="space-y-2">
+        <Label className="text-[#2E7D32]">Preview</Label>
+        <div className="p-4 rounded-md border border-[#4CAF50] bg-[#E8F5E9]">
+          <p className="text-[#2E7D32] whitespace-pre-wrap">{previewText}</p>
+        </div>
       </div>
 
       {blanks.length > 0 && (
-        <div className="space-y-2">
-          <Label>Answers</Label>
-          <ScrollArea className="h-[250px] border rounded-md p-2">
-            <Tabs
-              value={activeBlankIndex.toString()}
+        <Card className="border-[#4CAF50]">
+          <CardContent className="p-4">
+            <Tabs 
+              value={activeBlankIndex.toString()} 
               onValueChange={(value) => setActiveBlankIndex(Number.parseInt(value))}
             >
-              <TabsList className="h-9 overflow-x-auto w-auto">
-                {blanks.map((blank, index) => (
-                  <TabsTrigger key={blank.id} value={index.toString()} className="px-3 h-8">
-                    Blank {index + 1}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+              <ScrollArea className="h-[60px] w-full mb-4">
+                <TabsList className="w-full h-auto flex-wrap bg-[#E8F5E9]">
+                  {blanks.map((blank, index) => (
+                    <TabsTrigger
+                      key={blank.id}
+                      value={index.toString()}
+                      className="h-8 data-[state=active]:bg-[#4CAF50] data-[state=active]:text-white text-[#2E7D32] hover:text-[#2E7D32] hover:bg-[#E8F5E9]/80"
+                    >
+                      Blank {index + 1}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </ScrollArea>
 
-              {blanks.map((blank, index) => (
-                <TabsContent key={blank.id} value={index.toString()} className="m-0 space-y-4">
-                  <Card>
-                    <CardContent className="p-4 space-y-4">
-                      <div className="space-y-2">
-                        <Label>Correct Answer</Label>
+              {blanks.map((blank, blankIndex) => (
+                <TabsContent key={blank.id} value={blankIndex.toString()} className="m-0 space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-[#2E7D32]">Correct Answer</Label>
+                    <Input
+                      value={blank.answer}
+                      onChange={(e) => updateBlank(blankIndex, "answer", e.target.value)}
+                      placeholder="Enter correct answer"
+                      className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[#2E7D32]">Alternative Answers</Label>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => addAlternative(blankIndex)}
+                        className="border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add Alternative
+                      </Button>
+                    </div>
+
+                    {blank.alternatives?.map((alt, altIndex) => (
+                      <div key={altIndex} className="flex items-center gap-2">
                         <Input
-                          value={blank.answer}
-                          onChange={(e) => updateBlank(index, "answer", e.target.value)}
-                          placeholder="Correct answer"
+                          value={alt}
+                          onChange={(e) => updateAlternative(blankIndex, altIndex, e.target.value)}
+                          placeholder={`Alternative ${altIndex + 1}`}
+                          className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
                         />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeAlternative(blankIndex, altIndex)}
+                          className="text-[#4CAF50] hover:bg-[#E8F5E9] hover:text-[#2E7D32]"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
                       </div>
+                    ))}
 
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <Label>Alternative Answers (Optional)</Label>
-                          <Button size="sm" variant="outline" onClick={() => addAlternative(index)}>
-                            <Plus className="h-3 w-3 mr-1" />
-                            Add
-                          </Button>
-                        </div>
-
-                        {blank.alternatives && blank.alternatives.length > 0 ? (
-                          <div className="space-y-2">
-                            {blank.alternatives.map((alt, altIndex) => (
-                              <div key={altIndex} className="flex items-center gap-2">
-                                <Input
-                                  value={alt}
-                                  onChange={(e) => updateAlternative(index, altIndex, e.target.value)}
-                                  placeholder={`Alternative ${altIndex + 1}`}
-                                  className="flex-1"
-                                />
-                                <Button variant="ghost" size="icon" onClick={() => removeAlternative(index, altIndex)}>
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-sm text-muted-foreground">No alternative answers added yet</p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                    {(!blank.alternatives || blank.alternatives.length === 0) && (
+                      <p className="text-sm text-[#2E7D32]/70 italic">No alternative answers</p>
+                    )}
+                  </div>
                 </TabsContent>
               ))}
             </Tabs>
-          </ScrollArea>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   )

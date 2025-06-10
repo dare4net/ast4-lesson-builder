@@ -1,5 +1,7 @@
 "use client"
 
+import { cn } from "@/lib/utils"
+
 interface BulletListRendererProps {
   items: string[]
   type?: "ordered" | "unordered"
@@ -7,21 +9,22 @@ interface BulletListRendererProps {
 }
 
 export function BulletListRenderer({ items, type = "unordered", isEditing = false }: BulletListRendererProps) {
-  if (type === "ordered") {
-    return (
-      <ol className="list-decimal pl-5 space-y-1">
-        {items.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ol>
-    )
-  }
+  const listClasses = cn(
+    "my-6 ml-6 space-y-2 [&>li]:mt-2",
+    type === "ordered" ? "[list-style-type:decimal]" : "[list-style-type:disc]"
+  )
+
+  const ListComponent = type === "ordered" ? "ol" : "ul"
 
   return (
-    <ul className="list-disc pl-5 space-y-1">
+    <ListComponent className={listClasses}>
       {items.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li
+          key={index}
+          className="text-muted-foreground marker:text-foreground"
+          dangerouslySetInnerHTML={{ __html: item }}
+        />
       ))}
-    </ul>
+    </ListComponent>
   )
 }

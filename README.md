@@ -1,30 +1,91 @@
-# Lesson builder platform
+# Afterschool Tech Lesson Builder
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+An interactive lesson builder for creating engaging educational content with Duolingo-style feedback and gamification.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/damidreys-projects/v0-lesson-builder-platform)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/XfTzz3NyE4t)
+## Features
 
-## Overview
+- Drag-and-drop lesson building
+- Interactive components (quizzes, matching pairs, code editors, etc.)
+- Duolingo-style animations and sound effects
+- Real-time preview mode
+- Progress tracking and scoring
+- Export/import lessons as JSON
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Sound Effects System
 
-## Deployment
+The application uses a robust sound effects system powered by Howler.js. Sound effects include:
 
-Your project is live at:
+- `correct.mp3`: Played when an answer is correct
+- `incorrect.mp3`: Played when an answer is incorrect
+- `click.mp3`: Played for general UI interactions
+- `complete.mp3`: Played when a lesson or section is completed
+- `levelUp.mp3`: Played when achieving a milestone
+- `streak.mp3`: Played when maintaining a streak
 
-**[https://vercel.com/damidreys-projects/v0-lesson-builder-platform](https://vercel.com/damidreys-projects/v0-lesson-builder-platform)**
+Sound effects can be customized by placing MP3 files in the `/public/sounds` directory. The system will automatically fall back to hosted versions if local files are not found.
 
-## Build your app
+## Animations
 
-Continue building your app on:
+The application includes a variety of Duolingo-style animations:
 
-**[https://v0.dev/chat/projects/XfTzz3NyE4t](https://v0.dev/chat/projects/XfTzz3NyE4t)**
+- `duo-bounce`: Bouncy feedback for correct answers
+- `duo-shake`: Shake effect for incorrect answers
+- `duo-celebrate`: Celebration animation for completing lessons
+- `duo-pop`: Pop effect for button clicks
+- `duo-float`: Floating animation for hints and tooltips
+- `duo-pulse`: Pulsing effect for streaks and achievements
+- `duo-flip`: Card flip animation
+- `duo-wiggle`: Wiggle animation for hints
+- `duo-zoom`: Zoom animation for focus
 
-## How It Works
+Animations can be combined and customized using utility classes:
+- `duo-delay-[100-500]`: Add animation delays
+- `duo-duration-[100-500]`: Customize animation duration
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+## Getting Started
+
+1. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   pnpm install
+   ```
+
+2. Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   ```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Customizing Feedback
+
+The feedback system can be customized through the settings panel:
+
+- Enable/disable sound effects
+- Adjust sound volume
+- Enable/disable animations
+- Test different feedback types
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Sound effects from [Mixkit](https://mixkit.co/free-sound-effects/)
+- Animations inspired by Duolingo's gamification system

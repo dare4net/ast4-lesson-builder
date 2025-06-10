@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { CheckCircle2 } from "lucide-react"
 
 interface Hotspot {
   id: string
@@ -123,7 +124,7 @@ export function HotspotRenderer({
                     <button
                       className={`absolute w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                         isDiscovered
-                          ? "bg-primary text-primary-foreground"
+                          ? "bg-[#E8F5E9] text-[#2E7D32] border border-[#4CAF50]"
                           : "bg-primary/20 hover:bg-primary/40 text-primary"
                       }`}
                       style={{
@@ -149,9 +150,16 @@ export function HotspotRenderer({
         </div>
 
         <div className="mt-4">
-          <p className="text-sm">
-            Discovered: {discoveredHotspots.length} of {hotspots.length} hotspots
-          </p>
+          {discoveredHotspots.length === hotspots.length ? (
+            <div className="p-4 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
+              <p className="font-medium">You Rock! 🎉 All hotspots discovered!</p>
+            </div>
+          ) : (
+            <p className="text-sm">
+              Discovered: {discoveredHotspots.length} of {hotspots.length} hotspots
+            </p>
+          )}
         </div>
       </CardContent>
       <CardFooter>

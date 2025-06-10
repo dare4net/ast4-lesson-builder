@@ -152,18 +152,18 @@ export function FillInTheBlankRenderer({
                   className={`w-full inline-block ${
                     isSubmitted
                       ? correctAnswers[blanks[index].id]
-                        ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                        : "border-red-500 bg-red-50 dark:bg-red-900/20"
+                        ? "border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]"
+                        : "border-destructive bg-destructive/20 text-destructive"
                       : ""
                   }`}
                 />
                 {isSubmitted && (
                   <span className="inline-block ml-2">
                     {correctAnswers[blanks[index].id] ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-500 inline" />
+                      <CheckCircle2 className="h-4 w-4 text-[#4CAF50] inline" />
                     ) : (
                       <>
-                        <XCircle className="h-4 w-4 text-red-500 inline mr-1" />
+                        <XCircle className="h-4 w-4 text-destructive inline mr-1" />
                         <span className="text-sm text-muted-foreground">{blanks[index].answer}</span>
                       </>
                     )}
@@ -190,26 +190,26 @@ export function FillInTheBlankRenderer({
             <div
               className={`mt-4 p-3 rounded flex items-center ${
                 score === points
-                  ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300"
+                  ? "bg-[#E8F5E9] text-[#2E7D32]"
                   : score > 0
-                    ? "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300"
-                    : "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                    ? "bg-[#FFF3E0] text-[#E65100]"
+                    : "bg-destructive/10 text-destructive"
               }`}
             >
               {score === points ? (
                 <>
-                  <CheckCircle2 className="h-5 w-5 mr-2" />
-                  <span>Perfect! All answers are correct.</span>
+                  <CheckCircle2 className="h-5 w-5 mr-2 text-[#4CAF50]" />
+                  <span>You Rock! 🎉 All answers are correct!</span>
                 </>
               ) : score > 0 ? (
                 <>
-                  <CheckCircle2 className="h-5 w-5 mr-2" />
-                  <span>Good job! Some answers are correct.</span>
+                  <CheckCircle2 className="h-5 w-5 mr-2 text-[#FB8C00]" />
+                  <span>Good job! Keep trying to get them all correct!</span>
                 </>
               ) : (
                 <>
                   <XCircle className="h-5 w-5 mr-2" />
-                  <span>Try again! None of the answers are correct.</span>
+                  <span>Try again! You can do better!</span>
                 </>
               )}
             </div>

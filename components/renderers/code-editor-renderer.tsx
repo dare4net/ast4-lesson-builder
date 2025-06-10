@@ -5,8 +5,9 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Play, Check, RefreshCw } from "lucide-react"
+import { CheckCircle2, XCircle, Play, RefreshCw } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
 
 interface CodeEditorRendererProps {
   title?: string
@@ -94,7 +95,7 @@ export function CodeEditorRenderer({
         setOutput(`Running ${language} code is not supported in this demo.`)
       }
     } catch (error) {
-      setOutput(`Error: ${error.message}`)
+      setOutput(`Error: ${error instanceof Error ? error.message : 'An unknown error occurred'}`)
     }
 
     setIsRunning(false)
@@ -157,9 +158,13 @@ export function CodeEditorRenderer({
 
       // Generate output summary
       const passedCount = Object.values(results).filter(Boolean).length
-      setOutput(`${passedCount} of ${testCases.length} tests passed.`)
+      if (passedCount === testCases.length) {
+        setOutput("You Rock! 🎉 All tests passed successfully!")
+      } else {
+        setOutput(`${passedCount} of ${testCases.length} tests passed.`)
+      }
     } catch (error) {
-      setOutput(`Error running tests: ${error.message}`)
+      setOutput(`Error running tests: ${error instanceof Error ? error.message : 'An unknown error occurred'}`)
     }
 
     setIsRunning(false)
@@ -217,7 +222,10 @@ export function CodeEditorRenderer({
           <div className="border rounded-md">
             <div className="bg-muted px-3 py-2 border-b text-sm font-medium">Output</div>
             <ScrollArea className="h-[100px]">
-              <pre className="p-3 text-sm whitespace-pre-wrap">{output}</pre>
+              <pre className={cn(
+                "p-3 text-sm whitespace-pre-wrap",
+                output.includes("You Rock!") && "bg-[#E8F5E9] text-[#2E7D32]"
+              )}>{output}</pre>
             </ScrollArea>
           </div>
         )}
@@ -228,11 +236,12 @@ export function CodeEditorRenderer({
             {testCases.map((testCase) => (
               <div
                 key={testCase.id}
-                className={`p-2 rounded-md flex items-center justify-between ${
+                className={cn(
+                  "p-2 rounded-md flex items-center justify-between",
                   testResults[testCase.id]
-                    ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300"
-                    : "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300"
-                }`}
+                    ? "bg-[#E8F5E9] text-[#2E7D32] border border-[#4CAF50]"
+                    : "bg-destructive/20 text-destructive border border-destructive"
+                )}
               >
                 <div>
                   <span className="font-medium">Test {testCases.indexOf(testCase) + 1}</span>
@@ -240,7 +249,11 @@ export function CodeEditorRenderer({
                     Input: {testCase.input.length > 20 ? `${testCase.input.slice(0, 20)}...` : testCase.input}
                   </span>
                 </div>
-                {testResults[testCase.id] ? <Check className="h-4 w-4" /> : <span className="text-sm">Failed</span>}
+                {testResults[testCase.id] ? (
+                  <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
+                ) : (
+                  <XCircle className="h-5 w-5 text-destructive" />
+                )}
               </div>
             ))}
           </div>
@@ -256,10 +269,14 @@ export function CodeEditorRenderer({
             <Button
               onClick={runTests}
               disabled={isRunning || isSubmitted}
-              variant={isSubmitted ? "outline" : "default"}
+              className={cn(
+                isSubmitted && Object.values(testResults).every(Boolean)
+                  ? "bg-[#4CAF50] text-white hover:bg-[#43A047]"
+                  : ""
+              )}
             >
-              <Check className="h-4 w-4 mr-1" />
-              Submit
+              <CheckCircle2 className="h-4 w-4 mr-1" />
+              {isSubmitted && Object.values(testResults).every(Boolean) ? "Complete! 🎉" : "Submit"}
             </Button>
           )}
           <Button onClick={resetEditor} variant="outline">
