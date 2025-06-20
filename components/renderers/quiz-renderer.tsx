@@ -56,7 +56,7 @@ export function QuizRenderer({
   const handleAnswerSelect = async (optionId: string) => {
     if (isAnswered) return;
     setSelectedAnswer(optionId);
-    await playFeedback('click', { animation: false });
+    await playFeedback('click', { animation: false, sound: true });
   };
 
   const handleCheckAnswer = async () => {
