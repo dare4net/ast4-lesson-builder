@@ -38,47 +38,102 @@ export function MatchingPairsRenderer({
   points = 15,
   isEditing = false,
   scoreContext,
-}: MatchingPairsRendererProps) {
+  savedState,
+  setComponentState,
+}: MatchingPairsRendererProps & { savedState?: any; setComponentState?: (state: any) => void }) {
   const { playFeedback } = useFeedback();
   const [mounted, setMounted] = useState(false);
-  const [leftItems, setLeftItems] = useState<(MatchingPair & { selected: boolean })[]>([]);
-  const [rightItems, setRightItems] = useState<(MatchingPair & { selected: boolean })[]>([]);
-  const [selectedLeft, setSelectedLeft] = useState<string | null>(null);
-  const [selectedRight, setSelectedRight] = useState<string | null>(null);
-  const [matches, setMatches] = useState<Record<string, { rightId: string; color: string }>>({});
-  const [isChecking, setIsChecking] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [matchStats, setMatchStats] = useState({
+
+  // State initialization: use savedState if present, else shuffle and persist
+  const [leftItems, setLeftItems] = useState<(MatchingPair & { selected: boolean })[]>(() => {
+    if (savedState?.leftItems) return savedState.leftItems;
+    return pairs.map((pair) => ({ ...pair, selected: false }));
+  });
+  const [rightItems, setRightItems] = useState<(MatchingPair & { selected: boolean })[]>(() => {
+    if (savedState?.rightItems) return savedState.rightItems;
+    let arr = pairs.map((pair) => ({ ...pair, selected: false }));
+    if (shuffled && !savedState?.rightItems) arr = [...arr].sort(() => Math.random() - 0.5);
+    return arr;
+  });
+  const [selectedLeft, setSelectedLeft] = useState(() => savedState?.selectedLeft ?? null);
+  const [selectedRight, setSelectedRight] = useState(() => savedState?.selectedRight ?? null);
+  const [matches, setMatches] = useState(() => savedState?.matches ?? {});
+  const [isChecking, setIsChecking] = useState(() => savedState?.isChecking ?? false);
+  const [isCorrect, setIsCorrect] = useState(() => savedState?.isCorrect ?? false);
+  const [matchStats, setMatchStats] = useState(() => savedState?.matchStats ?? {
     correctCount: 0,
     noneCorrect: false,
     someCorrect: false
   });
 
+  // On first mount, persist the initial state if no savedState
   useEffect(() => {
     setMounted(true);
+    console.log('[MatchingPairsRenderer] MOUNT', {
+      savedState,
+      setComponentState,
+      typeofSetComponentState: typeof setComponentState,
+    });
+    if (!savedState) {
+      setComponentState?.({
+        leftItems,
+        rightItems,
+        selectedLeft: null,
+        selectedRight: null,
+        matches: {},
+        isChecking: false,
+        isCorrect: false,
+        matchStats: { correctCount: 0, noneCorrect: false, someCorrect: false },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Persist state on every check or relevant change
+  useEffect(() => {
+    if (!mounted) return;
+    console.log('[MatchingPairsRenderer] Persisting state', {
+      leftItems,
+      rightItems,
+      selectedLeft,
+      selectedRight,
+      matches,
+      isChecking,
+      isCorrect,
+      matchStats,
+      setComponentState,
+      typeofSetComponentState: typeof setComponentState,
+    });
+    setComponentState?.({
+      leftItems,
+      rightItems,
+      selectedLeft,
+      selectedRight,
+      matches,
+      isChecking,
+      isCorrect,
+      matchStats,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leftItems, rightItems, selectedLeft, selectedRight, matches, isChecking, isCorrect, matchStats]);
 
   // Initialize the game
   useEffect(() => {
-    if (isEditing) {
-      setLeftItems(pairs.map((pair) => ({ ...pair, selected: false })))
-      setRightItems(pairs.map((pair) => ({ ...pair, selected: false })))
-      return
-    }
+    if (isEditing || savedState) return;
 
-    const leftArray = pairs.map((pair) => ({ ...pair, selected: false }))
-    let rightArray = pairs.map((pair) => ({ ...pair, selected: false }))
+    const leftArray = pairs.map((pair) => ({ ...pair, selected: false }));
+    let rightArray = pairs.map((pair) => ({ ...pair, selected: false }));
 
     if (shuffled) {
-      rightArray = [...rightArray].sort(() => Math.random() - 0.5)
+      rightArray = [...rightArray].sort(() => Math.random() - 0.5);
     }
 
-    setLeftItems(leftArray)
-    setRightItems(rightArray)
-    setMatches({})
-    setIsChecking(false)
-    setIsCorrect(false)
-  }, [pairs, shuffled, isEditing])
+    setLeftItems(leftArray);
+    setRightItems(rightArray);
+    setMatches({});
+    setIsChecking(false);
+    setIsCorrect(false);
+  }, [pairs, shuffled, isEditing, savedState])
   const handleLeftClick = async (id: string) => {
     // Play click sound immediately if item is clickable
     if (!(isChecking || Object.keys(matches).includes(id))) {
@@ -135,25 +190,29 @@ export function MatchingPairsRenderer({
 
   const handleCheck = async () => {
     setIsChecking(true);
-    
     const { correctCount, allCorrect, noneCorrect, someCorrect } = checkAllMatches();
-
     setIsCorrect(allCorrect);
-    setMatchStats({
-      correctCount,
-      noneCorrect,
-      someCorrect
-    });
-
+    setMatchStats({ correctCount, noneCorrect, someCorrect });
     if (allCorrect) {
-      await playFeedback('complete');
+      await playFeedback('correct');
       if (scoreContext) {
         scoreContext.addPoints(points);
       }
     } else {
       await playFeedback('incorrect');
     }
-  }
+    // Persist state after check
+    setComponentState?.({
+      leftItems,
+      rightItems,
+      selectedLeft,
+      selectedRight,
+      matches,
+      isChecking: true,
+      isCorrect: allCorrect,
+      matchStats: { correctCount, noneCorrect, someCorrect },
+    });
+  };
 
   const resetGame = async () => {
     const leftArray = pairs.map((pair) => ({ ...pair, selected: false }))
@@ -170,7 +229,19 @@ export function MatchingPairsRenderer({
     setMatches({})
     setIsChecking(false)
     setIsCorrect(false)
+    setMatchStats({ correctCount: 0, noneCorrect: false, someCorrect: false })
     await playFeedback('click', { animation: false })
+    // Persist state after reset
+    setComponentState?.({
+      leftItems: leftArray,
+      rightItems: rightArray,
+      selectedLeft: null,
+      selectedRight: null,
+      matches: {},
+      isChecking: false,
+      isCorrect: false,
+      matchStats: { correctCount: 0, noneCorrect: false, someCorrect: false },
+    });
   }
 
   if (!mounted) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle, MoveUp, MoveDown } from "lucide-react"
@@ -24,7 +24,15 @@ interface DragDropRendererProps {
     totalPossible: number
     addPoints: (points: number) => void
   }
+  savedState?: any // Persisted state from parent
+  setComponentState?: (state: any) => void // State persister
 }
+
+// Generate a random pastel color
+const generatePastelColor = () => {
+  const hue = Math.floor(Math.random() * 360);
+  return `hsl(${hue}, 70%, 85%)`;
+};
 
 export function DragDropRenderer({
   title = "Arrange in the correct order",
@@ -33,41 +41,49 @@ export function DragDropRenderer({
   points = 15,
   isEditing = false,
   scoreContext,
+  savedState,
+  setComponentState,
 }: DragDropRendererProps) {
   const { playFeedback } = useFeedback();
-  const [dragItems, setDragItems] = useState<DragItem[]>([]);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // State initialization: use savedState if present, else shuffle and persist
+  const [dragItems, setDragItems] = useState<({
+    id: string;
+    text: string;
+    correctIndex: number;
+    color?: string;
+  })[]>(() => {
+    if (savedState?.dragItems) return savedState.dragItems;
+    const withColor = (arr: DragItem[]) => arr.map(item => ({ ...item, color: generatePastelColor() }));
+    if (isEditing) return withColor([...items].sort((a, b) => a.correctIndex - b.correctIndex));
+    let arr = withColor([...items]);
+    if (shuffled) arr = [...arr].sort(() => Math.random() - 0.5);
+    return arr;
+  });
+  const [isSubmitted, setIsSubmitted] = useState(() => savedState?.isSubmitted || false);
+  const [isCorrect, setIsCorrect] = useState(() => savedState?.isCorrect || false);
 
+  // On first mount, persist the initial state if no savedState
   useEffect(() => {
     setMounted(true);
+    if (!savedState) {
+      setComponentState?.({ dragItems, isSubmitted: false, isCorrect: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Initialize the items
+  // Persist state on every relevant change, but only after mount
   useEffect(() => {
-    if (isEditing) {
-      // In editing mode, show items in correct order
-      setDragItems([...items].sort((a, b) => a.correctIndex - b.correctIndex));
-      return;
-    }
-
-    // In play mode, shuffle if needed
-    let newItems = [...items];
-    if (shuffled) {
-      newItems = [...newItems].sort(() => Math.random() - 0.5);
-    }
-    setDragItems(newItems);
-  }, [items, shuffled, isEditing]);
+    if (!mounted) return;
+    setComponentState?.({ dragItems, isSubmitted, isCorrect });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragItems, isSubmitted, isCorrect]);
 
   const moveItem = async (index: number, direction: 'up' | 'down') => {
     if (isSubmitted) return;
-
     const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= dragItems.length) return;
-
     await playFeedback('click', { sound: true, animation: false });
-    
     const newItems = [...dragItems];
     const temp = newItems[index];
     newItems[index] = newItems[newIndex];
@@ -79,9 +95,8 @@ export function DragDropRenderer({
     setIsSubmitted(true);
     const isAllCorrect = dragItems.every((item, index) => item.correctIndex === index);
     setIsCorrect(isAllCorrect);
-
     if (isAllCorrect) {
-      await playFeedback('complete');
+      await playFeedback('correct');
       if (scoreContext) {
         scoreContext.addPoints(points);
       }
@@ -90,8 +105,10 @@ export function DragDropRenderer({
     }
   };
 
+  // When resetting, assign new pastel colors
   const handleReset = async () => {
-    let newItems = [...items];
+    const withColor = (arr: DragItem[]) => arr.map(item => ({ ...item, color: generatePastelColor() }));
+    let newItems = withColor([...items]);
     if (shuffled) {
       newItems = [...newItems].sort(() => Math.random() - 0.5);
     }
@@ -122,11 +139,11 @@ export function DragDropRenderer({
     <Card className="duo-card">
       <div className="p-6 space-y-6">
         <h2 className="text-xl font-bold">{title}</h2>
-        
         <div className="space-y-2">
           {dragItems.map((item, index) => (
             <div
               key={item.id}
+              style={{ backgroundColor: item.color }}
               className={cn(
                 "p-4 rounded-lg flex items-center gap-4 transition-colors duration-200",
                 isSubmitted && item.correctIndex === index 
@@ -140,7 +157,6 @@ export function DragDropRenderer({
                 <span className="text-muted-foreground mr-2">{index + 1}.</span>
                 {item.text}
               </div>
-              
               {!isSubmitted && (
                 <div className="flex gap-2">
                   <Button
@@ -165,7 +181,6 @@ export function DragDropRenderer({
                   </Button>
                 </div>
               )}
-
               {isSubmitted && (
                 <div className="animate-in fade-in duration-300">
                   {item.correctIndex === index ? (
@@ -178,7 +193,6 @@ export function DragDropRenderer({
             </div>
           ))}
         </div>
-
         <div className="space-y-4 pt-2">
           {isSubmitted && (
             <>
@@ -200,7 +214,6 @@ export function DragDropRenderer({
                   </>
                 )}
               </div>
-
               {isCorrect ? (
                 <Button
                   className="w-full bg-[#4CAF50] text-white hover:bg-[#43A047]"
@@ -218,7 +231,6 @@ export function DragDropRenderer({
               )}
             </>
           )}
-
           {!isSubmitted && (
             <Button
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"

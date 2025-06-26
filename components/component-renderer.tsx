@@ -1,11 +1,13 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import type { Component, ComponentType } from "@/types/lesson"
 import { createElement } from "react"
+import React from 'react';
+
+type ComponentType = 'quiz' | 'dragDrop' | 'matchingPairs' | 'fallback' | string;
 
 type ComponentRenderers = {
-  [K in ComponentType | 'fallback']?: React.ComponentType<any>;
+  [key in ComponentType]: React.ComponentType<any>;
 };
 
 // Dynamically import all component renderers
@@ -50,42 +52,34 @@ const componentRenderers: ComponentRenderers = {
 }
 
 interface ComponentRendererProps {
-  component: Component
-  isEditing?: boolean
-  onClick?: () => void
-  scoreContext?: {
-    score: number
-    totalPossible: number
-    addPoints: (points: number) => void
+  component: any;
+  scoreContext?: any;
+  savedState?: any;
+  setComponentState?: (state: any) => void;
+}
+
+const gamifiedTypes: ComponentType[] = [
+  'quiz',
+  'dragDrop',
+  'matchingPairs',
+  'score-board', // ensure scoreboard always gets scoreContext
+  // add other gamified types as needed
+];
+
+const ComponentRendererBase = function ComponentRenderer({ component, scoreContext, savedState, setComponentState }: any) {
+  const Renderer: React.ComponentType<any> = componentRenderers[component.type] || componentRenderers.fallback;
+  if (gamifiedTypes.includes(component.type)) {
+    return (
+      <Renderer
+        {...component.props}
+        scoreContext={scoreContext}
+        savedState={savedState}
+        setComponentState={setComponentState}
+      />
+    );
+  } else {
+    return <Renderer {...component.props} scoreContext={scoreContext} />;
   }
-}
+};
 
-interface QuizQuestion {
-  id: string;
-  question: string;
-  options: Array<{
-    id: string;
-    text: string;
-    isCorrect: boolean;
-  }>;
-  explanation?: string;
-}
-
-interface QuizProps {
-  title?: string;
-  questions: QuizQuestion[];
-  isEditing?: boolean;
-  onScoreUpdate?: (score: number) => void;
-}
-
-export function ComponentRenderer({ component, isEditing = false, onClick, scoreContext }: ComponentRendererProps) {
-  // Get the appropriate renderer or use fallback
-  const Renderer = componentRenderers[component.type] || componentRenderers.fallback
-  if (!Renderer) return null;
-
-  return (
-    <div className={isEditing ? "cursor-pointer" : ""} onClick={isEditing ? onClick : undefined}>
-      {createElement(Renderer, { ...component.props, isEditing, scoreContext })}
-    </div>
-  )
-}
+export const ComponentRenderer = React.memo(ComponentRendererBase);

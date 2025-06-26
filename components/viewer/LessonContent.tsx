@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -26,6 +26,9 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const currentSlide = lesson.slides[currentSlideIndex];
     const progress = ((currentSlideIndex + 1) / lesson.slides.length) * 100;
 
+    // Persist state for each component by id
+    const [componentStates, setComponentStates] = useState<Record<string, any>>({});
+
     useImperativeHandle(ref, () => ({
       setCurrentSlideIndex: onSlideChange
     }), [onSlideChange]);
@@ -33,6 +36,28 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     useEffect(() => {
       onScoreUpdate?.(score, totalPossible);
     }, [score, totalPossible, onScoreUpdate]);
+
+    useEffect(() => {
+      // Sum points for all gamified components in all slides
+      let total = 0;
+      for (const slide of lesson.slides) {
+        for (const component of slide.components) {
+          // List all gamified types here
+          if (
+            [
+              'quiz',
+              'drag-drop',
+              'matching-pairs',
+              // add other gamified types as needed
+            ].includes(component.type) &&
+            typeof component.props?.points === 'number'
+          ) {
+            total += component.props.points;
+          }
+        }
+      }
+      setTotalPossible(total);
+    }, [lesson]);
 
     const goToNextSlide = () => {
       if (currentSlideIndex < lesson.slides.length - 1) {
@@ -46,9 +71,13 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       }
     };
 
-    const addPoints = (points: number) => {
+    const addPoints = useCallback((points: number) => {
       setScore((prevScore) => prevScore + points);
-    };
+    }, []);
+
+    const setComponentState = useCallback((id: string, state: any) => {
+      setComponentStates(prev => ({ ...prev, [id]: state }));
+    }, []);
 
     const scoreContext = {
       score,
@@ -74,6 +103,8 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                       <ComponentRenderer 
                         component={component} 
                         scoreContext={scoreContext}
+                        savedState={componentStates[component.id]}
+                        setComponentState={(state: any) => setComponentState(component.id, state)}
                       />
                     </div>
                   ))}
@@ -116,4 +147,4 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       </div>
     );
   }
-); 
+);

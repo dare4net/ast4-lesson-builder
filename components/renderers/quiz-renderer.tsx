@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { useFeedback } from '@/lib/feedback-context';
@@ -39,15 +39,40 @@ export function QuizRenderer({
   isEditing = false,
   scoreContext,
   onScoreUpdate,
-}: QuizRendererProps) {
+  savedState,
+  setComponentState,
+}: QuizRendererProps & { savedState?: any; setComponentState?: (state: any) => void }) {
+  // Use savedState for initial state if available
   const [mounted, setMounted] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [score, setScore] = useState(0);
-  const [animationClass, setAnimationClass] = useState('');
-  const [isComplete, setIsComplete] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(savedState?.currentQuestion ?? 0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(savedState?.selectedAnswer ?? null);
+  const [isAnswered, setIsAnswered] = useState(savedState?.isAnswered ?? false);
+  const [score, setScore] = useState(savedState?.score ?? 0);
+  const [animationClass, setAnimationClass] = useState(savedState?.animationClass ?? '');
+  const [isComplete, setIsComplete] = useState(savedState?.isComplete ?? false);
   const { playFeedback } = useFeedback();
+  const isFirstRender = useRef(true);
+
+  // Persist state on every change
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const newState = {
+      currentQuestion,
+      selectedAnswer,
+      isAnswered,
+      score,
+      animationClass,
+      isComplete,
+    };
+    // Shallow compare with savedState
+    const isEqual = savedState && Object.keys(newState).every(key => newState[key] === savedState[key]);
+    if (!isEqual) {
+      setComponentState?.(newState);
+    }
+  }, [currentQuestion, selectedAnswer, isAnswered, score, animationClass, isComplete, setComponentState, savedState]);
 
   useEffect(() => {
     setMounted(true);
@@ -172,7 +197,7 @@ export function QuizRenderer({
                   <CheckCircle2 className="w-5 h-5 text-[#4CAF50]" />
                   You Rock! 🎉
                 </p>
-                <p className="text-sm text-muted-foreground">Final Score: {score + 1}/{questions.length}</p>
+                <p className="text-sm text-muted-foreground">Final Score: {score}/{questions.length}</p>
               </div>
             ) : (
               <>
