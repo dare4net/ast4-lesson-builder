@@ -13,25 +13,28 @@ interface LessonContentProps {
   onScoreUpdate?: (score: number, total: number) => void;
   currentSlideIndex: number;
   onSlideChange: (index: number) => void;
+  initialComponentStates?: Record<string, any>;
 }
 
 export interface LessonContentRef {
   setCurrentSlideIndex: (index: number) => void;
+  getAllComponentStates: () => Record<string, any>;
 }
 
 export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
-  function LessonContent({ lesson, onScoreUpdate, currentSlideIndex, onSlideChange }, ref) {
+  function LessonContent({ lesson, onScoreUpdate, currentSlideIndex, onSlideChange, initialComponentStates = {} }, ref) {
     const [score, setScore] = useState(0);
     const [totalPossible, setTotalPossible] = useState(0);
     const currentSlide = lesson.slides[currentSlideIndex];
     const progress = ((currentSlideIndex + 1) / lesson.slides.length) * 100;
 
     // Persist state for each component by id
-    const [componentStates, setComponentStates] = useState<Record<string, any>>({});
+    const [componentStates, setComponentStates] = useState<Record<string, any>>(initialComponentStates);
 
     useImperativeHandle(ref, () => ({
-      setCurrentSlideIndex: onSlideChange
-    }), [onSlideChange]);
+      setCurrentSlideIndex: onSlideChange,
+      getAllComponentStates: () => componentStates,
+    }), [onSlideChange, componentStates]);
 
     useEffect(() => {
       onScoreUpdate?.(score, totalPossible);

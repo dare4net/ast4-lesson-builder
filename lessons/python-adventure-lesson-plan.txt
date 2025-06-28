@@ -1,0 +1,160 @@
+Python Adventure: Coding with Sammy the Snake!
+Lesson Plan (Deep-Dive, Multi-Component, Slide-by-Slide)
+
+Target Audience: Kids (Ages 8-12), Beginner Level
+Theme: Story-driven adventure with Sammy the Snake, using as many interactive components as needed per slide to fully teach each concept. Components may be repeated and layered for deep learning.
+
+---
+
+Slide 1: Meet Sammy the Snake! (Introduction)
+- Heading: Welcome to Python Adventure!
+- Paragraph: Meet Sammy, set the adventure, introduce Python (snake & language).
+- List: What you’ll learn today.
+- Flashcards: Fun facts about Python (snake vs. language, what Python can do).
+- Paragraph: Why learn Python?
+- Scoreboard: Adventure Points (motivation).
+- Quiz: What is Python?
+- Matching Pairs: Match Python facts.
+- Flashcards: What can you build with Python?
+
+Slide 2: What is Programming?
+- Heading: Programming = Giving Instructions
+- Paragraph: Programming as telling a robot/computer what to do.
+- List: Steps in programming (write, run, see result).
+- Paragraph: Real-life analogy (recipe, robot, treasure map).
+- Matching Pairs: Match steps to actions.
+- Flashcards: Programming words (code, run, result).
+- Paragraph: Why instructions must be clear.
+- Quiz: What is programming?
+- Fill-in-the-Blank: Complete the steps of programming.
+
+Slide 3: Python Building Blocks
+- Heading: Python’s Special Words & Symbols
+- Paragraph: Python uses special words and symbols.
+- List: print(), =, #, if, for, def
+- Flashcards: What does each do?
+- Paragraph: How to use print(), =, #
+- Fill-in-the-Blank: Complete code snippets.
+- Drag-and-Drop: Order the parts of a simple program.
+- Flashcards: More examples.
+- Quiz: Identify the correct Python word for each job.
+- Matching Pairs: Match code to meaning.
+
+Slide 4: print() – Sammy’s First Program
+- Heading: Let’s Write Code!
+- Paragraph: Sammy wants to say hello.
+- List: Steps to write and run print().
+- Flashcards: print() examples.
+- Paragraph: What happens when you run print()?
+- Drag-and-Drop: Put print() code in order.
+- Fill-in-the-Blank: Complete print() statements.
+- Quiz: What does print() do?
+- Flashcards: Common print() mistakes.
+- Matching Pairs: Match code to output.
+
+Slide 5: Variables – Sammy’s Backpack
+- Heading: What are Variables?
+- Paragraph: Variables as containers/backpacks.
+- List: What can you store? (numbers, words, etc.)
+- Flashcards: Variable examples (score, name, color).
+- Paragraph: How to create and use variables.
+- Fill-in-the-Blank: Complete variable assignments.
+- Drag-and-Drop: Pack Sammy’s backpack (assign/update variables).
+- Paragraph: Changing variable values.
+- Flashcards: Variable rules and tips.
+- List: Good variable names.
+- Quiz: What is a variable?
+- Matching Pairs: Match variable code to meaning.
+
+Slide 6: Practice – Variables
+- Heading: Practice with Variables
+- Paragraph: Let’s use variables in code.
+- Fill-in-the-Blank: Assign and update variables.
+- Drag-and-Drop: Order variable code.
+- Flashcards: Common mistakes and fixes.
+- Quiz: Variable scenarios.
+- Matching Pairs: Match code to result.
+
+Slide 7: if Statements – Decisions with Sammy
+- Heading: Making Choices with if
+- Paragraph: Sammy finds a snack. Should he eat it?
+- List: How if statements work.
+- Flashcards: if statement examples.
+- Paragraph: Real-life choices as code.
+- Fill-in-the-Blank: Complete if statements.
+- Drag-and-Drop: Order if code.
+- Quiz: What does this if statement do?
+- Flashcards: Common if mistakes.
+- Matching Pairs: Match condition to outcome.
+
+Slide 8: Practice – if Statements
+- Heading: Practice with if
+- Paragraph: Try different snack scenarios.
+- Fill-in-the-Blank: Write if statements for new snacks.
+- Drag-and-Drop: Build if-else code.
+- Flashcards: More if/else examples.
+- Quiz: Predict the output.
+- Matching Pairs: Match code to result.
+
+Slide 9: Loops – Sammy’s Race
+- Heading: Loops: Doing Things Again and Again
+- Paragraph: Sammy races around the garden.
+- List: What is a loop?
+- Flashcards: for loop examples.
+- Paragraph: How for loops work.
+- Fill-in-the-Blank: Complete for loop code.
+- Drag-and-Drop: Order loop code.
+- Quiz: What does this loop do?
+- Flashcards: Loop tips and errors.
+- Matching Pairs: Match loop code to action.
+- Scoreboard: Track progress.
+
+Slide 10: Practice – Loops
+- Heading: Practice with Loops
+- Paragraph: Try different loop challenges.
+- Fill-in-the-Blank: Write loops for different tasks.
+- Drag-and-Drop: Build more complex loops.
+- Flashcards: Loop patterns.
+- Quiz: Loop scenarios.
+- Matching Pairs: Match code to output.
+
+Slide 11: Functions – Sammy’s Magic Tricks
+- Heading: What are Functions?
+- Paragraph: Functions as magic tricks you can use again and again.
+- List: Why use functions?
+- Flashcards: Define and call functions.
+- Paragraph: How to write a function.
+- Fill-in-the-Blank: Complete function definitions.
+- Drag-and-Drop: Order function code.
+- Quiz: What does this function do?
+- Flashcards: Function tips and errors.
+- Matching Pairs: Match function parts.
+
+Slide 12: Practice – Functions
+- Heading: Practice with Functions
+- Paragraph: Try writing and calling functions.
+- Fill-in-the-Blank: Complete function code.
+- Drag-and-Drop: Build and call functions.
+- Flashcards: More function examples.
+- Quiz: Function scenarios.
+- Matching Pairs: Match code to result.
+
+Slide 13: Python Adventure Quiz (Review)
+- Heading: Test Your Python Skills!
+- Paragraph: Review all concepts.
+- Quiz: Multi-question review (print, variables, if, loops, functions).
+- Flashcards: Recap key points.
+- Matching Pairs: Match concepts to code.
+- Scoreboard: Final score.
+
+Slide 14: You’re a Python Hero! (Conclusion & Next Steps)
+- Heading: Congratulations!
+- Paragraph: Celebrate, recap, and encourage next steps.
+- List: What you learned.
+- Flashcards: What will you code next?
+- Paragraph: Where to go from here.
+- Quiz: What do you want to build?
+
+---
+
+Each slide uses as many interactive components as needed to fully teach, practice, and reinforce the concept. Components may be repeated and layered for deep learning. No table component will be used. The story and activities are tightly integrated for maximum engagement and retention.

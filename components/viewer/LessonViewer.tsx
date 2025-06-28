@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FileUploader } from './FileUploader';
 import { LessonContent } from './LessonContent';
 import { Card } from '@/components/ui/card';
@@ -11,14 +11,46 @@ import { Progress } from '@/components/ui/progress';
 import { Menu, Clock, User, Award } from 'lucide-react';
 import type { Lesson } from '@/types/lesson';
 
-export function LessonViewer() {
-  const [lessonData, setLessonData] = useState<Lesson | null>(null);
+export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
+  const [lessonData, setLessonData] = useState<Lesson | null>(initialLesson || null);
   const [error, setError] = useState<string | null>(null);
   const [currentScore, setCurrentScore] = useState(0);
   const [totalPossible, setTotalPossible] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const lessonContentRef = useRef<{ setCurrentSlideIndex: (index: number) => void } | null>(null);
+  const lessonContentRef = useRef<any>(null);
+
+  // Save gamified state every 30s
+  useEffect(() => {
+    if (!userId || !lessonData) return;
+    console.log('[LessonViewer] Setting up periodic save for userId:', userId, 'lessonId:', lessonData.id);
+    const interval = setInterval(() => {
+      const componentsState = lessonContentRef.current?.getAllComponentStates?.();
+      console.log('[LessonViewer] Periodic saveUserInteraction', { userId, lessonId: lessonData.id, componentsState });
+      if (componentsState) {
+        import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
+          saveUserInteraction(userId, lessonData.id, componentsState).then((ok) => {
+            console.log('[LessonViewer] Periodic saveUserInteraction result:', ok);
+          });
+        });
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [userId, lessonData]);
+
+  // Save an initial interaction if none exists
+  useEffect(() => {
+    if (!userId || !lessonData) return;
+    const componentsState = lessonContentRef.current?.getAllComponentStates?.() || {};
+    console.log('[LessonViewer] Initial saveUserInteraction', { userId, lessonId: lessonData.id, componentsState });
+    import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
+      saveUserInteraction(userId, lessonData.id, componentsState).then((ok) => {
+        console.log('[LessonViewer] Initial saveUserInteraction result:', ok);
+      });
+    });
+    // Only run once on mount when userId/lessonData are available
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, lessonData]);
 
   const handleFileUpload = async (file: File) => {
     try {
@@ -216,8 +248,9 @@ export function LessonViewer() {
           onScoreUpdate={handleScoreUpdate}
           currentSlideIndex={currentSlideIndex}
           onSlideChange={setCurrentSlideIndex}
+          initialComponentStates={initialInteraction?.componentsState || {}}
         />
       </div>
     </div>
   );
-} 
+}

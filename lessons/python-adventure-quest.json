@@ -1,0 +1,672 @@
+{
+  "id": "lesson-python-adventure-quest-001",
+  "title": "Python Adventure: Coding with Sammy the Snake!",
+  "description": "Join Sammy the Snake on a magical journey to learn programming with Python! Each concept is deeply explored with interactive activities, games, and story-driven challenges. Every slide uses multiple components for maximum engagement and mastery.",
+  "author": "After School Tech Team",
+  "level": "Beginner",
+  "duration": 60,
+  "slides": [
+    {
+      "id": "slide-1",
+      "title": "🐍 Meet Sammy the Snake! (Introduction)",
+      "components": [
+        { "id": "heading-1", "type": "heading", "props": { "content": "Welcome to Python Adventure!", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Meet <b>Sammy the Snake</b>! Today, you’ll join Sammy on a Python adventure. Python is both a snake and a powerful programming language!", "align": "center" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["Learn to code with Python", "Solve puzzles and help Sammy", "Become a Python Hero!"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Fun Python Facts", "cards": [ { "id": "1", "front": "Is Python a snake or a language?", "back": "Both! But here, Python is a fun programming language." }, { "id": "2", "front": "What can you do with Python?", "back": "Make games, solve puzzles, and create cool apps!" } ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "Why learn Python? It’s easy, fun, and you can build anything you imagine!" } },
+        { "id": "scoreboard-1", "type": "scoreBoard", "props": { "title": "Adventure Points", "showTotal": true, "showPercentage": true, "animation": true } },
+        { "id": "quiz-1", "type": "quiz", "props": { "questions": [ { "id": "q1", "question": "What is Python?", "options": [ { "id": "1", "text": "A programming language and a snake", "isCorrect": true }, { "id": "2", "text": "Only a snake", "isCorrect": false }, { "id": "3", "text": "Only a language", "isCorrect": false } ], "explanation": "Python is both a snake and a programming language!" } ], "showExplanation": true, "shuffleOptions": true, "points": 10 } },
+        { "id": "matching-1", "type": "matchingPairs", "props": { "title": "Match Python Facts", "pairs": [ { "id": "1", "left": "Python", "right": "A language and a snake" }, { "id": "2", "left": "Sammy", "right": "Our coding guide" }, { "id": "3", "left": "Coding", "right": "Giving instructions" } ], "shuffled": true, "points": 10 } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "What can you build?", "cards": [ { "id": "1", "front": "A game?", "back": "Yes! Python is great for games." }, { "id": "2", "front": "A story?", "back": "Absolutely! Use print() to tell stories." } ] } }
+      ]
+    },
+    {
+      "id": "slide-2",
+      "title": "🔤 What is Programming?",
+      "components": [
+        { "id": "heading-2", "type": "heading", "props": { "content": "Programming = Giving Instructions", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Programming is like telling a robot or computer what to do, step by step. You write instructions, and the computer follows them exactly!" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["📝 Write instructions (code)", "🤖 Computer follows your code", "🎉 See the results!"] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "It’s just like writing a recipe, drawing a treasure map, or giving directions to a friend!" } },
+        { "id": "matching-1", "type": "matchingPairs", "props": { "title": "Match Steps to Actions", "pairs": [ { "id": "1", "left": "Write code", "right": "Type instructions" }, { "id": "2", "left": "Run code", "right": "Computer follows" }, { "id": "3", "left": "See result", "right": "Get the answer" } ], "shuffled": true, "points": 10 } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Programming Words", "cards": [ { "id": "1", "front": "Code", "back": "Instructions for the computer" }, { "id": "2", "front": "Run", "back": "Tell the computer to start" }, { "id": "3", "front": "Result", "back": "What you see after running code" } ] } },
+        { "id": "paragraph-3", "type": "paragraph", "props": { "content": "Instructions must be clear! If you mix up the order, the computer might get confused." } },
+        { "id": "quiz-1", "type": "quiz", "props": { "questions": [ { "id": "q1", "question": "What is programming?", "options": [ { "id": "1", "text": "Giving instructions to a computer", "isCorrect": true }, { "id": "2", "text": "Telling stories to a cat", "isCorrect": false }, { "id": "3", "text": "Drawing pictures", "isCorrect": false } ], "explanation": "Programming is giving instructions to a computer." } ], "showExplanation": true, "shuffleOptions": true, "points": 10 } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete the Steps of Programming",
+          "text": "First, you {{blank}}, then you {{blank}} the code, finally, you see the {{blank}}.",
+          "blanks": [
+            { "id": "b1", "answer": "write", "alternatives": ["Write"] },
+            { "id": "b2", "answer": "run", "alternatives": ["Run"] },
+            { "id": "b3", "answer": "result", "alternatives": ["Result"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-3",
+      "title": "🧩 Python Building Blocks",
+      "components": [
+        { "id": "heading-3", "type": "heading", "props": { "content": "Python’s Special Words & Symbols", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Python uses special words and symbols to give instructions. Let’s learn some of the most important ones!" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["print() – Shows a message", "= – Stores a value", "# – Adds a comment", "if – Checks a condition", "for – Repeats actions", "def – Defines a function"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "What does each do?", "cards": [
+          { "id": "1", "front": "print('Hello!')", "back": "Shows Hello! on the screen" },
+          { "id": "2", "front": "score = 10", "back": "Stores 10 in score" },
+          { "id": "3", "front": "# This is a comment", "back": "Notes for humans, not computers" },
+          { "id": "4", "front": "if apples > 5:", "back": "Checks if apples is more than 5" },
+          { "id": "5", "front": "for i in range(3):", "back": "Repeats 3 times" },
+          { "id": "6", "front": "def jump():", "back": "Defines a function called jump" }
+        ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "You’ll use print() to show messages, = to store values, and # to write notes in your code." } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete the Code Snippets",
+          "text": "To show 'Hello, world!' on the screen, write: {{blank}}.\nTo store 5 in a variable called apples, write: {{blank}}.\nTo add a comment, write: {{blank}}.",
+          "blanks": [
+            { "id": "b1", "answer": "print('Hello, world!')", "alternatives": ["print(\"Hello, world!\")"] },
+            { "id": "b2", "answer": "apples = 5", "alternatives": ["apples=5"] },
+            { "id": "b3", "answer": "# This is a comment", "alternatives": ["# comment"] }
+          ],
+          "caseSensitive": false,
+          "points": 15
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the Parts of a Simple Program",
+          "items": [
+            { "id": "1", "text": "# Say hello", "correctIndex": 0 },
+            { "id": "2", "text": "name = 'Sammy'", "correctIndex": 1 },
+            { "id": "3", "text": "print('Hello, ' + name + '!')", "correctIndex": 2 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "More Examples", "cards": [
+          { "id": "1", "front": "for i in range(2):\n    print('Hi!')", "back": "Shows Hi! two times" },
+          { "id": "2", "front": "if score > 10:\n    print('Winner!')", "back": "Checks if score is more than 10" }
+        ] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "Which Python word shows a message?", "options": [ { "id": "1", "text": "print()", "isCorrect": true }, { "id": "2", "text": "def", "isCorrect": false }, { "id": "3", "text": "#", "isCorrect": false } ], "explanation": "print() shows messages." },
+            { "id": "q2", "question": "What does = do in Python?", "options": [ { "id": "1", "text": "Stores a value", "isCorrect": true }, { "id": "2", "text": "Shows a message", "isCorrect": false }, { "id": "3", "text": "Repeats actions", "isCorrect": false } ], "explanation": "= stores values in variables." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 15
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Meaning",
+          "pairs": [
+            { "id": "1", "left": "print()", "right": "Shows a message" },
+            { "id": "2", "left": "=", "right": "Stores a value" },
+            { "id": "3", "left": "#", "right": "Adds a comment" },
+            { "id": "4", "left": "if", "right": "Checks a condition" },
+            { "id": "5", "left": "for", "right": "Repeats actions" },
+            { "id": "6", "left": "def", "right": "Defines a function" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-4",
+      "title": "print() – Sammy’s First Program",
+      "components": [
+        { "id": "heading-4", "type": "heading", "props": { "content": "Let’s Write Code!", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Sammy wants to say hello. Let’s help him write his very first Python program using print()." } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["Step 1: Type print('Hello!')", "Step 2: Run the code", "Step 3: See the message on the screen!"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "print() Examples", "cards": [
+          { "id": "1", "front": "print('Hello, world!')", "back": "Shows Hello, world! on the screen" },
+          { "id": "2", "front": "print('Sammy is learning!')", "back": "Shows Sammy is learning!" },
+          { "id": "3", "front": "print(2 + 3)", "back": "Shows 5" }
+        ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "When you run print(), the computer shows your message. Try it with your own words!" } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Put print() Code in Order",
+          "items": [
+            { "id": "1", "text": "print(", "correctIndex": 0 },
+            { "id": "2", "text": "'Hello, Sammy!'", "correctIndex": 1 },
+            { "id": "3", "text": ")", "correctIndex": 2 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete print() Statements",
+          "text": "To show 'Sammy is cool!' on the screen, write: {{blank}}.\nTo show the number 10, write: {{blank}}.",
+          "blanks": [
+            { "id": "b1", "answer": "print('Sammy is cool!')", "alternatives": ["print(\"Sammy is cool!\")"] },
+            { "id": "b2", "answer": "print(10)", "alternatives": ["print('10')"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does print('Hello!') do?", "options": [ { "id": "1", "text": "Shows Hello! on the screen", "isCorrect": true }, { "id": "2", "text": "Saves Hello! in a box", "isCorrect": false }, { "id": "3", "text": "Draws a snake", "isCorrect": false } ], "explanation": "print() shows messages." },
+            { "id": "q2", "question": "What will print(2 + 2) show?", "options": [ { "id": "1", "text": "4", "isCorrect": true }, { "id": "2", "text": "2 + 2", "isCorrect": false }, { "id": "3", "text": "22", "isCorrect": false } ], "explanation": "Python does the math and shows 4." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 15
+        } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "Common print() Mistakes", "cards": [
+          { "id": "1", "front": "print('Hello!", "back": "Missing closing quote or parenthesis!" },
+          { "id": "2", "front": "print Hello!", "back": "You need parentheses: print('Hello!')" }
+        ] } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Output",
+          "pairs": [
+            { "id": "1", "left": "print('Hi!')", "right": "Hi!" },
+            { "id": "2", "left": "print(3 + 2)", "right": "5" },
+            { "id": "3", "left": "print('Sammy')", "right": "Sammy" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-5",
+      "title": "Variables – Sammy’s Backpack",
+      "components": [
+        { "id": "heading-5", "type": "heading", "props": { "content": "What are Variables?", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Variables are like Sammy’s backpack. He can put things inside and use them later! In Python, variables store information so you can use it again and again." } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["Store numbers: score = 5", "Store words: name = 'Sammy'", "Change values: score = score + 1"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Variable Examples", "cards": [
+          { "id": "1", "front": "age = 10", "back": "Stores 10 in age" },
+          { "id": "2", "front": "name = 'Sammy'", "back": "Stores 'Sammy' in name" },
+          { "id": "3", "front": "score = score + 5", "back": "Adds 5 to score" }
+        ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "You can use variables to remember scores, names, or anything you want! Variable names can use letters, numbers, and underscores, but can't start with a number or have spaces." } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete Variable Assignments",
+          "text": "To store the number 7 in a variable called apples, write: {{blank}}.\nTo store your name in a variable called name, write: {{blank}}.",
+          "blanks": [
+            { "id": "b1", "answer": "apples = 7", "alternatives": ["apples=7"] },
+            { "id": "b2", "answer": "name = 'Sammy'", "alternatives": ["name='Sammy'"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Pack Sammy’s Backpack (Assign/Update Variables)",
+          "items": [
+            { "id": "1", "text": "score = 0", "correctIndex": 0 },
+            { "id": "2", "text": "score = score + 10", "correctIndex": 1 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "paragraph-3", "type": "paragraph", "props": { "content": "Variables can change! Try changing the value of a variable and see what happens." } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "Variable Rules & Tips", "cards": [
+          { "id": "1", "front": "Can a variable name have spaces?", "back": "No! Use underscores: my_score" },
+          { "id": "2", "front": "Can you change a variable’s value?", "back": "Yes! Variables can change any time." }
+        ] } },
+        { "id": "list-2", "type": "bulletList", "props": { "type": "unordered", "items": ["Good variable names: score, apples, player_name", "Variable names are case-sensitive: Score is different from score"] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "Which is a valid variable name?", "options": [ { "id": "1", "text": "my_score", "isCorrect": true }, { "id": "2", "text": "2score", "isCorrect": false }, { "id": "3", "text": "my score", "isCorrect": false } ], "explanation": "Variable names can't start with a number or have spaces." },
+            { "id": "q2", "question": "What does this code do?\nscore = 10\nscore = score + 5", "options": [ { "id": "1", "text": "Sets score to 15", "isCorrect": true }, { "id": "2", "text": "Sets score to 10", "isCorrect": false }, { "id": "3", "text": "Gives an error", "isCorrect": false } ], "explanation": "score is first 10, then increased by 5." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 15
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Variable Code to Meaning",
+          "pairs": [
+            { "id": "1", "left": "score", "right": "Points in a game" },
+            { "id": "2", "left": "name", "right": "A player’s name" },
+            { "id": "3", "left": "age", "right": "How old someone is" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-6",
+      "title": "Practice – Variables",
+      "components": [
+        { "id": "heading-6", "type": "heading", "props": { "content": "Practice with Variables", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Let’s use variables in code! Try these challenges to become a variable expert." } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Assign and Update Variables",
+          "text": "To start with 0 apples, write: {{blank}}.\nTo add 3 apples, write: {{blank}}.",
+          "blanks": [
+            { "id": "b1", "answer": "apples = 0", "alternatives": ["apples=0"] },
+            { "id": "b2", "answer": "apples = apples + 3", "alternatives": ["apples=apples+3"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order Variable Code",
+          "items": [
+            { "id": "1", "text": "score = 5", "correctIndex": 0 },
+            { "id": "2", "text": "score = score + 2", "correctIndex": 1 },
+            { "id": "3", "text": "print(score)", "correctIndex": 2 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Common Mistakes & Fixes", "cards": [
+          { "id": "1", "front": "2score = 5", "back": "Variable names can’t start with a number!" },
+          { "id": "2", "front": "my score = 10", "back": "No spaces! Use underscores: my_score" }
+        ] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does apples = apples + 1 do?", "options": [ { "id": "1", "text": "Adds 1 to apples", "isCorrect": true }, { "id": "2", "text": "Sets apples to 1", "isCorrect": false }, { "id": "3", "text": "Gives an error", "isCorrect": false } ], "explanation": "It increases apples by 1." },
+            { "id": "q2", "question": "Which is a good variable name?", "options": [ { "id": "1", "text": "player_score", "isCorrect": true }, { "id": "2", "text": "player score", "isCorrect": false }, { "id": "3", "text": "1score", "isCorrect": false } ], "explanation": "Use letters, numbers, and underscores, but don’t start with a number or use spaces." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 15
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Variable Code to Meaning",
+          "pairs": [
+            { "id": "1", "left": "score", "right": "Points in a game" },
+            { "id": "2", "left": "name", "right": "A player’s name" },
+            { "id": "3", "left": "age", "right": "How old someone is" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-7",
+      "title": "if Statements – Decisions with Sammy",
+      "components": [
+        { "id": "heading-7", "type": "heading", "props": { "content": "Making Choices with if", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Sammy finds a snack. Should he eat it? Let’s use if statements to help Sammy make choices!" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["if checks a condition", "If it’s true, do something", "If it’s false, do nothing or something else"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "if Statement Examples", "cards": [
+          { "id": "1", "front": "if snack == 'apple':\n    print('Yum!')", "back": "Prints Yum! if snack is apple" },
+          { "id": "2", "front": "if score > 10:\n    print('Winner!')", "back": "Prints Winner! if score is more than 10" }
+        ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "In real life, you make choices all the time. In code, if statements help the computer make choices." } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete the if Statement",
+          "text": "To check if apples are more than 5, write:\n{{blank}}\n    print('Lots of apples!')",
+          "blanks": [
+            { "id": "b1", "answer": "if apples > 5:", "alternatives": ["if(apples>5):"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the if Code",
+          "items": [
+            { "id": "1", "text": "if score > 10:", "correctIndex": 0 },
+            { "id": "2", "text": "    print('Winner!')", "correctIndex": 1 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does this code do?\nif snack == 'apple':\n    print('Yum!')", "options": [ { "id": "1", "text": "Prints 'Yum!' if snack is apple", "isCorrect": true }, { "id": "2", "text": "Always prints 'Yum!'", "isCorrect": false }, { "id": "3", "text": "Prints nothing", "isCorrect": false } ], "explanation": "The code checks if snack is 'apple'." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "Common if Mistakes", "cards": [
+          { "id": "1", "front": "if x = 5:", "back": "Use == to compare, not =!" },
+          { "id": "2", "front": "if apples > 5", "back": "Don’t forget the colon : at the end!" }
+        ] } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Condition to Outcome",
+          "pairs": [
+            { "id": "1", "left": "if apples > 5:", "right": "Checks if apples is more than 5" },
+            { "id": "2", "left": "if score == 10:", "right": "Checks if score is exactly 10" },
+            { "id": "3", "left": "if name == 'Sammy':", "right": "Checks if name is Sammy" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-8",
+      "title": "Practice – if Statements",
+      "components": [
+        { "id": "heading-8", "type": "heading", "props": { "content": "Practice with if", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Try different snack scenarios and practice writing if statements!" } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Write if Statements for New Snacks",
+          "text": "If snack is 'banana', print 'Yummy banana!':\n{{blank}}\n    print('Yummy banana!')",
+          "blanks": [
+            { "id": "b1", "answer": "if snack == 'banana':", "alternatives": ["if(snack=='banana'):"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Build if-else Code",
+          "items": [
+            { "id": "1", "text": "if apples > 0:", "correctIndex": 0 },
+            { "id": "2", "text": "    print('You have apples!')", "correctIndex": 1 },
+            { "id": "3", "text": "else:", "correctIndex": 2 },
+            { "id": "4", "text": "    print('No apples left!')", "correctIndex": 3 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "More if/else Examples", "cards": [
+          { "id": "1", "front": "if score >= 5:\n    print('Good job!')\nelse:\n    print('Keep trying!')", "back": "Prints Good job! if score is 5 or more, else prints Keep trying!" }
+        ] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What will this code print if snack = 'banana'?\nif snack == 'banana':\n    print('Yummy banana!')\nelse:\n    print('Try another snack!')", "options": [ { "id": "1", "text": "Yummy banana!", "isCorrect": true }, { "id": "2", "text": "Try another snack!", "isCorrect": false } ], "explanation": "It checks if snack is 'banana'." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Result",
+          "pairs": [
+            { "id": "1", "left": "if apples > 0:", "right": "Checks if apples is more than 0" },
+            { "id": "2", "left": "else:", "right": "Runs if apples is not more than 0" },
+            { "id": "3", "left": "print('No apples left!')", "right": "Shows No apples left!" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-9",
+      "title": "for Loops – Sammy’s Repeating Adventure",
+      "components": [
+        { "id": "heading-9", "type": "heading", "props": { "content": "Repeat with for Loops!", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Sammy wants to collect 5 apples. Instead of writing the same code 5 times, let’s use a for loop to repeat actions!" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["for repeats actions", "Use range() to set how many times", "Each time is called an iteration"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "for Loop Examples", "cards": [
+          { "id": "1", "front": "for i in range(3):\n    print('Hi!')", "back": "Prints Hi! three times" },
+          { "id": "2", "front": "for apple in range(5):\n    print('Collect an apple!')", "back": "Prints Collect an apple! five times" }
+        ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "Loops help you do things again and again without repeating yourself!" } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete the for Loop",
+          "text": "To print 'Yay!' 4 times, write:\n{{blank}}\n    print('Yay!')",
+          "blanks": [
+            { "id": "b1", "answer": "for i in range(4):", "alternatives": ["for i in range(4):"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the for Loop Code",
+          "items": [
+            { "id": "1", "text": "for i in range(3):", "correctIndex": 0 },
+            { "id": "2", "text": "    print('Go!')", "correctIndex": 1 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does for i in range(5): do?", "options": [ { "id": "1", "text": "Repeats 5 times", "isCorrect": true }, { "id": "2", "text": "Repeats 1 time", "isCorrect": false }, { "id": "3", "text": "Does nothing", "isCorrect": false } ], "explanation": "It repeats the code 5 times." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "Common for Loop Mistakes", "cards": [
+          { "id": "1", "front": "for i in range(3)\n    print('Hi!')", "back": "Missing colon : at the end of for line!" },
+          { "id": "2", "front": "for i in range(3): print('Hi!')", "back": "Works, but usually use a new line and indent!" }
+        ] } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Loop Code to Meaning",
+          "pairs": [
+            { "id": "1", "left": "for i in range(2):", "right": "Repeats 2 times" },
+            { "id": "2", "left": "for apple in range(5):", "right": "Repeats 5 times" },
+            { "id": "3", "left": "print('Done!')", "right": "Shows Done! once" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-10",
+      "title": "Practice – for Loops",
+      "components": [
+        { "id": "heading-10", "type": "heading", "props": { "content": "Practice with for Loops", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Try these challenges to master for loops!" } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Write for Loops",
+          "text": "To print 'Sammy!' 2 times, write:\n{{blank}}\n    print('Sammy!')",
+          "blanks": [
+            { "id": "b1", "answer": "for i in range(2):", "alternatives": ["for i in range(2):"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the Loop Code",
+          "items": [
+            { "id": "1", "text": "for i in range(5):", "correctIndex": 0 },
+            { "id": "2", "text": "    print('Apple!')", "correctIndex": 1 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Loop Practice", "cards": [
+          { "id": "1", "front": "for i in range(4):\n    print('Go!')", "back": "Prints Go! four times" },
+          { "id": "2", "front": "for i in range(1):\n    print('One time!')", "back": "Prints One time! once" }
+        ] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "How many times does this run?\nfor i in range(3):\n    print('Hi!')", "options": [ { "id": "1", "text": "3", "isCorrect": true }, { "id": "2", "text": "1", "isCorrect": false }, { "id": "3", "text": "0", "isCorrect": false } ], "explanation": "range(3) means 3 times." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Output",
+          "pairs": [
+            { "id": "1", "left": "for i in range(2):", "right": "Repeats 2 times" },
+            { "id": "2", "left": "for i in range(4):", "right": "Repeats 4 times" },
+            { "id": "3", "left": "print('Done!')", "right": "Shows Done! once" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-11",
+      "title": "Functions – Sammy’s Secret Moves",
+      "components": [
+        { "id": "heading-11", "type": "heading", "props": { "content": "Make Your Own Moves with Functions!", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Sammy wants to do a special dance. Instead of writing the same steps again and again, let’s use a function!" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["def makes a function", "Call the function to use it", "Functions help you reuse code"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Function Examples", "cards": [
+          { "id": "1", "front": "def dance():\n    print('Step left!')\n    print('Step right!')", "back": "Defines a dance function" },
+          { "id": "2", "front": "dance()", "back": "Calls the dance function" }
+        ] } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "Functions are like recipes. Write once, use many times!" } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete the Function Code",
+          "text": "To make a function called jump, write:\n{{blank}}\n    print('Jump!')",
+          "blanks": [
+            { "id": "b1", "answer": "def jump():", "alternatives": ["def jump():"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the Function Code",
+          "items": [
+            { "id": "1", "text": "def wave():", "correctIndex": 0 },
+            { "id": "2", "text": "    print('Wave!')", "correctIndex": 1 },
+            { "id": "3", "text": "wave()", "correctIndex": 2 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does def do in Python?", "options": [ { "id": "1", "text": "Defines a function", "isCorrect": true }, { "id": "2", "text": "Repeats code", "isCorrect": false }, { "id": "3", "text": "Shows a message", "isCorrect": false } ], "explanation": "def is used to define a function." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "flashcards-2", "type": "flashcards", "props": { "title": "Common Function Mistakes", "cards": [
+          { "id": "1", "front": "def jump()\n    print('Jump!')", "back": "Missing colon : at the end of def line!" },
+          { "id": "2", "front": "def jump(): print('Jump!')", "back": "Works, but usually use a new line and indent!" }
+        ] } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Meaning",
+          "pairs": [
+            { "id": "1", "left": "def dance():", "right": "Defines a function called dance" },
+            { "id": "2", "left": "dance()", "right": "Calls the dance function" },
+            { "id": "3", "left": "print('Done!')", "right": "Shows Done! once" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-12",
+      "title": "Practice – Functions",
+      "components": [
+        { "id": "heading-12", "type": "heading", "props": { "content": "Practice with Functions", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Try these challenges to become a function expert!" } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Write a Function",
+          "text": "To make a function called sing, write:\n{{blank}}\n    print('La la!')",
+          "blanks": [
+            { "id": "b1", "answer": "def sing():", "alternatives": ["def sing():"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the Function Code",
+          "items": [
+            { "id": "1", "text": "def jump():", "correctIndex": 0 },
+            { "id": "2", "text": "    print('Jump!')", "correctIndex": 1 },
+            { "id": "3", "text": "jump()", "correctIndex": 2 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Function Practice", "cards": [
+          { "id": "1", "front": "def wave():\n    print('Wave!')", "back": "Defines a wave function" },
+          { "id": "2", "front": "wave()", "back": "Calls the wave function" }
+        ] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does this code do?\ndef sing():\n    print('La la!')\nsing()", "options": [ { "id": "1", "text": "Prints La la!", "isCorrect": true }, { "id": "2", "text": "Does nothing", "isCorrect": false }, { "id": "3", "text": "Gives an error", "isCorrect": false } ], "explanation": "It defines and calls the sing function." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Output",
+          "pairs": [
+            { "id": "1", "left": "def jump():", "right": "Defines a function called jump" },
+            { "id": "2", "left": "jump()", "right": "Calls the jump function" },
+            { "id": "3", "left": "print('Done!')", "right": "Shows Done! once" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-13",
+      "title": "Sammy’s Final Challenge – Mix It Up!",
+      "components": [
+        { "id": "heading-13", "type": "heading", "props": { "content": "Mixing Everything Together!", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "Sammy faces his final challenge! Use everything you’ve learned: variables, if, for, and functions." } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["Use variables to store scores", "Use if to make choices", "Use for to repeat", "Use functions to organize code"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "Challenge Examples", "cards": [
+          { "id": "1", "front": "score = 0\nfor i in range(3):\n    score = score + 1\nif score == 3:\n    print('You win!')", "back": "Repeats 3 times, checks score, prints win!" },
+          { "id": "2", "front": "def cheer():\n    print('Go, Sammy!')\ncheer()", "back": "Defines and calls a function" }
+        ] } },
+        { "id": "fillblank-1", "type": "fillInTheBlank", "props": {
+          "title": "Complete the Final Code",
+          "text": "To check if score is 5, print 'Great job!':\n{{blank}}\n    print('Great job!')",
+          "blanks": [
+            { "id": "b1", "answer": "if score == 5:", "alternatives": ["if(score==5):"] }
+          ],
+          "caseSensitive": false,
+          "points": 10
+        } },
+        { "id": "dragdrop-1", "type": "dragDrop", "props": {
+          "title": "Order the Final Challenge Code",
+          "items": [
+            { "id": "1", "text": "def win():", "correctIndex": 0 },
+            { "id": "2", "text": "    print('You did it!')", "correctIndex": 1 },
+            { "id": "3", "text": "win()", "correctIndex": 2 }
+          ],
+          "shuffled": true,
+          "points": 10
+        } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "What does this code do?\nscore = 0\nfor i in range(2):\n    score = score + 1\nif score == 2:\n    print('Win!')", "options": [ { "id": "1", "text": "Prints Win! if score is 2", "isCorrect": true }, { "id": "2", "text": "Prints Win! always", "isCorrect": false }, { "id": "3", "text": "Does nothing", "isCorrect": false } ], "explanation": "It checks if score is 2 after the loop." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 10
+        } },
+        { "id": "matching-1", "type": "matchingPairs", "props": {
+          "title": "Match Code to Meaning",
+          "pairs": [
+            { "id": "1", "left": "score = 0", "right": "Starts score at 0" },
+            { "id": "2", "left": "for i in range(3):", "right": "Repeats 3 times" },
+            { "id": "3", "left": "if score == 3:", "right": "Checks if score is 3" },
+            { "id": "4", "left": "print('You win!')", "right": "Shows You win!" }
+          ],
+          "shuffled": true,
+          "points": 10
+        } }
+      ]
+    },
+    {
+      "id": "slide-14",
+      "title": "🎉 Congratulations, Python Hero!",
+      "components": [
+        { "id": "heading-14", "type": "heading", "props": { "content": "You Did It!", "level": 1, "align": "center" } },
+        { "id": "paragraph-1", "type": "paragraph", "props": { "content": "You helped Sammy the Snake complete his adventure and learned Python basics!" } },
+        { "id": "list-1", "type": "bulletList", "props": { "type": "unordered", "items": ["print() – Show messages", "Variables – Store information", "if – Make choices", "for – Repeat actions", "def – Make functions"] } },
+        { "id": "flashcards-1", "type": "flashcards", "props": { "title": "What Did You Learn?", "cards": [
+          { "id": "1", "front": "What does print() do?", "back": "Shows a message on the screen" },
+          { "id": "2", "front": "What is a variable?", "back": "A way to store information" },
+          { "id": "3", "front": "What does if do?", "back": "Makes choices in code" },
+          { "id": "4", "front": "What does for do?", "back": "Repeats actions" },
+          { "id": "5", "front": "What does def do?", "back": "Defines a function" }
+        ] } },
+        { "id": "quiz-1", "type": "quiz", "props": {
+          "questions": [
+            { "id": "q1", "question": "Which Python word repeats actions?", "options": [ { "id": "1", "text": "for", "isCorrect": true }, { "id": "2", "text": "if", "isCorrect": false }, { "id": "3", "text": "def", "isCorrect": false } ], "explanation": "for repeats actions." },
+            { "id": "q2", "question": "What does def do?", "options": [ { "id": "1", "text": "Defines a function", "isCorrect": true }, { "id": "2", "text": "Shows a message", "isCorrect": false }, { "id": "3", "text": "Repeats code", "isCorrect": false } ], "explanation": "def defines a function." }
+          ],
+          "showExplanation": true,
+          "shuffleOptions": true,
+          "points": 15
+        } },
+        { "id": "scoreboard-1", "type": "scoreBoard", "props": { "title": "Your Adventure Points!", "showTotal": true, "showPercentage": true, "animation": true } },
+        { "id": "paragraph-2", "type": "paragraph", "props": { "content": "You’re now a Python Hero! Keep coding and exploring new adventures!" } }
+      ]
+    }
+  ],
+  "createdAt": "2025-06-28T12:00:00.000Z",
+  "updatedAt": "2025-06-28T12:00:00.000Z"
+}

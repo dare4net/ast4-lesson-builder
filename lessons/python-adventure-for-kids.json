@@ -1,0 +1,490 @@
+{
+  "id": "lesson-python-adventure-001",
+  "title": "Python Adventure: Coding with Sammy the Snake!",
+  "description": "Join Sammy the Snake on a magical journey to learn programming with Python! Discover how to use code to solve puzzles, make friends, and become a Python coding hero.",
+  "author": "After School Tech Team",
+  "level": "Beginner",
+  "duration": 60,
+  "slides": [
+    {
+      "id": "slide-1",
+      "title": "🐍 Meet Sammy the Snake!",
+      "components": [
+        {
+          "id": "heading-1",
+          "type": "heading",
+          "props": {
+            "content": "Welcome to Python Adventure!",
+            "level": 1,
+            "align": "center"
+          }
+        },
+        {
+          "id": "paragraph-1",
+          "type": "paragraph",
+          "props": {
+            "content": "Hi! I'm <b>Sammy the Snake</b> 🐍. Today, I'll show you how to use <b>Python</b> to solve puzzles and have fun! Are you ready to become a Python Coder?",
+            "align": "center"
+          }
+        },
+        {
+          "id": "scoreBoard-1",
+          "type": "scoreBoard",
+          "props": {
+            "title": "Adventure Points",
+            "showTotal": true,
+            "showPercentage": true,
+            "animation": true
+          }
+        },
+        {
+          "id": "flashcards-1",
+          "type": "flashcards",
+          "props": {
+            "title": "What is Python?",
+            "cards": [
+              {
+                "id": "1",
+                "front": "Is Python a snake or a language?",
+                "back": "Both! But here, Python is a fun programming language."
+              },
+              {
+                "id": "2",
+                "front": "What can you do with Python?",
+                "back": "Make games, solve puzzles, and create cool apps!"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-2",
+      "title": "🔤 What is Programming?",
+      "components": [
+        {
+          "id": "heading-2",
+          "type": "heading",
+          "props": {
+            "content": "Programming = Giving Instructions",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-2",
+          "type": "paragraph",
+          "props": {
+            "content": "Programming is like telling a robot what to do, step by step. In Python, you write instructions and the computer follows them!"
+          }
+        },
+        {
+          "id": "bulletList-1",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "📝 Write instructions (code)",
+              "🤖 Computer follows your code",
+              "🎉 You see the results!"
+            ]
+          }
+        },
+        {
+          "id": "matchingPairs-1",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match the Programming Steps",
+            "pairs": [
+              { "id": "1", "left": "Write code", "right": "Type instructions" },
+              { "id": "2", "left": "Run code", "right": "Computer follows" },
+              { "id": "3", "left": "See result", "right": "Get the answer" }
+            ],
+            "shuffled": true,
+            "points": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-3",
+      "title": "🧩 Python Building Blocks",
+      "components": [
+        {
+          "id": "heading-3",
+          "type": "heading",
+          "props": {
+            "content": "Let's Learn Python Words!",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-3",
+          "type": "paragraph",
+          "props": {
+            "content": "Python uses special words and symbols. Let's see some important ones!"
+          }
+        },
+        {
+          "id": "bulletList-2",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "<b>print()</b> - Shows a message",
+              "<b>=</b> - Stores a value",
+              "<b>#</b> - Adds a comment",
+              "<b>if</b> - Checks a condition"
+            ]
+          }
+        },
+        {
+          "id": "flashcards-2",
+          "type": "flashcards",
+          "props": {
+            "title": "Python Words",
+            "cards": [
+              { "id": "1", "front": "print('Hello!')", "back": "Shows Hello! on the screen" },
+              { "id": "2", "front": "age = 10", "back": "Stores 10 in age" },
+              { "id": "3", "front": "# This is a comment", "back": "Notes for humans, not computers" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-4",
+      "title": "🎒 Sammy's First Program",
+      "components": [
+        {
+          "id": "heading-4",
+          "type": "heading",
+          "props": {
+            "content": "Let's Write Code!",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-4",
+          "type": "paragraph",
+          "props": {
+            "content": "Sammy wants to say hello. Can you help him write his first Python program?"
+          }
+        },
+        {
+          "id": "dragDrop-1",
+          "type": "dragDrop",
+          "props": {
+            "title": "Put the code in order",
+            "items": [
+              { "id": "1", "text": "print('Hello, world!')", "correctIndex": 0 }
+            ],
+            "shuffled": false,
+            "points": 10
+          }
+        },
+        {
+          "id": "scoreBoard-2",
+          "type": "scoreBoard",
+          "props": {
+            "title": "Your Score",
+            "showTotal": true,
+            "showPercentage": true,
+            "animation": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-5",
+      "title": "🔢 Variables: Sammy's Backpack",
+      "components": [
+        {
+          "id": "heading-5",
+          "type": "heading",
+          "props": {
+            "content": "What are Variables?",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-5",
+          "type": "paragraph",
+          "props": {
+            "content": "Variables are like Sammy's backpack. He can put things inside and use them later!"
+          }
+        },
+        {
+          "id": "bulletList-3",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "Store numbers: <b>score = 5</b>",
+              "Store words: <b>name = 'Sammy'</b>",
+              "Change values: <b>score = score + 1</b>"
+            ]
+          }
+        },
+        {
+          "id": "dragDrop-2",
+          "type": "dragDrop",
+          "props": {
+            "title": "Pack Sammy's Backpack",
+            "items": [
+              { "id": "1", "text": "score = 0", "correctIndex": 0 },
+              { "id": "2", "text": "score = score + 10", "correctIndex": 1 }
+            ],
+            "shuffled": true,
+            "points": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-6",
+      "title": "🤔 Decisions: If Sammy Finds a Snack",
+      "components": [
+        {
+          "id": "heading-6",
+          "type": "heading",
+          "props": {
+            "content": "Making Choices with if",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-6",
+          "type": "paragraph",
+          "props": {
+            "content": "Sammy finds a snack. Should he eat it? Let's use <b>if</b> to decide!"
+          }
+        },
+        {
+          "id": "quiz-1",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "What does this code do?\n\nif snack == 'apple':\n    print('Yum!')",
+                "options": [
+                  { "id": "1", "text": "Prints 'Yum!' if snack is apple", "isCorrect": true },
+                  { "id": "2", "text": "Always prints 'Yum!'", "isCorrect": false },
+                  { "id": "3", "text": "Prints nothing", "isCorrect": false }
+                ],
+                "explanation": "The code checks if snack is 'apple'."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "points": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-7",
+      "title": "🔁 Loops: Sammy's Race",
+      "components": [
+        {
+          "id": "heading-7",
+          "type": "heading",
+          "props": {
+            "content": "Loops: Doing Things Again and Again",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-7",
+          "type": "paragraph",
+          "props": {
+            "content": "Sammy wants to race around the garden 5 times. Let's use a <b>for loop</b>!"
+          }
+        },
+        {
+          "id": "dragDrop-3",
+          "type": "dragDrop",
+          "props": {
+            "title": "Put the loop in order",
+            "items": [
+              { "id": "1", "text": "for lap in range(5):", "correctIndex": 0 },
+              { "id": "2", "text": "    print('Sammy runs!')", "correctIndex": 1 }
+            ],
+            "shuffled": true,
+            "points": 10
+          }
+        },
+        {
+          "id": "scoreBoard-3",
+          "type": "scoreBoard",
+          "props": {
+            "title": "Your Score",
+            "showTotal": true,
+            "showPercentage": true,
+            "animation": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-8",
+      "title": "🎲 Functions: Sammy's Magic Tricks",
+      "components": [
+        {
+          "id": "heading-8",
+          "type": "heading",
+          "props": {
+            "content": "What are Functions?",
+            "level": 2
+          }
+        },
+        {
+          "id": "paragraph-8",
+          "type": "paragraph",
+          "props": {
+            "content": "Functions are like magic tricks. Sammy can use them again and again!"
+          }
+        },
+        {
+          "id": "flashcards-3",
+          "type": "flashcards",
+          "props": {
+            "title": "Function Fun",
+            "cards": [
+              { "id": "1", "front": "def jump():\n    print('Jump!')", "back": "Defines a jump trick" },
+              { "id": "2", "front": "jump()", "back": "Sammy jumps!" }
+            ]
+          }
+        },
+        {
+          "id": "matchingPairs-2",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match the Function Parts",
+            "pairs": [
+              { "id": "1", "left": "def", "right": "Defines a function" },
+              { "id": "2", "left": "()", "right": "Function's parentheses" },
+              { "id": "3", "left": "print()", "right": "Shows a message" }
+            ],
+            "shuffled": true,
+            "points": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-9",
+      "title": "🎉 Python Adventure Quiz",
+      "components": [
+        {
+          "id": "heading-9",
+          "type": "heading",
+          "props": {
+            "content": "Test Your Python Skills!",
+            "level": 2
+          }
+        },
+        {
+          "id": "quiz-2",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "What does print('Hello!') do?",
+                "options": [
+                  { "id": "1", "text": "Shows Hello! on the screen", "isCorrect": true },
+                  { "id": "2", "text": "Saves Hello! in a box", "isCorrect": false },
+                  { "id": "3", "text": "Draws a snake", "isCorrect": false }
+                ],
+                "explanation": "print() shows messages."
+              },
+              {
+                "id": "q2",
+                "question": "What is a variable?",
+                "options": [
+                  { "id": "1", "text": "A place to store information", "isCorrect": true },
+                  { "id": "2", "text": "A type of snake", "isCorrect": false },
+                  { "id": "3", "text": "A magic trick", "isCorrect": false }
+                ],
+                "explanation": "Variables store numbers, words, and more."
+              },
+              {
+                "id": "q3",
+                "question": "What does a loop do?",
+                "options": [
+                  { "id": "1", "text": "Repeats actions", "isCorrect": true },
+                  { "id": "2", "text": "Eats snacks", "isCorrect": false },
+                  { "id": "3", "text": "Draws pictures", "isCorrect": false }
+                ],
+                "explanation": "Loops repeat code."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "points": 30
+          }
+        },
+        {
+          "id": "scoreBoard-4",
+          "type": "scoreBoard",
+          "props": {
+            "title": "Final Score",
+            "showTotal": true,
+            "showPercentage": true,
+            "animation": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "slide-10",
+      "title": "🏆 You’re a Python Hero!",
+      "components": [
+        {
+          "id": "heading-10",
+          "type": "heading",
+          "props": {
+            "content": "Congratulations, Python Coder!",
+            "level": 1,
+            "align": "center"
+          }
+        },
+        {
+          "id": "paragraph-10",
+          "type": "paragraph",
+          "props": {
+            "content": "You helped Sammy the Snake learn Python and solve all the puzzles! Keep practicing and you’ll become a real coding wizard. What will you build next?",
+            "align": "center"
+          }
+        },
+        {
+          "id": "bulletList-4",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "🐍 You learned Python basics",
+              "🧠 You solved coding puzzles",
+              "🎮 You played with code",
+              "🚀 You’re ready for your next adventure!"
+            ]
+          }
+        },
+        {
+          "id": "flashcards-4",
+          "type": "flashcards",
+          "props": {
+            "title": "What will you code next?",
+            "cards": [
+              { "id": "1", "front": "A game?", "back": "Try making a guessing game!" },
+              { "id": "2", "front": "A story?", "back": "Use print() to tell your own story!" }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "createdAt": "2025-06-28T12:00:00.000Z",
+  "updatedAt": "2025-06-28T12:00:00.000Z"
+}
