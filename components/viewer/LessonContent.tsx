@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import type { Lesson } from '@/types/lesson';
+import type { Lesson, Component, ComponentType_Category } from '@/types/lesson';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -36,12 +36,33 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       getAllComponentStates: () => componentStates,
     }), [onSlideChange, componentStates]);
 
+    // Process components to handle disabled state
+    const processedComponents = currentSlide?.components.map(component => {
+      if (currentSlide.state === "disabled" && 
+          (component.component_type === "interactive" || component.component_type === "gamified")) {
+        return { 
+          ...component, 
+          state: "disabled" as const
+        };
+      }
+      return component;
+    });
+
+    // Handle component state updates
+    const handleComponentStateChange = (componentId: string, newState: any) => {
+      if (currentSlide?.state === "disabled") return; // Prevent state changes for disabled slides
+      setComponentStates(prev => ({
+        ...prev,
+        [componentId]: newState
+      }));
+    };
+
     useEffect(() => {
       onScoreUpdate?.(score, totalPossible);
     }, [score, totalPossible, onScoreUpdate]);
 
+    // Sum points for all gamified components in all slides
     useEffect(() => {
-      // Sum points for all gamified components in all slides
       let total = 0;
       for (const slide of lesson.slides) {
         for (const component of slide.components) {
@@ -62,89 +83,45 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       setTotalPossible(total);
     }, [lesson]);
 
-    const goToNextSlide = () => {
-      if (currentSlideIndex < lesson.slides.length - 1) {
-        onSlideChange(currentSlideIndex + 1);
-      }
-    };
-
-    const goToPreviousSlide = () => {
-      if (currentSlideIndex > 0) {
-        onSlideChange(currentSlideIndex - 1);
-      }
-    };
-
-    const addPoints = useCallback((points: number) => {
-      setScore((prevScore) => prevScore + points);
-    }, []);
-
-    const setComponentState = useCallback((id: string, state: any) => {
-      setComponentStates(prev => ({ ...prev, [id]: state }));
-    }, []);
-
-    const scoreContext = {
-      score,
-      totalPossible,
-      addPoints,
-    };
-
     return (
-      <div className="h-full flex flex-col">
-        {/* Fixed Header */}
-        <div className="shrink-0">
-          <Progress value={progress} className="w-full" />
-        </div>
+      <div className="flex flex-col h-full relative">
+        <ScrollArea className="flex-1 px-4 md:px-8 py-6">
+          <div className="max-w-4xl mx-auto space-y-8">
+            {currentSlide && processedComponents?.map((component) => (
+              <ComponentRenderer
+                key={component.id}
+                component={component}
+                scoreContext={{
+                  addToScore: (points: number) => setScore((s) => s + points),
+                  setTotalPossible: (total: number) =>
+                    setTotalPossible((t) => t + total),
+                }}
+                savedState={componentStates[component.id]}
+                setComponentState={(state) => handleComponentStateChange(component.id, state)}
+              />
+            ))}
+          </div>
+        </ScrollArea>
         
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="min-h-full w-full flex items-start justify-center">
-              <div className="w-full h-full flex items-start justify-center py-8">
-                <div className="w-full max-w-[90%] space-y-6">
-                  {currentSlide.components.map((component) => (
-                    <div key={component.id} className="w-full">
-                      <ComponentRenderer 
-                        component={component} 
-                        scoreContext={scoreContext}
-                        savedState={componentStates[component.id]}
-                        setComponentState={(state: any) => setComponentState(component.id, state)}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Fixed Footer */}
-        <div className="shrink-0 border-t bg-background">
-          <div className="w-full px-4 md:px-8">
-            <div className="py-4 flex items-center justify-between">
-              <div className="text-sm">
-                <span className="text-muted-foreground">Slide {currentSlideIndex + 1} of {lesson.slides.length}</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goToPreviousSlide}
-                  disabled={currentSlideIndex === 0}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goToNextSlide}
-                  disabled={currentSlideIndex === lesson.slides.length - 1}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+        <div className="sticky bottom-0 w-full bg-background border-t">
+          <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+            <Button
+              variant="outline"
+              onClick={() => onSlideChange(currentSlideIndex - 1)}
+              disabled={currentSlideIndex === 0}
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Previous
+            </Button>
+            <Progress value={progress} className="flex-1" />
+            <Button
+              variant="outline"
+              onClick={() => onSlideChange(currentSlideIndex + 1)}
+              disabled={currentSlideIndex === lesson.slides.length - 1}
+            >
+              Next
+              <ChevronRight className="h-4 w-4 ml-2" />
+            </Button>
           </div>
         </div>
       </div>

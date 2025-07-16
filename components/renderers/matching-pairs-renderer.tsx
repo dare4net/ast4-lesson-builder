@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle, Lock } from "lucide-react"
 import { useFeedback } from "@/lib/feedback-context"
 import { cn } from "@/lib/utils"
 
@@ -23,6 +23,9 @@ interface MatchingPairsRendererProps {
     totalPossible: number;
     addPoints: (points: number) => void;
   };
+  mode?: 'practice' | 'live';
+  state?: 'active' | 'disabled';
+  disabled?: boolean;
 }
 
 // Generate a random pastel color
@@ -40,9 +43,14 @@ export function MatchingPairsRenderer({
   scoreContext,
   savedState,
   setComponentState,
+  mode = 'practice',
+  state = 'active',
+  disabled = false,
 }: MatchingPairsRendererProps & { savedState?: any; setComponentState?: (state: any) => void }) {
   const { playFeedback } = useFeedback();
   const [mounted, setMounted] = useState(false);
+  const isDisabled = disabled || state === 'disabled';
+  const isLiveMode = mode === 'live';
 
   // State initialization: use savedState if present, else shuffle and persist
   const [leftItems, setLeftItems] = useState<(MatchingPair & { selected: boolean })[]>(() => {
@@ -135,6 +143,9 @@ export function MatchingPairsRenderer({
     setIsCorrect(false);
   }, [pairs, shuffled, isEditing, savedState])
   const handleLeftClick = async (id: string) => {
+    // Don't do anything if disabled
+    if (isDisabled) return;
+
     // Play click sound immediately if item is clickable
     if (!(isChecking || Object.keys(matches).includes(id))) {
       await playFeedback('click', { sound: true, animation: false });
@@ -152,6 +163,9 @@ export function MatchingPairsRenderer({
   };
 
   const handleRightClick = async (id: string) => {
+    // Don't do anything if disabled
+    if (isDisabled) return;
+
     // Play click sound immediately if item is clickable
     if (!(isChecking || Object.values(matches).some(m => m.rightId === id))) {
       await playFeedback('click', { sound: true, animation: false });
@@ -275,7 +289,11 @@ export function MatchingPairsRenderer({
   const allPairsMatched = Object.keys(matches).length === pairs.length
 
   return (
-    <div className="duo-card space-y-6">
+    <div className={cn(
+      "duo-card space-y-6",
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       {/* Progress indicator */}
       <div className="duo-progress-bar">
         <div
@@ -285,7 +303,22 @@ export function MatchingPairsRenderer({
       </div>
 
       <div className="space-y-6">
-        <h3 className="text-xl font-bold">{title}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-bold">{title}</h3>
+          <div className="flex items-center gap-4">
+            {isLiveMode && (
+              <div className="flex items-center gap-2 text-sm text-blue-500">
+                <span>Live Mode</span>
+              </div>
+            )}
+            {isDisabled && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Lock className="h-4 w-4" />
+                <span>Locked</span>
+              </div>
+            )}
+          </div>
+        </div>
 
         <div className="grid grid-cols-2 gap-6">
           {/* Left items */}
@@ -306,7 +339,8 @@ export function MatchingPairsRenderer({
                         ? 'bg-[#E8F5E9] text-[#2E7D32] border-[#4CAF50]'
                         : 'bg-destructive/20 text-destructive border-destructive'
                     ),
-                    (isMatched || isChecking) && 'cursor-not-allowed'
+                    (isMatched || isChecking || isDisabled) && 'cursor-not-allowed',
+                    isDisabled && 'opacity-75'
                   )}
                   onClick={() => handleLeftClick(item.id)}
                   disabled={isMatched || isChecking}
@@ -374,6 +408,7 @@ export function MatchingPairsRenderer({
             <Button
               className="w-full duo-button bg-primary text-primary-foreground"
               onClick={handleCheck}
+              disabled={isDisabled}
             >
               Check
             </Button>
@@ -415,6 +450,7 @@ export function MatchingPairsRenderer({
                 <Button
                   className="w-full duo-button bg-secondary text-secondary-foreground"
                   onClick={resetGame}
+                  disabled={isDisabled}
                 >
                   Try Again
                 </Button>

@@ -1,0 +1,32 @@
+/* Disabled state styles */
+.disabled-component {
+  position: relative;
+}
+
+.disabled-component button,
+.disabled-component input,
+.disabled-component select,
+.disabled-component textarea,
+.disabled-component [role="button"],
+.disabled-component [tabindex]:not([tabindex="-1"]) {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  opacity: 0.75;
+}
+
+.disabled-component a {
+  pointer-events: none;
+}
+
+/* Prevent drag and drop in disabled state */
+.disabled-component [draggable] {
+  pointer-events: none !important;
+}
+
+/* Visual feedback for interactive elements */
+.disabled-component button:not([disabled]),
+.disabled-component [role="button"]:not([disabled]) {
+  background-color: var(--muted) !important;
+  border-color: var(--border) !important;
+  color: var(--muted-foreground) !important;
+}

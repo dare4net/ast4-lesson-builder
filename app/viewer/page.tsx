@@ -1,4 +1,4 @@
-import { LessonViewer } from '@/components/viewer/LessonViewer';
+import { LessonViewer } from '@/components/viewer/LessonViewerUpload';
 
 export default function ViewerPage() {
   return (

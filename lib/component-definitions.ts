@@ -359,6 +359,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       showExplanation: true,
       shuffleOptions: false,
       points: 10,
+      mode: "practice",
+      state: "active"
     },
     propDefinitions: [
       {
@@ -402,6 +404,28 @@ export const componentDefinitions: ComponentDefinition[] = [
         defaultValue: 10,
         min: 0,
         max: 100,
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
       },
     ],
   },
@@ -465,6 +489,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       ],
       shuffled: true,
       points: 15,
+      mode: "practice",
+      state: "active",
     },
     propDefinitions: [
       {
@@ -501,6 +527,28 @@ export const componentDefinitions: ComponentDefinition[] = [
         min: 0,
         max: 100,
       },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
     ],
   },
   {
@@ -518,6 +566,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       ],
       shuffled: true,
       points: 15,
+      mode: "practice",
+      state: "active",
     },
     propDefinitions: [
       {
@@ -554,6 +604,28 @@ export const componentDefinitions: ComponentDefinition[] = [
         min: 0,
         max: 100,
       },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
     ],
   },
   {
@@ -571,6 +643,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       ],
       caseSensitive: false,
       points: 10,
+      mode: "practice",
+      state: "active",
     },
     propDefinitions: [
       {
@@ -613,6 +687,28 @@ export const componentDefinitions: ComponentDefinition[] = [
         min: 0,
         max: 100,
       },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
     ],
   },
   {
@@ -628,6 +724,8 @@ export const componentDefinitions: ComponentDefinition[] = [
         { id: "2", front: "What is the capital of Japan?", back: "Tokyo" },
         { id: "3", front: "What is the capital of Australia?", back: "Canberra" },
       ],
+      mode: "practice",
+      state: "active"
     },
     propDefinitions: [
       {
@@ -646,6 +744,28 @@ export const componentDefinitions: ComponentDefinition[] = [
           { id: "1", front: "What is the capital of France?", back: "Paris" },
           { id: "2", front: "What is the capital of Japan?", back: "Tokyo" },
           { id: "3", front: "What is the capital of Australia?", back: "Canberra" },
+        ],
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
         ],
       },
     ],
@@ -669,6 +789,8 @@ export const componentDefinitions: ComponentDefinition[] = [
         },
       ],
       points: 10,
+      mode: "practice",
+      state: "active",
     },
     propDefinitions: [
       {
@@ -727,6 +849,28 @@ export const componentDefinitions: ComponentDefinition[] = [
         min: 0,
         max: 100,
       },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
     ],
   },
   {
@@ -783,6 +927,8 @@ export const componentDefinitions: ComponentDefinition[] = [
         { id: "1", x: 0.3, y: 0.4, label: "Point 1", content: "This is the first point of interest" },
         { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
       ],
+      mode: "practice",
+      state: "active",
     },
     propDefinitions: [
       {
@@ -807,6 +953,28 @@ export const componentDefinitions: ComponentDefinition[] = [
         defaultValue: [
           { id: "1", x: 0.3, y: 0.4, label: "Point 1", content: "This is the first point of interest" },
           { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
+        ],
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
         ],
       },
     ],

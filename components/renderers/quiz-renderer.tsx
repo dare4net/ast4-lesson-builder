@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/button';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, Lock } from 'lucide-react';
 import { useFeedback } from '@/lib/feedback-context';
 import { cn } from '@/lib/utils';
 
@@ -30,6 +30,9 @@ interface QuizRendererProps {
     addPoints: (points: number) => void;
   };
   onScoreUpdate?: (score: number) => void;
+  mode?: 'practice' | 'live';
+  state?: 'active' | 'disabled';
+  disabled?: boolean;
 }
 
 export function QuizRenderer({
@@ -41,9 +44,14 @@ export function QuizRenderer({
   onScoreUpdate,
   savedState,
   setComponentState,
+  mode = 'practice',
+  state = 'active',
+  disabled = false,
 }: QuizRendererProps & { savedState?: any; setComponentState?: (state: any) => void }) {
   // Use savedState for initial state if available
   const [mounted, setMounted] = useState(false);
+  const isDisabled = disabled || state === 'disabled';
+  const isLiveMode = mode === 'live';
   const [currentQuestion, setCurrentQuestion] = useState(savedState?.currentQuestion ?? 0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(savedState?.selectedAnswer ?? null);
   const [isAnswered, setIsAnswered] = useState(savedState?.isAnswered ?? false);
@@ -79,13 +87,13 @@ export function QuizRenderer({
   }, []);
 
   const handleAnswerSelect = async (optionId: string) => {
-    if (isAnswered) return;
+    if (isAnswered || isDisabled) return;
     setSelectedAnswer(optionId);
     await playFeedback('click', { animation: false, sound: true });
   };
 
   const handleCheckAnswer = async () => {
-    if (selectedAnswer === null || isAnswered) return;
+    if (selectedAnswer === null || isAnswered || isDisabled) return;
 
     const selectedOption = questions[currentQuestion].options.find(opt => opt.id === selectedAnswer);
     const isCorrect = selectedOption?.isCorrect ?? false;
@@ -138,14 +146,37 @@ export function QuizRenderer({
   if (!question) return null;
 
   return (
-    <div className={cn("duo-card space-y-6", animationClass)}>
+    <div className={cn(
+      "duo-card space-y-6",
+      animationClass,
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
+      {/* Header with mode/state indicators */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-bold">{title}</h3>
+        <div className="flex items-center gap-4">
+          {isLiveMode && (
+            <div className="flex items-center gap-2 text-sm text-blue-500">
+              <span>Live Mode</span>
+            </div>
+          )}
+          {isDisabled && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Lock className="h-4 w-4" />
+              <span>Locked</span>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Progress bar */}
       <div className="duo-progress-bar">
         <div
           className="duo-progress-bar-fill"
           style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
         />
-        </div>
+      </div>
 
       {/* Question */}
       <div className="space-y-4">
@@ -167,11 +198,12 @@ export function QuizRenderer({
                   isSelected && !isAnswered && 'bg-secondary/20',
                   showCorrect && 'bg-[#E8F5E9] border-[#4CAF50] text-[#2E7D32]',
                   showIncorrect && 'bg-destructive/20 border-destructive',
-                  isAnswered && 'cursor-not-allowed',
-                  !isAnswered && 'hover:bg-secondary/10'
+                  (isAnswered || isDisabled) && 'cursor-not-allowed',
+                  !isAnswered && !isDisabled && 'hover:bg-secondary/10',
+                  isDisabled && 'opacity-75'
                 )}
                 onClick={() => handleAnswerSelect(option.id)}
-                disabled={isAnswered}
+                disabled={isAnswered || isDisabled}
               >
                 <div className="flex items-center justify-between">
                   <span>{option.text}</span>
@@ -231,7 +263,7 @@ export function QuizRenderer({
             isAnswered && currentQuestion < questions.length - 1 && 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
           )}
           onClick={isAnswered ? handleNextQuestion : handleCheckAnswer}
-          disabled={selectedAnswer === null && !isAnswered}
+          disabled={(selectedAnswer === null && !isAnswered) || isDisabled}
         >
           {isAnswered
             ? currentQuestion < questions.length - 1

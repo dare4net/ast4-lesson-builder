@@ -18,7 +18,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [totalPossible, setTotalPossible] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [loading, setLoading] = useState<boolean>(!initialLesson); // NEW: loading state
+  const [loading, setLoading] = useState<boolean>(false); // Only set to true during actual file upload
   const lessonContentRef = useRef<any>(null);
 
   // Function to check if a slide is accessible

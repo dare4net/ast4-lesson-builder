@@ -6,7 +6,8 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface Blank {
   id: string
@@ -26,6 +27,11 @@ interface FillInTheBlankRendererProps {
     totalPossible: number
     addPoints: (points: number) => void
   }
+  mode?: 'practice' | 'live'
+  state?: 'active' | 'disabled'
+  disabled?: boolean
+  savedState?: any // Persisted state from parent
+  setComponentState?: (state: any) => void // State persister
 }
 
 export function FillInTheBlankRenderer({
@@ -36,11 +42,20 @@ export function FillInTheBlankRenderer({
   points = 10,
   isEditing = false,
   scoreContext,
+  mode = 'practice',
+  state = 'active',
+  disabled = false,
+  savedState,
+  setComponentState,
 }: FillInTheBlankRendererProps) {
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({})
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>({})
-  const [score, setScore] = useState(0)
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>(savedState?.userAnswers ?? {})
+  const [isSubmitted, setIsSubmitted] = useState(savedState?.isSubmitted ?? false)
+  const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>(savedState?.correctAnswers ?? {})
+  const [score, setScore] = useState(savedState?.score ?? 0)
+  const [mounted, setMounted] = useState(false)
+  
+  const isDisabled = disabled || state === 'disabled'
+  const isLiveMode = mode === 'live'
 
   // Initialize user answers
   useEffect(() => {
@@ -82,6 +97,7 @@ export function FillInTheBlankRenderer({
   }
 
   const handleSubmit = () => {
+    if (isDisabled) return;
     const results: Record<string, boolean> = {}
     let correctCount = 0
 
@@ -105,6 +121,7 @@ export function FillInTheBlankRenderer({
   }
 
   const handleReset = () => {
+    if (isDisabled) return;
     const initialAnswers: Record<string, string> = {}
     blanks.forEach((blank) => {
       initialAnswers[blank.id] = ""
@@ -114,6 +131,23 @@ export function FillInTheBlankRenderer({
     setCorrectAnswers({})
     setScore(0)
   }
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Persist state on every change
+  useEffect(() => {
+    if (!mounted) return;
+    setComponentState?.({
+      userAnswers,
+      isSubmitted,
+      correctAnswers,
+      score
+    });
+  }, [mounted, userAnswers, isSubmitted, correctAnswers, score, setComponentState]);
+
+  if (!mounted) return null;
 
   // In editing mode, show a simplified version
   if (isEditing) {
@@ -148,14 +182,13 @@ export function FillInTheBlankRenderer({
                 <Input
                   value={userAnswers[blanks[index].id] || ""}
                   onChange={(e) => handleAnswerChange(blanks[index].id, e.target.value)}
-                  disabled={isSubmitted}
-                  className={`w-full inline-block ${
-                    isSubmitted
-                      ? correctAnswers[blanks[index].id]
-                        ? "border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]"
-                        : "border-destructive bg-destructive/20 text-destructive"
-                      : ""
-                  }`}
+                  disabled={isSubmitted || isDisabled}
+                  className={cn(
+                    "w-full inline-block",
+                    isDisabled && "opacity-75",
+                    isSubmitted && correctAnswers[blanks[index].id] && "border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]",
+                    isSubmitted && !correctAnswers[blanks[index].id] && "border-destructive bg-destructive/20 text-destructive"
+                  )}
                 />
                 {isSubmitted && (
                   <span className="inline-block ml-2">
@@ -178,9 +211,27 @@ export function FillInTheBlankRenderer({
   }
 
   return (
-    <Card>
+    <Card className={cn(
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{title}</CardTitle>
+          <div className="flex items-center gap-4">
+            {isLiveMode && (
+              <div className="flex items-center gap-2 text-sm text-blue-500">
+                <span>Live Mode</span>
+              </div>
+            )}
+            {isDisabled && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Lock className="h-4 w-4" />
+                <span>Locked</span>
+              </div>
+            )}
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -218,9 +269,20 @@ export function FillInTheBlankRenderer({
       </CardContent>
       <CardFooter>
         {!isSubmitted ? (
-          <Button onClick={handleSubmit}>Check Answers</Button>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={isDisabled}
+            className={cn(isDisabled && "opacity-75")}
+          >
+            Check Answers
+          </Button>
         ) : (
-          <Button onClick={handleReset} variant="outline">
+          <Button 
+            onClick={handleReset} 
+            variant="outline" 
+            disabled={isDisabled}
+            className={cn(isDisabled && "opacity-75")}
+          >
             Try Again
           </Button>
         )}

@@ -11,8 +11,8 @@ import { useMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { LayoutGrid } from "lucide-react"
-import type { Lesson, Slide, Component, ComponentType } from "@/types/lesson"
-import { defaultLesson } from "@/lib/default-lesson"
+import type { Lesson, Slide, Component, ComponentType, SlideStatus } from "@/types/lesson"
+import { defaultLesson, categorizeComponents, getComponentTypeCategory } from "@/lib/default-lesson"
 import { CustomDndProvider } from "@/components/dnd-provider"
 import { useFeedback } from "@/lib/feedback-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -64,6 +64,9 @@ export function LessonBuilder() {
       id: `slide-${Date.now()}`,
       title: `Slide ${lesson.slides.length + 1}`,
       components: [],
+      status: "uncompleted",
+      state: "active",
+      categorizedComponents: categorizeComponents([])
     }
 
     setLesson((prevLesson) => ({
@@ -83,26 +86,45 @@ export function LessonBuilder() {
     })
   }, [lesson.slides.length, toast, playFeedback])
 
+  // Update slide status based on components
+  const updateSlideStatus = useCallback((slide: Slide) => {
+    const allInteractiveAndGamified = [
+      ...slide.categorizedComponents.interactive,
+      ...slide.categorizedComponents.gamified
+    ];
+
+    const newStatus: SlideStatus = allInteractiveAndGamified.length > 0 
+      ? allInteractiveAndGamified.every(comp => comp.status === "completed")
+        ? "completed"
+        : "uncompleted"
+      : "completed";
+
+    return {
+      ...slide,
+      status: newStatus
+    };
+  }, []);
+
   // Update a slide
   const updateSlide = useCallback(
     async (updatedSlide: Slide) => {
-      setLesson((prevLesson) => {
-        // Create a new slides array with the updated slide
-        const updatedSlides = prevLesson.slides.map((slide, index) =>
-          index === currentSlideIndex ? updatedSlide : slide,
-        )
-
-        // Return a new lesson object with the updated slides
-        return {
-          ...prevLesson,
-          slides: updatedSlides,
-        }
-      })
-
-      // Play feedback
-      await playFeedback('click', { animation: false })
+      // Ensure categorizedComponents is up to date
+      const slideWithCategories = {
+        ...updatedSlide,
+        categorizedComponents: categorizeComponents(updatedSlide.components)
+      };
+      
+      // Update status based on the categorized components
+      const finalSlide = updateSlideStatus(slideWithCategories);
+      
+      setLesson((prev) => ({
+        ...prev,
+        slides: prev.slides.map((slide) =>
+          slide.id === finalSlide.id ? finalSlide : slide
+        ),
+      }))
     },
-    [currentSlideIndex, playFeedback],
+    [updateSlideStatus],
   )
 
   // Delete a slide
@@ -238,19 +260,27 @@ export function LessonBuilder() {
 
   // Add component to the current slide
   const addComponent = useCallback(async (type: string, defaultProps: Record<string, any> = {}) => {
-      const newComponent: Component = {
+    const newComponent: Component = {
       id: `${type}-${Date.now()}`,
       type: type as ComponentType,
+      component_type: getComponentTypeCategory(type),
       props: defaultProps,
+      state: "active",
+      status: "uncompleted",
+      ...(["quiz", "dragDrop", "matchingPairs", "scoreBoard"].includes(type) && { mode: "practice" })
     };
 
-    updateSlide({
+    const updatedComponents = [...currentSlide.components, newComponent];
+    const updatedSlide = {
       ...currentSlide,
-      components: [...currentSlide.components, newComponent],
-    });
+      components: updatedComponents,
+      categorizedComponents: categorizeComponents(updatedComponents)
+    };
+
+    updateSlide(updatedSlide);
 
     await playFeedback('click')
-
+    
     toast({
       title: "Component added",
       description: `Added new ${type} component`,
@@ -283,16 +313,20 @@ export function LessonBuilder() {
       id: `slide-${Date.now()}`,
       title: `Slide ${lesson.slides.length + 1}`,
       components: [],
-    }
+      status: "uncompleted",
+      state: "active",
+      get categorizedComponents() {
+        return categorizeComponents(this.components);
+      }
+    };
 
-    setLesson((prevLesson) => ({
-          ...prevLesson,
-      slides: [...prevLesson.slides, newSlide],
-    }))
+    setLesson((prev) => ({
+      ...prev,
+      slides: [...prev.slides, newSlide],
+    }));
 
-    setCurrentSlideIndex(lesson.slides.length)
     await playFeedback('click')
-  }, [lesson.slides.length, toast, playFeedback])
+  }, [lesson.slides.length, playFeedback])
 
   const handleDeleteSlide = useCallback(async () => {
     if (lesson.slides.length <= 1) {
@@ -382,6 +416,7 @@ export function LessonBuilder() {
                   addSlide={handleAddSlide}
                   deleteSlide={handleDeleteSlide}
                   reorderSlides={reorderSlides}
+                  updateSlide={updateSlide}
                 />
               </ScrollArea>
             </div>

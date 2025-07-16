@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils"
 import type { XYCoord } from 'react-dnd'
 import dynamic from "next/dynamic"
 import { useFeedback } from "@/lib/feedback-context"
+import { SlideEditModal } from "./slide-edit-modal"
 
 // Import DraggableComponent dynamically to avoid SSR issues
 const DraggableComponent = dynamic(
@@ -44,6 +45,7 @@ export function SlideEditor({ slide, updateSlide, deleteSlide, slideIndex, class
   const [mounted, setMounted] = useState(false);
   const [editingComponentId, setEditingComponentId] = useState<string | null>(null);
   const [isComponentEditorOpen, setIsComponentEditorOpen] = useState(false);
+  const [isSlideEditOpen, setIsSlideEditOpen] = useState(false);
   const { playFeedback } = useFeedback();
 
   useEffect(() => {
@@ -103,6 +105,17 @@ export function SlideEditor({ slide, updateSlide, deleteSlide, slideIndex, class
     await playFeedback('click', { animation: false });
   }, [playFeedback]);
 
+  const handleSlideEdit = useCallback(async () => {
+    setIsSlideEditOpen(true);
+    await playFeedback('click', { animation: false });
+  }, [playFeedback]);
+
+  const handleSlideEditSave = useCallback(async (updatedSlide: Slide) => {
+    await updateSlide(updatedSlide);
+    setIsSlideEditOpen(false);
+    await playFeedback('click');
+  }, [updateSlide, playFeedback]);
+
   const editingComponent = editingComponentId 
     ? slide.components.find(c => c.id === editingComponentId)
     : null;
@@ -122,6 +135,13 @@ export function SlideEditor({ slide, updateSlide, deleteSlide, slideIndex, class
               onChange={handleTitleChange}
               className="text-lg font-semibold flex-1"
             />
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={handleSlideEdit}
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
             <Button 
               variant="ghost"
               size="icon"
@@ -163,6 +183,13 @@ export function SlideEditor({ slide, updateSlide, deleteSlide, slideIndex, class
             </SheetContent>
           </Sheet>
         )}
+
+      <SlideEditModal
+        slide={slide}
+        isOpen={isSlideEditOpen}
+        onClose={() => setIsSlideEditOpen(false)}
+        onSave={handleSlideEditSave}
+      />
       </div>
   );
 }

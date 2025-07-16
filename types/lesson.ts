@@ -14,13 +14,43 @@ export interface Slide {
   id: string
   title: string
   components: Component[]
+  status: SlideStatus
+  state: SlideState
+  categorizedComponents: {
+    gamified: Component[]
+    interactive: Component[]
+    content: Component[]
+    media: Component[]
+    utility: Component[]
+    structure: Component[]
+  }
 }
+
+export type SlideStatus = "completed" | "uncompleted"
+export type SlideState = "active" | "disabled"
 
 export interface Component {
   id: string
   type: ComponentType
   props: Record<string, any>
+  component_type: ComponentType_Category
+  state?: ComponentState
+  status?: ComponentStatus
+  mode?: ComponentMode
 }
+
+export type ComponentType_Category = 
+  | "interactive"
+  | "gamified" 
+  | "content"
+  | "visual-guide"
+  | "media"
+  | "utility"
+  | "structure"
+
+export type ComponentState = "active" | "disabled"
+export type ComponentStatus = "completed" | "uncompleted"
+export type ComponentMode = "practice" | "live"
 
 export type ComponentType =
   // Content Components

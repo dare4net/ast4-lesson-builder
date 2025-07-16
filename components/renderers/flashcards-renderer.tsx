@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface Flashcard {
@@ -16,15 +16,28 @@ interface FlashcardsRendererProps {
   title?: string
   cards?: Flashcard[]
   isEditing?: boolean
+  mode?: 'practice' | 'live'
+  state?: 'active' | 'disabled'
+  disabled?: boolean
 }
 
-export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing = false }: FlashcardsRendererProps) {
+export function FlashcardsRenderer({ 
+  title = "Flashcards", 
+  cards = [], 
+  isEditing = false,
+  mode = 'practice',
+  state = 'active',
+  disabled = false
+}: FlashcardsRendererProps) {
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
 
   const currentCard = cards[currentCardIndex]
+  const isDisabled = disabled || state === 'disabled'
+  const isLiveMode = mode === 'live'
 
   const goToNextCard = () => {
+    if (isDisabled) return
     if (currentCardIndex < cards.length - 1) {
       setCurrentCardIndex(currentCardIndex + 1)
       setIsFlipped(false)
@@ -32,6 +45,7 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
   }
 
   const goToPreviousCard = () => {
+    if (isDisabled) return
     if (currentCardIndex > 0) {
       setCurrentCardIndex(currentCardIndex - 1)
       setIsFlipped(false)
@@ -39,6 +53,7 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
   }
 
   const flipCard = () => {
+    if (isDisabled) return
     setIsFlipped(!isFlipped)
   }
 
@@ -82,9 +97,27 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
   }
 
   return (
-    <Card>
+    <Card className={cn(
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{title}</CardTitle>
+          <div className="flex items-center gap-4">
+            {isLiveMode && (
+              <div className="flex items-center gap-2 text-sm text-blue-500">
+                <span>Live Mode</span>
+              </div>
+            )}
+            {isDisabled && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Lock className="h-4 w-4" />
+                <span>Locked</span>
+              </div>
+            )}
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         {/* Progress bar */}
@@ -97,31 +130,40 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
 
         <div className="relative perspective-1000">
           <div
-            className={`relative w-full h-64 cursor-pointer transition-transform duration-500 transform-style-preserve-3d ${
-              isFlipped ? "rotate-y-180" : ""
-            }`}
+            className={cn(
+              "relative w-full h-64 transition-transform duration-500 transform-style-preserve-3d",
+              isFlipped ? "rotate-y-180" : "",
+              !isDisabled && "cursor-pointer"
+            )}
             onClick={flipCard}
           >
             {/* Front of card */}
             <div
-              className={`absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md ${
-                isFlipped ? "opacity-0" : "opacity-100 bg-white hover:bg-secondary/10"
-              }`}
+              className={cn(
+                "absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md",
+                isFlipped ? "opacity-0" : "opacity-100 bg-white",
+                !isDisabled && "hover:bg-secondary/10"
+              )}
             >
               <div className="text-center">
                 <div className="text-lg font-medium">{currentCard.front}</div>
-                <div className="mt-4 text-sm text-muted-foreground">Click to flip</div>
+                {!isDisabled && (
+                  <div className="mt-4 text-sm text-muted-foreground">Click to flip</div>
+                )}
               </div>
             </div>
             {/* Back of card */}
             <div
-              className={`absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md rotate-y-180 ${
+              className={cn(
+                "absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md rotate-y-180",
                 isFlipped ? "opacity-100 bg-[#E8F5E9] text-[#2E7D32] border-[#4CAF50]" : "opacity-0"
-              }`}
+              )}
             >
               <div className="text-center">
                 <div className="text-lg">{currentCard.back}</div>
-                <div className="mt-4 text-sm text-muted-foreground">Click to flip back</div>
+                {!isDisabled && (
+                  <div className="mt-4 text-sm text-muted-foreground">Click to flip back</div>
+                )}
               </div>
             </div>
           </div>
@@ -143,13 +185,28 @@ export function FlashcardsRenderer({ title = "Flashcards", cards = [], isEditing
       </CardContent>
       <CardFooter className="flex justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={goToPreviousCard} disabled={currentCardIndex === 0}>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={goToPreviousCard} 
+            disabled={currentCardIndex === 0 || isDisabled}
+          >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={flipCard}>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={flipCard}
+            disabled={isDisabled}
+          >
             <RotateCw className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={goToNextCard} disabled={currentCardIndex === cards.length - 1}>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={goToNextCard} 
+            disabled={currentCardIndex === cards.length - 1 || isDisabled}
+          >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

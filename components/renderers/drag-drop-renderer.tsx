@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, XCircle, MoveUp, MoveDown } from "lucide-react"
+import { CheckCircle2, XCircle, MoveUp, MoveDown, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/lib/feedback-context"
 
@@ -24,6 +24,9 @@ interface DragDropRendererProps {
     totalPossible: number
     addPoints: (points: number) => void
   }
+  mode?: 'practice' | 'live'
+  state?: 'active' | 'disabled'
+  disabled?: boolean
   savedState?: any // Persisted state from parent
   setComponentState?: (state: any) => void // State persister
 }
@@ -43,9 +46,14 @@ export function DragDropRenderer({
   scoreContext,
   savedState,
   setComponentState,
+  mode = 'practice',
+  state = 'active',
+  disabled = false,
 }: DragDropRendererProps) {
   const { playFeedback } = useFeedback();
   const [mounted, setMounted] = useState(false);
+  const isDisabled = disabled || state === 'disabled';
+  const isLiveMode = mode === 'live';
   // State initialization: use savedState if present, else shuffle and persist
   const [dragItems, setDragItems] = useState<({
     id: string;
@@ -80,7 +88,7 @@ export function DragDropRenderer({
   }, [dragItems, isSubmitted, isCorrect]);
 
   const moveItem = async (index: number, direction: 'up' | 'down') => {
-    if (isSubmitted) return;
+    if (isSubmitted || isDisabled) return;
     const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= dragItems.length) return;
     await playFeedback('click', { sound: true, animation: false });
@@ -136,9 +144,28 @@ export function DragDropRenderer({
   }
 
   return (
-    <Card className="duo-card">
+    <Card className={cn(
+      "duo-card",
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       <div className="p-6 space-y-6">
-        <h2 className="text-xl font-bold">{title}</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold">{title}</h2>
+          <div className="flex items-center gap-4">
+            {isLiveMode && (
+              <div className="flex items-center gap-2 text-sm text-blue-500">
+                <span>Live Mode</span>
+              </div>
+            )}
+            {isDisabled && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Lock className="h-4 w-4" />
+                <span>Locked</span>
+              </div>
+            )}
+          </div>
+        </div>
         <div className="space-y-2">
           {dragItems.map((item, index) => (
             <div
@@ -163,8 +190,11 @@ export function DragDropRenderer({
                     variant="ghost"
                     size="icon"
                     onClick={() => moveItem(index, 'up')}
-                    disabled={index === 0}
-                    className="h-8 w-8 hover:bg-muted/60"
+                    disabled={index === 0 || isDisabled}
+                    className={cn(
+                      "h-8 w-8",
+                      !isDisabled && "hover:bg-muted/60"
+                    )}
                   >
                     <MoveUp className="h-4 w-4" />
                     <span className="sr-only">Move Up</span>
@@ -173,7 +203,7 @@ export function DragDropRenderer({
                     variant="ghost"
                     size="icon"
                     onClick={() => moveItem(index, 'down')}
-                    disabled={index === dragItems.length - 1}
+                    disabled={index === dragItems.length - 1 || isDisabled}
                     className="h-8 w-8 hover:bg-muted/60"
                   >
                     <MoveDown className="h-4 w-4" />
@@ -225,6 +255,7 @@ export function DragDropRenderer({
                 <Button
                   className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
                   onClick={handleReset}
+                  disabled={isDisabled}
                 >
                   Try Again
                 </Button>
@@ -235,6 +266,7 @@ export function DragDropRenderer({
             <Button
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={handleCheck}
+              disabled={isDisabled}
             >
               Check Order
             </Button>
