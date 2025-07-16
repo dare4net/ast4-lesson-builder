@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -64,6 +65,21 @@
     --border: 200 25% 30%;
     --input: 200 25% 30%;
     --ring: 130 60% 40%;
+  }
+
+  html, body {
+    font-family: 'Nunito', 'DIN Round Pro', Arial, sans-serif;
+    @apply antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-heading {
+    font-family: 'Lexend', 'Nunito', 'DIN Round Pro', Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .font-body {
+    font-family: 'Nunito', 'DIN Round Pro', Arial, sans-serif;
   }
 }
 

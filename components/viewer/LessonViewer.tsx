@@ -18,6 +18,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [totalPossible, setTotalPossible] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [loading, setLoading] = useState<boolean>(!initialLesson); // NEW: loading state
   const lessonContentRef = useRef<any>(null);
 
   // Save gamified state every 30s
@@ -52,7 +53,9 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, lessonData]);
 
+  // Handle file upload with loading state
   const handleFileUpload = async (file: File) => {
+    setLoading(true);
     try {
       const content = await file.text();
       const parsed = JSON.parse(content);
@@ -98,6 +101,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     } catch (err) {
       setError('Failed to load lesson file. Please make sure it\'s a valid After School Tech lesson file.');
       setLessonData(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -199,6 +204,17 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       </div>
     </div>
   );
+
+  // NEW: Show loading spinner until lessonData is fully loaded
+  if (loading) {
+    return (
+      <div className="h-screen w-screen flex items-center justify-center p-4">
+        <Card className="p-6 w-full max-w-lg text-center">
+          <h2 className="mb-4 text-xl font-semibold">Loading lesson...</h2>
+        </Card>
+      </div>
+    );
+  }
 
   if (!lessonData) {
     return (
