@@ -152,7 +152,7 @@ export function QuizRenderer({
     if (isCorrect) {
       // Only add points to scoreContext in live mode
       if (isLiveMode && scoreContext?.addPoints) {
-        scoreContext.addPoints(10);
+        scoreContext.addPoints(points);
       }
       await playFeedback('correct');
     } else {

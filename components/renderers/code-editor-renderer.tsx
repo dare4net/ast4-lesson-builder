@@ -96,7 +96,7 @@ export function CodeEditorRenderer({
         output,
         testResults,
         isSubmitted,
-        status: isLiveMode || Object.values(testResults).every(Boolean) ? 'completed' : 'active'
+        status: 'completed'
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -225,7 +225,7 @@ export function CodeEditorRenderer({
           : isLiveMode 
             ? `${passedCount} of ${testCases.length} tests passed. Continue to improve!` 
             : `${passedCount} of ${testCases.length} tests passed. Try again!`,
-        status: isLiveMode || allTestsPassed ? 'completed' : 'active'
+        status: isLiveMode ? 'completed' : 'active'
       }
 
       setTestResults(results)

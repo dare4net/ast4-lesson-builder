@@ -1,6 +1,6 @@
 import { Howl } from 'howler';
 
-export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak';
+export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip';
 
 interface SoundStatus {
   loaded: boolean;
@@ -20,7 +20,8 @@ class SoundEffectManager {
       complete: new Howl({ src: ['/sounds/complete.mp3'] }),
       click: new Howl({ src: ['/sounds/click.wav'] }),
       levelUp: new Howl({ src: ['/sounds/level-up.mp3'] }),
-      streak: new Howl({ src: ['/sounds/streak.mp3'] })
+      streak: new Howl({ src: ['/sounds/streak.mp3'] }),
+      flashcardFlip: new Howl({ src: ['/sounds/flashcard-flip.mp3'] })
     };
 
     this.status = Object.keys(this.sounds).reduce((acc, key) => ({

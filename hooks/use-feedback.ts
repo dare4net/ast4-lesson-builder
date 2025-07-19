@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { SoundEffects, SoundEffect } from '../lib/sound-effects';
 
-type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak';
+type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak'| 'flashcardFlip';
 
 interface FeedbackOptions {
   animation?: boolean;

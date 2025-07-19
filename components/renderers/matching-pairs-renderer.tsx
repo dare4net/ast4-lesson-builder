@@ -208,18 +208,36 @@ export function MatchingPairsRenderer({
     setIsCorrect(allCorrect);
     setMatchStats({ correctCount, noneCorrect, someCorrect });
     
+    // Calculate points per correct match
+    //const pointsPerMatch = Math.round(points / pairs.length);
+    const earnedPoints = correctCount * points;
+
     if (allCorrect) {
       await playFeedback('correct');
-      // Only add points in live mode
-      if (isLiveMode && scoreContext) {
-        scoreContext.addPoints(points);
-      }
+    } else if (correctCount > 0) {
+      await playFeedback('complete');
     } else {
       await playFeedback('incorrect');
     }
+
+    // Award points for correct matches in live mode
+    if (isLiveMode && scoreContext && correctCount > 0) {
+      scoreContext.addPoints(earnedPoints);
+      // Save state explicitly when points are awarded
+      setComponentState?.({
+        leftItems,
+        rightItems,
+        selectedLeft,
+        selectedRight,
+        matches,
+        isChecking: true,
+        isCorrect: allCorrect,
+        matchStats: { correctCount, noneCorrect, someCorrect },
+        status: 'completed'
+      })
+    }
     
-    // Always mark as completed in live mode, or when correct in practice mode
-    const isCompleted = isLiveMode || allCorrect;
+    // Mark as completed after submission regardless of mode
     setComponentState?.({
       leftItems,
       rightItems,
@@ -229,7 +247,7 @@ export function MatchingPairsRenderer({
       isChecking: true,
       isCorrect: allCorrect,
       matchStats: { correctCount, noneCorrect, someCorrect },
-      status: isCompleted ? 'completed' : 'active' // Only mark as completed in live mode or when correct
+      status: 'completed' // Mark as completed after submission
     });
   };
 

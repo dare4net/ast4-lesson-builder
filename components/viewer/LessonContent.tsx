@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useFeedback } from '@/hooks/use-feedback';
 import type { Lesson, Component, ComponentType_Category } from '@/types/lesson';
 
 interface LessonContentProps {
@@ -25,6 +26,7 @@ export interface LessonContentRef {
 
 export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
   function LessonContent({ lesson, onScoreUpdate, currentSlideIndex, onSlideChange, initialComponentStates = {}, onSlidesUpdate, savedScore }, ref) {
+    const { playFeedback } = useFeedback();
     const [score, setScore] = useState(savedScore || 0);
     const [totalPossible, setTotalPossible] = useState(0);
     const currentSlide = lesson.slides[currentSlideIndex];
@@ -154,6 +156,9 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           status: "completed"
         };
         
+        // Play level-up feedback when slide is completed
+        playFeedback('levelUp');
+        
         // Check if there's a next slide and set its state to active
         if (currentSlideIndex < lesson.slides.length - 1) {
           updatedSlides[currentSlideIndex + 1] = {
@@ -170,7 +175,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       }
 
       console.log('Slide completion check completed for:', currentSlide.title);
-    }, [currentSlide, componentStates, currentSlideIndex, lesson.slides, onSlidesUpdate]);
+    }, [currentSlide, componentStates, currentSlideIndex, lesson.slides, onSlidesUpdate, playFeedback]);
 
     // Handle component state updates with persistence
     const handleComponentStateChange = (componentId: string, newState: any) => {
@@ -212,22 +217,23 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         const allCompleted = slideComponentStates.every(state => state.status === "completed");
         console.log('All completed?', allCompleted);
 
-        if (allCompleted && currentSlide.status !== "completed") {
-          console.log('All components completed, preparing slide update');
-          const updatedSlides = [...lesson.slides];
-          updatedSlides[currentSlideIndex] = {
-            ...currentSlide,
-            status: "completed"
-          };
-
-          if (currentSlideIndex < lesson.slides.length - 1) {
-            updatedSlides[currentSlideIndex + 1] = {
-              ...lesson.slides[currentSlideIndex + 1],
-              state: "active"
+          if (allCompleted && currentSlide.status !== "completed") {
+            console.log('All components completed, preparing slide update');
+            const updatedSlides = [...lesson.slides];
+            updatedSlides[currentSlideIndex] = {
+              ...currentSlide,
+              status: "completed"
             };
-          }
+            
+            // Play level-up feedback when slide is completed
+            playFeedback('levelUp');
 
-          // Schedule the slides update after the state update
+            if (currentSlideIndex < lesson.slides.length - 1) {
+              updatedSlides[currentSlideIndex + 1] = {
+                ...lesson.slides[currentSlideIndex + 1],
+                state: "active"
+              };
+            }          // Schedule the slides update after the state update
           Promise.resolve().then(() => {
             console.log('Updating slides status');
             onSlidesUpdate?.(updatedSlides);
@@ -257,25 +263,57 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       }
     }, [currentSlideIndex, currentSlide]);
 
-    // Sum points for all gamified components in all slides
+    // Sum points for all gamified components in all slides, considering number of items
     useEffect(() => {
       let total = 0;
       for (const slide of lesson.slides) {
         for (const component of slide.components) {
-          // List all gamified types here
-          if (
-            [
-              'quiz',
-              'drag-drop',
-              'matching-pairs',
-              // add other gamified types as needed
-            ].includes(component.type) &&
-            typeof component.props?.points === 'number'
-          ) {
-            total += component.props.points;
+          // Skip practice mode components
+          if (component.props?.mode === 'practice') continue;
+
+          // Get points per item based on component type
+          const points = component.props?.points;
+          if (typeof points !== 'number') continue;
+
+          // Calculate total possible points based on number of items
+          if (component.type === 'quiz' && Array.isArray(component.props?.questions)) {
+            total += points * component.props.questions.length;
+          }
+          else if (component.type === 'fillInTheBlank' && Array.isArray(component.props?.blanks)) {
+            total += points * component.props.blanks.length;
+          }
+          else if (component.type === 'matchingPairs' && Array.isArray(component.props?.pairs)) {
+            total += points * component.props.pairs.length;
+          }
+          else if (component.type === 'dragDrop' && Array.isArray(component.props?.items)) {
+            total += points * component.props.items.length;
           }
         }
       }
+      console.log('Total Points Calculation:', {
+        total,
+        components: lesson.slides.flatMap(slide => 
+          slide.components.filter(comp => 
+            ['quiz', 'dragDrop', 'matchingPairs', 'fillInTheBlank'].includes(comp.type)
+          ).map(comp => ({
+            type: comp.type,
+            points: comp.props?.points,
+            itemCount: comp.type === 'quiz' ? comp.props?.questions?.length :
+                      comp.type === 'fillInTheBlank' ? comp.props?.blanks?.length :
+                      comp.type === 'matchingPairs' ? comp.props?.pairs?.length :
+                      comp.type === 'dragDrop' ? comp.props?.items?.length : 0,
+            mode: comp.props?.mode,
+            included: comp.props?.mode !== 'practice',
+            totalPoints: comp.props?.mode !== 'practice' ? 
+              (comp.props?.points || 0) * (
+                comp.type === 'quiz' ? comp.props?.questions?.length :
+                comp.type === 'fillInTheBlank' ? comp.props?.blanks?.length :
+                comp.type === 'matchingPairs' ? comp.props?.pairs?.length :
+                comp.type === 'dragDrop' ? comp.props?.items?.length : 0
+              ) : 0
+          }))
+        )
+      });
       setTotalPossible(total);
     }, [lesson]);
 
@@ -304,7 +342,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
             <Button
               variant="outline"
-              onClick={() => onSlideChange(currentSlideIndex - 1)}
+              onClick={() => {
+                playFeedback('click');
+                onSlideChange(currentSlideIndex - 1);
+              }}
               disabled={currentSlideIndex === 0}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
@@ -313,7 +354,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             <Progress value={progress} className="flex-1" />
             <Button
               variant="outline"
-              onClick={() => onSlideChange(currentSlideIndex + 1)}
+              onClick={() => {
+                playFeedback('click');
+                onSlideChange(currentSlideIndex + 1);
+              }}
               disabled={currentSlideIndex === lesson.slides.length - 1}
             >
               Next

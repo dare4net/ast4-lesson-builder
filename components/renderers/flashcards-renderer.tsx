@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useFeedback } from "@/hooks/use-feedback"
 
 interface Flashcard {
   id: string
@@ -32,6 +33,7 @@ export function FlashcardsRenderer({
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
 
+  const { playFeedback } = useFeedback();
   const currentCard = cards[currentCardIndex]
   const isDisabled = disabled || state === 'disabled'
   const isLiveMode = mode === 'live'
@@ -61,6 +63,7 @@ export function FlashcardsRenderer({
 
   const flipCard = () => {
     if (isDisabled) return
+    playFeedback('flashcardFlip');
     setIsFlipped(!isFlipped)
   }
 

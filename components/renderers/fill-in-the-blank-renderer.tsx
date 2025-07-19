@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CheckCircle2, XCircle, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useFeedback } from "@/hooks/use-feedback"
 
 interface Blank {
   id: string
@@ -48,6 +49,7 @@ export function FillInTheBlankRenderer({
   savedState,
   setComponentState,
 }: FillInTheBlankRendererProps) {
+  const { playFeedback } = useFeedback();
   const [mounted, setMounted] = useState(false);
   const isDisabled = disabled || state === 'disabled';
   const isLiveMode = mode === 'live';
@@ -127,16 +129,35 @@ export function FillInTheBlankRenderer({
       if (isCorrect) correctCount++
     })
 
-    const earnedPoints = Math.round((correctCount / blanks.length) * points)
+    // Calculate points per blank
+    //const pointsPerBlank = Math.round(points / blanks.length);
+    const earnedPoints = correctCount * points;
     const allCorrect = correctCount === blanks.length;
 
     setCorrectAnswers(results)
     setIsSubmitted(true)
     setScore(earnedPoints)
 
-    // Only add points to global score in live mode
-    if (isLiveMode && scoreContext && earnedPoints > 0) {
+    // Play appropriate feedback sound
+    if (allCorrect) {
+      playFeedback('correct');
+    } else if (correctCount > 0) {
+      playFeedback('complete');
+    } else {
+      playFeedback('incorrect');
+    }
+
+    // Award points for each correct answer in live mode
+    if (isLiveMode && scoreContext && correctCount > 0) {
       scoreContext.addPoints(earnedPoints)
+      // Save state explicitly when points are awarded
+      setComponentState?.({
+        userAnswers,
+        isSubmitted: true,
+        correctAnswers: results,
+        score: earnedPoints,
+        status: 'completed'
+      })
     }
 
     // Persist state after submission
@@ -145,7 +166,7 @@ export function FillInTheBlankRenderer({
       isSubmitted: true,
       correctAnswers: results,
       score: earnedPoints,
-      status: isLiveMode || allCorrect ? 'completed' : 'active'  // Mark as completed in live mode or when all correct
+      status: 'completed'  // Mark as completed after submission
     })
   }
 

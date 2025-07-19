@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle, MoveUp, MoveDown, Lock } from "lucide-react"
@@ -38,6 +38,8 @@ const generatePastelColor = () => {
   const hue = Math.floor(Math.random() * 360);
   return `hsl(${hue}, 70%, 85%)`;
 };
+
+
 
 export function DragDropRenderer({
   title = "Arrange in the correct order",
@@ -113,24 +115,42 @@ export function DragDropRenderer({
 
   const handleCheck = async () => {
     setIsSubmitted(true);
-    const isAllCorrect = dragItems.every((item, index) => item.correctIndex === index);
+    
+    // Count correct positions and calculate points
+    const correctCount = dragItems.reduce((count, item, index) => {
+      return count + (item.correctIndex === index ? 1 : 0);
+    }, 0);
+    const pointsPerItem = Math.round(points / dragItems.length);
+    const earnedPoints = correctCount * points;
+    
+    const isAllCorrect = correctCount === dragItems.length;
     setIsCorrect(isAllCorrect);
     
     if (isAllCorrect) {
       await playFeedback('correct');
-      // Only add points in live mode
-      if (isLiveMode && scoreContext) {
-        scoreContext.addPoints(points);
-      }
+    } else if (correctCount > 0) {
+      await playFeedback('complete');
     } else {
       await playFeedback('incorrect');
+    }
+
+    // Award points for correct positions in live mode
+    if (isLiveMode && scoreContext && correctCount > 0) {
+      scoreContext.addPoints(earnedPoints);
+      // Save state explicitly when points are awarded
+      setComponentState?.({
+        dragItems,
+        isSubmitted: true,
+        isCorrect: isAllCorrect,
+        status: 'completed'
+      });
     }
 
     const newState = {
       dragItems,
       isSubmitted: true,
       isCorrect: isAllCorrect,
-      status: isLiveMode || isAllCorrect ? 'completed' : 'active' // Mark as completed in live mode or when correct
+      status: 'completed' // Mark as completed after submission
     };
 
     // Persist state after check

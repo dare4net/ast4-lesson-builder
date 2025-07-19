@@ -230,6 +230,29 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const handleScoreUpdate = (score: number, total: number) => {
     setCurrentScore(score);
     setTotalPossible(total);
+
+    // Save interaction state when score updates
+    if (userId && lessonData) {
+      const componentsState = lessonContentRef.current?.getAllComponentStates?.();
+      const interactionData = {
+        componentsState,
+        lessonState: {
+          slides: lessonData.slides.map(slide => ({
+            id: slide.id,
+            state: slide.state,
+            status: slide.status
+          })),
+          currentSlideIndex,
+          currentScore: score,
+          totalPossible: total,
+          lessonTitle: lessonData.title,
+          lessonDescription: lessonData.description
+        }
+      };
+      import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
+        saveUserInteraction(userId, lessonData.id, interactionData);
+      });
+    }
   };
 
   const handleJumpToSlide = (index: number) => {
@@ -416,6 +439,30 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                 }
                 return newSlide;
               });
+
+              // Check if any slide was marked as completed and save interaction
+              const newlyCompletedSlide = updatedSlides.find(s => s.status === 'completed');
+              if (newlyCompletedSlide && userId && prevData) {
+                const componentsState = lessonContentRef.current?.getAllComponentStates?.();
+                const interactionData = {
+                  componentsState,
+                  lessonState: {
+                    slides: newSlides.map(s => ({
+                      id: s.id,
+                      state: s.state,
+                      status: s.status
+                    })),
+                    currentSlideIndex,
+                    currentScore,
+                    totalPossible,
+                    lessonTitle: prevData.title,
+                    lessonDescription: prevData.description
+                  }
+                };
+                import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
+                  saveUserInteraction(userId, prevData.id, interactionData);
+                });
+              }
 
               console.log('Updated lesson data slides:', newSlides.map(s => ({
                 id: s.id,
