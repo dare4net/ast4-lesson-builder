@@ -1,4 +1,4 @@
-import { LessonViewer } from '@/components/viewer/LessonViewer';
+import { LessonViewer } from '@/components/viewer/LessonViewerUpload';
 import { notFound } from 'next/navigation';
 
 async function fetchLesson(id: string, userId?: string) {

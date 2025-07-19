@@ -1,27 +1,24 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react';
-import { Button } from '../ui/button';
-import { CheckCircle2, XCircle, Lock } from 'lucide-react';
-import { useFeedback } from '@/lib/feedback-context';
-import { cn } from '@/lib/utils';
-
-interface QuizOption {
-  id: string;
-  text: string;
-  isCorrect: boolean;
-}
-
-export interface QuizQuestion {
-  id: string;
-  question: string;
-  options: QuizOption[];
-  explanation?: string;
-}
+import { useState, useEffect, useRef } from "react"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { CheckCircle2, XCircle, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { useFeedback } from "@/hooks/use-feedback"
 
 interface QuizRendererProps {
   title?: string;
-  questions: QuizQuestion[];
+  questions?: {
+    id: string;
+    question: string;
+    options: {
+      id: string;
+      text: string;
+      isCorrect: boolean;
+    }[];
+    explanation?: string;
+  }[];
   points?: number;
   isEditing?: boolean;
   scoreContext?: {
@@ -33,6 +30,8 @@ interface QuizRendererProps {
   mode?: 'practice' | 'live';
   state?: 'active' | 'disabled';
   disabled?: boolean;
+  isLastSlideChild?: boolean;
+  onCheckSlideCompletion?: () => void;
 }
 
 export function QuizRenderer({
@@ -47,11 +46,19 @@ export function QuizRenderer({
   mode = 'practice',
   state = 'active',
   disabled = false,
+  isLastSlideChild = false,
+  onCheckSlideCompletion
 }: QuizRendererProps & { savedState?: any; setComponentState?: (state: any) => void }) {
-  // Use savedState for initial state if available
   const [mounted, setMounted] = useState(false);
   const isDisabled = disabled || state === 'disabled';
   const isLiveMode = mode === 'live';
+  
+  // Debug logs
+  useEffect(() => {
+    console.log('Quiz Mode:', mode);
+    console.log('Is Live Mode:', isLiveMode);
+    console.log('Saved State:', savedState);
+  }, [mode, isLiveMode, savedState]);
   const [currentQuestion, setCurrentQuestion] = useState(savedState?.currentQuestion ?? 0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(savedState?.selectedAnswer ?? null);
   const [isAnswered, setIsAnswered] = useState(savedState?.isAnswered ?? false);
@@ -61,22 +68,37 @@ export function QuizRenderer({
   const { playFeedback } = useFeedback();
   const isFirstRender = useRef(true);
 
+  type QuizState = {
+    mode: 'practice' | 'live';
+    currentQuestion: number;
+    selectedAnswer: string | null;
+    isAnswered: boolean;
+    score: number;
+    animationClass: string;
+    isComplete: boolean;
+    isLastSlideChild?: boolean;
+  
+  };
+
   // Persist state on every change
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
-    const newState = {
+    const newState: QuizState = {
+      mode,  // Use the prop directly like flashcards does
       currentQuestion,
       selectedAnswer,
       isAnswered,
       score,
       animationClass,
       isComplete,
+      isLastSlideChild,
     };
-    // Shallow compare with savedState
-    const isEqual = savedState && Object.keys(newState).every(key => newState[key] === savedState[key]);
+    const isEqual = savedState && Object.keys(newState).every(key => 
+      newState[key as keyof QuizState] === savedState[key as keyof QuizState]
+    );
     if (!isEqual) {
       setComponentState?.(newState);
     }
@@ -97,12 +119,40 @@ export function QuizRenderer({
 
     const selectedOption = questions[currentQuestion].options.find(opt => opt.id === selectedAnswer);
     const isCorrect = selectedOption?.isCorrect ?? false;
+    const isLastQuestion = currentQuestion === questions.length - 1;
+    const newScore = isCorrect ? score + 1 : score;
+    
+    // Update all state at once
     setIsAnswered(true);
+    setScore(newScore);
+    
+    // Set isComplete if this is the last question, regardless of correctness
+    if (isLastQuestion) {
+      setIsComplete(true);
+      const newState = {
+        mode,
+        currentQuestion,
+        selectedAnswer,
+        isAnswered: true,
+        score: newScore,
+        animationClass,
+        isComplete: true,
+        status: 'completed'
+      };
+      
+      // Persist state with completion
+      setComponentState?.(newState);
+
+      // If this is the last interactive component in the slide, trigger completion check
+      if (isLastSlideChild) {
+        //onCheckSlideCompletion?.();
+      }
+    }
 
     if (isCorrect) {
-      setScore(score + 1);
-      if (scoreContext?.addPoints) {
-        scoreContext.addPoints(Math.floor(points / questions.length));
+      // Only add points to scoreContext in live mode
+      if (isLiveMode && scoreContext?.addPoints) {
+        scoreContext.addPoints(10);
       }
       await playFeedback('correct');
     } else {
@@ -110,8 +160,17 @@ export function QuizRenderer({
     }
 
     if (onScoreUpdate) {
-      onScoreUpdate(isCorrect ? score + 1 : score);
+      onScoreUpdate(newScore);
     }
+  };
+
+  const handleRetry = async () => {
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setIsAnswered(false);
+    setScore(0);
+    setIsComplete(false);
+    await playFeedback('click', { animation: false });
   };
 
   const handleNextQuestion = async () => {
@@ -121,9 +180,8 @@ export function QuizRenderer({
       setIsAnswered(false);
       await playFeedback('click', { animation: false });
     } else {
-      setIsComplete(true);
+      // Just play completion feedback - completion state is handled in handleCheckAnswer
       await playFeedback('complete');
-      // Score is not reset to allow the final score to be displayed
     }
   };
 
@@ -180,7 +238,12 @@ export function QuizRenderer({
 
       {/* Question */}
       <div className="space-y-4">
-        <h3 className="text-xl font-bold">{question.question}</h3>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Question {currentQuestion + 1} of {questions.length}</span>
+          </div>
+          <h3 className="text-xl font-bold">{question.question}</h3>
+        </div>
         
         {/* Options */}
         <div className="space-y-3">
@@ -199,8 +262,7 @@ export function QuizRenderer({
                   showCorrect && 'bg-[#E8F5E9] border-[#4CAF50] text-[#2E7D32]',
                   showIncorrect && 'bg-destructive/20 border-destructive',
                   (isAnswered || isDisabled) && 'cursor-not-allowed',
-                  !isAnswered && !isDisabled && 'hover:bg-secondary/10',
-                  isDisabled && 'opacity-75'
+                  !isAnswered && !isDisabled && 'hover:bg-secondary/10'
                 )}
                 onClick={() => handleAnswerSelect(option.id)}
                 disabled={isAnswered || isDisabled}
@@ -254,33 +316,49 @@ export function QuizRenderer({
           </div>
         )}
 
-        {/* Action button */}
-        <Button
-          className={cn(
-            'w-full duo-button',
-            !isAnswered && selectedAnswer !== null && 'bg-primary text-white hover:bg-primary/90',
-            isAnswered && currentQuestion === questions.length - 1 && 'bg-success text-white hover:bg-success/90',
-            isAnswered && currentQuestion < questions.length - 1 && 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+        {/* Action buttons */}
+        <div className="space-y-4">
+          {(!isAnswered || currentQuestion < questions.length - 1) ? (
+            <Button
+              className={cn(
+                'w-full duo-button',
+                !isAnswered && selectedAnswer !== null && 'bg-primary text-white hover:bg-primary/90',
+                isAnswered && 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+              )}
+              onClick={isAnswered ? handleNextQuestion : handleCheckAnswer}
+              disabled={(selectedAnswer === null && !isAnswered) || isDisabled}
+            >
+              {isAnswered ? 'Continue' : 'Check'}
+            </Button>
+          ) : (
+            <div className="space-y-2">
+              <Button
+                className="w-full duo-button bg-success text-success-foreground"
+                disabled
+              >
+                Complete!
+              </Button>
+              {!isLiveMode && score < questions.length && (
+                <Button
+                  className="w-full duo-button bg-secondary text-secondary-foreground"
+                  onClick={handleRetry}
+                >
+                  Try Again
+                </Button>
+              )}
+            </div>
           )}
-          onClick={isAnswered ? handleNextQuestion : handleCheckAnswer}
-          disabled={(selectedAnswer === null && !isAnswered) || isDisabled}
-        >
-          {isAnswered
-            ? currentQuestion < questions.length - 1
-              ? 'Continue'
-              : 'Complete!'
-            : 'Check'}
-        </Button>
 
-        {/* Score display */}
-        {(isAnswered || currentQuestion > 0) && (
-          <div className="flex justify-center">
-            <span className="duo-badge">
-              Score: {score}/{questions.length}
-            </span>
-          </div>
-        )}
-      </div>
+          {/* Score display */}
+          {(isAnswered || currentQuestion > 0) && (
+            <div className="flex justify-center">
+              <span className="duo-badge">
+                Score: {score}/{questions.length}
+              </span>
+            </div>
+          )}
         </div>
+      </div>
+    </div>
   );
 }

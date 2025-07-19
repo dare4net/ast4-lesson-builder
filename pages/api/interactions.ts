@@ -1,6 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '@/lib/mongodb';
 
+// Types from user-interactions.ts
+interface SlideState {
+  id: string;
+  state: "active" | "disabled";
+  status: "pending" | "completed";
+}
+
+interface LessonState {
+  slides: SlideState[];
+  currentSlideIndex: number;
+  lessonTitle: string;
+  lessonDescription: string;
+}
+
+interface InteractionData {
+  componentsState: Record<string, any>;
+  lessonState: LessonState;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log('API /api/interactions called:', req.method);
   if (req.method === 'GET') {
@@ -16,7 +35,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const db = client.db('ast_lessons');
       const interaction = await db.collection('interactions').findOne({ userId, lessonId });
       console.log('GET found interaction:', interaction);
+      
       if (!interaction) return res.status(404).json({ error: 'Not found' });
+      
+      // Handle backward compatibility
+      if (!interaction.lessonState) {
+        interaction.lessonState = {
+          slides: [],
+          currentSlideIndex: 0,
+          lessonTitle: '',
+          lessonDescription: ''
+        };
+      }
+      
       res.status(200).json(interaction);
     } catch (error) {
       console.error('GET error:', error);
@@ -25,21 +56,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } else if (req.method === 'POST') {
     // Save or update user interaction
     try {
-      const { userId, lessonId, componentsState } = req.body;
-      console.log('POST body:', { userId, lessonId, componentsState });
+      const { userId, lessonId, componentsState, lessonState } = req.body as {
+        userId: string;
+        lessonId: string;
+        componentsState: Record<string, any>;
+        lessonState: LessonState;
+      };
+      
+      console.log('POST body:', { userId, lessonId, componentsState, lessonState });
+      
       if (!userId || !lessonId) {
         console.log('Missing userId or lessonId');
         return res.status(400).json({ error: 'Missing userId or lessonId' });
       }
+      
       const client = await clientPromise;
       const db = client.db('ast_lessons');
       const result = await db.collection('interactions').updateOne(
         { userId, lessonId },
-        { $set: { componentsState, lastUpdated: new Date() } },
+        { 
+          $set: { 
+            componentsState, 
+            lessonState,
+            lastUpdated: new Date() 
+          } 
+        },
         { upsert: true }
       );
+      
       console.log('POST result:', result);
-      res.status(200).json({ success: true, id: result.upsertedId || result.modifiedId });
+      res.status(200).json({ success: true, id: result.upsertedId });
     } catch (error) {
       console.error('POST error:', error);
       res.status(500).json({ error: 'Failed to save interaction' });

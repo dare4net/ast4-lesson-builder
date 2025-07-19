@@ -360,7 +360,8 @@ export const componentDefinitions: ComponentDefinition[] = [
       shuffleOptions: false,
       points: 10,
       mode: "practice",
-      state: "active"
+      state: "active",
+      status: "uncompleted"
     },
     propDefinitions: [
       {
@@ -427,6 +428,17 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "status",
+      label: "Status",
+      type: "select",
+      required: false,
+      defaultValue: "uncompleted",
+      options: [
+        { label: "Uncompleted", value: "uncompleted" },
+        { label: "Complete", value: "complete" }
+      ]
+    },
     ],
   },
   {
@@ -714,7 +726,7 @@ export const componentDefinitions: ComponentDefinition[] = [
   {
     type: "flashcards",
     label: "Flashcards",
-    category: "interactive",
+    category: "gamified",
     description: "Two-sided study cards...",
     icon: "🎴",
     defaultProps: {

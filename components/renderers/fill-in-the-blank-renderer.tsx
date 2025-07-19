@@ -6,7 +6,8 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CheckCircle2, XCircle } from "lucide-react"
+import { CheckCircle2, XCircle, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface Blank {
   id: string
@@ -27,6 +28,10 @@ interface FillInTheBlankRendererProps {
     addPoints: (points: number) => void
   }
   mode?: 'practice' | 'live'
+  state?: 'active' | 'disabled'
+  disabled?: boolean
+  savedState?: any
+  setComponentState?: (state: any) => void
 }
 
 export function FillInTheBlankRenderer({
@@ -38,23 +43,50 @@ export function FillInTheBlankRenderer({
   isEditing = false,
   scoreContext,
   mode = 'practice',
+  state = 'active',
+  disabled = false,
+  savedState,
+  setComponentState,
 }: FillInTheBlankRendererProps) {
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({})
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>({})
-  const [score, setScore] = useState(0)
+  const [mounted, setMounted] = useState(false);
+  const isDisabled = disabled || state === 'disabled';
+  const isLiveMode = mode === 'live';
 
-  // Initialize user answers
+  // Debug logs
   useEffect(() => {
-    const initialAnswers: Record<string, string> = {}
-    blanks.forEach((blank) => {
-      initialAnswers[blank.id] = ""
-    })
-    setUserAnswers(initialAnswers)
-    setIsSubmitted(false)
-    setCorrectAnswers({})
-    setScore(0)
-  }, [blanks])
+    console.log('Fill in the Blank Mode:', mode);
+    console.log('Is Live Mode:', isLiveMode);
+    console.log('Saved State:', savedState);
+  }, [mode, isLiveMode, savedState]);
+
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>(() => savedState?.userAnswers ?? {})
+  const [isSubmitted, setIsSubmitted] = useState(() => savedState?.isSubmitted ?? false)
+  const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>(() => savedState?.correctAnswers ?? {})
+  const [score, setScore] = useState(() => savedState?.score ?? 0)
+
+  // Initialize user answers and handle mounting
+  useEffect(() => {
+    setMounted(true);
+    if (!savedState) {
+      const initialAnswers: Record<string, string> = {}
+      blanks.forEach((blank) => {
+        initialAnswers[blank.id] = ""
+      })
+      setUserAnswers(initialAnswers)
+      setIsSubmitted(false)
+      setCorrectAnswers({})
+      setScore(0)
+      
+      // Persist initial state
+      setComponentState?.({
+        userAnswers: initialAnswers,
+        isSubmitted: false,
+        correctAnswers: {},
+        score: 0,
+        status: 'active'
+      })
+    }
+  }, [blanks, savedState, setComponentState])
 
   const handleAnswerChange = (blankId: string, value: string) => {
     if (isSubmitted) return
@@ -84,6 +116,8 @@ export function FillInTheBlankRenderer({
   }
 
   const handleSubmit = () => {
+    if (isDisabled) return;
+    
     const results: Record<string, boolean> = {}
     let correctCount = 0
 
@@ -93,17 +127,26 @@ export function FillInTheBlankRenderer({
       if (isCorrect) correctCount++
     })
 
+    const earnedPoints = Math.round((correctCount / blanks.length) * points)
+    const allCorrect = correctCount === blanks.length;
+
     setCorrectAnswers(results)
     setIsSubmitted(true)
-
-    // Calculate score based on correct answers
-    const earnedPoints = Math.round((correctCount / blanks.length) * points)
     setScore(earnedPoints)
 
-    // Add points to global score if available
-    if (scoreContext && earnedPoints > 0) {
+    // Only add points to global score in live mode
+    if (isLiveMode && scoreContext && earnedPoints > 0) {
       scoreContext.addPoints(earnedPoints)
     }
+
+    // Persist state after submission
+    setComponentState?.({
+      userAnswers,
+      isSubmitted: true,
+      correctAnswers: results,
+      score: earnedPoints,
+      status: isLiveMode || allCorrect ? 'completed' : 'active'  // Mark as completed in live mode or when all correct
+    })
   }
 
   const handleReset = () => {
@@ -180,9 +223,20 @@ export function FillInTheBlankRenderer({
   }
 
   return (
-    <Card>
+    <Card className={cn(
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{title}</CardTitle>
+          {isDisabled && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Lock className="h-4 w-4" />
+              <span>Locked</span>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -218,24 +272,62 @@ export function FillInTheBlankRenderer({
           )}
         </div>
       </CardContent>
-      <CardFooter>
-        {!isSubmitted ? (
-          <Button onClick={handleSubmit}>Check Answers</Button>
-        ) : (
-          <>
-            {mode === 'practice' && score < points && (
-              <Button onClick={handleReset} variant="outline">
-                Try Again
-              </Button>
-            )}
-          </>
-        )}
+      <CardFooter className="flex items-center justify-between">
+        <div className="space-x-2">
+          {!isSubmitted ? (
+            <Button 
+              onClick={handleSubmit}
+              disabled={isDisabled}
+            >
+              Check Answers
+            </Button>
+          ) : (
+            <>
+              {/* Live Mode: Always show disabled Complete button */}
+              {isLiveMode && (
+                <Button
+                  className={score === points ? "bg-success text-success-foreground" : ""}
+                  disabled
+                >
+                  Complete
+                </Button>
+              )}
+              
+              {/* Practice Mode: Show Complete when all correct, Try Again when not */}
+              {!isLiveMode && (
+                <>
+                  {score === points ? (
+                    <Button
+                      className="bg-success text-success-foreground"
+                      disabled
+                    >
+                      Complete
+                    </Button>
+                  ) : (
+                    <Button 
+                      onClick={handleReset} 
+                      variant="outline"
+                      disabled={isDisabled}
+                    >
+                      Try Again
+                    </Button>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </div>
 
-        {points > 0 && (
-          <div className="ml-auto text-sm text-muted-foreground">
-            {isSubmitted ? `Score: ${score}/${points}` : `Points: ${points}`}
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          {isLiveMode && (
+            <div className="text-sm text-blue-500">Live Mode</div>
+          )}
+          {points > 0 && (
+            <div className="text-sm text-muted-foreground">
+              {isSubmitted ? `Score: ${score}/${points}` : `Points: ${points}`}
+            </div>
+          )}
+        </div>
       </CardFooter>
     </Card>
   )

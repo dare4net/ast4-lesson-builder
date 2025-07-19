@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
-import { Menu, Clock, User, Award } from 'lucide-react';
+import { Menu, Clock, User, Award, Lock, Unlock, CheckCircle2, Circle } from 'lucide-react';
 import type { Lesson } from '@/types/lesson';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
@@ -56,6 +56,44 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     }
   }, [isSlideAccessible]);
 
+  // Initialize lesson data and score with saved states on mount
+  useEffect(() => {
+    if (initialLesson && initialInteraction?.lessonState) {
+      // Map initial lesson data with saved states
+      const initializedLesson = {
+        ...initialLesson,
+        slides: initialLesson.slides.map(slide => {
+          const savedSlide = initialInteraction.lessonState.slides.find(s => s.id === slide.id);
+          // Only use original state if there's no saved state at all
+          const finalState = (savedSlide && 'state' in savedSlide) ? savedSlide.state : slide.state;
+          const finalStatus = (savedSlide && 'status' in savedSlide) ? savedSlide.status : slide.status;
+          
+          return {
+            ...slide,
+            state: finalState,
+            status: finalStatus
+          };
+        })
+      };
+      setLessonData(initializedLesson);
+    }
+  }, [initialLesson, initialInteraction]);
+
+  // Set initial scores from saved interaction
+  useEffect(() => {
+    if (initialInteraction?.lessonState) {
+      setCurrentScore(initialInteraction.lessonState.currentScore || 0);
+      setTotalPossible(initialInteraction.lessonState.totalPossible || 0);
+    }
+  }, [initialInteraction]);
+
+  // Set initial slide index from saved interaction
+  useEffect(() => {
+    if (initialInteraction?.lessonState?.currentSlideIndex !== undefined) {
+      setCurrentSlideIndex(initialInteraction.lessonState.currentSlideIndex);
+    }
+  }, [initialInteraction]);
+
   // Auto-skip disabled slides on initial load
   useEffect(() => {
     if (lessonData && !isSlideAccessible(currentSlideIndex)) {
@@ -72,25 +110,55 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     console.log('[LessonViewer] Setting up periodic save for userId:', userId, 'lessonId:', lessonData.id);
     const interval = setInterval(() => {
       const componentsState = lessonContentRef.current?.getAllComponentStates?.();
-      console.log('[LessonViewer] Periodic saveUserInteraction', { userId, lessonId: lessonData.id, componentsState });
+      const interactionData = {
+        componentsState,
+        lessonState: {
+          slides: lessonData.slides.map(slide => ({
+            id: slide.id,
+            state: slide.state,
+            status: slide.status
+          })),
+          currentSlideIndex,
+          currentScore,
+          totalPossible,
+          lessonTitle: lessonData.title,
+          lessonDescription: lessonData.description
+        }
+      };
+      console.log('[LessonViewer] Periodic saveUserInteraction', { userId, lessonId: lessonData.id, interactionData });
       if (componentsState) {
         import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
-          saveUserInteraction(userId, lessonData.id, componentsState).then((ok) => {
+          saveUserInteraction(userId, lessonData.id, interactionData).then((ok) => {
             console.log('[LessonViewer] Periodic saveUserInteraction result:', ok);
           });
         });
       }
     }, 30000);
     return () => clearInterval(interval);
-  }, [userId, lessonData]);
+  }, [userId, lessonData, currentSlideIndex]);
 
   // Save an initial interaction if none exists
   useEffect(() => {
     if (!userId || !lessonData) return;
     const componentsState = lessonContentRef.current?.getAllComponentStates?.() || {};
-    console.log('[LessonViewer] Initial saveUserInteraction', { userId, lessonId: lessonData.id, componentsState });
+    const interactionData = {
+      componentsState,
+      lessonState: {
+        slides: lessonData.slides.map(slide => ({
+          id: slide.id,
+          state: slide.state,
+          status: slide.status
+        })),
+        currentSlideIndex,
+        currentScore,
+        totalPossible,
+        lessonTitle: lessonData.title,
+        lessonDescription: lessonData.description
+      }
+    };
+    console.log('[LessonViewer] Initial saveUserInteraction', { userId, lessonId: lessonData.id, interactionData });
     import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
-      saveUserInteraction(userId, lessonData.id, componentsState).then((ok) => {
+      saveUserInteraction(userId, lessonData.id, interactionData).then((ok) => {
         console.log('[LessonViewer] Initial saveUserInteraction result:', ok);
       });
     });
@@ -192,9 +260,23 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                   }`}
                   onClick={() => handleJumpToSlide(index)}
                 >
-                  <div className="flex items-start gap-2">
-                    <span className="text-xs opacity-50 mt-0.5">#{index + 1}</span>
-                    <span className="text-sm">{slide.title}</span>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-start gap-2">
+                      <span className="text-xs opacity-50 mt-0.5">#{index + 1}</span>
+                      <span className="text-sm">{slide.title}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      {slide.status === "completed" ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                      ) : (
+                        <Circle className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                      {slide.state === "disabled" ? (
+                        <Lock className="h-3.5 w-3.5 text-destructive" />
+                      ) : (
+                        <Unlock className="h-3.5 w-3.5 text-success" />
+                      )}
+                    </div>
                   </div>
                 </Button>
               ))}
@@ -305,11 +387,51 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       <div className="flex-1 relative">
         <LessonContent 
           ref={lessonContentRef}
-          lesson={lessonData} 
+          lesson={lessonData}
           onScoreUpdate={handleScoreUpdate}
           currentSlideIndex={currentSlideIndex}
           onSlideChange={setCurrentSlideIndex}
           initialComponentStates={initialInteraction?.componentsState || {}}
+          onSlidesUpdate={(updatedSlides) => {
+            console.log('Updating slides with new states:', updatedSlides.map(s => ({
+              id: s.id,
+              state: s.state,
+              status: s.status
+            })));
+            
+            // Update lesson data preserving the latest state/status for each slide
+            setLessonData(prevData => {
+              const newSlides = prevData!.slides.map(slide => {
+                // Find the updated version of this slide
+                const updatedSlide = updatedSlides.find(s => s.id === slide.id);
+                if (!updatedSlide) return slide;
+
+                // Only update state/status if they are explicitly defined
+                const newSlide = { ...slide };
+                if ('state' in updatedSlide) {
+                  newSlide.state = updatedSlide.state;
+                }
+                if ('status' in updatedSlide) {
+                  newSlide.status = updatedSlide.status;
+                }
+                return newSlide;
+              });
+
+              console.log('Updated lesson data slides:', newSlides.map(s => ({
+                id: s.id,
+                state: s.state,
+                status: s.status,
+                hasExplicitState: s.state !== undefined,
+                hasExplicitStatus: s.status !== undefined
+              })));
+
+              return {
+                ...prevData!,
+                slides: newSlides
+              };
+            });
+          }}
+          savedScore={initialInteraction?.lessonState?.currentScore || 0}
         />
       </div>
     </div>

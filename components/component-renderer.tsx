@@ -54,6 +54,8 @@ interface ComponentRendererProps {
   scoreContext?: any;
   savedState?: any;
   setComponentState?: (state: any) => void;
+  isLastSlideChild?: boolean;
+  onCheckSlideCompletion?: () => void;
 }
 
 const gamifiedTypes: ComponentType[] = [
@@ -93,7 +95,14 @@ const DisabledWrapper = ({ isDisabled, children }: { isDisabled: boolean, childr
   );
 };
 
-const ComponentRendererBase = function ComponentRenderer({ component, scoreContext, savedState, setComponentState }: ComponentRendererProps) {
+const ComponentRendererBase = function ComponentRenderer({ 
+  component, 
+  scoreContext, 
+  savedState, 
+  setComponentState,
+  isLastSlideChild,
+  onCheckSlideCompletion 
+}: ComponentRendererProps) {
   const Renderer: React.ComponentType<any> = componentRenderers[component.type] || componentRenderers.fallback;
   const isDisabled = component.state === "disabled";
 
@@ -111,12 +120,13 @@ const ComponentRendererBase = function ComponentRenderer({ component, scoreConte
   if (gamifiedTypes.includes(component.type)) {
     return renderComponent({
       ...component.props,
-      mode: component.mode || "practice",
       scoreContext,
       savedState,
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
-      disabled: isDisabled
+      disabled: isDisabled,
+      isLastSlideChild,
+      onCheckSlideCompletion: isLastSlideChild ? onCheckSlideCompletion : undefined
     });
   }
 
@@ -126,7 +136,9 @@ const ComponentRendererBase = function ComponentRenderer({ component, scoreConte
       savedState,
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
-      disabled: isDisabled
+      disabled: isDisabled,
+      isLastSlideChild,
+      onCheckSlideCompletion: isLastSlideChild ? onCheckSlideCompletion : undefined
     });
   }
 

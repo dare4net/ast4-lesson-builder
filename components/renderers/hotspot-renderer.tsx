@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface Hotspot {
   id: string
@@ -19,6 +20,20 @@ interface HotspotRendererProps {
   image: string
   hotspots: Hotspot[]
   isEditing?: boolean
+  points?: number
+  scoreContext?: {
+    score: number
+    totalPossible: number
+    addPoints: (points: number) => void
+  }
+  mode?: 'practice' | 'live'
+  state?: 'active' | 'disabled'
+  disabled?: boolean
+  savedState?: {
+    discoveredHotspots: string[]
+    status?: 'active' | 'completed'
+  }
+  setComponentState?: (state: any) => void
 }
 
 export function HotspotRenderer({
@@ -26,11 +41,57 @@ export function HotspotRenderer({
   image,
   hotspots = [],
   isEditing = false,
+  points = 10,
+  scoreContext,
+  mode = 'practice',
+  state = 'active',
+  disabled = false,
+  savedState,
+  setComponentState,
 }: HotspotRendererProps) {
-  const [discoveredHotspots, setDiscoveredHotspots] = useState<string[]>([])
+  const [mounted, setMounted] = useState(false)
+  const [discoveredHotspots, setDiscoveredHotspots] = useState<string[]>(() => 
+    savedState?.discoveredHotspots ?? []
+  )
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const imageRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  const isDisabled = disabled || state === 'disabled'
+  const isLiveMode = mode === 'live'
+
+  // Debug logs
+  useEffect(() => {
+    console.log('Hotspot Mode:', mode);
+    console.log('Is Live Mode:', isLiveMode);
+    console.log('Saved State:', savedState);
+  }, [mode, isLiveMode, savedState]);
+
+  // Initialize state on mount
+  useEffect(() => {
+    setMounted(true)
+    if (!savedState && setComponentState) {
+      // Persist initial state
+      setComponentState({
+        discoveredHotspots: [],
+        status: 'active'
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Persist state changes
+  useEffect(() => {
+    if (!mounted) return
+    if (setComponentState) {
+      const allDiscovered = discoveredHotspots.length === hotspots.length
+      setComponentState({
+        discoveredHotspots,
+        status: isLiveMode || allDiscovered ? 'completed' : 'active'
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discoveredHotspots])
 
   // Calculate image dimensions when it loads
   useEffect(() => {
@@ -56,13 +117,27 @@ export function HotspotRenderer({
   }
 
   const handleHotspotClick = (hotspotId: string) => {
-    if (!discoveredHotspots.includes(hotspotId)) {
-      setDiscoveredHotspots([...discoveredHotspots, hotspotId])
+    if (isDisabled || discoveredHotspots.includes(hotspotId)) return
+
+    const newDiscovered = [...discoveredHotspots, hotspotId]
+    setDiscoveredHotspots(newDiscovered)
+
+    const allDiscovered = newDiscovered.length === hotspots.length
+    
+    // Award points in live mode when all hotspots are discovered
+    if (allDiscovered && isLiveMode && scoreContext) {
+      scoreContext.addPoints(points)
     }
   }
 
   const resetDiscovery = () => {
+    if (isDisabled || (isLiveMode && discoveredHotspots.length === hotspots.length)) return
+    
     setDiscoveredHotspots([])
+    setComponentState?.({
+      discoveredHotspots: [],
+      status: 'active'
+    })
   }
 
   // In editing mode, show a simplified version
@@ -100,9 +175,19 @@ export function HotspotRenderer({
   }
 
   return (
-    <Card>
+    <Card className={cn(
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{title}</CardTitle>
+          {isLiveMode && (
+            <div className="flex items-center gap-2 text-sm text-blue-500">
+              <span>Live Mode</span>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         <div className="relative" ref={containerRef}>
@@ -149,23 +234,44 @@ export function HotspotRenderer({
           </TooltipProvider>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 space-y-4">
+          {/* Status display */}
           {discoveredHotspots.length === hotspots.length ? (
             <div className="p-4 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
               <p className="font-medium">You Rock! 🎉 All hotspots discovered!</p>
             </div>
           ) : (
-            <p className="text-sm">
-              Discovered: {discoveredHotspots.length} of {hotspots.length} hotspots
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm">
+                Discovered: {discoveredHotspots.length} of {hotspots.length} hotspots
+              </p>
+              {isDisabled && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Lock className="h-4 w-4" />
+                  <span>Locked</span>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </CardContent>
-      <CardFooter>
-        <Button variant="outline" onClick={resetDiscovery}>
+      <CardFooter className="flex justify-between">
+        <Button 
+          variant="outline" 
+          onClick={resetDiscovery}
+          disabled={isDisabled || (isLiveMode && discoveredHotspots.length === hotspots.length)}
+        >
           Reset
         </Button>
+        {points > 0 && (
+          <div className={cn(
+            "text-sm",
+            isLiveMode ? "text-blue-500" : "text-muted-foreground"
+          )}>
+            Points: {points}
+          </div>
+        )}
       </CardFooter>
     </Card>
   )

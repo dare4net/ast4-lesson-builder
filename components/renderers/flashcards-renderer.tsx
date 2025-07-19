@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2, Lock } from "lucide-react"
@@ -35,6 +35,13 @@ export function FlashcardsRenderer({
   const currentCard = cards[currentCardIndex]
   const isDisabled = disabled || state === 'disabled'
   const isLiveMode = mode === 'live'
+
+  // Debug logs
+    useEffect(() => {
+      console.log('flash Mode:', mode);
+      console.log('Is Live Mode flash:', isLiveMode);
+      console.log('Saved State: none');
+    }, [mode, isLiveMode]);
 
   const goToNextCard = () => {
     if (isDisabled) return

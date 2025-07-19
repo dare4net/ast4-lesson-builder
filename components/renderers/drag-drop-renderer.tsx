@@ -29,6 +29,8 @@ interface DragDropRendererProps {
   disabled?: boolean
   savedState?: any // Persisted state from parent
   setComponentState?: (state: any) => void // State persister
+  isLastSlideChild?: boolean // Whether this is the last interactive component
+  onCheckSlideCompletion?: () => void // Function to check slide completion
 }
 
 // Generate a random pastel color
@@ -49,11 +51,21 @@ export function DragDropRenderer({
   mode = 'practice',
   state = 'active',
   disabled = false,
+  isLastSlideChild = false,
+  onCheckSlideCompletion,
 }: DragDropRendererProps) {
   const { playFeedback } = useFeedback();
   const [mounted, setMounted] = useState(false);
   const isDisabled = disabled || state === 'disabled';
   const isLiveMode = mode === 'live';
+
+  // Debug logs
+  useEffect(() => {
+    console.log('Drag Drop Mode:', mode);
+    console.log('Is Live Mode:', isLiveMode);
+    console.log('Saved State:', savedState);
+  }, [mode, isLiveMode, savedState]);
+
   // State initialization: use savedState if present, else shuffle and persist
   const [dragItems, setDragItems] = useState<({
     id: string;
@@ -103,13 +115,30 @@ export function DragDropRenderer({
     setIsSubmitted(true);
     const isAllCorrect = dragItems.every((item, index) => item.correctIndex === index);
     setIsCorrect(isAllCorrect);
+    
     if (isAllCorrect) {
       await playFeedback('correct');
-      if (scoreContext) {
+      // Only add points in live mode
+      if (isLiveMode && scoreContext) {
         scoreContext.addPoints(points);
       }
     } else {
       await playFeedback('incorrect');
+    }
+
+    const newState = {
+      dragItems,
+      isSubmitted: true,
+      isCorrect: isAllCorrect,
+      status: isLiveMode || isAllCorrect ? 'completed' : 'active' // Mark as completed in live mode or when correct
+    };
+
+    // Persist state after check
+    setComponentState?.(newState);
+
+    // If this is the last interactive child and we're completed, check slide completion
+    if (isLastSlideChild && (isLiveMode || isAllCorrect)) {
+      onCheckSlideCompletion?.();
     }
   };
 
@@ -224,7 +253,15 @@ export function DragDropRenderer({
           ))}
         </div>
         <div className="space-y-4 pt-2">
-          {isSubmitted && (
+          {!isSubmitted ? (
+            <Button
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={handleCheck}
+              disabled={isDisabled}
+            >
+              Check Order
+            </Button>
+          ) : (
             <>
               <div
                 className={cn(
@@ -244,32 +281,47 @@ export function DragDropRenderer({
                   </>
                 )}
               </div>
-              {isCorrect ? (
-                <Button
-                  className="w-full bg-[#4CAF50] text-white hover:bg-[#43A047]"
-                  disabled
-                >
-                  Complete! 🎉
-                </Button>
-              ) : (
-                <Button
-                  className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
-                  onClick={handleReset}
-                  disabled={isDisabled}
-                >
-                  Try Again
-                </Button>
-              )}
+
+              {/* Action buttons based on mode and correctness */}
+              <div className="space-y-2">
+                {/* Live Mode: Always show Complete button */}
+                {isLiveMode && (
+                  <Button
+                    className={cn(
+                      "w-full",
+                      isCorrect 
+                        ? "bg-success text-success-foreground" 
+                        : "bg-secondary text-secondary-foreground"
+                    )}
+                    disabled
+                  >
+                    {isCorrect ? "Complete! 🎉" : "Complete"}
+                  </Button>
+                )}
+
+                {/* Practice Mode: Show Complete when correct, Try Again when not */}
+                {!isLiveMode && (
+                  <>
+                    {isCorrect ? (
+                      <Button
+                        className="w-full bg-success text-success-foreground"
+                        disabled
+                      >
+                        Complete! 🎉
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                        onClick={handleReset}
+                        disabled={isDisabled}
+                      >
+                        Try Again
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
             </>
-          )}
-          {!isSubmitted && (
-            <Button
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-              onClick={handleCheck}
-              disabled={isDisabled}
-            >
-              Check Order
-            </Button>
           )}
         </div>
       </div>

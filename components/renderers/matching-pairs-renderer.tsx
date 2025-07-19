@@ -207,15 +207,19 @@ export function MatchingPairsRenderer({
     const { correctCount, allCorrect, noneCorrect, someCorrect } = checkAllMatches();
     setIsCorrect(allCorrect);
     setMatchStats({ correctCount, noneCorrect, someCorrect });
+    
     if (allCorrect) {
       await playFeedback('correct');
-      if (scoreContext) {
+      // Only add points in live mode
+      if (isLiveMode && scoreContext) {
         scoreContext.addPoints(points);
       }
     } else {
       await playFeedback('incorrect');
     }
-    // Persist state after check
+    
+    // Always mark as completed in live mode, or when correct in practice mode
+    const isCompleted = isLiveMode || allCorrect;
     setComponentState?.({
       leftItems,
       rightItems,
@@ -225,6 +229,7 @@ export function MatchingPairsRenderer({
       isChecking: true,
       isCorrect: allCorrect,
       matchStats: { correctCount, noneCorrect, someCorrect },
+      status: isCompleted ? 'completed' : 'active' // Only mark as completed in live mode or when correct
     });
   };
 
@@ -404,6 +409,7 @@ export function MatchingPairsRenderer({
 
         {/* Action buttons */}
         <div className="space-y-4">
+          {/* Show Check button when not checking and all pairs are matched */}
           {!isChecking && allPairsMatched && (
             <Button
               className="w-full duo-button bg-primary text-primary-foreground"
@@ -414,8 +420,10 @@ export function MatchingPairsRenderer({
             </Button>
           )}
 
+          {/* Show feedback and action buttons when checking */}
           {isChecking && (
             <>
+              {/* Feedback message */}
               <div className={cn(
                 'p-4 rounded-xl flex items-center gap-2',
                 isCorrect ? 'bg-[#E8F5E9]' : 'bg-destructive/10',
@@ -439,22 +447,44 @@ export function MatchingPairsRenderer({
                   </>
                 )}
               </div>
-              {isCorrect ? (
-                <Button
-                  className="w-full duo-button bg-success text-success-foreground"
-                  disabled
-                >
-                  You Rock! 🎉
-                </Button>
-              ) : (
-                <Button
-                  className="w-full duo-button bg-secondary text-secondary-foreground"
-                  onClick={resetGame}
-                  disabled={isDisabled}
-                >
-                  Try Again
-                </Button>
-              )}
+
+              {/* Action buttons based on mode and correctness */}
+              <div className="space-y-2">
+                {/* Live Mode: Always show Complete button */}
+                {isLiveMode && (
+                  <Button
+                    className={cn(
+                      "w-full duo-button",
+                      isCorrect ? "bg-success text-success-foreground" : "bg-secondary text-secondary-foreground"
+                    )}
+                    disabled
+                  >
+                    Complete
+                  </Button>
+                )}
+
+                {/* Practice Mode: Show Complete when correct, Try Again when incorrect */}
+                {!isLiveMode && (
+                  <>
+                    {isCorrect ? (
+                      <Button
+                        className="w-full duo-button bg-success text-success-foreground"
+                        disabled
+                      >
+                        Complete
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full duo-button bg-secondary text-secondary-foreground"
+                        onClick={resetGame}
+                        disabled={isDisabled}
+                      >
+                        Try Again
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
             </>
           )}
         </div>

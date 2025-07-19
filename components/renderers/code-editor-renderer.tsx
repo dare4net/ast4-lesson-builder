@@ -26,6 +26,17 @@ interface CodeEditorRendererProps {
     totalPossible: number
     addPoints: (points: number) => void
   }
+  mode?: 'practice' | 'live'
+  state?: 'active' | 'disabled'
+  disabled?: boolean
+  savedState?: {
+    code?: string
+    output?: string
+    testResults?: Record<string, boolean>
+    isSubmitted?: boolean
+    status?: 'active' | 'completed'
+  }
+  setComponentState?: (state: any) => void
 }
 
 export function CodeEditorRenderer({
@@ -37,20 +48,69 @@ export function CodeEditorRenderer({
   points = 10,
   isEditing = false,
   scoreContext,
+  mode = 'practice',
+  state = 'active',
+  disabled = false,
+  savedState,
+  setComponentState,
 }: CodeEditorRendererProps) {
-  const [code, setCode] = useState(initialCode)
-  const [output, setOutput] = useState("")
+  const [mounted, setMounted] = useState(false)
+  const [code, setCode] = useState(() => savedState?.code ?? initialCode)
+  const [output, setOutput] = useState(() => savedState?.output ?? "")
   const [isRunning, setIsRunning] = useState(false)
-  const [testResults, setTestResults] = useState<Record<string, boolean>>({})
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [testResults, setTestResults] = useState<Record<string, boolean>>(() => savedState?.testResults ?? {})
+  const [isSubmitted, setIsSubmitted] = useState(() => savedState?.isSubmitted ?? false)
+  
+  const isDisabled = disabled || state === 'disabled'
+  const isLiveMode = mode === 'live'
+
+  // Debug logs
+  useEffect(() => {
+    console.log('Code Editor Mode:', mode);
+    console.log('Is Live Mode:', isLiveMode);
+    console.log('Saved State:', savedState);
+  }, [mode, isLiveMode, savedState]);
+
+  // Handle initial mount and state persistence
+  useEffect(() => {
+    setMounted(true)
+    if (!savedState && setComponentState) {
+      // Persist initial state
+      setComponentState({
+        code: initialCode,
+        output: "",
+        testResults: {},
+        isSubmitted: false,
+        status: 'active'
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Persist state changes
+  useEffect(() => {
+    if (!mounted) return
+    if (setComponentState) {
+      setComponentState({
+        code,
+        output,
+        testResults,
+        isSubmitted,
+        status: isLiveMode || Object.values(testResults).every(Boolean) ? 'completed' : 'active'
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, output, testResults, isSubmitted])
 
   useEffect(() => {
-    setCode(initialCode)
-    setOutput("")
-    setIsRunning(false)
-    setTestResults({})
-    setIsSubmitted(false)
-  }, [initialCode])
+    if (initialCode !== savedState?.code) {
+      setCode(initialCode)
+      setOutput("")
+      setIsRunning(false)
+      setTestResults({})
+      setIsSubmitted(false)
+    }
+  }, [initialCode, savedState?.code])
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value)
@@ -148,21 +208,35 @@ export function CodeEditorRenderer({
         }
       })
 
-      // If all tests passed and we have a score context, add points
-      if (allPassed && scoreContext && !isSubmitted) {
+      // Only add points in live mode when all tests pass
+      if (allPassed && isLiveMode && scoreContext && !isSubmitted) {
         scoreContext.addPoints(points)
+      }
+
+      const passedCount = Object.values(results).filter(Boolean).length
+      const allTestsPassed = passedCount === testCases.length
+
+      // Update all state at once to minimize re-renders
+      const newState = {
+        testResults: results,
+        isSubmitted: true,
+        output: allTestsPassed
+          ? "You Rock! 🎉 All tests passed successfully!"
+          : isLiveMode 
+            ? `${passedCount} of ${testCases.length} tests passed. Continue to improve!` 
+            : `${passedCount} of ${testCases.length} tests passed. Try again!`,
+        status: isLiveMode || allTestsPassed ? 'completed' : 'active'
       }
 
       setTestResults(results)
       setIsSubmitted(true)
+      setOutput(newState.output)
 
-      // Generate output summary
-      const passedCount = Object.values(results).filter(Boolean).length
-      if (passedCount === testCases.length) {
-        setOutput("You Rock! 🎉 All tests passed successfully!")
-      } else {
-        setOutput(`${passedCount} of ${testCases.length} tests passed.`)
-      }
+      // Persist state immediately after test completion
+      setComponentState?.({
+        ...newState,
+        code
+      })
     } catch (error) {
       setOutput(`Error running tests: ${error instanceof Error ? error.message : 'An unknown error occurred'}`)
     }
@@ -171,10 +245,21 @@ export function CodeEditorRenderer({
   }
 
   const resetEditor = () => {
+    const newState = {
+      code: initialCode,
+      output: "",
+      testResults: {},
+      isSubmitted: false,
+      status: 'active'
+    }
+    
     setCode(initialCode)
     setOutput("")
     setTestResults({})
     setIsSubmitted(false)
+
+    // Persist reset state
+    setComponentState?.(newState)
   }
 
   // In editing mode, show a simplified version
@@ -198,9 +283,19 @@ export function CodeEditorRenderer({
   }
 
   return (
-    <Card>
+    <Card className={cn(
+      isDisabled && "opacity-75",
+      isLiveMode && "border-blue-500"
+    )}>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle>{title}</CardTitle>
+          {isLiveMode && (
+            <div className="flex items-center gap-2 text-sm text-blue-500">
+              <span>Live Mode</span>
+            </div>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="border rounded-md">
@@ -268,23 +363,38 @@ export function CodeEditorRenderer({
           {testCases.length > 0 && (
             <Button
               onClick={runTests}
-              disabled={isRunning || isSubmitted}
+              disabled={isRunning || (isSubmitted && isLiveMode) || isDisabled}
               className={cn(
                 isSubmitted && Object.values(testResults).every(Boolean)
-                  ? "bg-[#4CAF50] text-white hover:bg-[#43A047]"
+                  ? "bg-success text-success-foreground"
                   : ""
               )}
             >
               <CheckCircle2 className="h-4 w-4 mr-1" />
-              {isSubmitted && Object.values(testResults).every(Boolean) ? "Complete! 🎉" : "Submit"}
+              {isSubmitted ? (
+                Object.values(testResults).every(Boolean) ? "Complete! 🎉" : "Complete"
+              ) : (
+                "Submit"
+              )}
             </Button>
           )}
-          <Button onClick={resetEditor} variant="outline">
+          <Button 
+            onClick={resetEditor} 
+            variant="outline"
+            disabled={isDisabled || (isLiveMode && isSubmitted)}
+          >
             <RefreshCw className="h-4 w-4 mr-1" />
             Reset
           </Button>
         </div>
-        {points > 0 && <div className="text-sm text-muted-foreground">Points: {points}</div>}
+        {points > 0 && (
+          <div className={cn(
+            "text-sm",
+            isLiveMode ? "text-blue-500" : "text-muted-foreground"
+          )}>
+            Points: {points}
+          </div>
+        )}
       </CardFooter>
     </Card>
   )
