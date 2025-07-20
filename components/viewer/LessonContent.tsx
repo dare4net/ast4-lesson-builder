@@ -31,6 +31,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const [totalPossible, setTotalPossible] = useState(0);
     const currentSlide = lesson.slides[currentSlideIndex];
     const progress = ((currentSlideIndex + 1) / lesson.slides.length) * 100;
+    const [triggerProgress, setTriggerProgress] = useState(0);
 
     // Persist state for each component by id with debug log
     const [componentStates, setComponentStates] = useState<Record<string, any>>(() => {
@@ -172,6 +173,14 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         lesson.slides = updatedSlides;
         onSlidesUpdate?.(updatedSlides);
         console.log('Updated lesson slides:', updatedSlides);
+        
+        // Include progress in slide update
+        if (typeof onSlidesUpdate === 'function') {
+          onSlidesUpdate(updatedSlides);
+          // You can also add progress to the slide object if needed
+          updatedSlides[currentSlideIndex].progress = slideProgress;
+          setTriggerProgress(prev => prev + 1); // Trigger progress update
+        }
       }
 
       console.log('Slide completion check completed for:', currentSlide.title);
@@ -197,12 +206,28 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       };
 
       // Then check completion with the new state
-      if (newState?.status === "completed") {
-        // Get all interactive components
-        const interactiveComponents = currentSlide.components.filter(
-          comp => comp.component_type === "interactive"
-        );
+      // Get all interactive components
+      const interactiveComponents = currentSlide.components.filter(
+        comp => comp.component_type === "interactive"
+      );
 
+      // Calculate progress first since we have the fresh state
+      const completedCount = interactiveComponents.filter(
+        comp => (comp.id === componentId ? "completed" : updatedStates[comp.id]?.status) === "completed"
+      ).length;
+      const slideProgress = interactiveComponents.length > 0 
+        ? (completedCount / interactiveComponents.length) * 100 
+        : 100;
+
+      // Update slide with new progress
+      const updatedSlide = {
+        ...currentSlide,
+        progress: slideProgress
+      };
+      lesson.slides[currentSlideIndex] = updatedSlide;
+      onSlidesUpdate?.(lesson.slides);
+
+      if (newState?.status === "completed") {
         // Get completion status with the updated state
         const slideComponentStates = interactiveComponents.map(comp => ({
           id: comp.id,

@@ -10,6 +10,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
 import { Menu, Clock, User, Award, Lock, Unlock, CheckCircle2, Circle } from 'lucide-react';
 import type { Lesson } from '@/types/lesson';
+import { TopProgressBar } from './TopProgressBar';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const [lessonData, setLessonData] = useState<Lesson | null>(initialLesson || null);
@@ -348,7 +349,9 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
       {/* End Lesson Button */}
       <div className="p-4 border-t mt-auto">
-        <Button variant="destructive" className="w-full" onClick={resetViewer}>
+        <Button variant="destructive" className="w-full" onClick={() => {
+          window.location.href = 'https://app.after-school.tech/dashboard/student';
+        }}>
           End Lesson
         </Button>
       </div>
@@ -387,8 +390,30 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     );
   }
 
+  // Get current slide's interactive components progress
+  const currentSlide = lessonData?.slides[currentSlideIndex];
+  const interactiveComponents = currentSlide?.components.filter(
+    comp => comp.component_type === "interactive"
+  ) || [];
+  
+  // Get completion status for current slide's components
+  const componentStates = lessonContentRef.current?.getAllComponentStates?.() || {};
+  const completedComponents = interactiveComponents.filter(
+    comp => componentStates[comp.id]?.status === "completed"
+  ).length;
+  
+  const slideProgress = interactiveComponents.length > 0 
+    ? (completedComponents / interactiveComponents.length) * 100 
+    : 100; // If no interactive components, slide is complete
+
   return (
     <div className="h-screen w-screen flex overflow-hidden">
+      {/* Top Progress Bar */}
+      <TopProgressBar 
+        progress={slideProgress}
+        isCompleted={currentSlide?.status === "completed"}
+      />
+
       {/* Desktop/Tablet Sidebar */}
       <div className="hidden md:block w-80 border-r bg-muted/40">
         {renderSidebarContent()}
