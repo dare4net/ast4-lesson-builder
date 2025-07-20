@@ -1,7 +1,7 @@
 {
-  "name": "AfterSchool Tech Lesson Builder",
-  "short_name": "AST Builder",
-  "description": "Interactive lesson builder for AfterSchool Tech",
+  "name": "AfterSchool Tech Learning Environment",
+  "short_name": "AST",
+  "description": "Interactive learning for AfterSchool Tech",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
