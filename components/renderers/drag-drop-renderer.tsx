@@ -137,13 +137,6 @@ export function DragDropRenderer({
     // Award points for correct positions in live mode
     if (isLiveMode && scoreContext && correctCount > 0) {
       scoreContext.addPoints(earnedPoints);
-      // Save state explicitly when points are awarded
-      setComponentState?.({
-        dragItems,
-        isSubmitted: true,
-        isCorrect: isAllCorrect,
-        status: 'completed'
-      });
     }
 
     const newState = {

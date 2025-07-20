@@ -11,7 +11,7 @@ export function getComponentTypeCategory(type: string): ComponentType_Category {
     matchingPairs: "interactive",
     dragDrop: "interactive",
     scoreBoard: "gamified",
-    flashcards: "interactive",
+    flashcards: "gamified",
     hotspot: "interactive",
     fillInTheBlank: "interactive",
     codeEditor: "interactive",

@@ -150,14 +150,6 @@ export function FillInTheBlankRenderer({
     // Award points for each correct answer in live mode
     if (isLiveMode && scoreContext && correctCount > 0) {
       scoreContext.addPoints(earnedPoints)
-      // Save state explicitly when points are awarded
-      setComponentState?.({
-        userAnswers,
-        isSubmitted: true,
-        correctAnswers: results,
-        score: earnedPoints,
-        status: 'completed'
-      })
     }
 
     // Persist state after submission
@@ -266,14 +258,14 @@ export function FillInTheBlankRenderer({
           {isSubmitted && (
             <div
               className={`mt-4 p-3 rounded flex items-center ${
-                score === points
+                score === points * blanks.length
                   ? "bg-[#E8F5E9] text-[#2E7D32]"
                   : score > 0
                     ? "bg-[#FFF3E0] text-[#E65100]"
                     : "bg-destructive/10 text-destructive"
               }`}
             >
-              {score === points ? (
+              {score === points * blanks.length ? (
                 <>
                   <CheckCircle2 className="h-5 w-5 mr-2 text-[#4CAF50]" />
                   <span>You Rock! 🎉 All answers are correct!</span>
@@ -317,7 +309,7 @@ export function FillInTheBlankRenderer({
               {/* Practice Mode: Show Complete when all correct, Try Again when not */}
               {!isLiveMode && (
                 <>
-                  {score === points ? (
+                  {score === points * blanks.length ? (
                     <Button
                       className="bg-success text-success-foreground"
                       disabled
@@ -345,7 +337,7 @@ export function FillInTheBlankRenderer({
           )}
           {points > 0 && (
             <div className="text-sm text-muted-foreground">
-              {isSubmitted ? `Score: ${score}/${points}` : `Points: ${points}`}
+              {isSubmitted ? `Score: ${score}/${points *blanks.length}` : `Points: ${points * blanks.length}`}
             </div>
           )}
         </div>

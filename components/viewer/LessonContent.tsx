@@ -98,7 +98,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     // Process components to handle disabled state
     const processedComponents = currentSlide?.components.map(component => {
       if (currentSlide.state === "disabled" && 
-          (component.component_type === "interactive" || component.component_type === "gamified")) {
+          (component.component_type === "interactive")) {
         return { 
           ...component, 
           state: "disabled" as const
@@ -320,7 +320,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     return (
       <div className="flex flex-col h-full relative">
         <ScrollArea className="flex-1 px-4 md:px-8 py-6">
-          <div className="max-w-4xl mx-auto space-y-8 px-4 py-6">
+          <div className="max-w-4xl mx-auto space-y-8 px-2 py-6">
             {currentSlide && processedComponents?.map((component) => (
               <ComponentRenderer
                 key={component.id}

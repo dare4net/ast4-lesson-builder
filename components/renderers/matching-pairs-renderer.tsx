@@ -65,7 +65,11 @@ export function MatchingPairsRenderer({
   });
   const [selectedLeft, setSelectedLeft] = useState(() => savedState?.selectedLeft ?? null);
   const [selectedRight, setSelectedRight] = useState(() => savedState?.selectedRight ?? null);
-  const [matches, setMatches] = useState(() => savedState?.matches ?? {});
+  interface Match {
+    rightId: string;
+    color: string;
+  }
+  const [matches, setMatches] = useState<Record<string, Match>>(() => savedState?.matches ?? {});
   const [isChecking, setIsChecking] = useState(() => savedState?.isChecking ?? false);
   const [isCorrect, setIsCorrect] = useState(() => savedState?.isCorrect ?? false);
   const [matchStats, setMatchStats] = useState(() => savedState?.matchStats ?? {
@@ -223,18 +227,6 @@ export function MatchingPairsRenderer({
     // Award points for correct matches in live mode
     if (isLiveMode && scoreContext && correctCount > 0) {
       scoreContext.addPoints(earnedPoints);
-      // Save state explicitly when points are awarded
-      setComponentState?.({
-        leftItems,
-        rightItems,
-        selectedLeft,
-        selectedRight,
-        matches,
-        isChecking: true,
-        isCorrect: allCorrect,
-        matchStats: { correctCount, noneCorrect, someCorrect },
-        status: 'completed'
-      })
     }
     
     // Mark as completed after submission regardless of mode
