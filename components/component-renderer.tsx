@@ -65,7 +65,9 @@ const gamifiedTypes: ComponentType[] = [
   'scoreBoard',
   'badgeReveal',
   'miniGame',
-  'progressBar'
+  'progressBar',
+  'fillInTheBlank',
+  'codeEditor',
 ];
 
 const interactiveTypes: ComponentType[] = [
