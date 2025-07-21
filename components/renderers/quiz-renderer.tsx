@@ -152,7 +152,12 @@ export function QuizRenderer({
     if (isCorrect) {
       // Only add points to scoreContext in live mode
       if (isLiveMode && scoreContext?.addPoints) {
+        console.log(`this is a live quiz, scoreContext before is: `, scoreContext);
         scoreContext.addPoints(points);
+        console.log(`this is a live quiz, scoreContext after is: `, scoreContext);
+      }else {
+        scoreContext?.addPoints(0);
+        console.log(`this is a practice quiz, scoreContext is: `, scoreContext);
       }
       await playFeedback('correct');
     } else {

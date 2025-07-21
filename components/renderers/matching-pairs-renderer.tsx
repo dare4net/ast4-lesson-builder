@@ -227,6 +227,8 @@ export function MatchingPairsRenderer({
     // Award points for correct matches in live mode
     if (isLiveMode && scoreContext && correctCount > 0) {
       scoreContext.addPoints(earnedPoints);
+    }else{
+      scoreContext?.addPoints(0);
     }
     
     // Mark as completed after submission regardless of mode
