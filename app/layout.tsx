@@ -9,16 +9,16 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Afterschool Tech Lesson Builder",
-  description: "Build interactive lessons for kids without writing code",
-  generator: "v0.dev",
+  title: "Afterschool Interactive Learning Environment",
+  description: "The official interactive learning platform for Afterschool Tech",
+  generator: "AST",
   manifest: "/manifest.json",
   themeColor: "#4CAF50",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "AST Builder",
+    title: "AST Learn",
   },
   icons: {
     icon: "/icons/icon-512x512.png",

@@ -159,7 +159,7 @@ export function QuizRenderer({
         scoreContext?.addPoints(0);
         console.log(`this is a practice quiz, scoreContext is: `, scoreContext);
       }
-      await playFeedback('correct');
+      await playFeedback('quizSuccess', { animation: false });
     } else {
       await playFeedback('incorrect');
     }
@@ -186,7 +186,7 @@ export function QuizRenderer({
       await playFeedback('click', { animation: false });
     } else {
       // Just play completion feedback - completion state is handled in handleCheckAnswer
-      await playFeedback('complete');
+      await playFeedback('quizSuccess', { animation: false });
     }
   };
 

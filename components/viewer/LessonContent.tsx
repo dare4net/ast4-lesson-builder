@@ -345,7 +345,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             <Button
               variant="outline"
               onClick={() => {
-                playFeedback('click');
+                playFeedback('uiClick');
                 onSlideChange(currentSlideIndex - 1);
                 if (viewportRef.current) {
                   viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
@@ -360,7 +360,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             <Button
               variant="outline"
               onClick={() => {
-                playFeedback('click');
+                playFeedback('uiClick');
                 onSlideChange(currentSlideIndex + 1);
                 if (viewportRef.current) {
                   viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });

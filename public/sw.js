@@ -17,7 +17,12 @@ const soundsToCache = [
   '/sounds/flashcard-flip.mp3',
   '/sounds/correct.mp3',
   '/sounds/click.wav',
-  '/sounds/complete.mp3'
+  '/sounds/complete.mp3',
+  '/sounds/ui-click.mp3',
+  '/sounds/dng-click.mp3',
+  '/sounds/dng-success.mp3',
+  '/sounds/quiz-success.mp3',
+  '/sounds/finished-lesson.mp3'
 ];
 
 console.log('Service Worker Initialized');
@@ -90,12 +95,13 @@ self.addEventListener('fetch', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  const cacheWhitelist = [CACHE_NAME];
+  const cacheWhitelist = [CACHE_NAME, SOUND_CACHE_NAME];
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })

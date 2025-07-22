@@ -105,7 +105,7 @@ export function DragDropRenderer({
     if (isSubmitted || isDisabled) return;
     const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= dragItems.length) return;
-    await playFeedback('click', { sound: true, animation: false });
+    await playFeedback('dngClick', { sound: true, animation: false });
     const newItems = [...dragItems];
     const temp = newItems[index];
     newItems[index] = newItems[newIndex];
@@ -127,7 +127,7 @@ export function DragDropRenderer({
     setIsCorrect(isAllCorrect);
     
     if (isAllCorrect) {
-      await playFeedback('correct');
+      await playFeedback('dngSuccess', { animation: false });
     } else if (correctCount > 0) {
       await playFeedback('complete');
     } else {
@@ -165,7 +165,7 @@ export function DragDropRenderer({
     setDragItems(newItems);
     setIsSubmitted(false);
     setIsCorrect(false);
-    await playFeedback('click', { sound: true, animation: false });
+    await playFeedback('dngClick', { sound: true, animation: false });
   };
 
   if (!mounted) return null;

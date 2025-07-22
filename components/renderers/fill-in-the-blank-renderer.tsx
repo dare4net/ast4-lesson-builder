@@ -124,7 +124,7 @@ export function FillInTheBlankRenderer({
     let correctCount = 0
 
     blanks.forEach((blank) => {
-      const isCorrect = checkAnswer(blank, userAnswers[blank.id])
+      const isCorrect = checkAnswer(blank, userAnswers[blank.id].trim())
       results[blank.id] = isCorrect
       if (isCorrect) correctCount++
     })
