@@ -9,7 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
 import { Menu, Clock, User, Award, Lock, Unlock, CheckCircle2, Circle } from 'lucide-react';
-import type { Lesson } from '@/types/lesson';
+import type { Lesson, SlideState, SlideStatus } from '@/types/lesson';
 import { TopProgressBar } from './TopProgressBar';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
@@ -59,23 +59,59 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   // Initialize lesson data and score with saved states on mount
   useEffect(() => {
-    if (initialLesson && initialInteraction?.lessonState) {
-      // Map initial lesson data with saved states
+    if (initialLesson) {
+      // First, apply any saved states
+      const initializedSlides = initialLesson.slides.map(slide => {
+        const savedSlide = initialInteraction?.lessonState?.slides.find((s: { id: string }) => s.id === slide.id);
+        // Only use original state if there's no saved state at all
+        const finalState = (savedSlide && 'state' in savedSlide) ? 
+          savedSlide.state as SlideState : slide.state;
+        const finalStatus = (savedSlide && 'status' in savedSlide) ? 
+          savedSlide.status as SlideStatus : slide.status;
+        
+        return {
+          ...slide,
+          state: finalState,
+          status: finalStatus
+        };
+      });
+
+      // Then, process slides to auto-complete non-interactive ones
+      const processedSlides = initializedSlides.map((slide, index) => {
+        // Skip if slide is already completed
+        if (slide.status === "completed") return slide;
+
+        // Check if slide has any interactive components
+        const hasInteractiveComponents = slide.components.some(
+          comp => comp.component_type === "interactive"
+        );
+
+        if (!hasInteractiveComponents) {
+          // Mark this slide as completed
+          const updatedSlide = {
+            ...slide,
+            status: "completed" as const
+          };
+
+          // If there's a next slide and it's not the last slide, activate it
+          if (index < initializedSlides.length - 1) {
+            initializedSlides[index + 1] = {
+              ...initializedSlides[index + 1],
+              state: "active" as const
+            };
+          }
+
+          return updatedSlide;
+        }
+
+        return slide;
+      });
+
       const initializedLesson = {
         ...initialLesson,
-        slides: initialLesson.slides.map(slide => {
-          const savedSlide = initialInteraction.lessonState.slides.find(s => s.id === slide.id);
-          // Only use original state if there's no saved state at all
-          const finalState = (savedSlide && 'state' in savedSlide) ? savedSlide.state : slide.state;
-          const finalStatus = (savedSlide && 'status' in savedSlide) ? savedSlide.status : slide.status;
-          
-          return {
-            ...slide,
-            state: finalState,
-            status: finalStatus
-          };
-        })
+        slides: processedSlides
       };
+      
       setLessonData(initializedLesson);
     }
   }, [initialLesson, initialInteraction]);

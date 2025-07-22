@@ -132,7 +132,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
       console.log('Slide Component States:', slideComponentStates);
       
-      if (slideComponentStates.length === 0) {
+      if (interactiveComponents.length === 0) {
         console.log('No interactive components with state to check.');
         return;
       }
