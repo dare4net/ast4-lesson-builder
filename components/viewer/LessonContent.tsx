@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -27,6 +27,7 @@ export interface LessonContentRef {
 export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
   function LessonContent({ lesson, onScoreUpdate, currentSlideIndex, onSlideChange, initialComponentStates = {}, onSlidesUpdate, savedScore }, ref) {
     const { playFeedback } = useFeedback();
+    const viewportRef = useRef<HTMLDivElement>(null);
     const [score, setScore] = useState(savedScore || 0);
     const [totalPossible, setTotalPossible] = useState(0);
     const currentSlide = lesson.slides[currentSlideIndex];
@@ -320,7 +321,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     return (
       <div className="flex flex-col h-full relative">
-        <ScrollArea className="flex-1 px-4 md:px-8 py-6">
+        <ScrollArea className="flex-1 px-4 md:px-8 py-6" viewportRef={viewportRef}>
           <div className="max-w-4xl mx-auto space-y-8 px-2 py-6">
             {currentSlide && processedComponents?.map((component) => (
               <ComponentRenderer
@@ -346,6 +347,9 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
               onClick={() => {
                 playFeedback('click');
                 onSlideChange(currentSlideIndex - 1);
+                if (viewportRef.current) {
+                  viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               disabled={currentSlideIndex === 0}
             >
@@ -358,6 +362,9 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
               onClick={() => {
                 playFeedback('click');
                 onSlideChange(currentSlideIndex + 1);
+                if (viewportRef.current) {
+                  viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
               disabled={currentSlideIndex === lesson.slides.length - 1}
             >
