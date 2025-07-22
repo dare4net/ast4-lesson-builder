@@ -106,7 +106,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   }, [lessonData, currentSlideIndex, isSlideAccessible, findNextAccessibleSlide]);
 
   // Save gamified state every 30s
-  useEffect(() => {
+  /*useEffect(() => {
     if (!userId || !lessonData) return;
     console.log('[LessonViewer] Setting up periodic save for userId:', userId, 'lessonId:', lessonData.id);
     const interval = setInterval(() => {
@@ -136,7 +136,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       }
     }, 30000);
     return () => clearInterval(interval);
-  }, [userId, lessonData, currentSlideIndex]);
+  }, [userId, lessonData, currentSlideIndex]);*/
 
   // Save an initial interaction if none exists
   useEffect(() => {
