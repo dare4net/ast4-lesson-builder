@@ -386,7 +386,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       {/* End Lesson Button */}
       <div className="p-4 border-t mt-auto">
         <Button variant="destructive" className="w-full" onClick={() => {
-          window.location.href = 'https://app.after-school.tech/dashboard/student';
+          window.open('https://app.after-school.tech/dashboard/student', '_blank');
         }}>
           End Lesson
         </Button>

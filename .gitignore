@@ -25,3 +25,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# perseonal scripts
+/lib/mongodb_script.ts
+/scripts/bulk-personalize.js
+/scripts/bulk-personalize.js.new
+/scripts/bulk-personalize.mjs
+/scripts/create-personalized-lesson.js
+/scripts/personalize.js
