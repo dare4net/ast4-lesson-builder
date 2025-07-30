@@ -1,13 +1,13 @@
 // Service Worker for AST Lesson Builder PWA
 
-const CACHE_NAME = 'ast-builder-cache-v2';
-const SOUND_CACHE_NAME = 'ast-builder-sounds-v1';
+const CACHE_NAME = 'ast-builder-cache-v3';
+const SOUND_CACHE_NAME = 'ast-builder-sounds-v2';
 
 const urlsToCache = [
   '/',
   '/manifest.json',
   '/register-sw.js',
-  '/placeholder-logo.png'
+  '/icons/icon-512x512.png'
 ];
 
 const soundsToCache = [
