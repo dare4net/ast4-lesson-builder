@@ -3,22 +3,26 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FileUploader } from './FileUploader';
 import { LessonContent } from './LessonContent';
+import { TopProgressBar } from './TopProgressBar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { Progress } from '@/components/ui/progress';
 import { Menu, Clock, User, Award } from 'lucide-react';
+import { ScoringProvider } from '@/context/scoring-context';
+import { ScoreDisplay } from '@/components/ui/score-display';
+import { cn } from '@/lib/utils';
 import type { Lesson } from '@/types/lesson';
+import { NavigationLockProvider } from '@/context/navigation-lock-context';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const [lessonData, setLessonData] = useState<Lesson | null>(initialLesson || null);
   const [error, setError] = useState<string | null>(null);
-  const [currentScore, setCurrentScore] = useState(0);
-  const [totalPossible, setTotalPossible] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [loading, setLoading] = useState<boolean>(!initialLesson); // NEW: loading state
+  const [loading, setLoading] = useState<boolean>(!initialLesson);
+  const [slideProgress, setSlideProgress] = useState(0);
   const lessonContentRef = useRef<any>(null);
 
   // Function to check if a slide is accessible
@@ -55,6 +59,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       setCurrentSlideIndex(index);
     }
   }, [isSlideAccessible]);
+
+  const handleProgressUpdate = (progress: number) => {
+    setSlideProgress(progress);
+  };
 
   // Auto-skip disabled slides on initial load
   useEffect(() => {
@@ -104,7 +112,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     try {
       const content = await file.text();
       const parsed = JSON.parse(content);
-      
+
       // Validate required Lesson fields
       const requiredFields = ['id', 'title', 'description', 'author', 'level', 'duration', 'slides', 'createdAt', 'updatedAt'];
       for (const field of requiredFields) {
@@ -154,14 +162,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const resetViewer = () => {
     setLessonData(null);
     setError(null);
-    setCurrentScore(0);
-    setTotalPossible(0);
     setCurrentSlideIndex(0);
-  };
-
-  const handleScoreUpdate = (score: number, total: number) => {
-    setCurrentScore(score);
-    setTotalPossible(total);
   };
 
   const handleJumpToSlide = (index: number) => {
@@ -171,108 +172,136 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   };
 
   const renderSidebarContent = () => (
-    <div className="flex flex-col h-full">
-      {/* Lesson Title */}
-      <div className="p-4 border-b">
-        <h2 className="text-xl font-bold">{lessonData?.title}</h2>
+    <div className="flex flex-col h-full bg-[#0F172A] border-r border-slate-800">
+      {/* Lesson Title Section */}
+      <div className="p-6 border-b border-slate-800 bg-slate-900/40">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
+          <h2 className="text-xs font-black text-white uppercase tracking-[0.2em]">Active Course</h2>
+        </div>
+        <h3 className="text-xl font-black text-emerald-400 tracking-tight leading-tight">{lessonData?.title}</h3>
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-6">
-          {/* Slides Section */}
-          <div className="space-y-2">
-            <h3 className="font-semibold text-sm text-muted-foreground">SLIDES</h3>
-            <div className="space-y-1">
+        <div className="p-6 space-y-10">
+          {/* Navigation Section */}
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Curriculum Stream</h3>
+            <div className="space-y-2">
               {lessonData?.slides.map((slide, index) => (
                 <Button
                   key={slide.id}
-                  variant={index === currentSlideIndex ? "secondary" : "ghost"}
-                  className={`w-full justify-start text-left h-auto py-2 px-3 ${
-                    index === currentSlideIndex ? 'bg-secondary' : ''
-                  }`}
+                  variant="ghost"
+                  className={cn(
+                    "w-full justify-start text-left h-auto py-3 px-4 rounded-xl transition-all duration-300 border border-transparent",
+                    index === currentSlideIndex
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-lg shadow-emerald-500/5 translate-x-1"
+                      : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+                  )}
                   onClick={() => handleJumpToSlide(index)}
                 >
-                  <div className="flex items-start gap-2">
-                    <span className="text-xs opacity-50 mt-0.5">#{index + 1}</span>
-                    <span className="text-sm">{slide.title}</span>
+                  <div className="flex items-center gap-4 w-full">
+                    <span className={cn(
+                      "text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border shrink-0 transition-colors",
+                      index === currentSlideIndex ? "bg-emerald-500 border-emerald-500 text-slate-950" : "border-slate-800 text-slate-600"
+                    )}>
+                      {index + 1}
+                    </span>
+                    <span className="text-xs font-bold truncate flex-1">{slide.title}</span>
+                    {index === currentSlideIndex && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    )}
                   </div>
                 </Button>
               ))}
             </div>
           </div>
 
-          {/* Score Section */}
-          <div className="space-y-2">
-            <h3 className="font-semibold text-sm text-muted-foreground flex items-center gap-2">
-              <Award className="h-4 w-4" />
-              SCORE
+          {/* Performance Section */}
+          <div className="space-y-4">
+            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+              <Award className="h-3 w-3 text-emerald-500" />
+              Live Analytics
             </h3>
-            <div className="bg-muted/50 rounded-lg p-3 space-y-2">
-              <Progress value={(currentScore / totalPossible) * 100} />
-              <p className="text-sm text-muted-foreground">
-                {currentScore} / {totalPossible} points
-              </p>
+            <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800 shadow-inner">
+              <ScoreDisplay />
             </div>
           </div>
 
-          {/* Lesson Info Section */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-muted-foreground flex items-center gap-2">
-                <User className="h-4 w-4" />
-                AUTHOR
+          {/* Metadata Section */}
+          <div className="space-y-6">
+            <div className="space-y-2 group">
+              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors">
+                <User className="h-3 w-3 text-emerald-500/50" />
+                Architect
               </h3>
-              <p className="text-sm">{lessonData?.author}</p>
+              <p className="text-sm font-bold text-slate-300 pl-5">{lessonData?.author}</p>
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-muted-foreground flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                DURATION
+              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
+                <Clock className="h-3 w-3 text-emerald-500/50" />
+                Estimated Flow
               </h3>
-              <p className="text-sm">{lessonData?.duration} minutes</p>
+              <p className="text-sm font-bold text-slate-300 pl-5">{lessonData?.duration} minutes</p>
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-muted-foreground">DESCRIPTION</h3>
-              <p className="text-sm text-muted-foreground">{lessonData?.description}</p>
+              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Summary</h3>
+              <p className="text-xs font-medium text-slate-500 leading-relaxed pl-1">{lessonData?.description}</p>
             </div>
           </div>
         </div>
       </ScrollArea>
 
-      {/* End Lesson Button */}
-      <div className="p-4 border-t mt-auto">
-        <Button variant="destructive" className="w-full" onClick={resetViewer}>
-          End Lesson
+      {/* Footer Section */}
+      <div className="p-6 border-t border-slate-800 bg-slate-950/20">
+        <Button
+          variant="ghost"
+          className="w-full rounded-full border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[10px] tracking-widest h-11"
+          onClick={resetViewer}
+        >
+          Terminate Session
         </Button>
       </div>
     </div>
   );
 
-  // NEW: Show loading spinner until lessonData is fully loaded
   if (loading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center p-4">
-        <Card className="p-6 w-full max-w-lg text-center">
-          <h2 className="mb-4 text-xl font-semibold">Loading lesson...</h2>
-        </Card>
+      <div className="h-screen w-screen flex items-center justify-center p-4 bg-[#0F172A]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-full border-4 border-slate-800 border-t-emerald-500 animate-spin" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
+            </div>
+          </div>
+          <h2 className="text-xs font-black text-emerald-400 uppercase tracking-[0.3em] animate-pulse">Initializing Studio Stream</h2>
+        </div>
       </div>
     );
   }
 
   if (!lessonData) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center p-4">
-        <Card className="p-6 w-full max-w-lg">
-          <div className="text-center">
-            <h2 className="mb-4 text-xl font-semibold">Upload Lesson File</h2>
-            <p className="mb-6 text-muted-foreground">
-              Upload an After School Tech lesson file (.json) to start learning
-            </p>
-            <FileUploader onFileUpload={handleFileUpload} />
+      <div className="h-screen w-screen flex items-center justify-center p-4 bg-[#0F172A]">
+        <Card className="p-10 w-full max-w-xl bg-slate-900/40 border-slate-800 shadow-2xl rounded-[2rem] backdrop-blur-xl">
+          <div className="text-center space-y-8">
+            <div className="flex flex-col items-center">
+              <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 flex items-center justify-center mb-6 shadow-inner border border-emerald-500/20">
+                <Award className="h-10 w-10 text-emerald-400" />
+              </div>
+              <h2 className="text-2xl font-black text-white tracking-tight uppercase">Enter the Studio</h2>
+              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Deploy your education artifacts to begin</p>
+            </div>
+
+            <div className="p-8 bg-slate-950/40 border border-slate-800 rounded-2xl shadow-inner">
+              <FileUploader onFileUpload={handleFileUpload} />
+            </div>
+
             {error && (
-              <div className="mt-4 rounded-lg bg-destructive/10 p-4 text-destructive">
+              <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4 text-rose-400 text-xs font-bold uppercase tracking-widest">
                 {error}
               </div>
             )}
@@ -283,35 +312,35 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   }
 
   return (
-    <div className="h-screen w-screen flex overflow-hidden">
-      {/* Desktop/Tablet Sidebar */}
-      <div className="hidden md:block w-80 border-r bg-muted/40">
-        {renderSidebarContent()}
-      </div>
-
-      {/* Mobile Menu Button and Sheet */}
-      <div className="md:hidden fixed top-4 left-4 z-50">
-        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-          <Button variant="outline" size="icon" onClick={() => setIsSidebarOpen(true)}>
-            <Menu className="h-4 w-4" />
-          </Button>
-          <SheetContent side="left" className="w-80 p-0">
+    <ScoringProvider lesson={lessonData}>
+      <NavigationLockProvider>
+        <div className="h-screen w-screen flex overflow-hidden bg-white selection:bg-emerald-500 selection:text-slate-950">
+          {/* Desktop/Tablet Sidebar */}
+          <div className="hidden md:block w-80 shrink-0">
             {renderSidebarContent()}
-          </SheetContent>
-        </Sheet>
-      </div>
+          </div>
+          {/* ... */}
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col relative bg-emerald-50/10 overflow-hidden">
+            <TopProgressBar
+              progress={slideProgress}
+              isCompleted={lessonData?.slides[currentSlideIndex]?.status === "completed"}
+              onMenuClick={() => setIsSidebarOpen(true)}
+            />
 
-      {/* Main Content */}
-      <div className="flex-1 relative">
-        <LessonContent 
-          ref={lessonContentRef}
-          lesson={lessonData} 
-          onScoreUpdate={handleScoreUpdate}
-          currentSlideIndex={currentSlideIndex}
-          onSlideChange={setCurrentSlideIndex}
-          initialComponentStates={initialInteraction?.componentsState || {}}
-        />
-      </div>
-    </div>
+            <div className="flex-1 relative overflow-hidden">
+              <LessonContent
+                ref={lessonContentRef}
+                lesson={lessonData!}
+                currentSlideIndex={currentSlideIndex}
+                onSlideChange={setCurrentSlideIndex}
+                initialComponentStates={initialInteraction?.componentsState || {}}
+                onProgressUpdate={handleProgressUpdate}
+              />
+            </div>
+          </div>
+        </div>
+      </NavigationLockProvider>
+    </ScoringProvider>
   );
 }

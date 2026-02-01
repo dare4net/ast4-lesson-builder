@@ -1,15 +1,14 @@
 "use client"
 
-import type React from "react"
-
+import * as React from "react"
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Trash2 } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
+import { Plus } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
 interface Hotspot {
   id: string
@@ -38,10 +37,7 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
       label: `Hotspot ${hotspots.length + 1}`,
       content: "Description goes here",
     }
-
-    const updatedHotspots = [...hotspots, newHotspot]
-    onChange(updatedHotspots)
-    setActiveHotspotIndex(updatedHotspots.length - 1)
+    onChange([...hotspots, newHotspot])
     setIsAddingHotspot(false)
   }
 
@@ -54,143 +50,110 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
     onChange(updatedHotspots)
   }
 
-  const deleteHotspot = (index: number) => {
-    const updatedHotspots = [...hotspots]
-    updatedHotspots.splice(index, 1)
-    onChange(updatedHotspots)
-
-    if (activeHotspotIndex >= index && activeHotspotIndex > 0) {
-      setActiveHotspotIndex(activeHotspotIndex - 1)
-    }
-  }
-
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
     if (!isAddingHotspot || !imageRef.current) return
-
     const rect = imageRef.current.getBoundingClientRect()
     const x = (e.clientX - rect.left) / rect.width
     const y = (e.clientY - rect.top) / rect.height
-
     addHotspot(x, y)
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Label className="text-[#2E7D32]">Hotspots</Label>
-        <Button
-          size="sm"
-          variant={isAddingHotspot ? "default" : "outline"}
-          onClick={() => setIsAddingHotspot(!isAddingHotspot)}
-          className={isAddingHotspot 
-            ? "bg-[#4CAF50] text-white hover:bg-[#43A047]"
-            : "border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"}
-        >
-          {isAddingHotspot ? (
-            "Cancel"
-          ) : (
-            <>
-              <Plus className="h-4 w-4 mr-1" />
-              Add Hotspot
-            </>
-          )}
-        </Button>
-      </div>
-
-      {isAddingHotspot && (
-        <div className="border border-[#4CAF50] rounded-md p-2 bg-[#E8F5E9]">
-          <p className="text-sm mb-2 text-[#2E7D32]">Click on the image to place a hotspot</p>
-        </div>
-      )}
-
+    <div className="space-y-6">
       <div className="relative">
-        <img
-          ref={imageRef}
-          src={image}
-          alt="Hotspot image"
-          className={`w-full h-auto border border-[#4CAF50] rounded-md ${isAddingHotspot ? 'cursor-crosshair' : ''}`}
-          onClick={handleImageClick}
-        />
-        {hotspots.map((hotspot, index) => (
-          <div
-            key={hotspot.id}
-            style={{
-              position: "absolute",
-              left: `${hotspot.x * 100}%`,
-              top: `${hotspot.y * 100}%`,
-              transform: "translate(-50%, -50%)",
-            }}
-            className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer border-2 text-sm ${
-              index === activeHotspotIndex
-                ? "bg-[#4CAF50] border-[#2E7D32] text-white"
-                : "bg-white border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9]"
-            }`}
-            onClick={() => setActiveHotspotIndex(index)}
+        <div className="flex items-center justify-between mb-3 px-1">
+          <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Spatial Mapping</Label>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setIsAddingHotspot(!isAddingHotspot)}
+            className={cn(
+              "h-8 rounded-full border transition-all text-[10px] font-black uppercase tracking-widest px-4",
+              isAddingHotspot
+                ? "bg-rose-500 border-rose-500 text-white hover:bg-rose-600"
+                : "border-slate-800 bg-slate-900/50 text-emerald-500 hover:bg-emerald-500 hover:text-slate-950 hover:border-emerald-500"
+            )}
           >
-            {index + 1}
+            {isAddingHotspot ? "Terminate Entry" : <><Plus className="h-3.5 w-3.5 mr-2" /> Initialize Node</>}
+          </Button>
+        </div>
+
+        {isAddingHotspot && (
+          <div className="border border-emerald-500/30 rounded-2xl p-4 bg-emerald-500/5 mb-4 animate-in fade-in slide-in-from-top-2 border-dashed">
+            <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest text-center">Protocol: Click workspace to deploy sensor</p>
           </div>
-        ))}
+        )}
+
+        <div className="relative border border-slate-800 rounded-[2rem] overflow-hidden bg-slate-950/40 shadow-2xl group/stage">
+          <img
+            ref={imageRef}
+            src={image}
+            alt="Hotspot base"
+            className={cn(
+              "w-full h-auto transition-all duration-700",
+              isAddingHotspot ? 'cursor-crosshair opacity-40 grayscale-[0.5]' : 'group-hover/stage:opacity-90'
+            )}
+            onClick={handleImageClick}
+          />
+          {hotspots.map((hotspot, index) => (
+            <div
+              key={hotspot.id}
+              style={{
+                position: "absolute",
+                left: `${hotspot.x * 100}%`,
+                top: `${hotspot.y * 100}%`,
+                transform: "translate(-50%, -50%)",
+              }}
+              className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center cursor-pointer border-2 text-[10px] font-black shadow-2xl transition-all duration-300",
+                index === activeHotspotIndex
+                  ? "bg-emerald-500 border-white text-slate-950 scale-125 z-10 shadow-emerald-500/50"
+                  : "bg-slate-950/80 border-emerald-500/50 text-emerald-500 hover:scale-110"
+              )}
+              onClick={() => setActiveHotspotIndex(index)}
+            >
+              {index + 1}
+              {index === activeHotspotIndex && (
+                <div className="absolute inset-0 rounded-full border-4 border-emerald-500 animate-ping opacity-20" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {hotspots.length > 0 && (
-        <Card className="border-[#4CAF50]">
-          <CardContent className="p-4">
-            <Tabs 
-              value={activeHotspotIndex.toString()} 
-              onValueChange={(value) => setActiveHotspotIndex(Number.parseInt(value))}
-            >
-              <TabsList className="w-full h-auto flex-wrap bg-[#E8F5E9] mb-4">
-                {hotspots.map((hotspot, index) => (
-                  <TabsTrigger
-                    key={hotspot.id}
-                    value={index.toString()}
-                    className="flex-1 h-8 data-[state=active]:bg-[#4CAF50] data-[state=active]:text-white text-[#2E7D32] hover:text-[#2E7D32] hover:bg-[#E8F5E9]/80"
-                  >
-                    Hotspot {index + 1}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+      <ArrayItemEditor<Hotspot>
+        items={hotspots}
+        onChange={onChange}
+        onAddItem={() => setIsAddingHotspot(true)}
+        getItemLabel={(_, index) => `Sensor Node ${index + 1}`}
+        addButtonLabel="Deploy Node"
+        maxItems={10}
+        renderItem={(hotspot, index) => (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Node Identifier</Label>
+              <Input
+                value={hotspot.label}
+                onChange={(e) => updateHotspot(index, "label", e.target.value)}
+                placeholder="Tag this sensor"
+                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold rounded-xl"
+              />
+            </div>
 
-              {hotspots.map((hotspot, index) => (
-                <TabsContent key={hotspot.id} value={index.toString()} className="m-0 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <h4 className="text-sm font-medium text-[#2E7D32]">Hotspot {index + 1}</h4>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => deleteHotspot(index)}
-                      className="text-[#4CAF50] hover:bg-[#E8F5E9] hover:text-[#2E7D32]"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-[#2E7D32]">Label</Label>
-                    <Input
-                      value={hotspot.label}
-                      onChange={(e) => updateHotspot(index, "label", e.target.value)}
-                      placeholder="Hotspot label"
-                      className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-[#2E7D32]">Content</Label>
-                    <Textarea
-                      value={hotspot.content}
-                      onChange={(e) => updateHotspot(index, "content", e.target.value)}
-                      placeholder="Hotspot content"
-                      rows={3}
-                      className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
-                    />
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </CardContent>
-        </Card>
-      )}
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Payload Content</Label>
+              <Textarea
+                value={hotspot.content}
+                onChange={(e) => updateHotspot(index, "content", e.target.value)}
+                placeholder="What data does this sensor emit?"
+                rows={3}
+                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
+              />
+            </div>
+          </div>
+        )}
+      />
     </div>
-  )
+  );
 }
+

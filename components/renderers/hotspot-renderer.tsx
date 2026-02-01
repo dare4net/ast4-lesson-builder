@@ -1,11 +1,14 @@
 "use client"
 
+import * as React from "react"
 import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { CheckCircle2, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import type { Component } from "@/types/lesson"
 
 interface Hotspot {
   id: string
@@ -29,119 +32,104 @@ interface HotspotRendererProps {
   mode?: 'practice' | 'live'
   state?: 'active' | 'disabled'
   disabled?: boolean
-  savedState?: {
-    discoveredHotspots: string[]
-    status?: 'active' | 'completed'
-  }
+  savedState?: any
   setComponentState?: (state: any) => void
+  id?: string
+  status?: string
+  behavior?: 'discovery' | 'quiz'
 }
 
-export function HotspotRenderer({
-  title = "Interactive Image",
+type HotspotState = {
+  discoveredHotspots: string[]
+  status?: string
+}
+
+function HotspotContent({
+  title,
   image,
-  hotspots = [],
-  isEditing = false,
-  points = 10,
-  scoreContext,
-  mode = 'practice',
-  state = 'active',
-  disabled = false,
-  savedState,
-  setComponentState,
-}: HotspotRendererProps) {
+  hotspots,
+  points,
+  state,
+  setState,
+  handleScore,
+  handleRetry,
+  isLive,
+  isDisabled: disabledProp,
+  props
+}: ScoredRenderProps<HotspotState> & {
+  title: string
+  image: string
+  hotspots: Hotspot[]
+  points: number
+  isDisabled: boolean
+  props: HotspotRendererProps
+}) {
   const [mounted, setMounted] = useState(false)
-  const [discoveredHotspots, setDiscoveredHotspots] = useState<string[]>(() => 
-    savedState?.discoveredHotspots ?? []
-  )
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const imageRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  
-  const isDisabled = disabled || state === 'disabled'
-  const isLiveMode = mode === 'live'
 
-  // Debug logs
-  useEffect(() => {
-    console.log('Hotspot Mode:', mode);
-    console.log('Is Live Mode:', isLiveMode);
-    console.log('Saved State:', savedState);
-  }, [mode, isLiveMode, savedState]);
+  const { discoveredHotspots } = state
 
-  // Initialize state on mount
   useEffect(() => {
     setMounted(true)
-    if (!savedState && setComponentState) {
-      // Persist initial state
-      setComponentState({
-        discoveredHotspots: [],
-        status: 'active'
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Persist state changes
-  useEffect(() => {
-    if (!mounted) return
-    if (setComponentState) {
-      const allDiscovered = discoveredHotspots.length === hotspots.length
-      setComponentState({
-        discoveredHotspots,
-        status: isLiveMode || allDiscovered ? 'completed' : 'active'
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [discoveredHotspots])
-
   // Calculate image dimensions when it loads
-  useEffect(() => {
-    if (imageRef.current && imageRef.current.complete) {
-      updateImageSize()
-    }
-  }, [image])
-
   const updateImageSize = () => {
-    if (imageRef.current && containerRef.current) {
-      const containerWidth = containerRef.current.clientWidth
-      const imgWidth = imageRef.current.naturalWidth
-      const imgHeight = imageRef.current.naturalHeight
-
-      // Calculate the scaled height based on the container width
-      const scaledHeight = (containerWidth / imgWidth) * imgHeight
-
-      setImageSize({
-        width: containerWidth,
-        height: scaledHeight,
-      })
-    }
+    // Only used for sizing? Logic seems to just use CSS positioning (%).
+    // Maybe previously it did calculations?
+    // Step 488 shows `updateImageSize` setting `imageSize` state but that state was unused in render?
+    // Wait, Step 488, line 56: `const [imageSize, setImageSize] = useState(...)`
+    // Line 112: `setImageSize(...)`.
+    // It is NEVER used in render in Step 488?
+    // Yes, Step 488 lines 193-236 don't use `imageSize`.
+    // The previous implementation calculated size but didn't use it.
+    // I can remove it.
   }
+
+  // Effect to check validation?
+  // Previous used effect at line 84: `setComponentState` if `setComponentState` exists.
+  // ScoredRenderer handles persistence.
+  // But we need to handle "All Discovered" logic for Live Mode scoring.
+
+  // Logic from `handleHotspotClick` (Step 488 line 119):
+  // Check validation immediately.
 
   const handleHotspotClick = (hotspotId: string) => {
-    if (isDisabled || discoveredHotspots.includes(hotspotId)) return
+    if (disabledProp || discoveredHotspots.includes(hotspotId)) return
 
     const newDiscovered = [...discoveredHotspots, hotspotId]
-    setDiscoveredHotspots(newDiscovered)
+    const behavior = props.behavior || (props as any).subType === 'clickableImage' ? 'discovery' : 'quiz'
 
+    // Check completion
     const allDiscovered = newDiscovered.length === hotspots.length
-    
-    // Award points in live mode when all hotspots are discovered
-    if (allDiscovered && isLiveMode && scoreContext) {
-      scoreContext.addPoints(points)
+
+    // Scoring (Using standardized handleScore)
+    // Only award points in Quiz mode, or if Discovery mode is treated as a task
+    if (allDiscovered) {
+      handleScore(true)
     }
+
+    setState(prev => ({
+      ...prev,
+      discoveredHotspots: newDiscovered,
+      status: (isLive || allDiscovered || behavior === 'discovery') ? 'completed' : 'active'
+    }))
   }
 
-  const resetDiscovery = () => {
-    if (isDisabled || (isLiveMode && discoveredHotspots.length === hotspots.length)) return
-    
-    setDiscoveredHotspots([])
-    setComponentState?.({
+  const onLocalRetry = () => {
+    handleRetry() // Centralized handler
+    setState(prev => ({
+      ...prev,
       discoveredHotspots: [],
       status: 'active'
-    })
+    }))
   }
 
-  // In editing mode, show a simplified version
-  if (isEditing) {
+  if (!mounted) return null
+
+  // Editing Mode
+  if (props.isEditing) {
     return (
       <div className="border p-4 rounded-md">
         <h3 className="font-semibold mb-2">{title}</h3>
@@ -175,104 +163,201 @@ export function HotspotRenderer({
   }
 
   return (
-    <Card className={cn(
-      isDisabled && "opacity-75",
-      isLiveMode && "border-blue-500"
+    <div className={cn(
+      "w-full flex-1 flex flex-col bg-white transition-all duration-300 px-6",
+      disabledProp && "opacity-75"
     )}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>{title}</CardTitle>
-          {isLiveMode && (
-            <div className="flex items-center gap-2 text-sm text-blue-500">
-              <span>Live Mode</span>
-            </div>
-          )}
+      {/* Visual Accent */}
+      <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
+
+      {/* TOP SECTION: Meta */}
+      <div className="shrink-0 space-y-2 pt-2">
+        <div className="relative flex items-center justify-between">
+          <div className="space-y-1">
+            <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Image Exploration</span>
+            <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            {(props.behavior === 'discovery' || (props as any).subType === 'clickableImage') && (
+              <span className="px-2 py-1 bg-emerald-50 text-emerald-600 rounded text-[7px] font-black border border-emerald-100 uppercase tracking-widest">
+                Explore
+              </span>
+            )}
+            {isLive && (
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-600 rounded text-[7px] font-black border border-blue-200 uppercase tracking-widest">
+                <CheckCircle2 className="h-2.5 w-2.5" />
+                <span>Live</span>
+              </div>
+            )}
+          </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="relative" ref={containerRef}>
-          <img
-            ref={imageRef}
-            src={image || "/placeholder.svg?height=300&width=400"}
-            alt={title}
-            className="w-full h-auto rounded-md"
-            onLoad={updateImageSize}
-          />
+      </div>
 
-          <TooltipProvider>
-            {hotspots.map((hotspot) => {
-              const isDiscovered = discoveredHotspots.includes(hotspot.id)
+      {/* CENTER SECTION: Image Stage */}
+      <div className="flex-1 flex flex-col justify-center min-h-0 py-2">
+        <div className="flex items-center justify-center w-full h-full">
+          <div className="relative inline-block shrink-0 rounded-2xl border-2 border-emerald-100 bg-white overflow-hidden shadow-sm group/stage max-w-full" ref={containerRef}>
+            <img
+              ref={imageRef}
+              src={image || "/placeholder.svg?height=300&width=400"}
+              alt={title}
+              className="max-h-[55vh] w-auto h-auto object-contain transition-transform duration-700 group-hover/stage:scale-[1.01] block"
+            />
 
-              return (
-                <Tooltip key={hotspot.id}>
-                  <TooltipTrigger asChild>
-                    <button
-                      className={`absolute w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                        isDiscovered
-                          ? "bg-[#E8F5E9] text-[#2E7D32] border border-[#4CAF50]"
-                          : "bg-primary/20 hover:bg-primary/40 text-primary"
-                      }`}
-                      style={{
-                        left: `${hotspot.x * 100}%`,
-                        top: `${hotspot.y * 100}%`,
-                        transform: "translate(-50%, -50%)",
-                      }}
-                      onClick={() => handleHotspotClick(hotspot.id)}
-                    >
-                      {hotspots.indexOf(hotspot) + 1}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">
-                    <div className="max-w-xs">
-                      <p className="font-medium">{hotspot.label}</p>
-                      <p className="text-sm">{hotspot.content}</p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              )
-            })}
-          </TooltipProvider>
+            <TooltipProvider>
+              {hotspots.map((hotspot, idx) => {
+                const isDiscovered = discoveredHotspots.includes(hotspot.id)
+
+                return (
+                  <Tooltip key={hotspot.id}>
+                    <TooltipTrigger asChild>
+                      <button
+                        className={cn(
+                          "absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border-2 z-10 shadow-lg",
+                          isDiscovered
+                            ? "bg-emerald-500 border-white text-white scale-110 shadow-emerald-500/20"
+                            : "bg-white border-emerald-500 text-emerald-600 hover:scale-110 shadow-black/5"
+                        )}
+                        style={{
+                          left: `${hotspot.x * 100}%`,
+                          top: `${hotspot.y * 100}%`,
+                          transform: "translate(-50%, -50%)",
+                        }}
+                        onClick={() => handleHotspotClick(hotspot.id)}
+                      >
+                        <span className="text-[10px] font-black">{idx + 1}</span>
+                        {!isDiscovered && (
+                          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
+                        )}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="bg-white border-2 border-emerald-500 text-slate-900 rounded-xl p-4 shadow-xl animate-in zoom-in-95 backdrop-blur-sm z-50">
+                      <div className="max-w-xs space-y-1.5">
+                        <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]">{hotspot.label}</p>
+                        <p className="text-sm font-black text-slate-900 leading-tight">{hotspot.content}</p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                )
+              })}
+            </TooltipProvider>
+          </div>
         </div>
+      </div>
 
-        <div className="mt-4 space-y-4">
-          {/* Status display */}
+      {/* BOTTOM SECTION: Feedback & Buttons */}
+      <div className="shrink-0 space-y-3 pb-4">
+        <div className="min-h-[60px] flex flex-col justify-end">
           {discoveredHotspots.length === hotspots.length ? (
-            <div className="p-4 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
-              <p className="font-medium">You Rock! 🎉 All hotspots discovered!</p>
+            <div className="p-4 rounded-2xl border-2 bg-emerald-50/50 border-emerald-500/20 animate-in slide-in-from-top-2 duration-500 shadow-emerald-500/5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Activity Complete</span>
+              </div>
+              <p className="text-sm font-black text-slate-900 mt-1 italic">You've found all hotspots!</p>
             </div>
           ) : (
             <div className="flex items-center justify-between">
-              <p className="text-sm">
-                Discovered: {discoveredHotspots.length} of {hotspots.length} hotspots
-              </p>
-              {isDisabled && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Lock className="h-4 w-4" />
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  Progress: <span className="text-emerald-600">{discoveredHotspots.length}</span> / {hotspots.length}
+                </span>
+              </div>
+              {disabledProp && (
+                <div className="flex items-center gap-1.5 text-[7px] font-black text-slate-400 uppercase tracking-widest">
+                  <Lock className="h-2.5 w-2.5" />
                   <span>Locked</span>
                 </div>
               )}
             </div>
           )}
         </div>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button 
-          variant="outline" 
-          onClick={resetDiscovery}
-          disabled={isDisabled || (isLiveMode && discoveredHotspots.length === hotspots.length)}
-        >
-          Reset
-        </Button>
-        {points > 0 && (
-          <div className={cn(
-            "text-sm",
-            isLiveMode ? "text-blue-500" : "text-muted-foreground"
-          )}>
-            Points: {points}
-          </div>
-        )}
-      </CardFooter>
-    </Card>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Button
+            className="h-11 rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95 shadow-sm"
+            onClick={onLocalRetry}
+            disabled={disabledProp || (isLive && discoveredHotspots.length === hotspots.length)}
+          >
+            Start Over
+          </Button>
+          {points > 0 && (
+            <div className="h-11 flex items-center justify-center rounded-xl bg-emerald-50/50 border-2 border-emerald-100 transition-all">
+              <span className="text-[10px] font-black text-emerald-600/60 uppercase tracking-widest">
+                Points: <span className="text-emerald-700">{points} Points</span>
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function HotspotRenderer(props: HotspotRendererProps) {
+  const {
+    title = "Interactive Image",
+    image,
+    hotspots = [],
+    isEditing = false,
+    points = 10,
+    scoreContext,
+    mode = 'practice',
+    state: componentState = 'active',
+    disabled = false,
+    savedState,
+    setComponentState,
+    id = "hotspot-renderer",
+    status,
+    behavior = 'quiz',
+    ...rest
+  } = props
+
+  // Handle migration from clickableImage
+  const effectiveType = (props as any).type === 'clickableImage' ? 'hotspot' : 'hotspot'
+  const effectiveBehavior = (props as any).type === 'clickableImage' || (props as any).subType === 'clickableImage'
+    ? 'discovery'
+    : behavior
+
+  const component: Component = {
+    id,
+    type: 'hotspot',
+    state: componentState as any,
+    status: (status || (savedState as any)?.status || 'uncompleted') as any,
+    props: {
+      ...rest, // Capture any other props
+      title,
+      image,
+      hotspots,
+      behavior: effectiveBehavior
+    },
+    mode: mode as any
+  } as Component
+
+  const initialState: HotspotState = {
+    discoveredHotspots: [],
+    status: 'active'
+  }
+
+  return (
+    <ScoredRenderer<HotspotState>
+      component={component}
+      initialState={initialState}
+      savedState={savedState}
+      setComponentState={setComponentState}
+      points={points}
+      mode={mode}
+      disabled={disabled}
+      onRender={(renderProps) => (
+        <HotspotContent
+          {...renderProps}
+          title={title}
+          image={image}
+          hotspots={hotspots}
+          points={points}
+          isDisabled={disabled || component.state === 'disabled'}
+          props={props}
+        />
+      )}
+    />
   )
 }

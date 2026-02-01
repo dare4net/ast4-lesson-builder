@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import type { Component } from "@/types/lesson"
 import { componentDefinitions } from "@/lib/component-definitions"
 import { RichTextEditor } from "@/components/rich-text-editor"
@@ -21,6 +21,7 @@ import { HotspotEditor } from "@/components/editors/hotspot-editor"
 import { BulletListEditor } from "@/components/editors/bullet-list-editor"
 import { FillInTheBlankEditor } from "@/components/editors/fill-in-the-blank-editor"
 import { CodeEditorEditor } from "@/components/editors/code-editor-editor"
+import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { ComponentRenderer } from "@/components/component-renderer"
 
 interface ComponentEditorProps {
@@ -33,10 +34,8 @@ interface ComponentEditorProps {
 export function ComponentEditor({ component, updateComponent, onClose, isMobile = false }: ComponentEditorProps) {
   const [props, setProps] = useState<Record<string, any>>(component.props)
 
-  // Get component definition
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
 
-  // Update props when component changes
   useEffect(() => {
     setProps(component.props)
   }, [component])
@@ -49,450 +48,254 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
 
   if (!componentDef) {
     return (
-      <div className={`${isMobile ? "w-full" : "w-80"} border-l p-4 flex flex-col h-full`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-semibold">Unknown Component</h3>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
+      <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-slate-950/20 backdrop-blur-sm rounded-2xl border border-slate-800/50 m-4">
+        <div className="w-16 h-16 rounded-full bg-slate-900 flex items-center justify-center mb-6">
+          <X className="h-8 w-8 text-slate-700" />
         </div>
-        <p className="text-muted-foreground">No editor available for this component type.</p>
+        <h3 className="text-lg font-black text-slate-400 uppercase tracking-widest mb-2">Unknown Fragment</h3>
+        <p className="text-slate-500 text-xs font-bold px-4">The selected component does not have a registered configuration manifest.</p>
+        <Button variant="ghost" onClick={onClose} className="mt-8 text-emerald-400 hover:text-emerald-300">
+          Dismiss Settings
+        </Button>
       </div>
     )
   }
 
-  // Mobile UI
-  if (isMobile) {
-    return (
-      <div className="flex flex-col h-full">
-        <div className="flex justify-between items-center p-4 border-b">
-          <h3 className="font-semibold">{componentDef.label} Settings</h3>
-        </div>
-
-        <Tabs defaultValue="properties" className="flex-1">
-          <TabsList className="grid grid-cols-2 mx-4 mt-2">
-            <TabsTrigger value="properties">Properties</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="properties" className="flex-1 p-0 m-0">
-            <ScrollArea className="h-[calc(100vh-150px)]">
-              <div className="px-4 py-4">
-                <div className="space-y-4 pb-8">
-                  {componentDef.propDefinitions.map((propDef) => (
-                    <div key={propDef.name} className="space-y-2">
-                      <Label htmlFor={propDef.name}>
-                        {propDef.label}
-                        {propDef.required && <span className="text-red-500 ml-1">*</span>}
-                      </Label>
-
-                      {propDef.type === "string" && (
-                        <Input
-                          id={propDef.name}
-                          value={props[propDef.name] || ""}
-                          onChange={(e) => handleChange(propDef.name, e.target.value)}
-                          placeholder={propDef.placeholder}
-                        />
-                      )}
-
-                      {propDef.type === "number" && (
-                        <Input
-                          id={propDef.name}
-                          type="number"
-                          value={props[propDef.name] || 0}
-                          onChange={(e) => handleChange(propDef.name, Number(e.target.value))}
-                          min={propDef.min}
-                          max={propDef.max}
-                          step={propDef.step || 1}
-                        />
-                      )}
-
-                      {propDef.type === "boolean" && (
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            id={propDef.name}
-                            checked={props[propDef.name] || false}
-                            onCheckedChange={(checked) => handleChange(propDef.name, checked)}
-                          />
-                          <Label htmlFor={propDef.name}>{props[propDef.name] ? "Enabled" : "Disabled"}</Label>
-                        </div>
-                      )}
-
-                      {propDef.type === "select" && propDef.options && (
-                        <Select
-                          value={String(props[propDef.name])}
-                          onValueChange={(value) => handleChange(propDef.name, value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder={propDef.placeholder || "Select..."} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {propDef.options.map((option) => {
-                              const value = typeof option === "object" ? option.value : option
-                              const label = typeof option === "object" ? option.label : option
-
-                              return (
-                                <SelectItem key={String(value)} value={String(value)}>
-                                  {label}
-                                </SelectItem>
-                              )
-                            })}
-                          </SelectContent>
-                        </Select>
-                      )}
-
-                      {propDef.type === "richText" && (
-                        <RichTextEditor
-                          value={props[propDef.name] || ""}
-                          onChange={(value) => handleChange(propDef.name, value)}
-                          placeholder={propDef.placeholder}
-                        />
-                      )}
-
-                      {propDef.type === "image" && (
-                        <ImageUploader
-                          value={props[propDef.name] || ""}
-                          onChange={(value) => handleChange(propDef.name, value)}
-                        />
-                      )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "quiz" &&
-                        propDef.name === "questions" && (
-                          <QuizEditor
-                            questions={props.questions || []}
-                            onChange={(questions) => handleChange("questions", questions)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "matchingPairs" &&
-                        propDef.name === "pairs" && (
-                          <MatchingPairsEditor
-                            pairs={props.pairs || []}
-                            onChange={(pairs) => handleChange("pairs", pairs)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "dragDrop" &&
-                        propDef.name === "items" && (
-                          <DragDropEditor
-                            items={props.items || []}
-                            onChange={(items) => handleChange("items", items)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "flashcards" &&
-                        propDef.name === "cards" && (
-                          <FlashcardsEditor
-                            cards={props.cards || []}
-                            onChange={(cards) => handleChange("cards", cards)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "hotspot" &&
-                        propDef.name === "hotspots" && (
-                          <HotspotEditor
-                            image={props.image || ""}
-                            hotspots={props.hotspots || []}
-                            onChange={(hotspots) => handleChange("hotspots", hotspots)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "bulletList" &&
-                        propDef.name === "items" && (
-                          <BulletListEditor
-                            items={props.items || []}
-                            onChange={(items) => handleChange("items", items)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "fillInTheBlank" &&
-                        propDef.name === "blanks" && (
-                          <FillInTheBlankEditor
-                            text={props.text || ""}
-                            blanks={props.blanks || []}
-                            onTextChange={(text) => handleChange("text", text)}
-                            onBlanksChange={(blanks) => handleChange("blanks", blanks)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "codeEditor" &&
-                        propDef.name === "testCases" && (
-                          <CodeEditorEditor
-                            initialCode={props.initialCode || ""}
-                            language={props.language || "javascript"}
-                            testCases={props.testCases || []}
-                            onInitialCodeChange={(code) => handleChange("initialCode", code)}
-                            onLanguageChange={(lang) => handleChange("language", lang)}
-                            onTestCasesChange={(testCases) => handleChange("testCases", testCases)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type !== "quiz" &&
-                        component.type !== "matchingPairs" &&
-                        component.type !== "dragDrop" &&
-                        component.type !== "flashcards" &&
-                        component.type !== "hotspot" &&
-                        component.type !== "bulletList" &&
-                        component.type !== "fillInTheBlank" &&
-                        component.type !== "codeEditor" && (
-                          <div className="space-y-2">
-                            <p className="text-sm text-muted-foreground">
-                              This property requires a custom editor that is not yet implemented.
-                            </p>
-                          </div>
-                        )}
-
-                      {propDef.description && <p className="text-xs text-muted-foreground">{propDef.description}</p>}
-                    </div>
-                  ))}
+  const renderEditorFields = () => (
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+      <SingleItemEditor
+        title={props.title}
+        points={props.points}
+        titlePlaceholder={componentDef.label}
+        onTitleChange={componentDef.propDefinitions.find(d => d.name === "title") ? (val) => handleChange("title", val) : undefined}
+        onPointsChange={componentDef.propDefinitions.find(d => d.name === "points") ? (val) => handleChange("points", val) : undefined}
+      >
+        <div className="space-y-8">
+          {componentDef.propDefinitions
+            .filter(d => d.name !== "title" && d.name !== "points")
+            .map((propDef) => (
+              <div key={propDef.name} className="space-y-3 group">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor={propDef.name} className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] group-focus-within:text-emerald-500 transition-colors">
+                    {propDef.label}
+                    {propDef.required && <span className="text-emerald-500 ml-1.5 opacity-50">*</span>}
+                  </Label>
+                  {propDef.description && (
+                    <span className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter">
+                      {propDef.type}
+                    </span>
+                  )}
                 </div>
-              </div>
-            </ScrollArea>
-          </TabsContent>
 
-          <TabsContent value="preview" className="flex-1 p-0 m-0">
-            <ScrollArea className="h-[calc(100vh-150px)]">
-              <div className="p-4">
-                <div className="border rounded-md p-4">
-                  <ComponentRenderer
-                    component={{
-                      id: component.id,
-                      type: component.type,
-                      props: props,
-                    }}
-                    isEditing={false}
+                {propDef.type === "string" && (
+                  <Input
+                    id={propDef.name}
+                    value={props[propDef.name] || ""}
+                    onChange={(e) => handleChange(propDef.name, e.target.value)}
+                    placeholder={propDef.placeholder}
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold placeholder:text-slate-700"
                   />
-                </div>
-              </div>
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
-      </div>
-    )
-  }
+                )}
 
-  // Desktop UI
+                {propDef.type === "number" && (
+                  <Input
+                    id={propDef.name}
+                    type="number"
+                    value={props[propDef.name] || 0}
+                    onChange={(e) => handleChange(propDef.name, Number(e.target.value))}
+                    min={propDef.min}
+                    max={propDef.max}
+                    step={propDef.step || 1}
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold"
+                  />
+                )}
+
+                {propDef.type === "boolean" && (
+                  <div className="flex items-center justify-between p-4 bg-slate-950/30 rounded-xl border border-slate-800 transition-all hover:bg-slate-950/50">
+                    <Label htmlFor={propDef.name} className="text-xs font-bold text-slate-300">
+                      {props[propDef.name] ? "Enabled" : "Disabled"}
+                    </Label>
+                    <Switch
+                      id={propDef.name}
+                      checked={props[propDef.name] || false}
+                      onCheckedChange={(checked: boolean) => handleChange(propDef.name, checked)}
+                      className="data-[state=checked]:bg-emerald-500"
+                    />
+                  </div>
+                )}
+
+                {propDef.type === "select" && propDef.options && (
+                  <Select
+                    value={String(props[propDef.name])}
+                    onValueChange={(value: string) => handleChange(propDef.name, value)}
+                  >
+                    <SelectTrigger className="bg-slate-950/50 border-slate-800 h-11 text-sm font-bold focus:ring-emerald-500/50">
+                      <SelectValue placeholder={propDef.placeholder || "Select Choice..."} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+                      {propDef.options.map((option) => {
+                        const value = typeof option === "object" ? option.value : option
+                        const label = typeof option === "object" ? option.label : option
+
+                        return (
+                          <SelectItem key={String(value)} value={String(value)} className="focus:bg-emerald-500 focus:text-slate-950 font-bold">
+                            {label}
+                          </SelectItem>
+                        )
+                      })}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                {propDef.type === "richText" && (
+                  <div className="rounded-xl overflow-hidden border border-slate-800 focus-within:border-emerald-500/50 transition-all">
+                    <RichTextEditor
+                      value={props[propDef.name] || ""}
+                      onChange={(value) => handleChange(propDef.name, value)}
+                      placeholder={propDef.placeholder}
+                    />
+                  </div>
+                )}
+
+                {propDef.type === "image" && (
+                  <div className="rounded-xl overflow-hidden shadow-2xl">
+                    <ImageUploader
+                      value={props[propDef.name] || ""}
+                      onChange={(value) => handleChange(propDef.name, value)}
+                    />
+                  </div>
+                )}
+
+                {propDef.type === "componentArray" && (
+                  <div className="space-y-4 pt-2">
+                    {component.type === "quiz" && propDef.name === "questions" && (
+                      <QuizEditor
+                        questions={props.questions || []}
+                        onChange={(questions) => handleChange("questions", questions)}
+                      />
+                    )}
+                    {component.type === "matchingPairs" && propDef.name === "pairs" && (
+                      <MatchingPairsEditor
+                        pairs={props.pairs || []}
+                        onChange={(pairs) => handleChange("pairs", pairs)}
+                      />
+                    )}
+                    {component.type === "dragDrop" && propDef.name === "items" && (
+                      <DragDropEditor
+                        items={props.items || []}
+                        onChange={(items) => handleChange("items", items)}
+                      />
+                    )}
+                    {component.type === "flashcards" && propDef.name === "cards" && (
+                      <FlashcardsEditor
+                        cards={props.cards || []}
+                        onChange={(cards) => handleChange("cards", cards)}
+                      />
+                    )}
+                    {component.type === "hotspot" && propDef.name === "hotspots" && (
+                      <HotspotEditor
+                        image={props.image || ""}
+                        hotspots={props.hotspots || []}
+                        onChange={(hotspots) => handleChange("hotspots", hotspots)}
+                      />
+                    )}
+                    {component.type === "bulletList" && propDef.name === "items" && (
+                      <BulletListEditor
+                        items={props.items || []}
+                        onChange={(items) => handleChange("items", items)}
+                      />
+                    )}
+                    {component.type === "fillInTheBlank" && propDef.name === "blanks" && (
+                      <FillInTheBlankEditor
+                        text={props.text || ""}
+                        blanks={props.blanks || []}
+                        onTextChange={(text) => handleChange("text", text)}
+                        onBlanksChange={(blanks) => handleChange("blanks", blanks)}
+                      />
+                    )}
+                    {component.type === "codeEditor" && propDef.name === "testCases" && (
+                      <CodeEditorEditor
+                        initialCode={props.initialCode || ""}
+                        language={props.language || "javascript"}
+                        testCases={props.testCases || []}
+                        onInitialCodeChange={(code) => handleChange("initialCode", code)}
+                        onLanguageChange={(lang) => handleChange("language", lang)}
+                        onTestCasesChange={(testCases) => handleChange("testCases", testCases)}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {propDef.description && <p className="text-[10px] text-slate-600 font-bold ml-1">{propDef.description}</p>}
+              </div>
+            ))}
+        </div>
+      </SingleItemEditor>
+    </div>
+  )
+
   return (
-    <div className="w-80 border-l flex flex-col h-full">
-      <div className="flex justify-between items-center p-4 border-b">
-        <h3 className="font-semibold">{componentDef.label} Settings</h3>
-        <Button variant="ghost" size="icon" onClick={onClose}>
+    <div className="flex flex-col h-full bg-[#0F172A]">
+      {/* Header - Fixed */}
+      <div className="flex-shrink-0 flex justify-between items-center p-5 border-b border-slate-800 bg-slate-900/60 backdrop-blur-xl">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 animate-pulse" />
+          <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">{componentDef.label}</h3>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="h-8 w-8 rounded-full text-slate-500 hover:text-white hover:bg-slate-800 transition-all"
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Tabs defaultValue="properties" className="w-full">
-          <TabsList className="grid grid-cols-2 mx-4 mt-2">
-            <TabsTrigger value="properties">Properties</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
+      {/* Content Tabs */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <Tabs defaultValue="properties" className="flex-1 flex flex-col min-h-0">
+          <div className="px-5 py-3 border-b border-slate-800/50 bg-slate-900/20 flex-shrink-0">
+            <TabsList className="grid grid-cols-2 h-9 bg-slate-950/60 p-1 rounded-full border border-slate-800">
+              <TabsTrigger
+                value="properties"
+                className="text-[10px] font-black uppercase rounded-full data-[state=active]:bg-emerald-500 data-[state=active]:text-slate-950 transition-all"
+              >
+                Payload
+              </TabsTrigger>
+              <TabsTrigger
+                value="preview"
+                className="text-[10px] font-black uppercase rounded-full data-[state=active]:bg-emerald-500 data-[state=active]:text-slate-950 transition-all"
+              >
+                Output
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <div className="flex-1 overflow-hidden">
-            <TabsContent value="properties" className="h-full m-0 p-0 overflow-auto">
-              <div className="px-4 py-4">
-                <div className="space-y-4 pb-8">
-                  {componentDef.propDefinitions.map((propDef) => (
-                    <div key={propDef.name} className="space-y-2">
-                      <Label htmlFor={propDef.name}>
-                        {propDef.label}
-                        {propDef.required && <span className="text-red-500 ml-1">*</span>}
-                      </Label>
-
-                      {propDef.type === "string" && (
-                        <Input
-                          id={propDef.name}
-                          value={props[propDef.name] || ""}
-                          onChange={(e) => handleChange(propDef.name, e.target.value)}
-                          placeholder={propDef.placeholder}
-                        />
-                      )}
-
-                      {propDef.type === "number" && (
-                        <Input
-                          id={propDef.name}
-                          type="number"
-                          value={props[propDef.name] || 0}
-                          onChange={(e) => handleChange(propDef.name, Number(e.target.value))}
-                          min={propDef.min}
-                          max={propDef.max}
-                          step={propDef.step || 1}
-                        />
-                      )}
-
-                      {propDef.type === "boolean" && (
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            id={propDef.name}
-                            checked={props[propDef.name] || false}
-                            onCheckedChange={(checked) => handleChange(propDef.name, checked)}
-                          />
-                          <Label htmlFor={propDef.name}>{props[propDef.name] ? "Enabled" : "Disabled"}</Label>
-                        </div>
-                      )}
-
-                      {propDef.type === "select" && propDef.options && (
-                        <Select
-                          value={String(props[propDef.name])}
-                          onValueChange={(value) => handleChange(propDef.name, value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder={propDef.placeholder || "Select..."} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {propDef.options.map((option) => {
-                              const value = typeof option === "object" ? option.value : option
-                              const label = typeof option === "object" ? option.label : option
-
-                              return (
-                                <SelectItem key={String(value)} value={String(value)}>
-                                  {label}
-                                </SelectItem>
-                              )
-                            })}
-                          </SelectContent>
-                        </Select>
-                      )}
-
-                      {propDef.type === "richText" && (
-                        <RichTextEditor
-                          value={props[propDef.name] || ""}
-                          onChange={(value) => handleChange(propDef.name, value)}
-                          placeholder={propDef.placeholder}
-                        />
-                      )}
-
-                      {propDef.type === "image" && (
-                        <ImageUploader
-                          value={props[propDef.name] || ""}
-                          onChange={(value) => handleChange(propDef.name, value)}
-                        />
-                      )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "quiz" &&
-                        propDef.name === "questions" && (
-                          <QuizEditor
-                            questions={props.questions || []}
-                            onChange={(questions) => handleChange("questions", questions)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "matchingPairs" &&
-                        propDef.name === "pairs" && (
-                          <MatchingPairsEditor
-                            pairs={props.pairs || []}
-                            onChange={(pairs) => handleChange("pairs", pairs)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "dragDrop" &&
-                        propDef.name === "items" && (
-                          <DragDropEditor
-                            items={props.items || []}
-                            onChange={(items) => handleChange("items", items)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "flashcards" &&
-                        propDef.name === "cards" && (
-                          <FlashcardsEditor
-                            cards={props.cards || []}
-                            onChange={(cards) => handleChange("cards", cards)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "hotspot" &&
-                        propDef.name === "hotspots" && (
-                          <HotspotEditor
-                            image={props.image || ""}
-                            hotspots={props.hotspots || []}
-                            onChange={(hotspots) => handleChange("hotspots", hotspots)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "bulletList" &&
-                        propDef.name === "items" && (
-                          <BulletListEditor
-                            items={props.items || []}
-                            onChange={(items) => handleChange("items", items)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "fillInTheBlank" &&
-                        propDef.name === "blanks" && (
-                          <FillInTheBlankEditor
-                            text={props.text || ""}
-                            blanks={props.blanks || []}
-                            onTextChange={(text) => handleChange("text", text)}
-                            onBlanksChange={(blanks) => handleChange("blanks", blanks)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type === "codeEditor" &&
-                        propDef.name === "testCases" && (
-                          <CodeEditorEditor
-                            initialCode={props.initialCode || ""}
-                            language={props.language || "javascript"}
-                            testCases={props.testCases || []}
-                            onInitialCodeChange={(code) => handleChange("initialCode", code)}
-                            onLanguageChange={(lang) => handleChange("language", lang)}
-                            onTestCasesChange={(testCases) => handleChange("testCases", testCases)}
-                          />
-                        )}
-
-                      {propDef.type === "componentArray" &&
-                        component.type !== "quiz" &&
-                        component.type !== "matchingPairs" &&
-                        component.type !== "dragDrop" &&
-                        component.type !== "flashcards" &&
-                        component.type !== "hotspot" &&
-                        component.type !== "bulletList" &&
-                        component.type !== "fillInTheBlank" &&
-                        component.type !== "codeEditor" && (
-                          <div className="space-y-2">
-                            <p className="text-sm text-muted-foreground">
-                              This property requires a custom editor that is not yet implemented.
-                            </p>
-                          </div>
-                        )}
-
-                      {propDef.description && <p className="text-xs text-muted-foreground">{propDef.description}</p>}
-                    </div>
-                  ))}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <TabsContent value="properties" className="h-full m-0 focus-visible:outline-none">
+              <ScrollArea className="h-full">
+                <div className="p-5">
+                  {renderEditorFields()}
                 </div>
-              </div>
+                <ScrollBar orientation="vertical" />
+              </ScrollArea>
             </TabsContent>
 
-            <TabsContent value="preview" className="h-full m-0 p-0 overflow-auto">
-              <div className="p-4">
-                <div className="border rounded-md p-4">
-                  <ComponentRenderer
-                    component={{
-                      id: component.id,
-                      type: component.type,
-                      props: props,
-                    }}
-                    isEditing={false}
-                  />
+            <TabsContent value="preview" className="h-full m-0 focus-visible:outline-none bg-white">
+              <ScrollArea className="h-full">
+                <div className="p-8 flex items-center justify-center min-h-full bg-slate-50/50">
+                  <div className="w-full max-w-[400px] border border-slate-100 rounded-3xl bg-white shadow-2xl p-8">
+                    <ComponentRenderer
+                      component={{
+                        id: component.id,
+                        type: component.type,
+                        props: props,
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
+              </ScrollArea>
             </TabsContent>
           </div>
         </Tabs>

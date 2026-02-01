@@ -1,8 +1,8 @@
 "use client"
 
 import dynamic from "next/dynamic"
+import * as React from 'react'
 import { createElement } from "react"
-import React from 'react'
 import { cn } from "@/lib/utils"
 import type { Component, ComponentType } from "@/types/lesson"
 
@@ -25,11 +25,6 @@ const componentRenderers: ComponentRenderers = {
   ),
   dragDrop: dynamic(() => import("@/components/renderers/drag-drop-renderer").then((mod) => mod.DragDropRenderer)),
 
-  // Gamified Components
-  scoreBoard: dynamic(() =>
-    import("@/components/renderers/score-board-renderer").then((mod) => mod.ScoreBoardRenderer),
-  ),
-
   // Additional Interactive Components
   flashcards: dynamic(() => import("@/components/renderers/flashcards-renderer").then((mod) => mod.FlashcardsRenderer)),
   hotspot: dynamic(() => import("@/components/renderers/hotspot-renderer").then((mod) => mod.HotspotRenderer)),
@@ -51,78 +46,178 @@ const componentRenderers: ComponentRenderers = {
 
 interface ComponentRendererProps {
   component: Component;
-  scoreContext?: any;
   savedState?: any;
   setComponentState?: (state: any) => void;
   isLastSlideChild?: boolean;
   onCheckSlideCompletion?: () => void;
+  isEditing?: boolean;
 }
 
 const gamifiedTypes: ComponentType[] = [
   'quiz',
   'dragDrop',
   'matchingPairs',
-  'scoreBoard',
-  'badgeReveal',
-  'miniGame',
-  'progressBar',
   'fillInTheBlank',
   'codeEditor',
+  // badgeReveal, miniGame, progressBar were removed
 ];
 
 const interactiveTypes: ComponentType[] = [
   'quiz',
-  'poll',
   'dragDrop',
   'matchingPairs',
   'fillInTheBlank',
   'flashcards',
   'codeEditor',
-  'clickableImage',
-  'hotspot'
+  'hotspot',
+  // poll, clickableImage were removed
 ];
+
+// Status-safe wrapper for component discovery and live timing
+const DiscoveryWrapper = ({
+  component,
+  children,
+  savedState,
+  setComponentState
+}: {
+  component: Component,
+  children: React.ReactNode,
+  savedState?: any,
+  setComponentState?: (state: any) => void
+}) => {
+  const timeLimit = component.props?.timeLimit || 0;
+  const isLive = !!timeLimit;
+  const [isRevealed, setIsRevealed] = React.useState(!!savedState?.revealed || component.type === 'slideTitle' || !isLive);
+  const [timeLeft, setTimeLeft] = React.useState<number | null>(null);
+  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleReveal = () => {
+    setIsRevealed(true);
+    if (setComponentState) {
+      setComponentState({ revealed: true });
+    }
+
+    if (isLive) {
+      setTimeLeft(timeLimit);
+    }
+  };
+
+  React.useEffect(() => {
+    if (timeLeft !== null && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft(prev => (prev !== null && prev > 0) ? prev - 1 : 0);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      // Auto-submit or lock logic could go here
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [timeLeft]);
+
+  if (!isRevealed) {
+    return (
+      <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-slate-50/50 transition-all duration-700">
+        <div className="text-center space-y-6 animate-in fade-in zoom-in-95 duration-500 px-6">
+          <div className="relative mx-auto w-20 h-20 flex items-center justify-center mb-8">
+            <div className="absolute inset-0 bg-emerald-500/10 rounded-full animate-ping" />
+            <div className="relative w-14 h-14 bg-white border-2 border-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-xl font-black text-emerald-600">?</span>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Encrypted Fragment</h3>
+            <p className="text-[10px] font-black text-emerald-600/60 uppercase tracking-[0.3em]">Initialize synchronization protocol</p>
+          </div>
+
+          <button
+            onClick={handleReveal}
+            className="group relative h-14 w-64 mx-auto rounded-xl bg-emerald-600 p-[2px] shadow-xl shadow-emerald-500/20 active:scale-95 transition-transform"
+          >
+            <div className="h-full w-full rounded-[10px] bg-emerald-600 flex items-center justify-center gap-3">
+              <span className="text-[10px] font-black text-white uppercase tracking-widest">Decrypt Segment</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative flex-1 flex flex-col w-full">
+      {isLive && timeLeft !== null && (
+        <div className="absolute -top-12 right-0 flex items-center gap-3 px-4 py-2 bg-rose-50 border-2 border-rose-500 rounded-full animate-in slide-in-from-right-4">
+          <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+          <span className="text-[10px] font-black text-rose-600 uppercase tracking-widest">
+            Terminating in: {timeLeft}s
+          </span>
+        </div>
+      )}
+      <div className={cn(
+        "flex-1 flex flex-col w-full transition-all duration-500",
+        timeLeft === 0 && "opacity-50 pointer-events-none grayscale"
+      )}>
+        {children}
+      </div>
+
+      {timeLeft === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center z-50">
+          <div className="bg-rose-500 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest shadow-2xl animate-bounce">
+            Protocol Terminated
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Wrapper component for disabled state
 const DisabledWrapper = ({ isDisabled, children }: { isDisabled: boolean, children: React.ReactNode }) => {
-  if (!isDisabled) return <>{children}</>;
-  
+  if (!isDisabled) return <div className="flex-1 flex flex-col w-full">{children}</div>;
+
   return (
-    <div className="relative group">
+    <div className="relative group flex-1 flex flex-col w-full">
       {children}
-      <div className="absolute inset-0 bg-background/50 backdrop-blur-[1px] pointer-events-auto cursor-not-allowed">
-        {/* Visual overlay for disabled state */}
-        <div className="absolute inset-0 opacity-10 bg-muted"></div>
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] pointer-events-auto cursor-not-allowed">
+        <div className="absolute inset-0 opacity-5 bg-slate-900"></div>
       </div>
     </div>
   );
 };
 
-const ComponentRendererBase = function ComponentRenderer({ 
-  component, 
-  scoreContext, 
-  savedState, 
+const ComponentRendererBase = function ComponentRenderer({
+  component,
+  savedState,
   setComponentState,
   isLastSlideChild,
-  onCheckSlideCompletion 
+  onCheckSlideCompletion,
+  isEditing = false
 }: ComponentRendererProps) {
   const Renderer: React.ComponentType<any> = componentRenderers[component.type] || componentRenderers.fallback;
   const isDisabled = component.state === "disabled";
 
   const renderComponent = (props: any) => (
     <DisabledWrapper isDisabled={isDisabled}>
-      <div className={cn(
-        "transition-opacity",
-        isDisabled && "opacity-75"
-      )}>
-        <Renderer {...props} />
-      </div>
+      <DiscoveryWrapper
+        component={component}
+        savedState={savedState}
+        setComponentState={setComponentState}
+      >
+        <div className={cn(
+          "flex-1 flex flex-col w-full transition-opacity",
+          isDisabled && "opacity-75"
+        )}>
+          <Renderer {...props} />
+        </div>
+      </DiscoveryWrapper>
     </DisabledWrapper>
   );
 
   if (gamifiedTypes.includes(component.type)) {
     return renderComponent({
       ...component.props,
-      scoreContext,
       savedState,
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
@@ -146,7 +241,11 @@ const ComponentRendererBase = function ComponentRenderer({
 
   return renderComponent({
     ...component.props,
-    disabled: isDisabled
+    savedState,
+    setComponentState: isDisabled ? undefined : setComponentState,
+    status: component.status,
+    disabled: isDisabled,
+    isEditing
   });
 }
 

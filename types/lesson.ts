@@ -16,15 +16,8 @@ export interface Slide {
   components: Component[]
   status: SlideStatus
   state: SlideState
-  categorizedComponents: {
-    gamified: Component[]
-    interactive: Component[]
-    content: Component[]
-    media: Component[]
-    utility: Component[]
-    structure: Component[]
-  }
 }
+
 
 export type SlideStatus = "completed" | "uncompleted"
 export type SlideState = "active" | "disabled"
@@ -33,15 +26,15 @@ export interface Component {
   id: string
   type: ComponentType
   props: Record<string, any>
-  component_type: ComponentType_Category
   state?: ComponentState
   status?: ComponentStatus
   mode?: ComponentMode
 }
 
-export type ComponentType_Category = 
+
+export type ComponentType_Category =
   | "interactive"
-  | "gamified" 
+  | "gamified"
   | "content"
   | "visual-guide"
   | "media"
@@ -74,20 +67,14 @@ export type ComponentType =
 
   // Interactive Components
   | "quiz"
-  | "poll"
   | "dragDrop"
   | "matchingPairs"
   | "fillInTheBlank"
   | "flashcards"
   | "codeEditor"
-  | "clickableImage"
   | "hotspot"
 
   // Gamified Components
-  | "badgeReveal"
-  | "scoreBoard"
-  | "miniGame"
-  | "progressBar"
 
   // Lesson Structure Components
   | "slideTitle"
@@ -96,10 +83,8 @@ export type ComponentType =
   | "lessonComplete"
 
   // Utility Components
-  | "timer"
   | "audioPlayer"
   | "languageToggle"
-  | "themeSwitch"
   | "hint"
   | "notePad"
 

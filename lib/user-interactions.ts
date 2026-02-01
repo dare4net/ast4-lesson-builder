@@ -2,7 +2,7 @@
 interface SlideState {
   id: string;
   state: "active" | "disabled";
-  status: "pending" | "completed";
+  status: "uncompleted" | "completed";
 }
 
 interface LessonState {
@@ -22,7 +22,7 @@ export async function fetchUserInteraction(userId: string, lessonId: string) {
   console.log('[user-interactions] fetchUserInteraction', { userId, lessonId });
   const res = await fetch(`/api/interactions?userId=${userId}&lessonId=${lessonId}`);
   if (!res.ok) return null;
-  
+
   const data = await res.json();
   // Handle backward compatibility for older interaction data
   if (data && !data.lessonState) {
@@ -40,22 +40,22 @@ export async function fetchUserInteraction(userId: string, lessonId: string) {
 }
 
 export async function saveUserInteraction(
-  userId: string, 
-  lessonId: string, 
+  userId: string,
+  lessonId: string,
   interactionData: InteractionData
 ) {
-  console.log('[user-interactions] saveUserInteraction', { 
-    userId, 
-    lessonId, 
-    interactionData 
+  console.log('[user-interactions] saveUserInteraction', {
+    userId,
+    lessonId,
+    interactionData
   });
-  
+
   const res = await fetch('/api/interactions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      userId, 
-      lessonId, 
+    body: JSON.stringify({
+      userId,
+      lessonId,
       componentsState: interactionData.componentsState,
       lessonState: interactionData.lessonState
     })

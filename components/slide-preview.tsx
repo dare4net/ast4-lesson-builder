@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Lock, CheckCircle } from "lucide-react"
 import { ComponentRenderer } from "@/components/component-renderer"
 import { Badge } from "@/components/ui/badge"
 import type { Slide } from "@/types/lesson"
+import { getInteractiveAndGamifiedComponents } from "@/lib/lesson-utils"
 
 interface SlidePreviewProps {
   slide: Slide
@@ -23,7 +24,7 @@ export function SlidePreview({ slide, onNext, onPrev, isFirst, isLast }: SlidePr
   // Calculate total possible score for the slide
   useEffect(() => {
     let total = 0
-    const gamifiedAndInteractive = [...slide.categorizedComponents.gamified, ...slide.categorizedComponents.interactive]
+    const gamifiedAndInteractive = getInteractiveAndGamifiedComponents(slide.components)
 
     gamifiedAndInteractive.forEach((component) => {
       if (component.props.points) {
@@ -105,7 +106,7 @@ export function SlidePreview({ slide, onNext, onPrev, isFirst, isLast }: SlidePr
 
           <Button
             onClick={onNext}
-            disabled={isLast || (slide.status !== "completed" && (slide.categorizedComponents.interactive.length > 0 || slide.categorizedComponents.gamified.length > 0))}
+            disabled={isLast || (slide.status !== "completed" && getInteractiveAndGamifiedComponents(slide.components).length > 0)}
           >
             {isLast ? "Complete" : "Next"}
             <ChevronRight className="h-4 w-4 ml-2" />

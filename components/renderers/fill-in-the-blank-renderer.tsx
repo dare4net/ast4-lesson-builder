@@ -1,7 +1,6 @@
 "use client"
 
-import React from "react"
-
+import * as React from "react"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,6 +8,10 @@ import { Input } from "@/components/ui/input"
 import { CheckCircle2, XCircle, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
+import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { useNavigationLock } from "@/context/navigation-lock-context"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import type { Component } from "@/types/lesson"
 
 interface Blank {
   id: string
@@ -31,71 +34,87 @@ interface FillInTheBlankRendererProps {
   mode?: 'practice' | 'live'
   state?: 'active' | 'disabled'
   disabled?: boolean
+  // Persistence & Base props
   savedState?: any
   setComponentState?: (state: any) => void
+  id?: string
+  status?: string
 }
 
-export function FillInTheBlankRenderer({
-  title = "Fill in the blanks",
-  text = "",
-  blanks = [],
-  caseSensitive = false,
-  points = 10,
-  isEditing = false,
-  scoreContext,
-  mode = 'practice',
-  state = 'active',
-  disabled = false,
-  savedState,
-  setComponentState,
-}: FillInTheBlankRendererProps) {
-  const { playFeedback } = useFeedback();
-  const [mounted, setMounted] = useState(false);
-  const isDisabled = disabled || state === 'disabled';
-  const isLiveMode = mode === 'live';
+type FillInTheBlankState = {
+  userAnswers: Record<string, string>
+  isSubmitted: boolean
+  correctAnswers: Record<string, boolean>
+  score: number
+  status?: string
+}
 
-  // Debug logs
+function FillInTheBlankContent({
+  title,
+  text,
+  blanks,
+  caseSensitive,
+  points, // Points per blank
+  state,
+  setState,
+  handlePoints,
+  handleRetry,
+  isLive,
+  isDisabled: disabledProp,
+  props
+}: ScoredRenderProps<FillInTheBlankState> & {
+  title: string
+  text: string
+  blanks: Blank[]
+  caseSensitive: boolean
+  points: number
+  isDisabled: boolean
+  props: FillInTheBlankRendererProps
+}) {
+  const { playFeedback } = useFeedback()
+  const [mounted, setMounted] = useState(false)
+  const { registerLock, unregisterLock } = useNavigationLock()
+  const [hasStarted, setHasStarted] = useState(false)
+
+  const timeLimit = (props as any).timeLimit || 10
+
+  const {
+    userAnswers,
+    isSubmitted,
+    correctAnswers,
+    score
+  } = state
+
+  const parts = text.split("{{blank}}")
+
   useEffect(() => {
-    console.log('Fill in the Blank Mode:', mode);
-    console.log('Is Live Mode:', isLiveMode);
-    console.log('Saved State:', savedState);
-  }, [mode, isLiveMode, savedState]);
+    setMounted(true)
+  }, [])
 
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>(() => savedState?.userAnswers ?? {})
-  const [isSubmitted, setIsSubmitted] = useState(() => savedState?.isSubmitted ?? false)
-  const [correctAnswers, setCorrectAnswers] = useState<Record<string, boolean>>(() => savedState?.correctAnswers ?? {})
-  const [score, setScore] = useState(() => savedState?.score ?? 0)
-
-  // Initialize user answers and handle mounting
   useEffect(() => {
-    setMounted(true);
-    if (!savedState) {
-      const initialAnswers: Record<string, string> = {}
-      blanks.forEach((blank) => {
-        initialAnswers[blank.id] = ""
-      })
-      setUserAnswers(initialAnswers)
-      setIsSubmitted(false)
-      setCorrectAnswers({})
-      setScore(0)
-      
-      // Persist initial state
-      setComponentState?.({
-        userAnswers: initialAnswers,
-        isSubmitted: false,
-        correctAnswers: {},
-        score: 0,
-        status: 'active'
-      })
+    const isComplete = isSubmitted || state.status === 'completed'
+    if (isLive && hasStarted && !isComplete) {
+      registerLock(props.id || 'fitb-renderer')
+    } else {
+      unregisterLock(props.id || 'fitb-renderer')
     }
-  }, [blanks, savedState, setComponentState])
+    return () => unregisterLock(props.id || 'fitb-renderer')
+  }, [isLive, hasStarted, isSubmitted, state.status, registerLock, unregisterLock, props.id])
+
+  // Initialize state if empty (though initial state passed to ScoredRenderer handles this, 
+  // we might need to populate keys if they are missing in a "partial" save?)
+  // But `initialState` in wrapper does that.
 
   const handleAnswerChange = (blankId: string, value: string) => {
-    if (isSubmitted) return
+    const effectiveDisabled = disabledProp || isSubmitted || state.status === 'completed'
+    if (effectiveDisabled) return
 
-    setUserAnswers((prev) => ({
+    setState(prev => ({
       ...prev,
-      [blankId]: value,
+      userAnswers: {
+        ...prev.userAnswers,
+        [blankId]: value
+      }
     }))
   }
 
@@ -117,63 +136,261 @@ export function FillInTheBlankRenderer({
     return false
   }
 
-  const handleSubmit = () => {
-    if (isDisabled) return;
-    
+  const handleSubmit = async () => {
+    if (disabledProp) return;
+
     const results: Record<string, boolean> = {}
     let correctCount = 0
 
     blanks.forEach((blank) => {
-      const isCorrect = checkAnswer(blank, userAnswers[blank.id].trim())
+      const isCorrect = checkAnswer(blank, userAnswers[blank.id] ? userAnswers[blank.id].trim() : "")
       results[blank.id] = isCorrect
       if (isCorrect) correctCount++
     })
 
-    // Calculate points per blank
-    //const pointsPerBlank = Math.round(points / blanks.length);
     const earnedPoints = correctCount * points;
     const allCorrect = correctCount === blanks.length;
 
-    setCorrectAnswers(results)
-    setIsSubmitted(true)
-    setScore(earnedPoints)
-
-    // Play appropriate feedback sound
+    // Feedback
     if (allCorrect) {
-      playFeedback('correct');
+      await playFeedback('quizSuccess');
     } else if (correctCount > 0) {
-      playFeedback('complete');
+      await playFeedback('complete');
     } else {
-      playFeedback('incorrect');
+      await playFeedback('incorrect');
     }
 
-    // Award points for each correct answer in live mode
-    if (isLiveMode && scoreContext && correctCount > 0) {
-      scoreContext.addPoints(earnedPoints)
-    }
+    // Scoring (Using standardized handlePoints from base renderer)
+    handlePoints(earnedPoints);
 
-    // Persist state after submission
-    setComponentState?.({
-      userAnswers,
+    // Update State
+    setState(prev => ({
+      ...prev,
       isSubmitted: true,
       correctAnswers: results,
       score: earnedPoints,
-      status: 'completed'  // Mark as completed after submission
-    })
+      status: 'completed'
+    }))
   }
 
-  const handleReset = () => {
+  const onLocalRetry = () => {
+    handleRetry() // Centralized handler
     const initialAnswers: Record<string, string> = {}
     blanks.forEach((blank) => {
       initialAnswers[blank.id] = ""
     })
-    setUserAnswers(initialAnswers)
-    setIsSubmitted(false)
-    setCorrectAnswers({})
-    setScore(0)
+
+    setState(prev => ({
+      ...prev,
+      userAnswers: initialAnswers,
+      isSubmitted: false,
+      correctAnswers: {},
+      score: 0,
+      status: 'active'
+    }))
   }
 
-  // In editing mode, show a simplified version
+  const onTimeout = () => {
+    if (!isSubmitted) {
+      handleSubmit()
+    }
+  }
+
+  if (!mounted) return null
+
+  // Live Start Screen
+  if (isLive && !hasStarted && !isSubmitted && state.status !== 'completed') {
+    return (
+      <LiveStartScreen
+        onStart={() => setHasStarted(true)}
+        label={`Start Activity (${timeLimit}s Time Limit)`}
+      />
+    )
+  }
+
+
+
+  const totalPossible = points * blanks.length
+
+  return (
+    <div className={cn(
+      "w-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-6",
+      disabledProp && "opacity-75"
+    )}>
+      {/* Visual Accent */}
+      <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
+
+      {/* Header */}
+      <div className="shrink-0 relative flex items-center justify-between px-4 pt-2">
+        <div className="space-y-1">
+          <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Activity</span>
+          <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+        </div>
+        <div className="flex items-center gap-2">
+          {isLive && (
+            <div className="flex items-center gap-1.5">
+              <LiveTimer
+                isCompleted={isSubmitted || state.status === 'completed'}
+                duration={timeLimit}
+                onTimeout={onTimeout}
+              />
+            </div>
+          )}
+          {disabledProp && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
+              <Lock className="h-2.5 w-2.5" />
+              <span>Locked</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* CENTER SECTION: Interactive Text */}
+      <div className="flex-1 flex flex-col justify-center py-4">
+        <div className="text-lg md:text-xl font-bold text-slate-900 leading-relaxed tracking-tight">
+          {parts.map((part, index) => (
+            <React.Fragment key={index}>
+              {part}
+              {index < blanks.length && (
+                <span className="inline-flex relative mx-1.5 group/input align-middle">
+                  <Input
+                    value={userAnswers[blanks[index].id] || ""}
+                    onChange={(e) => handleAnswerChange(blanks[index].id, e.target.value)}
+                    disabled={isSubmitted || disabledProp}
+                    placeholder="..."
+                    className={cn(
+                      "w-32 md:w-44 h-10 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-sm shadow-inner",
+                      isSubmitted && (
+                        correctAnswers[blanks[index].id]
+                          ? "border-emerald-500 bg-emerald-500 text-white shadow-none"
+                          : "border-rose-500 bg-rose-50 text-rose-600 shadow-none"
+                      )
+                    )}
+                  />
+                  {isSubmitted && !correctAnswers[blanks[index].id] && (
+                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white border border-emerald-500 px-2 py-1 rounded shadow-lg z-20 whitespace-nowrap animate-in fade-in zoom-in-95 font-black uppercase text-[8px] tracking-widest text-emerald-600">
+                      Answer: <span className="text-slate-900">{blanks[index].answer}</span>
+                    </div>
+                  )}
+                </span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+
+      {/* BOTTOM SECTION: Feedback & Buttons */}
+      <div className="shrink-0 space-y-4 px-4 pb-6">
+        <div className="min-h-[60px] flex flex-col justify-end">
+          {isSubmitted && (
+            <div className={cn(
+              'p-6 rounded-2xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
+              score === totalPossible ? 'bg-emerald-50/50 border-emerald-500/20' : 'bg-rose-50/50 border-rose-500/20'
+            )}>
+              {score === totalPossible ? (
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Correct</span>
+                  </div>
+                  <p className="text-sm font-black text-slate-900 leading-tight italic">"Excellent! All answers are correct."</p>
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Score</span>
+                  </div>
+                  <p className="text-sm font-black text-slate-900 leading-tight">
+                    You got {Math.floor(score / points)} / {blanks.length} correct.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-2 pt-2">
+          {!isSubmitted ? (
+            <Button
+              className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 hover:bg-emerald-500"
+              onClick={handleSubmit}
+              disabled={disabledProp}
+            >
+              Check Answers
+            </Button>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+              <Button
+                className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest disabled:opacity-100 shadow-lg shadow-emerald-500/20"
+                disabled
+              >
+                Completed
+              </Button>
+              {!isLive && score !== totalPossible && (
+                <Button
+                  className="h-11 w-full rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95"
+                  onClick={onLocalRetry}
+                  disabled={disabledProp}
+                >
+                  Retry
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-center pt-1">
+          <div className="px-4 py-1.5 bg-emerald-50/50 border border-emerald-100 rounded">
+            <span className="text-[7px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">
+              Points: <span className="text-emerald-700">{score}</span> / {totalPossible}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+export function FillInTheBlankRenderer(props: FillInTheBlankRendererProps) {
+  const {
+    title = "Fill in the blanks",
+    text = "",
+    blanks = [],
+    caseSensitive = false,
+    points = 10,
+    isEditing = false,
+    scoreContext,
+    mode = 'practice',
+    state: componentState = 'active',
+    disabled = false,
+    savedState,
+    setComponentState,
+    id = 'fill-in-blank-renderer',
+    status
+  } = props
+
+  const component: Component = {
+    id,
+    type: 'fillInTheBlank',
+    state: componentState as any,
+    status: (status || (savedState as any)?.status || 'uncompleted') as any,
+    props: { title, text, blanks },
+    mode: mode as any
+  } as Component
+
+  // Initial State Construction
+  const initialAnswers: Record<string, string> = {}
+  blanks.forEach((blank) => {
+    initialAnswers[blank.id] = ""
+  })
+
+  const initialState: FillInTheBlankState = {
+    userAnswers: initialAnswers,
+    isSubmitted: false,
+    correctAnswers: {},
+    score: 0
+  }
+
   if (isEditing) {
     return (
       <div className="border p-4 rounded-md">
@@ -182,7 +399,7 @@ export function FillInTheBlankRenderer({
           {text.split("{{blank}}").map((part, index) => (
             <React.Fragment key={index}>
               {part}
-              {index < blanks.length && (
+              {index < blanks.length && blanks[index] && (
                 <span className="inline-block bg-muted px-2 py-0.5 rounded mx-1">{blanks[index].answer}</span>
               )}
             </React.Fragment>
@@ -192,156 +409,31 @@ export function FillInTheBlankRenderer({
     )
   }
 
-  // Replace {{blank}} placeholders with input fields
-  const renderText = () => {
-    const parts = text.split("{{blank}}")
-
-    return (
-      <div>
-        {parts.map((part, index) => (
-          <React.Fragment key={index}>
-            {part}
-            {index < blanks.length && (
-              <span className="inline-block mx-1" style={{ minWidth: "100px" }}>
-                <Input
-                  value={userAnswers[blanks[index].id] || ""}
-                  onChange={(e) => handleAnswerChange(blanks[index].id, e.target.value)}
-                  disabled={isSubmitted}
-                  className={`w-full inline-block ${
-                    isSubmitted
-                      ? correctAnswers[blanks[index].id]
-                        ? "border-[#4CAF50] bg-[#E8F5E9] text-[#2E7D32]"
-                        : "border-destructive bg-destructive/20 text-destructive"
-                      : ""
-                  }`}
-                />
-                {isSubmitted && (
-                  <span className="inline-block ml-2">
-                    {correctAnswers[blanks[index].id] ? (
-                      <CheckCircle2 className="h-4 w-4 text-[#4CAF50] inline" />
-                    ) : (
-                      <>
-                        <XCircle className="h-4 w-4 text-destructive inline mr-1" />
-                        <span className="text-sm text-muted-foreground">{blanks[index].answer}</span>
-                      </>
-                    )}
-                  </span>
-                )}
-              </span>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-    )
-  }
-
   return (
-    <Card className={cn(
-      isDisabled && "opacity-75",
-      isLiveMode && "border-blue-500"
-    )}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>{title}</CardTitle>
-          {isDisabled && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Lock className="h-4 w-4" />
-              <span>Locked</span>
-            </div>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {renderText()}
-
-          {isSubmitted && (
-            <div
-              className={`mt-4 p-3 rounded flex items-center ${
-                score === points * blanks.length
-                  ? "bg-[#E8F5E9] text-[#2E7D32]"
-                  : score > 0
-                    ? "bg-[#FFF3E0] text-[#E65100]"
-                    : "bg-destructive/10 text-destructive"
-              }`}
-            >
-              {score === points * blanks.length ? (
-                <>
-                  <CheckCircle2 className="h-5 w-5 mr-2 text-[#4CAF50]" />
-                  <span>You Rock! 🎉 All answers are correct!</span>
-                </>
-              ) : score > 0 ? (
-                <>
-                  <CheckCircle2 className="h-5 w-5 mr-2 text-[#FB8C00]" />
-                  <span>Good job! Keep trying to get them all correct!</span>
-                </>
-              ) : (
-                <>
-                  <XCircle className="h-5 w-5 mr-2" />
-                  <span>Try again! You can do better!</span>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between">
-        <div className="space-x-2">
-          {!isSubmitted ? (
-            <Button 
-              onClick={handleSubmit}
-              disabled={isDisabled}
-            >
-              Check Answers
-            </Button>
-          ) : (
-            <>
-              {/* Live Mode: Always show disabled Complete button */}
-              {isLiveMode && (
-                <Button
-                  className={score === points ? "bg-success text-success-foreground" : ""}
-                  disabled
-                >
-                  Complete
-                </Button>
-              )}
-              
-              {/* Practice Mode: Show Complete when all correct, Try Again when not */}
-              {!isLiveMode && (
-                <>
-                  {score === points * blanks.length ? (
-                    <Button
-                      className="bg-success text-success-foreground"
-                      disabled
-                    >
-                      Complete
-                    </Button>
-                  ) : (
-                    <Button 
-                      onClick={handleReset} 
-                      variant="outline"
-                      disabled={isDisabled}
-                    >
-                      Try Again
-                    </Button>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </div>
-
-        <div className="flex items-center gap-4">
-          {isLiveMode && (
-            <div className="text-sm text-blue-500">Live Mode</div>
-          )}
-          {points > 0 && (
-            <div className="text-sm text-muted-foreground">
-              {isSubmitted ? `Score: ${score}/${points *blanks.length}` : `Points: ${points * blanks.length}`}
-            </div>
-          )}
-        </div>
-      </CardFooter>
-    </Card>
+    <ScoredRenderer<FillInTheBlankState>
+      component={component}
+      initialState={initialState}
+      savedState={savedState}
+      setComponentState={setComponentState}
+      // We pass Points * Blanks as total? No, component consumes 'points' meaning 'Points per blank' in legacy.
+      // But ScoredRenderer prop 'points' is typically total.
+      // But we use manual scoring. So it doesn't matter what we pass to ScoredRenderer strictly, 
+      // EXCEPT if ScoredRenderer uses it for something.
+      points={points * blanks.length}
+      mode={mode}
+      disabled={disabled}
+      onRender={(renderProps) => (
+        <FillInTheBlankContent
+          {...renderProps}
+          title={title}
+          text={text}
+          blanks={blanks}
+          caseSensitive={caseSensitive}
+          points={points}
+          isDisabled={disabled || component.state === 'disabled'}
+          props={props}
+        />
+      )}
+    />
   )
 }

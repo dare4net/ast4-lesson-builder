@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { ComponentRenderer } from "@/components/component-renderer";
 import type { Component } from "@/types/lesson";
 import { useState, useEffect } from 'react'
-import { DragDropContext, DragDropContextProps } from 'react-beautiful-dnd'
+import { DragDropContext, DragDropContextProps } from '@hello-pangea/dnd'
 
 interface DragItem {
   index: number;
@@ -26,13 +26,13 @@ interface DraggableComponentProps {
   id: string;
 }
 
-export function DraggableComponent({ 
-  component, 
-  index, 
+export function DraggableComponent({
+  component,
+  index,
   moveComponent,
-  onDelete, 
-  onClick, 
-  id 
+  onDelete,
+  onClick,
+  id
 }: DraggableComponentProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -81,7 +81,7 @@ export function DraggableComponent({
 
   // Initialize drag and drop
   drag(drop(ref));
-  
+
   return (
     <div
       ref={ref}

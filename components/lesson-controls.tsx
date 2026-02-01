@@ -1,8 +1,8 @@
 "use client"
 
-import type React from "react"
-
+import * as React from "react"
 import { useState, useRef } from "react"
+import { LayoutGrid } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -71,15 +71,12 @@ export function LessonControls({
         const result = event.target?.result as string
         const importedLesson = JSON.parse(result)
 
-        // Validate basic lesson structure
         if (!importedLesson.id || !Array.isArray(importedLesson.slides)) {
           throw new Error("Invalid lesson format")
         }
 
-        // Completely replace the current lesson with the imported one
         importLesson(importedLesson)
 
-        // Clear any local storage to prevent conflicts
         if (typeof window !== "undefined") {
           localStorage.removeItem("currentLesson")
         }
@@ -89,7 +86,6 @@ export function LessonControls({
           description: `Loaded lesson: ${importedLesson.title}`,
         })
 
-        // Close mobile menu if open
         if (isMobile) {
           setIsMobileMenuOpen(false)
         }
@@ -112,8 +108,6 @@ export function LessonControls({
     }
 
     reader.readAsText(file)
-
-    // Reset the input
     e.target.value = ""
   }
 
@@ -126,12 +120,10 @@ export function LessonControls({
         updatedAt: new Date().toISOString(),
       }
 
-      // Clear any local storage to prevent conflicts
       if (typeof window !== "undefined") {
         localStorage.removeItem("currentLesson")
       }
 
-      // Import the new lesson
       importLesson(newLesson)
 
       toast({
@@ -139,121 +131,107 @@ export function LessonControls({
         description: "Started a fresh lesson",
       })
 
-      // Close mobile menu if open
       if (isMobile) {
         setIsMobileMenuOpen(false)
       }
     }
   }
 
-  // Mobile UI
+  // Mobile remains largely the same but with updated colors
   if (isMobile) {
     return (
-      <header className={cn("border-b bg-background p-2 flex items-center justify-between", className)}>
-        <div className="flex items-center gap-2">
+      <header className={cn("border-b border-slate-800 bg-[#0F172A] p-3 flex items-center justify-between", className)}>
+        <div className="flex items-center gap-3">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="text-slate-300">
+                <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[250px] sm:w-[300px]">
+            <SheetContent side="left" className="w-[300px] bg-[#0F172A] border-slate-800 text-slate-200">
               <SheetHeader>
-                <SheetTitle>{lesson.title || "Untitled Lesson"}</SheetTitle>
-                <SheetDescription>Lesson Builder Menu</SheetDescription>
+                <SheetTitle className="text-emerald-400">{lesson.title || "Untitled Lesson"}</SheetTitle>
+                <SheetDescription className="text-slate-400">Lesson Studio Menu</SheetDescription>
               </SheetHeader>
-              <div className="py-4 space-y-2">
-                <Button variant="outline" className="w-full justify-start" onClick={createNewLesson}>
-                  <Plus className="h-4 w-4 mr-2" />
+              <div className="py-6 space-y-3">
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={createNewLesson}>
+                  <Plus className="h-4 w-4 mr-3 text-emerald-500" />
                   New Lesson
                 </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={() => setIsSettingsOpen(true)}>
-                  <Settings className="h-4 w-4 mr-2" />
-                  Lesson Settings
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={() => setIsSettingsOpen(true)}>
+                  <Settings className="h-4 w-4 mr-3 text-emerald-500" />
+                  Studio Settings
                 </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={exportLesson}>
-                  <Download className="h-4 w-4 mr-2" />
-                  Export Lesson
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={exportLesson}>
+                  <Download className="h-4 w-4 mr-3 text-emerald-500" />
+                  Export Project
                 </Button>
-                <Button variant="outline" className="w-full justify-start" onClick={handleImportClick}>
-                  <Upload className="h-4 w-4 mr-2" />
-                  Import Lesson
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={handleImportClick}>
+                  <Upload className="h-4 w-4 mr-3 text-emerald-500" />
+                  Import Project
                 </Button>
                 <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
               </div>
             </SheetContent>
           </Sheet>
-          <h1 className="font-bold text-lg truncate max-w-[180px]">{lesson.title || "Untitled Lesson"}</h1>
+          <h1 className="font-bold text-base truncate max-w-[150px] text-slate-200">{lesson.title || "Untitled"}</h1>
         </div>
 
-        <Button variant={previewMode ? "default" : "outline"} size="sm" onClick={() => setPreviewMode(!previewMode)}>
+        <Button
+          variant={previewMode ? "default" : "secondary"}
+          size="sm"
+          onClick={() => setPreviewMode(!previewMode)}
+          className={cn(
+            "rounded-full px-4",
+            previewMode ? "bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20" : "bg-slate-800 text-slate-200"
+          )}
+        >
           {previewMode ? (
-            <>
-              <Pencil className="h-4 w-4 mr-1" />
-              Edit
-            </>
+            <><Pencil className="h-4 w-4 mr-2" />Edit</>
           ) : (
-            <>
-              <Play className="h-4 w-4 mr-1" />
-              Preview
-            </>
+            <><Play className="h-4 w-4 mr-2" />Preview</>
           )}
         </Button>
 
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl bg-[#0F172A] border-slate-800 text-slate-200">
             <DialogHeader>
-              <DialogTitle>Lesson Configuration</DialogTitle>
-              <DialogDescription>
-                Configure your lesson settings and feedback preferences
+              <DialogTitle className="text-emerald-400">Lesson Configuration</DialogTitle>
+              <DialogDescription className="text-slate-400">
+                Studio-grade settings for your educational content
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-6">
-              {/* Lesson Settings */}
               <div className="space-y-4">
-                <h3 className="font-semibold">Lesson Details</h3>
                 <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title" className="text-slate-400">Project Title</Label>
                   <Input
                     id="title"
                     value={lesson.title}
                     onChange={(e) => updateLessonMetadata({ title: e.target.value })}
-                    placeholder="Enter lesson title"
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50"
                   />
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description" className="text-slate-400">Description</Label>
                   <Textarea
                     id="description"
                     value={lesson.description}
                     onChange={(e) => updateLessonMetadata({ description: e.target.value })}
-                    placeholder="Enter lesson description"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="author">Author</Label>
-                  <Input
-                    id="author"
-                    value={lesson.author}
-                    onChange={(e) => updateLessonMetadata({ author: e.target.value })}
-                    placeholder="Enter author name"
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 min-h-[100px]"
                   />
                 </div>
               </div>
 
-              {/* Feedback Settings */}
-              <div className="border-t pt-6">
-                <h3 className="font-semibold mb-4">Feedback Preferences</h3>
+              <div className="border-t border-slate-800 pt-6">
                 <FeedbackSettings />
               </div>
             </div>
 
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
-                Close
+              <Button variant="secondary" onClick={() => setIsSettingsOpen(false)} className="bg-slate-800 hover:bg-slate-700">
+                Save & Close
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -264,112 +242,142 @@ export function LessonControls({
 
   // Desktop UI
   return (
-    <header className={cn("border-b bg-background p-2 flex items-center justify-between", className)}>
-      <div className="flex items-center gap-2">
-        <h1 className="font-bold text-lg">{lesson.title || "Untitled Lesson"}</h1>
+    <header className={cn("px-6 py-3 flex items-center justify-between", className)}>
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <LayoutGrid className="h-5 w-5 text-[#0F172A]" />
+          </div>
+          <h1 className="font-bold text-lg tracking-tight text-white">{lesson.title || "New Project"}</h1>
+        </div>
 
-        <Button variant="ghost" size="icon" onClick={() => setIsSettingsOpen(true)} title="Lesson Settings">
-          <Settings className="h-4 w-4" />
-        </Button>
+        <nav className="flex items-center gap-1 bg-slate-950/50 p-1 rounded-full border border-slate-800">
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "rounded-full px-4 h-8 text-xs font-bold transition-all",
+              !previewMode ? "bg-emerald-500 text-[#0F172A] hover:bg-emerald-400" : "text-slate-400 hover:text-slate-200"
+            )}
+            onClick={() => setPreviewMode(false)}
+          >
+            Design
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "rounded-full px-4 h-8 text-xs font-bold transition-all",
+              previewMode ? "bg-emerald-500 text-[#0F172A] hover:bg-emerald-400" : "text-slate-400 hover:text-slate-200"
+            )}
+            onClick={() => setPreviewMode(true)}
+          >
+            Preview
+          </Button>
+        </nav>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Button variant={previewMode ? "default" : "outline"} size="sm" onClick={() => setPreviewMode(!previewMode)}>
-          {previewMode ? (
-            <>
-              <Pencil className="h-4 w-4 mr-1" />
-              Edit
-            </>
-          ) : (
-            <>
-              <Play className="h-4 w-4 mr-1" />
-              Preview
-            </>
-          )}
-        </Button>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 mr-3 border-r border-slate-800 pr-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsSettingsOpen(true)}
+            className="text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-full"
+            title="Studio Settings"
+          >
+            <Settings className="h-5 w-5" />
+          </Button>
+        </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Save className="h-4 w-4 mr-1" />
-              Save
-              <ChevronDown className="h-4 w-4 ml-1" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={createNewLesson}>
-              <Plus className="h-4 w-4 mr-2" />
-              New Lesson
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={exportLesson}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Lesson
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleImportClick}>
-              <Upload className="h-4 w-4 mr-2" />
-              Import Lesson
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={createNewLesson}
+            className="border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-300 rounded-full px-4"
+          >
+            <Plus className="h-4 w-4 mr-2 text-emerald-500" />
+            New
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="default" size="sm" className="bg-emerald-500 hover:bg-emerald-600 text-[#0F172A] font-bold rounded-full px-4 shadow-lg shadow-emerald-500/10">
+                <Upload className="h-4 w-4 mr-2" />
+                Publish
+                <ChevronDown className="h-4 w-4 ml-1 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-[#0F172A] border-slate-800 text-slate-200">
+              <DropdownMenuItem onClick={exportLesson} className="hover:bg-slate-800 cursor-pointer">
+                <Download className="h-4 w-4 mr-3 text-emerald-500" />
+                Export Project (.json)
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleImportClick} className="hover:bg-slate-800 cursor-pointer">
+                <Upload className="h-4 w-4 mr-3 text-emerald-500" />
+                Import Project
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" className="hidden" />
       </div>
 
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl bg-[#0F172A] border-slate-800 text-slate-200">
           <DialogHeader>
-            <DialogTitle>Lesson Configuration</DialogTitle>
-            <DialogDescription>
-              Configure your lesson settings and feedback preferences
+            <DialogTitle className="text-emerald-400">Studio Configuration</DialogTitle>
+            <DialogDescription className="text-slate-400">
+              Fine-tune your lesson metadata and interaction policies
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-6">
-            {/* Lesson Settings */}
-            <div className="space-y-4">
-              <h3 className="font-semibold">Lesson Details</h3>
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={lesson.title}
-                  onChange={(e) => updateLessonMetadata({ title: e.target.value })}
-                  placeholder="Enter lesson title"
-                />
+          <div className="space-y-8 py-4">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="d-title" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Project Title</Label>
+                  <Input
+                    id="d-title"
+                    value={lesson.title}
+                    onChange={(e) => updateLessonMetadata({ title: e.target.value })}
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="d-author" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Lead Designer</Label>
+                  <Input
+                    id="d-author"
+                    value={lesson.author || ""}
+                    onChange={(e) => updateLessonMetadata({ author: e.target.value })}
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50"
+                  />
+                </div>
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="d-description" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Project Summary</Label>
                 <Textarea
-                  id="description"
+                  id="d-description"
                   value={lesson.description}
                   onChange={(e) => updateLessonMetadata({ description: e.target.value })}
-                  placeholder="Enter lesson description"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="author">Author</Label>
-                <Input
-                  id="author"
-                  value={lesson.author}
-                  onChange={(e) => updateLessonMetadata({ author: e.target.value })}
-                  placeholder="Enter author name"
+                  className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-[106px] resize-none"
                 />
               </div>
             </div>
 
-            {/* Feedback Settings */}
-            <div className="border-t pt-6">
-              <h3 className="font-semibold mb-4">Feedback Preferences</h3>
+            <div className="border-t border-slate-800 pt-8">
+              <h3 className="text-emerald-400 text-xs uppercase font-bold tracking-wider mb-6 flex items-center gap-2">
+                <Play className="h-3 w-3" />
+                Runtime Feedback Policies
+              </h3>
               <FeedbackSettings />
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsSettingsOpen(false)}>
-              Close
+          <DialogFooter className="border-t border-slate-800 pt-6">
+            <Button variant="secondary" onClick={() => setIsSettingsOpen(false)} className="bg-slate-800 hover:bg-slate-700 rounded-full px-6">
+              Done
             </Button>
           </DialogFooter>
         </DialogContent>

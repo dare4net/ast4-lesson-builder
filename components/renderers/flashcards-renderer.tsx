@@ -1,11 +1,14 @@
 "use client"
 
+import * as React from "react"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
+import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import type { Component } from "@/types/lesson"
 
 interface Flashcard {
   id: string
@@ -20,55 +23,107 @@ interface FlashcardsRendererProps {
   mode?: 'practice' | 'live'
   state?: 'active' | 'disabled'
   disabled?: boolean
+  savedState?: any
+  setComponentState?: (state: any) => void
+  id?: string
+  status?: string
 }
 
-export function FlashcardsRenderer({ 
-  title = "Flashcards", 
-  cards = [], 
-  isEditing = false,
-  mode = 'practice',
-  state = 'active',
-  disabled = false
-}: FlashcardsRendererProps) {
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const [isFlipped, setIsFlipped] = useState(false)
+type FlashcardsState = {
+  currentCardIndex: number
+  isFlipped: boolean
+  status?: string
+}
 
-  const { playFeedback } = useFeedback();
+function FlashcardsContent({
+  title,
+  cards,
+  state,
+  setState,
+  isLive,
+  isDisabled: disabledProp,
+  props
+}: InteractiveRenderProps<FlashcardsState> & {
+  title: string
+  cards: Flashcard[]
+  isDisabled: boolean
+  isLive: boolean
+  props: FlashcardsRendererProps
+}) {
+  const [mounted, setMounted] = useState(false)
+  const { playFeedback } = useFeedback()
+
+  const { currentCardIndex, isFlipped } = state
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   const currentCard = cards[currentCardIndex]
-  const isDisabled = disabled || state === 'disabled'
-  const isLiveMode = mode === 'live'
-
-  // Debug logs
-    useEffect(() => {
-      console.log('flash Mode:', mode);
-      console.log('Is Live Mode flash:', isLiveMode);
-      console.log('Saved State: none');
-    }, [mode, isLiveMode]);
 
   const goToNextCard = () => {
-    if (isDisabled) return
+    if (disabledProp) return
     if (currentCardIndex < cards.length - 1) {
-      setCurrentCardIndex(currentCardIndex + 1)
-      setIsFlipped(false)
+      if (isFlipped) {
+        // Should we un-flip before moving? Yes.
+        // setState merge
+      }
+
+      const nextIndex = currentCardIndex + 1
+      const isLast = nextIndex === cards.length // Actually, status update happening here?
+      // Logic: If we reach the end, do we mark complete?
+      // Usually completion is "viewed all".
+      // Let's mark complete when we successfully render the LAST card? 
+      // Or when we reach end?
+      // Original code marked complete when `currentCardIndex === cards.length - 1 && isFlipped`.
+
+      setState(prev => ({
+        ...prev,
+        currentCardIndex: nextIndex,
+        isFlipped: false,
+        // If moving to last card, we aren't flipped yet, so presumably not complete per original logic?
+        // Original: `currentCardIndex === cards.length - 1 && isFlipped` triggers "You Rock".
+      }))
     }
   }
 
   const goToPreviousCard = () => {
-    if (isDisabled) return
+    if (disabledProp) return
     if (currentCardIndex > 0) {
-      setCurrentCardIndex(currentCardIndex - 1)
-      setIsFlipped(false)
+      setState(prev => ({
+        ...prev,
+        currentCardIndex: currentCardIndex - 1,
+        isFlipped: false
+      }))
     }
   }
 
   const flipCard = () => {
-    if (isDisabled) return
-    playFeedback('flashcardFlip');
-    setIsFlipped(!isFlipped)
+    if (disabledProp) return
+    playFeedback('flashcardFlip')
+
+    // Check completion logic
+    const willBeFlipped = !isFlipped
+    const isCompleted = currentCardIndex === cards.length - 1 && willBeFlipped
+
+    setState(prev => ({
+      ...prev,
+      isFlipped: willBeFlipped,
+      status: isLive || isCompleted ? 'completed' : prev.status
+    }))
   }
 
-  // In editing mode, show a simplified version
-  if (isEditing) {
+  const onLocalRestart = () => {
+    playFeedback('click', { animation: false })
+    setState(prev => ({
+      ...prev,
+      currentCardIndex: 0,
+      isFlipped: false,
+      status: 'active'
+    }))
+  }
+
+  if (props.isEditing) {
     return (
       <div className="border p-4 rounded-md">
         <h3 className="font-semibold mb-2">{title}</h3>
@@ -107,120 +162,196 @@ export function FlashcardsRenderer({
   }
 
   return (
-    <Card className={cn(
-      isDisabled && "opacity-75",
-      isLiveMode && "border-blue-500"
+    <div className={cn(
+      "w-full flex-1 flex flex-col bg-white overflow-hidden group/flashcards transition-all duration-300 px-6",
+      disabledProp && "opacity-75"
     )}>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>{title}</CardTitle>
-          <div className="flex items-center gap-4">
-            {isLiveMode && (
-              <div className="flex items-center gap-2 text-sm text-blue-500">
-                <span>Live Mode</span>
-              </div>
-            )}
-            {isDisabled && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Lock className="h-4 w-4" />
-                <span>Locked</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {/* Progress bar */}
-        <div className="duo-progress-bar mb-4">
-          <div
-            className="duo-progress-bar-fill"
-            style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
-          />
-        </div>
+      {/* Visual Accent */}
+      <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
-        <div className="relative perspective-1000">
-          <div
-            className={cn(
-              "relative w-full h-64 transition-transform duration-500 transform-style-preserve-3d",
-              isFlipped ? "rotate-y-180" : "",
-              !isDisabled && "cursor-pointer"
-            )}
-            onClick={flipCard}
-          >
-            {/* Front of card */}
-            <div
-              className={cn(
-                "absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md",
-                isFlipped ? "opacity-0" : "opacity-100 bg-white",
-                !isDisabled && "hover:bg-secondary/10"
-              )}
-            >
-              <div className="text-center">
-                <div className="text-lg font-medium">{currentCard.front}</div>
-                {!isDisabled && (
-                  <div className="mt-4 text-sm text-muted-foreground">Click to flip</div>
-                )}
-              </div>
+      {/* Header */}
+      <div className="shrink-0 relative flex items-center justify-between pt-2 pb-4">
+        <div className="space-y-1">
+          <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Flashcard Set</span>
+          <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+        </div>
+        <div className="flex items-center gap-2">
+          {isLive && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-600 rounded text-[7px] font-black border border-blue-200 uppercase tracking-widest">
+              <CheckCircle2 className="h-2.5 w-2.5" />
+              <span>Live</span>
             </div>
-            {/* Back of card */}
-            <div
-              className={cn(
-                "absolute w-full h-full backface-hidden flex items-center justify-center p-6 border rounded-md rotate-y-180",
-                isFlipped ? "opacity-100 bg-[#E8F5E9] text-[#2E7D32] border-[#4CAF50]" : "opacity-0"
-              )}
-            >
-              <div className="text-center">
-                <div className="text-lg">{currentCard.back}</div>
-                {!isDisabled && (
-                  <div className="mt-4 text-sm text-muted-foreground">Click to flip back</div>
-                )}
-              </div>
+          )}
+          {disabledProp && (
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
+              <Lock className="h-2.5 w-2.5" />
+              <span>Locked</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* MAIN CONTENT: Flashcard Stage - Moved to top */}
+      <div className="flex-1 flex flex-col py-2">
+        <div className="relative space-y-6">
+          {/* Progress indicator */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-end">
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Study Progress</span>
+              <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">{Math.round(((currentCardIndex + 1) / cards.length) * 100)}%</span>
+            </div>
+            <div className="h-1.5 w-full bg-emerald-50 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 ease-out"
+                style={{ width: `${((currentCardIndex + 1) / cards.length) * 100}%` }}
+              />
             </div>
           </div>
-        </div>
 
-        {currentCardIndex === cards.length - 1 && isFlipped && (
-          <div className="mt-4 p-4 rounded-xl bg-[#E8F5E9] text-[#2E7D32] flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-[#4CAF50]" />
-            <p className="font-medium">You Rock! 🎉 You've completed all flashcards!</p>
+          {/* Flashcard - Increased height */}
+          <div className="relative h-[420px]" style={{ perspective: '2000px' }}>
+            <div
+              className={cn(
+                "relative w-full h-full transition-transform duration-700",
+                !disabledProp && "cursor-pointer"
+              )}
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+              }}
+              onClick={flipCard}
+            >
+              {/* Front of card */}
+              <div
+                className="absolute inset-0 w-full h-full flex items-center justify-center p-8 border-2 bg-white rounded-[2.5rem] shadow-xl shadow-black/5"
+                style={{
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                  transform: 'rotateY(0deg)'
+                }}
+              >
+                <div className="text-center space-y-6">
+                  <div className="text-3xl font-black text-slate-900 tracking-tight leading-tight px-4">{currentCard.front}</div>
+                  {!disabledProp && (
+                    <div className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] bg-emerald-50 px-4 py-1.5 rounded-full inline-block border border-emerald-100 animate-pulse">Reveal</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Back of card */}
+              <div
+                className="absolute inset-0 w-full h-full flex items-center justify-center p-8 border-2 border-emerald-600 rounded-[2.5rem] bg-gradient-to-br from-emerald-500 to-teal-600 shadow-xl shadow-emerald-500/20"
+                style={{
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                  transform: 'rotateY(180deg)'
+                }}
+              >
+                <div className="text-center space-y-6">
+                  <div className="text-3xl font-black text-white tracking-tight leading-tight px-4">{currentCard.back}</div>
+                  {!disabledProp && (
+                    <div className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em] bg-white/20 px-4 py-1.5 rounded-full inline-block backdrop-blur-sm">Learned</div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
 
-        {/* Card count indicator */}
-        <div className="mt-4 flex justify-center">
-          <span className="duo-badge">
-            Card {currentCardIndex + 1} of {cards.length}
+          {currentCardIndex === cards.length - 1 && isFlipped && (
+            <div className="p-6 rounded-2xl border-2 bg-emerald-50/50 border-emerald-500/20 animate-in slide-in-from-top-2 duration-500 shadow-emerald-500/5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Review Complete</span>
+              </div>
+              <p className="text-sm font-black text-slate-900 mt-1 italic">Excellent! You've reviewed all cards.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* BOTTOM SECTION: Navigation - Counter left, buttons right */}
+      <div className="shrink-0 flex items-center justify-between gap-4 pb-6 pt-4">
+        {/* Counter on the left */}
+        <div className="px-5 py-2.5 bg-emerald-50/50 border-2 border-emerald-100 rounded-xl shadow-sm">
+          <span className="text-[11px] font-black text-emerald-600/60 uppercase tracking-widest">
+            {currentCardIndex + 1} / {cards.length}
           </span>
         </div>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={goToPreviousCard} 
-            disabled={currentCardIndex === 0 || isDisabled}
+
+        {/* Navigation buttons on the right - more prominent */}
+        <div className="flex items-center gap-3">
+          <Button
+            className="w-12 h-12 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 p-0 disabled:opacity-50 disabled:bg-slate-300"
+            onClick={goToPreviousCard}
+            disabled={currentCardIndex === 0 || disabledProp}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-6 w-6 stroke-[3]" />
           </Button>
-          <Button 
-            variant="outline" 
-            size="icon" 
+          <Button
+            className="w-12 h-12 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 p-0 disabled:opacity-50"
             onClick={flipCard}
-            disabled={isDisabled}
+            disabled={disabledProp}
           >
-            <RotateCw className="h-4 w-4" />
+            <RotateCw className="h-5 w-5 stroke-[3]" />
           </Button>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={goToNextCard} 
-            disabled={currentCardIndex === cards.length - 1 || isDisabled}
+          <Button
+            className="w-12 h-12 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 p-0 disabled:opacity-50 disabled:bg-slate-300"
+            onClick={goToNextCard}
+            disabled={currentCardIndex === cards.length - 1 || disabledProp}
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-6 w-6 stroke-[3]" />
           </Button>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
+  )
+}
+
+export function FlashcardsRenderer(props: FlashcardsRendererProps) {
+  const {
+    title = "Flashcards",
+    cards = [],
+    isEditing = false,
+    mode = 'practice',
+    state: componentState = 'active',
+    disabled = false,
+    savedState,
+    setComponentState,
+    id = 'flashcards-renderer',
+    status
+  } = props
+
+  const component: Component = {
+    id,
+    type: 'flashcards',
+    state: componentState as any,
+    status: (status || (savedState as any)?.status || 'uncompleted') as any,
+    props: { title, cards },
+    mode: mode as any
+  } as Component
+
+  const initialState: FlashcardsState = {
+    currentCardIndex: 0,
+    isFlipped: false,
+    status: 'active'
+  }
+
+  return (
+    <InteractiveRenderer<FlashcardsState>
+      component={component}
+      initialState={initialState}
+      savedState={savedState}
+      setComponentState={setComponentState}
+      disabled={disabled}
+      onRender={(renderProps) => (
+        <FlashcardsContent
+          {...renderProps}
+          title={title}
+          cards={cards}
+          isDisabled={disabled || component.state === 'disabled'}
+          isLive={mode === 'live'}
+          props={props}
+        />
+      )}
+    />
   )
 }

@@ -1,14 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Plus, Trash2, Check, X } from "lucide-react"
+import { Plus, Trash2, Check, X, Circle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
 interface QuizOption {
   id: string
@@ -29,8 +27,6 @@ interface QuizEditorProps {
 }
 
 export function QuizEditor({ questions, onChange }: QuizEditorProps) {
-  const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
-
   const addQuestion = () => {
     const newQuestion: QuizQuestion = {
       id: `q${Date.now()}`,
@@ -41,10 +37,7 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
       ],
       explanation: "",
     }
-
-    const updatedQuestions = [...questions, newQuestion]
-    onChange(updatedQuestions)
-    setActiveQuestionIndex(updatedQuestions.length - 1)
+    onChange([...questions, newQuestion])
   }
 
   const updateQuestion = (index: number, field: keyof QuizQuestion, value: any) => {
@@ -54,20 +47,6 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
       [field]: value,
     }
     onChange(updatedQuestions)
-  }
-
-  const deleteQuestion = (index: number) => {
-    if (questions.length <= 1) {
-      return // Don't delete the last question
-    }
-
-    const updatedQuestions = [...questions]
-    updatedQuestions.splice(index, 1)
-    onChange(updatedQuestions)
-
-    if (activeQuestionIndex >= index && activeQuestionIndex > 0) {
-      setActiveQuestionIndex(activeQuestionIndex - 1)
-    }
   }
 
   const addOption = (questionIndex: number) => {
@@ -91,10 +70,7 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
   }
 
   const deleteOption = (questionIndex: number, optionIndex: number) => {
-    if (questions[questionIndex].options.length <= 2) {
-      return // Don't delete if only 2 options left
-    }
-
+    if (questions[questionIndex].options.length <= 2) return
     const updatedQuestions = [...questions]
     updatedQuestions[questionIndex].options.splice(optionIndex, 1)
     onChange(updatedQuestions)
@@ -102,148 +78,113 @@ export function QuizEditor({ questions, onChange }: QuizEditorProps) {
 
   const setCorrectOption = (questionIndex: number, optionIndex: number) => {
     const updatedQuestions = [...questions]
-
-    // Set all options to not correct
     updatedQuestions[questionIndex].options.forEach((opt, idx) => {
       opt.isCorrect = idx === optionIndex
     })
-
     onChange(updatedQuestions)
   }
 
-  const activeQuestion = questions[activeQuestionIndex]
-
   return (
-    <div className="space-y-4">
-      <Tabs
-        value={activeQuestionIndex.toString()}
-        onValueChange={(value) => setActiveQuestionIndex(Number.parseInt(value))}
-      >
-        <div className="flex items-center justify-between mb-2">
-          <TabsList className="h-9 overflow-x-auto w-auto bg-muted/50">
-            {questions.map((q, index) => (
-              <TabsTrigger
-                key={q.id}
-                value={index.toString()}
-                className={cn(
-                  "px-3 h-8 data-[state=active]:bg-[#E8F5E9] data-[state=active]:text-[#2E7D32]",
-                  "transition-colors"
-                )}
+    <ArrayItemEditor<QuizQuestion>
+      items={questions}
+      onChange={onChange}
+      onAddItem={addQuestion}
+      getItemLabel={(_, index) => `Question ${index + 1}`}
+      addButtonLabel="Add Question"
+      renderItem={(question, qIndex) => (
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Inquiry Definition</Label>
+            <Input
+              value={question.question}
+              onChange={(e) => updateQuestion(qIndex, "question", e.target.value)}
+              placeholder="What is the prompt for this sector?"
+              className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-12 text-sm font-bold placeholder:text-slate-700 rounded-xl"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Time Limit (Seconds)</Label>
+            <Input
+              type="number"
+              min="5"
+              value={(question as any).timeLimit || 10}
+              onChange={(e) => updateQuestion(qIndex, "timeLimit", parseInt(e.target.value) || 10)}
+              className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-10 w-32 text-sm font-bold placeholder:text-slate-700 rounded-xl"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-1">
+              <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Response Manifest</Label>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => addOption(qIndex)}
+                className="h-8 rounded-full border border-slate-800 bg-slate-900/50 hover:bg-emerald-500 hover:text-slate-950 transition-all text-[10px] font-black uppercase tracking-widest px-4"
               >
-                Q{index + 1}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={addQuestion}
-            className="hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            Add Question
-          </Button>
-        </div>
+                <Plus className="h-3.5 w-3.5 mr-2" />
+                Initialize Option
+              </Button>
+            </div>
 
-        {questions.map((question, qIndex) => (
-          <TabsContent key={question.id} value={qIndex.toString()} className="m-0">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between py-2">
-                <CardTitle className="text-base font-medium">Question {qIndex + 1}</CardTitle>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => deleteQuestion(qIndex)}
-                  disabled={questions.length <= 1}
-                  className="hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </CardHeader>
-              <CardContent className="space-y-4 pt-0">
-                <div className="space-y-2">
-                  <Label>Question Text</Label>
+            <div className="space-y-3">
+              {question.options.map((option, oIndex) => (
+                <div key={option.id} className="flex items-center gap-3 group/option">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(
+                      "h-10 w-10 shrink-0 rounded-xl border transition-all duration-300",
+                      option.isCorrect
+                        ? "bg-emerald-500 border-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20 rotate-0"
+                        : "bg-slate-950/50 border-slate-800 text-slate-600 hover:border-emerald-500/30 hover:text-emerald-500"
+                    )}
+                    onClick={() => setCorrectOption(qIndex, oIndex)}
+                  >
+                    {option.isCorrect ? (
+                      <Check className="h-5 w-5 stroke-[3]" />
+                    ) : (
+                      <Circle className="h-4 w-4" />
+                    )}
+                  </Button>
+
                   <Input
-                    value={question.question}
-                    onChange={(e) => updateQuestion(qIndex, "question", e.target.value)}
-                    placeholder="Enter your question"
-                    className="focus-visible:ring-[#4CAF50]"
+                    value={option.text}
+                    onChange={(e) => updateOption(qIndex, oIndex, "text", e.target.value)}
+                    placeholder={`Descriptor ${oIndex + 1}`}
+                    className={cn(
+                      "flex-1 w-full min-w-0 bg-slate-950/20 border-slate-800/50 h-10 text-sm font-bold transition-all rounded-xl",
+                      option.isCorrect ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-400" : "focus:bg-slate-950/50"
+                    )}
                   />
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => deleteOption(qIndex, oIndex)}
+                    disabled={question.options.length <= 2}
+                    className="h-10 w-10 rounded-xl text-slate-600 hover:text-rose-500 hover:bg-rose-500/10 opacity-0 group-hover/option:opacity-100 transition-all disabled:hidden"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>Answer Options</Label>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => addOption(qIndex)}
-                      className="hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Add Option
-                    </Button>
-                  </div>
-
-                  <div className="space-y-2">
-                    {question.options.map((option, oIndex) => (
-                      <div key={option.id} className="flex items-center gap-2">
-                        <Button
-                          variant={option.isCorrect ? "default" : "outline"}
-                          size="icon"
-                          className={cn(
-                            "h-8 w-8 shrink-0",
-                            option.isCorrect ? "bg-[#4CAF50] hover:bg-[#43A047]" : "hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
-                          )}
-                          onClick={() => setCorrectOption(qIndex, oIndex)}
-                          title={option.isCorrect ? "Correct Answer" : "Mark as Correct"}
-                        >
-                          {option.isCorrect ? (
-                            <Check className="h-4 w-4 text-white" />
-                          ) : (
-                            <div className="h-4 w-4 rounded-full border-2" />
-                          )}
-                        </Button>
-
-                        <Input
-                          value={option.text}
-                          onChange={(e) => updateOption(qIndex, oIndex, "text", e.target.value)}
-                          placeholder={`Option ${oIndex + 1}`}
-                          className={cn(
-                            "flex-1",
-                            option.isCorrect && "focus-visible:ring-[#4CAF50]",
-                            "transition-colors"
-                          )}
-                        />
-
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => deleteOption(qIndex, oIndex)}
-                          disabled={question.options.length <= 2}
-                          className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Explanation (Optional)</Label>
-                  <Textarea
-                    value={question.explanation || ""}
-                    onChange={(e) => updateQuestion(qIndex, "explanation", e.target.value)}
-                    placeholder="Explain the correct answer"
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        ))}
-      </Tabs>
-    </div>
+          <div className="space-y-2">
+            <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Logic Feedback (Optional)</Label>
+            <Textarea
+              value={question.explanation || ""}
+              onChange={(e) => updateQuestion(qIndex, "explanation", e.target.value)}
+              placeholder="Why is the chosen data stream correct?"
+              rows={3}
+              className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
+            />
+          </div>
+        </div>
+      )}
+    />
   )
 }

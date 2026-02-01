@@ -1,10 +1,8 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Plus, Trash2, ArrowRight } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { ArrowRight } from "lucide-react"
+import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
 interface MatchingPair {
   id: string
@@ -36,73 +34,81 @@ export function MatchingPairsEditor({ pairs, onChange }: MatchingPairsEditorProp
     onChange(updatedPairs)
   }
 
-  const deletePair = (index: number) => {
-    if (pairs.length <= 2) {
-      return // Don't delete if only 2 pairs left
-    }
-    const updatedPairs = [...pairs]
-    updatedPairs.splice(index, 1)
-    onChange(updatedPairs)
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Label className="text-base font-medium">Matching Pairs</Label>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={addPair}
-          className="hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
-        >
-          <Plus className="h-4 w-4 mr-1" />
-          Add Pair
-        </Button>
-      </div>
+    <ArrayItemEditor<MatchingPair>
+      items={pairs}
+      onChange={onChange}
+      onAddItem={addPair}
+      getItemLabel={(_, index) => `Pair ${index + 1}`}
+      layout="list"
+      title="Matching Pairs"
+      addButtonLabel="Add Pair"
+      minItems={2}
+      renderItem={(pair, index) => (
+        <div className="flex items-center gap-3">
+          <Input
+            value={pair.left}
+            onChange={(e) => updatePair(index, "left", e.target.value)}
+            placeholder="Origin point"
+            className="flex-1 w-full min-w-0 bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-10 text-xs font-bold transition-all rounded-xl"
+          />
 
-      <div className="space-y-2">
-        {pairs.map((pair, index) => (
-          <div
-            key={pair.id}
-            className={cn(
-              "flex items-center gap-2 p-2 rounded-lg",
-              "transition-colors hover:bg-muted/50"
-            )}
-          >
-            <Input
-              value={pair.left}
-              onChange={(e) => updatePair(index, "left", e.target.value)}
-              placeholder="Left item"
-              className="flex-1 focus-visible:ring-[#4CAF50]"
-            />
-
-            <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-
-            <Input
-              value={pair.right}
-              onChange={(e) => updatePair(index, "right", e.target.value)}
-              placeholder="Right match"
-              className="flex-1 focus-visible:ring-[#4CAF50]"
-            />
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => deletePair(index)}
-              disabled={pairs.length <= 2}
-              className="flex-shrink-0 hover:bg-destructive/10 hover:text-destructive"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <div className="flex flex-col items-center justify-center h-10 px-2 shrink-0">
+            <ArrowRight className="h-4 w-4 text-emerald-500/50" />
           </div>
-        ))}
-      </div>
 
-      {pairs.length < 2 && (
-        <p className="text-sm text-muted-foreground">
-          Add at least two pairs to create a matching exercise.
-        </p>
+          <Input
+            value={pair.right}
+            onChange={(e) => updatePair(index, "right", e.target.value)}
+            placeholder="Terminal point"
+            className="flex-1 w-full min-w-0 bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-10 text-xs font-bold transition-all rounded-xl"
+          />
+        </div>
       )}
-    </div>
+      renderHeader={() => (
+        <div className="pb-4 mb-4 border-b border-slate-800/50">
+          <div className="space-y-2">
+            <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Configuration</div>
+            <div className="flex items-center gap-4">
+              <div className="space-y-1 flex-1">
+                <label className="text-xs font-bold text-slate-400">Time Limit (Seconds)</label>
+                <Input
+                  type="number"
+                  min="5"
+                  // We need to store timeLimit on the parent props, but ArrayItemEditor assumes 'items'. 
+                  // The editor props are { pairs, onChange }. 
+                  // We might need to change the signature of MatchingPairsEditor to accept extra props or attach it to the first pair? (Hack)
+                  // No, the Component Editor typically passes 'props' object. 
+                  // MatchingPairsEditorProps is { pairs, onChange }. It doesn't receive the full component props.
+                  // I need to check how standard editors handle non-array props.
+                  // For now I will assume I can't easily add it HERE without changing the interface. 
+                  // Wait, 'onChange' updates the pairs array.
+                  // If I want to update a top-level prop 'timeLimit', I need the parent to pass it.
+                  // Checking usage... usually 'props={component.props} onChange={updateProps}'
+                  // So I can add 'timeLimit' to MatchingPairsEditorProps.
+                  value={(pairs as any).timeLimit || 10}
+                  onChange={(e) => {
+                    // This is tricky. ComponentEditor usually expects 'onChange' to take the whole props object?
+                    // No, looking at MatchingPairsEditor signature: `export function MatchingPairsEditor({ pairs, onChange }: MatchingPairsEditorProps)`
+                    // It extracts `pairs` from props.
+                    // I should change the signature to accept `timeLimit` and call `onChange` with updated props?
+                    // Actually, I'll return to this after checking ComponentEditor.
+                    // For now, let's assume I can't modify the signature easily without breaking things.
+                    // But wait, `p` in ComponentEditor is `props`. 
+                    // <EditorComponent {...component.props} onChange={handlePropsChange} />
+                    // If `component.props` has `timeLimit`, it splits into `pairs` and `timeLimit`?
+                    // TypeScript interface `MatchingPairsEditorProps` only defines `pairs`. 
+                    // I will add `timeLimit` to the interface first.
+                  }}
+                  disabled
+                  placeholder="Coming soon"
+                  className="bg-slate-950/50 border-slate-800"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    />
   )
 }

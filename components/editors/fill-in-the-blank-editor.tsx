@@ -6,9 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus, Trash2 } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
 interface Blank {
   id: string
@@ -24,20 +22,12 @@ interface FillInTheBlankEditorProps {
 }
 
 export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChange }: FillInTheBlankEditorProps) {
-  const [activeBlankIndex, setActiveBlankIndex] = useState(0)
   const [previewText, setPreviewText] = useState("")
 
-  // Update preview text when text or blanks change
   useEffect(() => {
-    const updatedText = text
-    const blankPlaceholder = "{{blank}}"
-
-    // Make sure we have enough blanks in the text
     const blankCount = (text.match(/{{blank}}/g) || []).length
 
-    // Add or remove blanks from the array to match the text
     if (blankCount > blanks.length) {
-      // Add more blanks
       const newBlanks = [...blanks]
       for (let i = blanks.length; i < blankCount; i++) {
         newBlanks.push({
@@ -48,42 +38,29 @@ export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChang
       }
       onBlanksChange(newBlanks)
     } else if (blankCount < blanks.length) {
-      // Remove excess blanks
       onBlanksChange(blanks.slice(0, blankCount))
     }
 
-    // Create preview text with answers
     let previewWithAnswers = text
-    blanks.forEach((blank, index) => {
-      const regex = /{{blank}}/
-      previewWithAnswers = previewWithAnswers.replace(regex, `[${blank.answer}]`)
+    blanks.forEach((blank) => {
+      previewWithAnswers = previewWithAnswers.replace(/{{blank}}/, `[${blank.answer}]`)
     })
-
     setPreviewText(previewWithAnswers)
   }, [text, blanks, onBlanksChange])
 
-  const handleTextChange = (newText: string) => {
-    onTextChange(newText)
-  }
-
   const updateBlank = (index: number, field: keyof Blank, value: any) => {
     const updatedBlanks = [...blanks]
-    updatedBlanks[index] = {
-      ...updatedBlanks[index],
-      [field]: value,
-    }
+    updatedBlanks[index] = { ...updatedBlanks[index], [field]: value }
     onBlanksChange(updatedBlanks)
   }
 
   const addAlternative = (blankIndex: number) => {
     const updatedBlanks = [...blanks]
     const blank = updatedBlanks[blankIndex]
-
     updatedBlanks[blankIndex] = {
       ...blank,
       alternatives: [...(blank.alternatives || []), ""],
     }
-
     onBlanksChange(updatedBlanks)
   }
 
@@ -91,14 +68,8 @@ export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChang
     const updatedBlanks = [...blanks]
     const blank = updatedBlanks[blankIndex]
     const alternatives = [...(blank.alternatives || [])]
-
     alternatives[altIndex] = value
-
-    updatedBlanks[blankIndex] = {
-      ...blank,
-      alternatives,
-    }
-
+    updatedBlanks[blankIndex] = { ...blank, alternatives }
     onBlanksChange(updatedBlanks)
   }
 
@@ -106,121 +77,95 @@ export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChang
     const updatedBlanks = [...blanks]
     const blank = updatedBlanks[blankIndex]
     const alternatives = [...(blank.alternatives || [])]
-
     alternatives.splice(altIndex, 1)
-
-    updatedBlanks[blankIndex] = {
-      ...blank,
-      alternatives,
-    }
-
+    updatedBlanks[blankIndex] = { ...blank, alternatives }
     onBlanksChange(updatedBlanks)
   }
 
-  const addBlank = () => {
-    const updatedText = text + " {{blank}}"
-    onTextChange(updatedText)
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label className="text-[#2E7D32]">Text Content</Label>
-        <div className="space-y-1">
-          <p className="text-sm text-[#2E7D32]">Use {'{{'} blank {'}}' } to mark blank spaces</p>
-          <Textarea
-            value={text}
-            onChange={(e) => handleTextChange(e.target.value)}
-            placeholder="Enter text with {{blank}} placeholders..."
-            rows={5}
-            className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
-          />
-        </div>
+    <div className="space-y-8">
+      <div className="space-y-3">
+        <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Composition Stream</Label>
+        <p className="text-[10px] font-bold text-slate-800 mb-2 uppercase tracking-tight">Use <span className="text-emerald-500">{'{{'} blank {'}}'}</span> to inject delta points</p>
+        <Textarea
+          value={text}
+          onChange={(e) => onTextChange(e.target.value)}
+          placeholder="Enter text with {{blank}} placeholders..."
+          rows={5}
+          className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-slate-200 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
+        />
       </div>
 
-      <div className="space-y-2">
-        <Label className="text-[#2E7D32]">Preview</Label>
-        <div className="p-4 rounded-md border border-[#4CAF50] bg-[#E8F5E9]">
-          <p className="text-[#2E7D32] whitespace-pre-wrap">{previewText}</p>
+      <div className="space-y-3">
+        <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Render Output</Label>
+        <div className="p-6 rounded-[2rem] border border-slate-800 bg-slate-950/20 shadow-inner">
+          <p className="text-slate-400 text-sm font-medium whitespace-pre-wrap leading-relaxed">{previewText}</p>
         </div>
       </div>
 
       {blanks.length > 0 && (
-        <Card className="border-[#4CAF50]">
-          <CardContent className="p-4">
-            <Tabs 
-              value={activeBlankIndex.toString()} 
-              onValueChange={(value) => setActiveBlankIndex(Number.parseInt(value))}
-            >
-              <ScrollArea className="h-[60px] w-full mb-4">
-                <TabsList className="w-full h-auto flex-wrap bg-[#E8F5E9]">
-                  {blanks.map((blank, index) => (
-                    <TabsTrigger
-                      key={blank.id}
-                      value={index.toString()}
-                      className="h-8 data-[state=active]:bg-[#4CAF50] data-[state=active]:text-white text-[#2E7D32] hover:text-[#2E7D32] hover:bg-[#E8F5E9]/80"
-                    >
-                      Blank {index + 1}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </ScrollArea>
+        <ArrayItemEditor<Blank>
+          items={blanks}
+          onChange={onBlanksChange}
+          onAddItem={() => onTextChange(text + " {{blank}}")}
+          getItemLabel={(_, index) => `Delta Node ${index + 1}`}
+          title="Blank Details"
+          addButtonLabel="Initialize New Delta"
+          renderItem={(blank, blankIndex) => (
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Dominant Value</Label>
+                <Input
+                  value={blank.answer}
+                  onChange={(e) => updateBlank(blankIndex, "answer", e.target.value)}
+                  placeholder="Enter specific answer"
+                  className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold rounded-xl"
+                />
+              </div>
 
-              {blanks.map((blank, blankIndex) => (
-                <TabsContent key={blank.id} value={blankIndex.toString()} className="m-0 space-y-4">
-                  <div className="space-y-2">
-                    <Label className="text-[#2E7D32]">Correct Answer</Label>
-                    <Input
-                      value={blank.answer}
-                      onChange={(e) => updateBlank(blankIndex, "answer", e.target.value)}
-                      placeholder="Enter correct answer"
-                      className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
-                    />
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-1">
+                  <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Alternative Logic</Label>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => addAlternative(blankIndex)}
+                    className="h-8 rounded-full border border-slate-800 bg-slate-900/50 hover:bg-emerald-500 hover:text-slate-950 transition-all text-[10px] font-black uppercase tracking-widest px-4"
+                  >
+                    <Plus className="h-3.5 w-3.5 mr-2" />
+                    Expand Variants
+                  </Button>
+                </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-[#2E7D32]">Alternative Answers</Label>
+                <div className="space-y-3">
+                  {blank.alternatives?.map((alt, altIndex) => (
+                    <div key={altIndex} className="flex items-center gap-2 group/alt">
+                      <Input
+                        value={alt}
+                        onChange={(e) => updateAlternative(blankIndex, altIndex, e.target.value)}
+                        placeholder={`Variant ${altIndex + 1}`}
+                        className="flex-1 bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-10 text-xs font-bold rounded-xl"
+                      />
                       <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => addAlternative(blankIndex)}
-                        className="border-[#4CAF50] text-[#2E7D32] hover:bg-[#E8F5E9] hover:text-[#2E7D32] hover:border-[#4CAF50]"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeAlternative(blankIndex, altIndex)}
+                        className="h-10 w-10 text-slate-600 hover:text-rose-500 hover:bg-rose-500/10 transition-all rounded-xl"
                       >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Add Alternative
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
+                  ))}
 
-                    {blank.alternatives?.map((alt, altIndex) => (
-                      <div key={altIndex} className="flex items-center gap-2">
-                        <Input
-                          value={alt}
-                          onChange={(e) => updateAlternative(blankIndex, altIndex, e.target.value)}
-                          placeholder={`Alternative ${altIndex + 1}`}
-                          className="border-[#4CAF50] focus:ring-[#4CAF50] focus:border-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
-                        />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeAlternative(blankIndex, altIndex)}
-                          className="text-[#4CAF50] hover:bg-[#E8F5E9] hover:text-[#2E7D32]"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-
-                    {(!blank.alternatives || blank.alternatives.length === 0) && (
-                      <p className="text-sm text-[#2E7D32]/70 italic">No alternative answers</p>
-                    )}
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </CardContent>
-        </Card>
+                  {(!blank.alternatives || blank.alternatives.length === 0) && (
+                    <p className="text-[10px] font-black text-slate-800 uppercase tracking-widest text-center py-4 border border-dashed border-slate-800/50 rounded-2xl">Void Variant Array</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        />
       )}
     </div>
-  )
+  );
 }

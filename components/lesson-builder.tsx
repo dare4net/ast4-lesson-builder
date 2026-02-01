@@ -12,41 +12,54 @@ import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { LayoutGrid } from "lucide-react"
 import type { Lesson, Slide, Component, ComponentType, SlideStatus } from "@/types/lesson"
-import { defaultLesson, categorizeComponents, getComponentTypeCategory } from "@/lib/default-lesson"
+import { defaultLesson } from "@/lib/default-lesson"
+import { getCategorizedComponents, getInteractiveAndGamifiedComponents } from "@/lib/lesson-utils"
 import { CustomDndProvider } from "@/components/dnd-provider"
 import { useFeedback } from "@/lib/feedback-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScoringProvider } from "@/context/scoring-context"
+import { ComponentEditor } from "@/components/component-editor"
+import { NavigationLockProvider } from '@/context/navigation-lock-context';
 
 export function LessonBuilder() {
   // Initialize with default lesson or from localStorage
-  const [lesson, setLesson] = useState<Lesson>(() => {
-    if (typeof window !== "undefined") {
-      const savedLesson = localStorage.getItem("currentLesson")
-      if (savedLesson) {
-        try {
-          return JSON.parse(savedLesson)
-        } catch (e) {
-          console.error("Failed to parse saved lesson:", e)
-        }
-      }
-    }
-    return defaultLesson
-  })
+  // Initialize with defaultLesson to ensure server/client match during hydration
+  const [lesson, setLesson] = useState<Lesson>(defaultLesson)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [previewMode, setPreviewMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [activeSidebar, setActiveSidebar] = useState<"components">("components")
+  const [activeSidebar, setActiveSidebar] = useState<"components" | "slides">("components")
+  const [editingComponentId, setEditingComponentId] = useState<string | null>(null)
+  const [isInspectorOpen, setIsInspectorOpen] = useState(false)
+
   const { toast } = useToast()
   const isMobile = useMobile()
   const { playFeedback } = useFeedback()
 
-  // Save lesson to localStorage whenever it changes
+  // Load saved lesson on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const savedLesson = localStorage.getItem("currentLesson")
+      if (savedLesson) {
+        try {
+          const parsed = JSON.parse(savedLesson)
+          setLesson(parsed)
+        } catch (e) {
+          console.error("Failed to parse saved lesson:", e)
+        }
+      }
+      setIsLoaded(true)
+    }
+  }, [])
+
+  // Save lesson to localStorage whenever it changes
+  useEffect(() => {
+    if (isLoaded && typeof window !== "undefined") {
       localStorage.setItem("currentLesson", JSON.stringify(lesson))
     }
-  }, [lesson])
+  }, [lesson, isLoaded])
 
   // Make sure currentSlideIndex is valid
   useEffect(() => {
@@ -65,8 +78,7 @@ export function LessonBuilder() {
       title: `Slide ${lesson.slides.length + 1}`,
       components: [],
       status: "uncompleted",
-      state: "active",
-      categorizedComponents: categorizeComponents([])
+      state: "active"
     }
 
     setLesson((prevLesson) => ({
@@ -88,12 +100,9 @@ export function LessonBuilder() {
 
   // Update slide status based on components
   const updateSlideStatus = useCallback((slide: Slide) => {
-    const allInteractiveAndGamified = [
-      ...slide.categorizedComponents.interactive,
-      ...slide.categorizedComponents.gamified
-    ];
+    const allInteractiveAndGamified = getInteractiveAndGamifiedComponents(slide.components);
 
-    const newStatus: SlideStatus = allInteractiveAndGamified.length > 0 
+    const newStatus: SlideStatus = allInteractiveAndGamified.length > 0
       ? allInteractiveAndGamified.every(comp => comp.status === "completed")
         ? "completed"
         : "uncompleted"
@@ -108,15 +117,9 @@ export function LessonBuilder() {
   // Update a slide
   const updateSlide = useCallback(
     async (updatedSlide: Slide) => {
-      // Ensure categorizedComponents is up to date
-      const slideWithCategories = {
-        ...updatedSlide,
-        categorizedComponents: categorizeComponents(updatedSlide.components)
-      };
-      
-      // Update status based on the categorized components
-      const finalSlide = updateSlideStatus(slideWithCategories);
-      
+      // Update status based on components
+      const finalSlide = updateSlideStatus(updatedSlide);
+
       setLesson((prev) => ({
         ...prev,
         slides: prev.slides.map((slide) =>
@@ -216,31 +219,16 @@ export function LessonBuilder() {
   const importLesson = useCallback(
     async (importedLesson: Lesson) => {
       try {
-        // Validate the imported lesson has the required structure
         if (!importedLesson.id || !Array.isArray(importedLesson.slides)) {
           throw new Error("Invalid lesson format")
         }
-
-        // Update the timestamps
         const updatedLesson = {
           ...importedLesson,
           updatedAt: new Date().toISOString(),
         }
-
-        // Completely replace the current lesson
         setLesson(updatedLesson)
-
-        // Reset to the first slide
         setCurrentSlideIndex(0)
-
-        // Force a refresh of the UI
-        setTimeout(() => {
-          // This will trigger a re-render
-          setLesson((prev) => ({ ...prev }))
-        }, 100)
-
         await playFeedback('complete')
-
         toast({
           title: "Lesson imported",
           description: `Loaded lesson: ${importedLesson.title}`,
@@ -263,24 +251,20 @@ export function LessonBuilder() {
     const newComponent: Component = {
       id: `${type}-${Date.now()}`,
       type: type as ComponentType,
-      component_type: getComponentTypeCategory(type),
       props: defaultProps,
       state: "active",
       status: "uncompleted",
-      ...(["quiz", "dragDrop", "matchingPairs", "scoreBoard"].includes(type) && { mode: "practice" })
+      ...(["quiz", "dragDrop", "matchingPairs", "fillInTheBlank", "hotspot", "codeEditor"].includes(type) && { mode: "practice" })
     };
 
     const updatedComponents = [...currentSlide.components, newComponent];
-    const updatedSlide = {
-      ...currentSlide,
-      components: updatedComponents,
-      categorizedComponents: categorizeComponents(updatedComponents)
-    };
+    await updateSlide({ ...currentSlide, components: updatedComponents });
 
-    updateSlide(updatedSlide);
+    // Auto-select the new component
+    setEditingComponentId(newComponent.id);
+    setIsInspectorOpen(true);
 
     await playFeedback('click')
-    
     toast({
       title: "Component added",
       description: `Added new ${type} component`,
@@ -290,7 +274,6 @@ export function LessonBuilder() {
   const handleNextSlide = useCallback(async () => {
     if (currentSlideIndex < lesson.slides.length - 1) {
       setCurrentSlideIndex(prev => prev + 1)
-      // Only play sound when completing the last slide
       if (currentSlideIndex === lesson.slides.length - 2) {
         await playFeedback('complete')
       }
@@ -314,17 +297,12 @@ export function LessonBuilder() {
       title: `Slide ${lesson.slides.length + 1}`,
       components: [],
       status: "uncompleted",
-      state: "active",
-      get categorizedComponents() {
-        return categorizeComponents(this.components);
-      }
+      state: "active"
     };
-
     setLesson((prev) => ({
       ...prev,
       slides: [...prev.slides, newSlide],
     }));
-
     await playFeedback('click')
   }, [lesson.slides.length, playFeedback])
 
@@ -338,173 +316,164 @@ export function LessonBuilder() {
       await playFeedback('incorrect')
       return
     }
-
     const newSlides = lesson.slides.filter((_, index) => index !== currentSlideIndex)
     setLesson((prevLesson) => ({
       ...prevLesson,
       slides: newSlides,
     }))
-
     if (currentSlideIndex === lesson.slides.length - 1) {
       setCurrentSlideIndex(prev => prev - 1)
     }
   }, [currentSlideIndex, lesson.slides, toast, playFeedback])
 
-  const handleSaveLesson = useCallback(async () => {
-    // Save lesson logic here
-    toast({
-      title: "Lesson saved!",
-      description: "Your lesson has been saved successfully.",
-    })
-    await playFeedback('complete')
-  }, [lesson, toast, playFeedback])
+  // Update a component in the current slide
+  const updateComponent = useCallback(async (componentId: string, props: Record<string, any>) => {
+    if (!currentSlide) return;
+    const newComponents = currentSlide.components.map(c =>
+      c.id === componentId ? {
+        ...c,
+        props,
+        ...(props.mode && { mode: props.mode }),
+        ...(props.state && { state: props.state })
+      } : c
+    );
+    await updateSlide({ ...currentSlide, components: newComponents });
+    await playFeedback('click', { animation: false });
+  }, [currentSlide, updateSlide, playFeedback]);
 
-  const handlePublishLesson = useCallback(async () => {
-    // Validate lesson
-    const hasEmptySlides = lesson.slides.some(slide => slide.components.length === 0)
-    if (hasEmptySlides) {
-      toast({
-        title: "Cannot publish lesson",
-        description: "Some slides are empty. Add content to all slides before publishing.",
-        variant: "destructive",
-      })
-      await playFeedback('incorrect')
-      return
-    }
+  // Handle component selection for editing
+  const handleSelectComponent = useCallback(async (componentId: string) => {
+    setEditingComponentId(componentId);
+    setIsInspectorOpen(true);
+    await playFeedback('click', { animation: false });
+  }, [playFeedback]);
 
-    // Publish lesson logic here
-    toast({
-      title: "Lesson published!",
-      description: "Your lesson is now available to students.",
-    })
-    await playFeedback('complete')
-  }, [toast, playFeedback])
+  // Handle inspector close
+  const handleCloseInspector = useCallback(() => {
+    setEditingComponentId(null);
+    setIsInspectorOpen(false);
+  }, []);
 
-  const handleUpdateSlideTitle = useCallback(async (newTitle: string) => {
-    if (!currentSlide) return
-
-    const updatedSlide = {
-      ...currentSlide,
-      title: newTitle,
-    }
-
-    updateSlide(updatedSlide)
-  }, [currentSlide, updateSlide, toast, playFeedback])
+  const editingComponent = editingComponentId
+    ? currentSlide?.components.find(c => c.id === editingComponentId)
+    : null;
 
   return (
-    <CustomDndProvider>
-      <div className="flex flex-col h-screen max-h-screen overflow-hidden">
-        <LessonControls
-          lesson={lesson}
-          updateLessonMetadata={updateLessonMetadata}
-          exportLesson={exportLesson}
-          importLesson={importLesson}
-          previewMode={previewMode}
-          setPreviewMode={setPreviewMode}
-          isMobile={isMobile}
-          className="flex-shrink-0"
-        />
-        <div className="flex flex-1 min-h-0 overflow-hidden">
-          {/* Far left - Slide Navigator */}
-          {!isMobile && (
-            <div className="w-[240px] border-r flex flex-col h-full bg-muted/10">
-              <ScrollArea className="flex-1">
-                <SlideNavigator
-                  slides={lesson.slides}
-                  currentSlideIndex={currentSlideIndex}
-                  setCurrentSlideIndex={setCurrentSlideIndex}
-                  addSlide={handleAddSlide}
-                  deleteSlide={handleDeleteSlide}
-                  reorderSlides={reorderSlides}
-                  updateSlide={updateSlide}
-                />
-              </ScrollArea>
-            </div>
-          )}
+    <NavigationLockProvider>
+      <ScoringProvider lesson={lesson}>
+        <CustomDndProvider>
+          <div className="flex flex-col h-screen max-h-screen overflow-hidden bg-[#0F172A] text-slate-200">
+            <LessonControls
+              lesson={lesson}
+              updateLessonMetadata={updateLessonMetadata}
+              exportLesson={exportLesson}
+              importLesson={importLesson}
+              previewMode={previewMode}
+              setPreviewMode={setPreviewMode}
+              isMobile={isMobile}
+              className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
+            />
+            <div className="flex flex-1 min-h-0 overflow-hidden relative">
+              {/* Far left - Slide Navigator */}
+              {!isMobile && (
+                <div className="w-[260px] border-r border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm">
+                  <ScrollArea className="flex-1">
+                    <SlideNavigator
+                      slides={lesson.slides}
+                      currentSlideIndex={currentSlideIndex}
+                      setCurrentSlideIndex={setCurrentSlideIndex}
+                      addSlide={handleAddSlide}
+                      deleteSlide={handleDeleteSlide}
+                      reorderSlides={reorderSlides}
+                    />
+                  </ScrollArea>
+                </div>
+              )}
 
-          {/* Components Sidebar */}
-          {isMobile ? (
-            <>
-              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                <SheetContent side="left" className="w-[320px] sm:w-[400px] p-0 overflow-hidden">
-                  {activeSidebar === "components" ? (
-                    <ScrollArea className="h-full">
-                      <ComponentLibrary addComponent={addComponent} />
-                    </ScrollArea>
-                  ) : (
-                    <ScrollArea className="h-full">
-                      <SlideNavigator
-                        slides={lesson.slides}
-                        currentSlideIndex={currentSlideIndex}
-                        setCurrentSlideIndex={(index) => {
-                          setCurrentSlideIndex(index);
-                          setSidebarOpen(false);
-                        }}
-                        addSlide={handleAddSlide}
-                        deleteSlide={handleDeleteSlide}
-                        reorderSlides={reorderSlides}
-                      />
-                    </ScrollArea>
-                  )}
-                </SheetContent>
-              </Sheet>
-              
-              {/* Mobile FABs */}
-              <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-12 w-12 rounded-full shadow-lg"
-                  onClick={() => {
-                    setActiveSidebar("components");
-                    setSidebarOpen(true);
-                  }}
-                >
-                  <LayoutGrid className="h-6 w-6" />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-12 w-12 rounded-full shadow-lg"
-                  onClick={() => {
-                    setActiveSidebar("slides");
-                    setSidebarOpen(true);
-                  }}
-                >
-                  <span className="text-lg font-medium">
-                    {currentSlideIndex + 1}
-                  </span>
-                </Button>
+              {/* Main content area (Stage) */}
+              <div className="flex-1 flex flex-col min-h-0 overflow-hidden bg-slate-950/50">
+                <ScrollArea className="flex-1">
+                  <div className="h-full flex flex-col items-center justify-center p-8">
+                    <div className="w-full max-w-5xl aspect-[16/9] bg-white rounded-xl shadow-2xl shadow-emerald-900/10 overflow-hidden relative border border-slate-800">
+                      {previewMode ? (
+                        <SlidePreview
+                          slide={currentSlide}
+                          onNext={handleNextSlide}
+                          onPrev={handlePrevSlide}
+                          isFirst={currentSlideIndex === 0}
+                          isLast={currentSlideIndex === lesson.slides.length - 1}
+                        />
+                      ) : (
+                        <SlideEditor
+                          slide={currentSlide}
+                          updateSlide={updateSlide}
+                          deleteSlide={deleteSlide}
+                          slideIndex={currentSlideIndex}
+                          onSelectComponent={handleSelectComponent}
+                          selectedComponentId={editingComponentId}
+                          className="h-full"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </ScrollArea>
               </div>
-            </>
-          ) : (
-            <div className="w-[320px] border-r flex flex-col h-full">
-                <ComponentLibrary addComponent={addComponent} />
-            </div>
-          )}
 
-          {/* Main content area */}
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-            {previewMode ? (
-              <SlidePreview
-                slide={currentSlide}
-                onNext={handleNextSlide}
-                onPrev={handlePrevSlide}
-                isFirst={currentSlideIndex === 0}
-                isLast={currentSlideIndex === lesson.slides.length - 1}
-              />
-            ) : (
-              <SlideEditor
-                slide={currentSlide}
-                updateSlide={updateSlide}
-                deleteSlide={deleteSlide}
-                slideIndex={currentSlideIndex}
-                className="duo-animated h-full"
-              />
-            )}
+              {/* Right sidebar - Unified Inspector/Library */}
+              {!isMobile && (
+                <div className="w-[480px] border-l border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm">
+                  {isInspectorOpen && editingComponent ? (
+                    <ComponentEditor
+                      component={editingComponent}
+                      updateComponent={(props) => updateComponent(editingComponent.id, props)}
+                      onClose={handleCloseInspector}
+                    />
+                  ) : (
+                    <div className="flex flex-col h-full overflow-hidden">
+                      <div className="p-4 border-b border-slate-800 bg-slate-900/50">
+                        <h3 className="font-semibold text-emerald-400">Component Library</h3>
+                      </div>
+                      <ScrollArea className="flex-1">
+                        <ComponentLibrary addComponent={addComponent} />
+                      </ScrollArea>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Mobile Sheet for Inspector */}
+              {isMobile && isInspectorOpen && editingComponent && (
+                <Sheet open={isInspectorOpen} onOpenChange={(open) => !open && handleCloseInspector()}>
+                  <SheetContent side="bottom" className="h-[85vh] p-0 bg-[#0F172A] border-t border-slate-800">
+                    <ComponentEditor
+                      component={editingComponent}
+                      updateComponent={(props) => updateComponent(editingComponent.id, props)}
+                      onClose={handleCloseInspector}
+                      isMobile={true}
+                    />
+                  </SheetContent>
+                </Sheet>
+              )}
+
+              {/* Mobile Sheet for Component Library */}
+              {isMobile && !isInspectorOpen && (
+                <Sheet open={sidebarOpen && activeSidebar === "components"} onOpenChange={setSidebarOpen}>
+                  <SheetContent side="bottom" className="h-[70vh] p-0 bg-[#0F172A] border-t border-slate-800">
+                    <div className="flex flex-col h-full overflow-hidden">
+                      <div className="p-4 border-b border-slate-800 bg-slate-900/50">
+                        <h3 className="font-semibold text-emerald-400">Component Library</h3>
+                      </div>
+                      <ScrollArea className="flex-1">
+                        <ComponentLibrary addComponent={addComponent} />
+                      </ScrollArea>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              )}
+            </div>
           </div>
-        </div>
-      </div>
-    </CustomDndProvider>
+        </CustomDndProvider>
+      </ScoringProvider>
+    </NavigationLockProvider>
   )
 }

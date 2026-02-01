@@ -430,59 +430,23 @@ export const componentDefinitions: ComponentDefinition[] = [
       },
       {
         name: "status",
-      label: "Status",
-      type: "select",
-      required: false,
-      defaultValue: "uncompleted",
-      options: [
-        { label: "Uncompleted", value: "uncompleted" },
-        { label: "Complete", value: "complete" }
-      ]
-    },
-    ],
-  },
-  {
-    type: "poll",
-    label: "Poll",
-    category: "interactive",
-    description: "Real-time student responses...",
-    icon: "📊",
-    defaultProps: {
-      question: "What's your favorite color?",
-      options: [
-        { id: "1", text: "Red" },
-        { id: "2", text: "Blue" },
-        { id: "3", text: "Green" },
-        { id: "4", text: "Yellow" },
-      ],
-      multipleAnswers: false,
-    },
-    propDefinitions: [
-      {
-        name: "question",
-        label: "Poll Question",
-        type: "string",
-        required: true,
-        defaultValue: "What's your favorite color?",
-      },
-      {
-        name: "options",
-        label: "Poll Options",
-        type: "componentArray",
-        required: true,
-        defaultValue: [
-          { id: "1", text: "Red" },
-          { id: "2", text: "Blue" },
-          { id: "3", text: "Green" },
-          { id: "4", text: "Yellow" },
-        ],
-      },
-      {
-        name: "multipleAnswers",
-        label: "Allow Multiple Answers",
-        type: "boolean",
+        label: "Status",
+        type: "select",
         required: false,
-        defaultValue: false,
+        defaultValue: "uncompleted",
+        options: [
+          { label: "Uncompleted", value: "uncompleted" },
+          { label: "Complete", value: "complete" }
+        ]
+      },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 5,
+        max: 300,
       },
     ],
   },
@@ -561,6 +525,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 5,
+        max: 300,
+      },
     ],
   },
   {
@@ -637,6 +610,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Active", value: "active" },
           { label: "Disabled", value: "disabled" },
         ],
+      },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 5,
+        max: 300,
       },
     ],
   },
@@ -726,7 +708,7 @@ export const componentDefinitions: ComponentDefinition[] = [
   {
     type: "flashcards",
     label: "Flashcards",
-    category: "gamified",
+    category: "interactive",
     description: "Two-sided study cards...",
     icon: "🎴",
     defaultProps: {
@@ -886,11 +868,11 @@ export const componentDefinitions: ComponentDefinition[] = [
     ],
   },
   {
-    type: "clickableImage",
-    label: "Clickable Image",
+    type: "hotspot",
+    label: "Hotspot",
     category: "interactive",
-    description: "Add interactive hotspots...",
-    icon: "🖱️",
+    description: "Clickable image regions...",
+    icon: "🎯",
     defaultProps: {
       title: "Interactive Image",
       image: "/placeholder.svg?height=400&width=600",
@@ -898,6 +880,9 @@ export const componentDefinitions: ComponentDefinition[] = [
         { id: "1", x: 0.3, y: 0.4, label: "Point 1", content: "This is the first point of interest" },
         { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
       ],
+      mode: "practice",
+      state: "active",
+      behavior: "quiz", // "discovery" | "quiz"
     },
     propDefinitions: [
       {
@@ -924,47 +909,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
         ],
       },
-    ],
-  },
-  {
-    type: "hotspot",
-    label: "Hotspot",
-    category: "interactive",
-    description: "Clickable image regions...",
-    icon: "🎯",
-    defaultProps: {
-      title: "Interactive Image",
-      image: "/placeholder.svg?height=400&width=600",
-      hotspots: [
-        { id: "1", x: 0.3, y: 0.4, label: "Point 1", content: "This is the first point of interest" },
-        { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
-      ],
-      mode: "practice",
-      state: "active",
-    },
-    propDefinitions: [
       {
-        name: "title",
-        label: "Title",
-        type: "string",
-        required: false,
-        defaultValue: "Interactive Image",
-      },
-      {
-        name: "image",
-        label: "Image",
-        type: "image",
+        name: "behavior",
+        label: "Interaction Behavior",
+        type: "select",
         required: true,
-        defaultValue: "/placeholder.svg?height=400&width=600",
-      },
-      {
-        name: "hotspots",
-        label: "Hotspots",
-        type: "componentArray",
-        required: true,
-        defaultValue: [
-          { id: "1", x: 0.3, y: 0.4, label: "Point 1", content: "This is the first point of interest" },
-          { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
+        defaultValue: "quiz",
+        options: [
+          { label: "Discovery (Information only)", value: "discovery" },
+          { label: "Quiz (Find all to complete)", value: "quiz" },
         ],
       },
       {
@@ -993,168 +946,6 @@ export const componentDefinitions: ComponentDefinition[] = [
   },
 
   // Gamified Components
-  {
-    type: "badgeReveal",
-    label: "Badge Reveal",
-    category: "gamified",
-    description: "Reveal badge on completion...",
-    icon: "🏅",
-    defaultProps: {
-      badgeId: "badge1",
-      taskCompleted: false,
-    },
-    propDefinitions: [
-      {
-        name: "badgeId",
-        label: "Badge ID",
-        type: "string",
-        required: true,
-        defaultValue: "badge1",
-      },
-      {
-        name: "taskCompleted",
-        label: "Task Completed",
-        type: "boolean",
-        required: true,
-        defaultValue: false,
-      },
-    ],
-  },
-  {
-    type: "scoreBoard",
-    label: "Score Board",
-    category: "gamified",
-    description: "Show points and progress...",
-    icon: "🏆",
-    defaultProps: {
-      title: "Your Score",
-      showTotal: true,
-      showPercentage: true,
-      animation: true,
-    },
-    propDefinitions: [
-      {
-        name: "title",
-        label: "Title",
-        type: "string",
-        required: false,
-        defaultValue: "Your Score",
-      },
-      {
-        name: "showTotal",
-        label: "Show Total Score",
-        type: "boolean",
-        required: false,
-        defaultValue: true,
-      },
-      {
-        name: "showPercentage",
-        label: "Show Percentage",
-        type: "boolean",
-        required: false,
-        defaultValue: true,
-      },
-      {
-        name: "animation",
-        label: "Animate Score Changes",
-        type: "boolean",
-        required: false,
-        defaultValue: true,
-      },
-    ],
-  },
-  {
-    type: "miniGame",
-    label: "Mini Game",
-    category: "gamified",
-    description: "Interactive game with score...",
-    icon: "🎮",
-    defaultProps: {
-      title: "Catch the Falling Stars",
-      instruction: "Catch as many stars as you can",
-      maxScore: 100,
-      timeLimit: 30,
-    },
-    propDefinitions: [
-      {
-        name: "title",
-        label: "Title",
-        type: "string",
-        required: false,
-        defaultValue: "Catch the Falling Stars",
-      },
-      {
-        name: "instruction",
-        label: "Instructions",
-        type: "string",
-        required: false,
-        defaultValue: "Catch as many stars as you can",
-      },
-      {
-        name: "maxScore",
-        label: "Maximum Score",
-        type: "number",
-        required: false,
-        defaultValue: 100,
-        min: 1,
-        max: 1000,
-      },
-      {
-        name: "timeLimit",
-        label: "Time Limit (seconds)",
-        type: "number",
-        required: false,
-        defaultValue: 30,
-        min: 5,
-        max: 300,
-      },
-    ],
-  },
-  {
-    type: "progressBar",
-    label: "Progress Bar",
-    category: "gamified",
-    description: "Show completion status...",
-    icon: "📈",
-    defaultProps: {
-      title: "Course Progress",
-      percentage: 0,
-      showPercentage: true,
-      animation: true,
-    },
-    propDefinitions: [
-      {
-        name: "title",
-        label: "Title",
-        type: "string",
-        required: false,
-        defaultValue: "Course Progress",
-      },
-      {
-        name: "percentage",
-        label: "Completion Percentage",
-        type: "number",
-        required: true,
-        defaultValue: 0,
-        min: 0,
-        max: 100,
-      },
-      {
-        name: "showPercentage",
-        label: "Show Percentage",
-        type: "boolean",
-        required: false,
-        defaultValue: true,
-      },
-      {
-        name: "animation",
-        label: "Animate Progress Changes",
-        type: "boolean",
-        required: false,
-        defaultValue: true,
-      },
-    ],
-  },
 
   // Structure Components
   {

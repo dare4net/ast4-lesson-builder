@@ -1,13 +1,16 @@
-"use client"
+﻿"use client"
 
-import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Menu } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
 import type { Lesson, Component, ComponentType_Category } from '@/types/lesson';
+import { getComponentCategory } from '@/lib/lesson-utils';
+import isEqual from 'lodash.isequal';
+import { useNavigationLock } from '@/context/navigation-lock-context';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -16,6 +19,7 @@ interface LessonContentProps {
   onSlideChange: (index: number) => void;
   initialComponentStates?: Record<string, any>;
   onSlidesUpdate?: (updatedSlides: Lesson['slides']) => void;
+  onProgressUpdate?: (progress: number) => void;
   savedScore?: number;
 }
 
@@ -24,355 +28,286 @@ export interface LessonContentRef {
   getAllComponentStates: () => Record<string, any>;
 }
 
+/**
+ * Hook to sync a value to a ref
+ */
+function useLatestRef<T>(value: T) {
+  const ref = useRef(value);
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref;
+}
+
 export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
-  function LessonContent({ lesson, onScoreUpdate, currentSlideIndex, onSlideChange, initialComponentStates = {}, onSlidesUpdate, savedScore }, ref) {
+  function LessonContent({
+    lesson,
+    onScoreUpdate,
+    currentSlideIndex,
+    onSlideChange,
+    initialComponentStates = {},
+    onSlidesUpdate,
+    onProgressUpdate,
+    savedScore
+  }, ref) {
     const { playFeedback } = useFeedback();
     const viewportRef = useRef<HTMLDivElement>(null);
-    const [score, setScore] = useState(savedScore || 0);
-    const [totalPossible, setTotalPossible] = useState(0);
-    const currentSlide = lesson.slides[currentSlideIndex];
-    const progress = ((currentSlideIndex + 1) / lesson.slides.length) * 100;
-    const [triggerProgress, setTriggerProgress] = useState(0);
+    const { currentScore: score, totalScore: totalPossible, addPoints } = useScoring();
 
-    // Persist state for each component by id with debug log
-    const [componentStates, setComponentStates] = useState<Record<string, any>>(() => {
-      console.log('Initializing component states with:', initialComponentStates);
-      return initialComponentStates;
-    });
+    // Memoized basic properties
+    const currentSlide = useMemo(() => lesson.slides[currentSlideIndex], [lesson.slides, currentSlideIndex]);
+    const progress = useMemo(() => ((currentSlideIndex + 1) / lesson.slides.length) * 100, [currentSlideIndex, lesson.slides.length]);
 
-    // Debug log when component states change
+    // Stable refs for parent callbacks and complex objects
+    const onSlidesUpdateRef = useLatestRef(onSlidesUpdate);
+    const onProgressUpdateRef = useLatestRef(onProgressUpdate);
+    const onScoreUpdateRef = useLatestRef(onScoreUpdate);
+    const lessonRef = useLatestRef(lesson);
+
+    // Guards to prevent infinite loops from redundant updates
+    const lastReportedProgressRef = useRef<number>(-1);
+    const lastCompletedSlideIdRef = useRef<string | null>(null);
+
+    // Local state for component interactions
+    const [componentStates, setComponentStates] = useState<Record<string, any>>(initialComponentStates);
+    const [innerStepIndex, setInnerStepIndex] = useState(0);
+
+    // Reset inner step when slide changes
     useEffect(() => {
-      console.group('Component States Update');
-      console.log('Updated component states:', componentStates);
-      console.log('Initial states reference:', initialComponentStates);
-      console.groupEnd();
-    }, [componentStates, initialComponentStates]);
-
-    // Log slide details on change and preserve states
-    useEffect(() => {
-      if (!currentSlide) return;
-      
-      console.group('State Persistence Debug');
-      console.log('Current Component States:', componentStates);
-      console.log('Initial Component States:', initialComponentStates);
-      console.groupEnd();
-
-      // REMOVE state cleaning as it's causing loss of persistence
-      // We want to keep all states across slides for persistence
-      
-      // Get interactive components for current slide only
-      const interactiveComponents = currentSlide.components.filter(
-        comp => comp.component_type === "interactive"
-      );
-
-      // Get components completion status
-      const componentsStatus = interactiveComponents.map(comp => ({
-        id: comp.id,
-        type: comp.type,
-        status: componentStates[comp.id]?.status || 'pending',
-        isComplete: componentStates[comp.id]?.isComplete || false
-      }));
-
-      // Create detailed log
-      console.group(`🎯 Slide Change - #${currentSlideIndex + 1}`);
-      console.log('Slide Details:', {
-        title: currentSlide.title,
-        id: currentSlide.id,
-        state: currentSlide.state,
-        status: currentSlide.status,
-        totalComponents: currentSlide.components.length,
-        interactiveComponents: interactiveComponents.length,
-      });
-      console.log('Interactive Components:', interactiveComponents);
-      console.log('Interactive Components Status:', componentsStatus);
-      console.log('Component States:', componentStates);
-      console.groupEnd();
-      
-    }, [currentSlide, currentSlideIndex, componentStates]);
-
-
+      setInnerStepIndex(0);
+    }, [currentSlideIndex]);
 
     useImperativeHandle(ref, () => ({
       setCurrentSlideIndex: onSlideChange,
       getAllComponentStates: () => componentStates,
     }), [onSlideChange, componentStates]);
 
-    // Process components to handle disabled state
-    const processedComponents = currentSlide?.components.map(component => {
-      if (currentSlide.state === "disabled" && 
-          (component.component_type === "interactive")) {
-        return { 
-          ...component, 
-          state: "disabled" as const
-        };
-      }
-      return component;
-    });
-
-    // Check if all interactive components in a slide are completed
-    const checkSlideCompletion = useCallback(() => {
-      console.log('Checking slide completion for:', currentSlide?.title);
-      if (!currentSlide) {
-        console.log('No current slide to check completion for.');
-        return;
-      }
-
-      // Get all component IDs for this slide that have state
-      const interactiveComponents = currentSlide.components.filter(
-        comp => comp.component_type === "interactive"
-      );
-
-      // Get components completion status
-      const slideComponentStates = interactiveComponents.map(comp => ({
-        id: comp.id,
-        type: comp.type,
-        status: componentStates[comp.id]?.status || 'pending',
-        isComplete: componentStates[comp.id]?.isComplete || false
-      }));
-
-      console.log('Slide Component States:', slideComponentStates);
-      
-      if (interactiveComponents.length === 0) {
-        console.log('No interactive components with state to check.');
-        return;
-      }
-
-      // Check if all interactive components that have state are completed
-      /*const allCompleted = slideComponentStates.every((state) => 
-        state.status === "completed"
-      );*/
-      const allCompleted = slideComponentStates.filter((state) => state.status === "completed").length === slideComponentStates.length;
-
-      console.log('Component Completion Status:', {
-        total: slideComponentStates.length,
-        completed: slideComponentStates.filter((state) => state.status === "completed").length,
-        allCompleted
-      });
-
-      if (allCompleted && currentSlide.status !== "completed") {
-        // Update the slide status in lesson data
-        console.log(`All interactive components completed for slide: ${currentSlide.title}`);
-        const updatedSlides = [...lesson.slides];
-        updatedSlides[currentSlideIndex] = {
-          ...currentSlide,
-          status: "completed"
-        };
-        
-        // Play level-up feedback when slide is completed
-        playFeedback('levelUp');
-        
-        // Check if there's a next slide and set its state to active
-        if (currentSlideIndex < lesson.slides.length - 1) {
-          updatedSlides[currentSlideIndex + 1] = {
-            ...lesson.slides[currentSlideIndex + 1],
-            state: "active"
+    // Process components to handle disabled state - MEMOIZED
+    const processedComponents = useMemo(() => {
+      if (!currentSlide) return [];
+      return currentSlide.components.map(component => {
+        if (currentSlide.state === "disabled" &&
+          (getComponentCategory(component.type) === "interactive")) {
+          return {
+            ...component,
+            state: "disabled" as const
           };
-          console.log('Activated next slide:', updatedSlides[currentSlideIndex + 1].title);
         }
-        
-        // Update lesson slides and notify parent component
-        lesson.slides = updatedSlides;
-        onSlidesUpdate?.(updatedSlides);
-        console.log('Updated lesson slides:', updatedSlides);
+        return component;
+      });
+    }, [currentSlide]);
+
+    const activeComponent = processedComponents[innerStepIndex];
+
+    const { isLocked } = useNavigationLock();
+
+    // Navigation Logic
+    const canGoNext = !isLocked && (innerStepIndex < (processedComponents.length - 1) || currentSlideIndex < (lesson.slides.length - 1));
+    const canGoPrev = !isLocked && (innerStepIndex > 0 || currentSlideIndex > 0);
+
+    const handleAdvance = () => {
+      playFeedback('uiClick');
+      if (innerStepIndex < processedComponents.length - 1) {
+        setInnerStepIndex(prev => prev + 1);
+      } else if (currentSlideIndex < lesson.slides.length - 1) {
+        onSlideChange(currentSlideIndex + 1);
       }
-
-      console.log('Slide completion check completed for:', currentSlide.title);
-    }, [currentSlide, componentStates, currentSlideIndex, lesson.slides, onSlidesUpdate, playFeedback]);
-
-    // Handle component state updates with persistence
-    const handleComponentStateChange = (componentId: string, newState: any) => {
-      if (currentSlide?.state === "disabled") return; // Prevent state changes for disabled slides
-      
-      console.group('Component State Update');
-      console.log('Updating state for component:', componentId);
-      console.log('Previous states:', componentStates);
-      console.log('New state:', newState);
-
-      // First, update component state
-      const updatedStates = {
-        ...componentStates,
-        [componentId]: {
-          ...componentStates[componentId],
-          ...newState,
-          lastUpdated: Date.now()
-        }
-      };
-
-      // Then check completion with the new state
-      if (newState?.status === "completed") {
-        // Get all interactive components
-        const interactiveComponents = currentSlide.components.filter(
-          comp => comp.component_type === "interactive"
-        );
-
-        // Get completion status with the updated state
-        const slideComponentStates = interactiveComponents.map(comp => ({
-          id: comp.id,
-          type: comp.type,
-          status: comp.id === componentId ? "completed" : (updatedStates[comp.id]?.status || 'pending'),
-          isComplete: comp.id === componentId ? true : (updatedStates[comp.id]?.isComplete || false)
-        }));
-
-        console.log('Checking completion with states:', slideComponentStates);
-
-        // Check if all are completed
-        const allCompleted = slideComponentStates.every(state => state.status === "completed");
-        console.log('All completed?', allCompleted);
-
-          if (allCompleted && currentSlide.status !== "completed") {
-            console.log('All components completed, preparing slide update');
-            const updatedSlides = [...lesson.slides];
-            updatedSlides[currentSlideIndex] = {
-              ...currentSlide,
-              status: "completed"
-            };
-            
-            // Play level-up feedback when slide is completed
-            playFeedback('levelUp');
-
-            if (currentSlideIndex < lesson.slides.length - 1) {
-              updatedSlides[currentSlideIndex + 1] = {
-                ...lesson.slides[currentSlideIndex + 1],
-                state: "active"
-              };
-            }          // Schedule the slides update after the state update
-          Promise.resolve().then(() => {
-            console.log('Updating slides status');
-            onSlidesUpdate?.(updatedSlides);
-          });
-        }
-      }
-
-      // Finally set the component states
-      setComponentStates(updatedStates);
-      console.groupEnd();
     };
 
-    useEffect(() => {
-      onScoreUpdate?.(score, totalPossible);
-    }, [score, totalPossible, onScoreUpdate]);
-
-    // Log quiz component props when slide changes
-    useEffect(() => {
-      if (currentSlide) {
-        const quizComponents = currentSlide.components.filter(comp => comp.type === 'quiz');
-        if (quizComponents.length > 0) {
-          console.log('Quiz components in current slide:', quizComponents.map(comp => ({
-            id: comp.id,
-            props: comp.props
-          })));
-        }
+    const handleRecall = () => {
+      playFeedback('uiClick');
+      if (innerStepIndex > 0) {
+        setInnerStepIndex(prev => prev - 1);
+      } else if (currentSlideIndex > 0) {
+        onSlideChange(currentSlideIndex - 1);
+        // Note: We might want a way to jump to the LAST component of the previous slide
+        // but for now, simple jump is fine.
       }
-    }, [currentSlideIndex, currentSlide]);
+    };
 
-    // Sum points for all gamified components in all slides, considering number of items
+    // Update parent slide progress
     useEffect(() => {
-      let total = 0;
-      for (const slide of lesson.slides) {
-        for (const component of slide.components) {
-          // Skip practice mode components
-          if (component.props?.mode === 'practice') continue;
+      if (!currentSlide) return;
 
-          // Get points per item based on component type
-          const points = component.props?.points;
-          if (typeof points !== 'number') continue;
+      const interactiveComponents = currentSlide.components.filter(
+        comp => getComponentCategory(comp.type) === "interactive"
+      );
 
-          // Calculate total possible points based on number of items
-          if (component.type === 'quiz' && Array.isArray(component.props?.questions)) {
-            total += points * component.props.questions.length;
-          }
-          else if (component.type === 'fillInTheBlank' && Array.isArray(component.props?.blanks)) {
-            total += points * component.props.blanks.length;
-          }
-          else if (component.type === 'matchingPairs' && Array.isArray(component.props?.pairs)) {
-            total += points * component.props.pairs.length;
-          }
-          else if (component.type === 'dragDrop' && Array.isArray(component.props?.items)) {
-            total += points * component.props.items.length;
-          }
-        }
+      let slideProgress = 100;
+      if (interactiveComponents.length > 0) {
+        const completedCount = interactiveComponents.filter(
+          comp => componentStates[comp.id]?.status === "completed"
+        ).length;
+        slideProgress = (completedCount / interactiveComponents.length) * 100;
       }
-      console.log('Total Points Calculation:', {
-        total,
-        components: lesson.slides.flatMap(slide => 
-          slide.components.filter(comp => 
-            ['quiz', 'dragDrop', 'matchingPairs', 'fillInTheBlank'].includes(comp.type)
-          ).map(comp => ({
-            type: comp.type,
-            points: comp.props?.points,
-            itemCount: comp.type === 'quiz' ? comp.props?.questions?.length :
-                      comp.type === 'fillInTheBlank' ? comp.props?.blanks?.length :
-                      comp.type === 'matchingPairs' ? comp.props?.pairs?.length :
-                      comp.type === 'dragDrop' ? comp.props?.items?.length : 0,
-            mode: comp.props?.mode,
-            included: comp.props?.mode !== 'practice',
-            totalPoints: comp.props?.mode !== 'practice' ? 
-              (comp.props?.points || 0) * (
-                comp.type === 'quiz' ? comp.props?.questions?.length :
-                comp.type === 'fillInTheBlank' ? comp.props?.blanks?.length :
-                comp.type === 'matchingPairs' ? comp.props?.pairs?.length :
-                comp.type === 'dragDrop' ? comp.props?.items?.length : 0
-              ) : 0
-          }))
-        )
+
+      if (slideProgress !== lastReportedProgressRef.current) {
+        lastReportedProgressRef.current = slideProgress;
+        onProgressUpdateRef.current?.(slideProgress);
+      }
+    }, [currentSlide, componentStates]);
+
+    // Check if slide is completed and notify parent
+    const performCompletionCheck = useCallback(() => {
+      const slide = lessonRef.current.slides[currentSlideIndex];
+
+      if (!slide || slide.status === "completed") return;
+
+      const interactiveComponents = slide.components.filter(
+        comp => getComponentCategory(comp.type) === "interactive"
+      );
+
+      if (interactiveComponents.length === 0) return;
+
+      const allCompleted = interactiveComponents.every(
+        comp => componentStates[comp.id]?.status === "completed"
+      );
+
+      const completionKey = `${slide.id}-completed`;
+      if (allCompleted && lastCompletedSlideIdRef.current !== completionKey) {
+        lastCompletedSlideIdRef.current = completionKey;
+
+        const updatedSlides = [...lessonRef.current.slides];
+        updatedSlides[currentSlideIndex] = {
+          ...slide,
+          status: "completed"
+        };
+
+        playFeedback('levelUp');
+
+        if (currentSlideIndex < lessonRef.current.slides.length - 1) {
+          updatedSlides[currentSlideIndex + 1] = {
+            ...lessonRef.current.slides[currentSlideIndex + 1],
+            state: "active" as const
+          };
+        }
+
+        setTimeout(() => {
+          onSlidesUpdateRef.current?.(updatedSlides);
+        }, 0);
+      }
+    }, [componentStates, currentSlideIndex, playFeedback, lessonRef, onSlidesUpdateRef]);
+
+    useEffect(() => {
+      performCompletionCheck();
+    }, [componentStates, performCompletionCheck]);
+
+    useEffect(() => {
+      onScoreUpdateRef.current?.(score, totalPossible);
+    }, [score, totalPossible]);
+
+    const handleComponentStateChange = useCallback((componentId: string, newState: any) => {
+      const slide = lessonRef.current.slides[currentSlideIndex];
+      if (slide?.state === "disabled") return;
+
+      setComponentStates(prev => {
+        const currentState = prev[componentId];
+        if (isEqual(currentState, newState)) {
+          return prev;
+        }
+
+        return {
+          ...prev,
+          [componentId]: {
+            ...currentState,
+            ...newState
+          }
+        };
       });
-      setTotalPossible(total);
-    }, [lesson]);
+    }, [currentSlideIndex, lessonRef]);
 
     return (
-      <div className="flex flex-col h-full relative">
-        <ScrollArea className="flex-1 px-4 md:px-8 py-6" viewportRef={viewportRef}>
-          <div className="max-w-4xl mx-auto space-y-8 px-2 py-6">
-            {currentSlide && processedComponents?.map((component) => (
-              <ComponentRenderer
-                key={component.id}
-                component={component}
-                scoreContext={{
-                  score,
-                  totalPossible,
-                  addPoints: (points: number) => setScore((s) => s + points),
-                }}
-                savedState={componentStates[component.id]}
-                setComponentState={(state) => handleComponentStateChange(component.id, state)}
-                onCheckSlideCompletion={checkSlideCompletion}
+      <div className="flex flex-col h-full relative bg-white overflow-hidden font-sans uppercase">
+        {/* Tier 1: Operational Header - Indicators & Status */}
+        <header className="shrink-0 w-full bg-[#0F172A] border-b border-emerald-500/30 px-4 py-2.5 z-30 flex items-center justify-between gap-6 shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
+          {/* Progress Cluster */}
+          <div className="flex-1 flex flex-col gap-1 max-w-sm">
+            <div className="flex justify-between items-center px-0.5">
+              <span className="text-[7px] font-black text-emerald-400 tracking-[0.2em] leading-none">Module Progress</span>
+              <span className="text-[7px] font-black text-white/30 tracking-widest leading-none">{Math.round(progress)}%</span>
+            </div>
+            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-emerald-500 transition-all duration-1000 ease-out shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                style={{ width: `${progress}%` }}
               />
-            ))}
+            </div>
           </div>
-        </ScrollArea>
-        
-        <div className="sticky bottom-0 w-full bg-background border-t">
-          <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
+
+          {/* Metrics Cluster */}
+          <div className="flex gap-6 shrink-0 h-full items-center">
+            <div className="flex flex-col items-end justify-center">
+              <span className="text-[7px] font-black text-emerald-400/40 tracking-widest leading-none mb-0.5">Points</span>
+              <span className="text-sm font-black text-white tracking-tighter leading-none tabular-nums">{score}</span>
+            </div>
+            <div className="flex flex-col items-end justify-center border-l border-white/10 pl-6 h-6">
+              <span className="text-[7px] font-black text-emerald-400/40 tracking-widest leading-none mb-0.5">Slide</span>
+              <span className="text-sm font-black text-white tracking-tighter leading-none tabular-nums">
+                {currentSlideIndex + 1} <span className="text-white/20">/</span> {lesson.slides.length}
+              </span>
+            </div>
+          </div>
+        </header>
+
+        {/* Tier 2: Active Stage - RAW CONTENT SURFACE */}
+        <main className="flex-1 relative overflow-y-auto custom-scrollbar bg-white z-10 flex flex-col">
+          <div className="w-full min-h-full flex-1 flex flex-col">
+            {activeComponent && (
+              <div
+                key={`${currentSlideIndex}-${innerStepIndex}`}
+                className="w-full flex-1 flex flex-col animate-in fade-in duration-300"
+              >
+                <ComponentRenderer
+                  component={activeComponent}
+                  savedState={componentStates[activeComponent.id]}
+                  setComponentState={(state: any) => handleComponentStateChange(activeComponent.id, state)}
+                  onCheckSlideCompletion={performCompletionCheck}
+                />
+              </div>
+            )}
+          </div>
+        </main>
+
+        {/* Tier 3: Command Footer - Horizontal Nav Group */}
+        <footer className="shrink-0 w-full bg-slate-50 border-t border-slate-200 z-30 py-4 px-6 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+          <div className="max-w-md mx-auto flex items-center justify-center gap-3">
             <Button
               variant="outline"
-              onClick={() => {
-                playFeedback('uiClick');
-                onSlideChange(currentSlideIndex - 1);
-                if (viewportRef.current) {
-                  viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }}
-              disabled={currentSlideIndex === 0}
+              className="h-9 px-0 w-full rounded-lg border border-emerald-100 bg-white text-emerald-600 hover:bg-emerald-50 transition-all font-black text-[9px] tracking-widest disabled:opacity-20 flex items-center justify-center"
+              onClick={handleRecall}
+              disabled={!canGoPrev}
             >
-              <ChevronLeft className="h-4 w-4 mr-2" />
+              <ChevronLeft className="h-3 w-3 mr-2 stroke-[4]" />
               Previous
             </Button>
-            <Progress value={progress} className="flex-1" />
+
             <Button
-              variant="outline"
-              onClick={() => {
-                playFeedback('uiClick');
-                onSlideChange(currentSlideIndex + 1);
-                if (viewportRef.current) {
-                  viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              }}
-              disabled={currentSlideIndex === lesson.slides.length - 1}
+              variant="default"
+              className="h-9 px-0 w-full rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-all transform active:scale-95 font-black text-[9px] tracking-widest shadow-lg shadow-emerald-600/10 disabled:bg-slate-200 disabled:text-slate-400 flex items-center justify-center"
+              onClick={handleAdvance}
+              disabled={!canGoNext}
             >
               Next
-              <ChevronRight className="h-4 w-4 ml-2" />
+              <ChevronRight className="h-3 w-3 ml-2 stroke-[4]" />
             </Button>
           </div>
-        </div>
+        </footer>
+
+        <style jsx global>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 10px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.4);
+          }
+        `}</style>
       </div>
     );
   }
