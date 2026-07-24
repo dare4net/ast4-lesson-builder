@@ -16,14 +16,33 @@ import { ScoringProvider } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
+import { useRouter } from 'next/navigation';
+import { syncEngine } from '@/lib/sync-engine';
+import { SyncStatusHUD } from './SyncStatusHUD';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
+  const router = useRouter();
   const [lessonData, setLessonData] = useState<Lesson | null>(initialLesson || null);
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [loading, setLoading] = useState<boolean>(false); // Only set to true during actual file upload
+  const [isHydrated, setIsHydrated] = useState(false);
+  const [resolvedInteraction, setResolvedInteraction] = useState<any>(null);
+  const [currentScore, setCurrentScore] = useState(0);
+  const [totalPossibleScore, setTotalPossibleScore] = useState(0);
   const lessonContentRef = useRef<any>(null);
+
+  // Refs for tracking latest state in periodic timer and callbacks
+  const currentSlideIndexRef = useRef(currentSlideIndex);
+  const currentScoreRef = useRef(currentScore);
+  const totalPossibleScoreRef = useRef(totalPossibleScore);
+  const lessonDataRef = useRef(lessonData);
+
+  useEffect(() => { currentSlideIndexRef.current = currentSlideIndex; }, [currentSlideIndex]);
+  useEffect(() => { currentScoreRef.current = currentScore; }, [currentScore]);
+  useEffect(() => { totalPossibleScoreRef.current = totalPossibleScore; }, [totalPossibleScore]);
+  useEffect(() => { lessonDataRef.current = lessonData; }, [lessonData]);
 
   // Function to check if a slide is accessible
   const isSlideAccessible = useCallback((index: number) => {
@@ -62,11 +81,22 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   // Initialize lesson data and score with saved states on mount
   useEffect(() => {
-    if (initialLesson) {
-      // First, apply any saved states
+    let isMounted = true;
+    async function initializeState() {
+      if (!initialLesson) return;
+
+      console.log('[Viewer] Initializing state for lesson:', initialLesson.id, 'User:', userId);
+
+      // Get latest state (Priority: Local IndexedDB > Server initialInteraction)
+      const latestData = await syncEngine.getLatestState(userId || '', initialLesson.id, initialInteraction);
+      const lessonState = latestData?.lessonState;
+
+      console.log('[Viewer] Resolved latest state:', lessonState ? 'Found' : 'Not Found', 'Slide Index:', lessonState?.currentSlideIndex);
+
+      if (!isMounted) return;
+
       const initializedSlides = initialLesson.slides.map(slide => {
-        const savedSlide = initialInteraction?.lessonState?.slides.find((s: { id: string }) => s.id === slide.id);
-        // Only use original state if there's no saved state at all
+        const savedSlide = lessonState?.slides?.find((s: { id: string }) => s.id === slide.id);
         const finalState = (savedSlide && 'state' in savedSlide) ?
           savedSlide.state as SlideState : slide.state;
         const finalStatus = (savedSlide && 'status' in savedSlide) ?
@@ -79,60 +109,40 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
         };
       });
 
-      // Then, process slides to auto-complete non-interactive ones
-      const processedSlides = initializedSlides.map((slide, index) => {
-        // Skip if slide is already completed
-        if (slide.status === "completed") return slide;
+      // Set the last viewed slide from resolved latest state
+      if (lessonState?.currentSlideIndex !== undefined) {
+        console.log('[Viewer] Hydrating slide index:', lessonState.currentSlideIndex);
+        setCurrentSlideIndex(lessonState.currentSlideIndex);
+      } else if (initialInteraction?.lessonState?.currentSlideIndex !== undefined) {
+        // Fallback to server initial interaction if syncEngine didn't return it for some reason
+        console.log('[Viewer] Fallback hydrating slide index:', initialInteraction.lessonState.currentSlideIndex);
+        setCurrentSlideIndex(initialInteraction.lessonState.currentSlideIndex);
+      }
 
-        // Check if slide has any interactive components
+      // Process slides to auto-complete non-interactive ones
+      const processedSlides = initializedSlides.map((slide, index) => {
+        if (slide.status === "completed") return slide;
         const hasInteractiveComponents = slide.components.some(
           comp => getComponentCategory(comp.type) === "interactive"
         );
-
         if (!hasInteractiveComponents) {
-          // Mark this slide as completed
-          const updatedSlide = {
-            ...slide,
-            status: "completed" as const
-          };
-
-          // If there's a next slide and it's not the last slide, activate it
+          const updatedSlide = { ...slide, status: "completed" as const };
           if (index < initializedSlides.length - 1) {
-            initializedSlides[index + 1] = {
-              ...initializedSlides[index + 1],
-              state: "active" as const
-            };
+            initializedSlides[index + 1] = { ...initializedSlides[index + 1], state: "active" as const };
           }
-
           return updatedSlide;
         }
-
         return slide;
       });
 
-      const initializedLesson = {
-        ...initialLesson,
-        slides: processedSlides
-      };
-
-      setLessonData(initializedLesson);
+      setLessonData({ ...initialLesson, slides: processedSlides });
+      setResolvedInteraction(latestData);
+      setIsHydrated(true);
     }
-  }, [initialLesson, initialInteraction]);
 
-  // Set initial scores from saved interaction
-  /*useEffect(() => {
-    if (initialInteraction?.lessonState) {
-      setCurrentScore(initialInteraction.lessonState.currentScore || 0);
-      setTotalPossible(initialInteraction.lessonState.totalPossible || 0);
-    }
-  }, [initialInteraction]);*/
-
-  // Set initial slide index from saved interaction
-  useEffect(() => {
-    if (initialInteraction?.lessonState?.currentSlideIndex !== undefined) {
-      setCurrentSlideIndex(initialInteraction.lessonState.currentSlideIndex);
-    }
-  }, [initialInteraction]);
+    initializeState();
+    return () => { isMounted = false; };
+  }, [initialLesson, initialInteraction, userId]);
 
   // Auto-skip disabled slides on initial load
   useEffect(() => {
@@ -144,71 +154,56 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     }
   }, [lessonData, currentSlideIndex, isSlideAccessible, findNextAccessibleSlide]);
 
-  // Save gamified state every 30s
-  /*useEffect(() => {
-    if (!userId || !lessonData) return;
-    console.log('[LessonViewer] Setting up periodic save for userId:', userId, 'lessonId:', lessonData.id);
+  // Periodic heartbeat save every 30s
+  useEffect(() => {
+    if (!userId || !lessonData || !isHydrated) return;
+
     const interval = setInterval(() => {
-      const componentsState = lessonContentRef.current?.getAllComponentStates?.();
-      const interactionData = {
-        componentsState,
-        lessonState: {
-          slides: lessonData.slides.map(slide => ({
-            id: slide.id,
-            state: slide.state,
-            status: slide.status
-          })),
-          currentSlideIndex,
-          currentScore,
-          totalPossible,
-          lessonTitle: lessonData.title,
-          lessonDescription: lessonData.description
-        }
-      };
-      console.log('[LessonViewer] Periodic saveUserInteraction', { userId, lessonId: lessonData.id, interactionData });
-      if (componentsState) {
-        import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
-          saveUserInteraction(userId, lessonData.id, interactionData).then((ok) => {
-            console.log('[LessonViewer] Periodic saveUserInteraction result:', ok);
-          });
-        });
-      }
+      saveInteraction();
     }, 30000);
+
     return () => clearInterval(interval);
-  }, [userId, lessonData, currentSlideIndex]);*/
+  }, [userId, lessonData?.id, isHydrated]); // Depends on lesson ID to reset if lesson changes
 
   // Save interaction helper
   const saveInteraction = useCallback((updatedSlides?: any[]) => {
-    if (!userId || !lessonData) return;
+    const currentLesson = updatedSlides ? { ...lessonData, slides: updatedSlides } : lessonDataRef.current;
+    if (!userId || !currentLesson) return;
 
     const componentsState = lessonContentRef.current?.getAllComponentStates?.() || {};
-    const slides = (updatedSlides || lessonData.slides).map(slide => ({
-      id: slide.id,
-      state: slide.state,
-      status: slide.status
-    }));
+
+    // Calculate progress
+    const totalSlides = currentLesson.slides.length;
+    const completedSlides = currentLesson.slides.filter((s: any) => s.status === 'completed').length;
+    const progress = totalSlides > 0 ? Math.round((completedSlides / totalSlides) * 100) : 0;
 
     const interactionData = {
       componentsState,
       lessonState: {
-        slides,
-        currentSlideIndex,
-        lessonTitle: lessonData.title,
-        lessonDescription: lessonData.description
+        slides: currentLesson.slides.map((slide: any) => ({
+          id: slide.id,
+          state: slide.state,
+          status: slide.status
+        })),
+        currentSlideIndex: currentSlideIndexRef.current,
+        lessonTitle: currentLesson.title,
+        lessonDescription: currentLesson.description,
+        progress,
+        score: currentScoreRef.current,
+        totalScore: totalPossibleScoreRef.current
       }
     };
 
-    import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
-      saveUserInteraction(userId, lessonData.id, interactionData);
-    });
-  }, [userId, lessonData, currentSlideIndex]);
+    console.log('[Viewer] Triggering SyncEngine save:', { lessonId: currentLesson.id, progress });
+    syncEngine.save(userId as string, currentLesson.id as string, interactionData);
+  }, [userId]);
 
-  // Save an initial interaction if none exists
+  // Save interaction on slide navigation
   useEffect(() => {
-    if (userId && lessonData) {
+    if (isHydrated && userId && lessonData) {
       saveInteraction();
     }
-  }, [userId, lessonData, saveInteraction]);
+  }, [currentSlideIndex, saveInteraction, isHydrated, userId]); // Only trigger on slide change indices
 
   // Handle file upload with loading state
   const handleFileUpload = async (file: File) => {
@@ -277,33 +272,46 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   const [slideProgress, setSlideProgress] = useState(0);
 
+  const handleScoreUpdate = useCallback((score: number, total: number) => {
+    setCurrentScore(score);
+    setTotalPossibleScore(total);
+  }, []);
+
   // Memoized slides update handler
   const handleSlidesUpdate = useCallback((updatedSlides: any[]) => {
-    console.log('Updating slides with new states:', updatedSlides.map(s => ({
-      id: s.id,
-      state: s.state,
-      status: s.status
-    })));
+    if (!lessonData || !userId) return;
 
-    setLessonData(prevData => {
-      if (!prevData) return null;
-      const newSlides = prevData.slides.map(slide => {
-        const updatedSlide = updatedSlides.find(s => s.id === slide.id);
-        if (!updatedSlide) return slide;
-        const newSlide = { ...slide };
-        if ('state' in updatedSlide) newSlide.state = updatedSlide.state;
-        if ('status' in updatedSlide) newSlide.status = updatedSlide.status;
-        return newSlide;
-      });
-
-      const newlyCompletedSlide = updatedSlides.find(s => s.status === 'completed');
-      if (newlyCompletedSlide && userId) {
-        saveInteraction(newSlides);
-      }
-
-      return { ...prevData, slides: newSlides };
+    // Create the updated lesson data
+    const newSlides = lessonData.slides.map(slide => {
+      const updatedSlide = updatedSlides.find(s => s.id === slide.id);
+      if (!updatedSlide) return slide;
+      const newSlide = { ...slide };
+      if ('state' in updatedSlide) newSlide.state = updatedSlide.state as SlideState;
+      if ('status' in updatedSlide) newSlide.status = updatedSlide.status as SlideStatus;
+      return newSlide;
     });
-  }, [userId, saveInteraction]);
+
+    const newLessonData = { ...lessonData, slides: newSlides };
+    setLessonData(newLessonData);
+    lessonDataRef.current = newLessonData; // Update ref immediately for save
+
+    // Check if ALL slides are completed for backend marking
+    const allCompleted = newSlides.every(s => s.status === 'completed');
+    if (allCompleted) {
+      console.log('[Viewer] All slides completed. Marking lesson as finished.');
+      const finalScore = totalPossibleScoreRef.current > 0 ?
+        Math.round((currentScoreRef.current / totalPossibleScoreRef.current) * 100) : 0;
+
+      import('@/lib/api-client').then(({ apiClient }) => {
+        apiClient.lessons.markCompleted(lessonData.id, finalScore).catch(err => {
+          console.error('[Viewer] Failed to mark lesson as completed:', err);
+        });
+      });
+    }
+
+    // Trigger immediate save when slides update
+    saveInteraction(newSlides);
+  }, [userId, lessonData, saveInteraction]);
 
   // Handle slide progress update from LessonContent
   const handleProgressUpdate = useCallback((progress: number) => {
@@ -409,7 +417,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           variant="ghost"
           className="w-full rounded-full border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[10px] tracking-widest h-11"
           onClick={() => {
-            window.open('https://app.after-school.tech/dashboard/student', '_blank');
+            saveInteraction();
+            router.push('/dashboard/student');
           }}
         >
           Terminate Session
@@ -485,6 +494,11 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
               onMenuClick={() => setIsSidebarOpen(true)}
             />
 
+            {/* Sync HUD Layer */}
+            <div className="absolute top-20 right-6 z-50 pointer-events-auto">
+              <SyncStatusHUD />
+            </div>
+
             {/* Mobile Menu Sheet (Triggered by LessonContent header) */}
             <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
               <SheetContent side="left" className="w-80 p-0 border-r-0">
@@ -494,15 +508,28 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
             {/* Actual Slide Content */}
             <div className="flex-1 relative overflow-hidden">
-              <LessonContent
-                ref={lessonContentRef}
-                lesson={lessonData!}
-                currentSlideIndex={currentSlideIndex}
-                onSlideChange={setCurrentSlideIndex}
-                initialComponentStates={initialInteraction?.componentsState || {}}
-                onSlidesUpdate={handleSlidesUpdate}
-                onProgressUpdate={handleProgressUpdate}
-              />
+              {/* Lesson Body/Viewer */}
+              {isHydrated ? (
+                <LessonContent
+                  ref={lessonContentRef}
+                  lesson={lessonData!}
+                  currentSlideIndex={currentSlideIndex}
+                  onSlideChange={setCurrentSlideIndex}
+                  initialComponentStates={resolvedInteraction?.componentsState || {}}
+                  onSlidesUpdate={handleSlidesUpdate}
+                  onProgressUpdate={handleProgressUpdate}
+                  onScoreUpdate={handleScoreUpdate}
+                />
+              ) : (
+                <div className="flex-1 flex items-center justify-center bg-slate-950">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+                    <span className="text-emerald-500 font-black uppercase tracking-widest text-[10px]">
+                      Materializing Directive
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

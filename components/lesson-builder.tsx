@@ -19,7 +19,12 @@ import { useFeedback } from "@/lib/feedback-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { ScoringProvider } from "@/context/scoring-context"
 import { ComponentEditor } from "@/components/component-editor"
-import { NavigationLockProvider } from '@/context/navigation-lock-context';
+import { NavigationLockProvider } from '@/context/navigation-lock-context'
+import { SaveLessonModal } from "@/components/modals/save-lesson-modal"
+import { LoadLessonModal } from "@/components/modals/load-lesson-modal"
+import { useSearchParams } from 'next/navigation'
+import { apiClient } from '@/lib/api-client'
+import { Loader2 } from 'lucide-react'
 
 export function LessonBuilder() {
   // Initialize with default lesson or from localStorage
@@ -33,26 +38,84 @@ export function LessonBuilder() {
   const [activeSidebar, setActiveSidebar] = useState<"components" | "slides">("components")
   const [editingComponentId, setEditingComponentId] = useState<string | null>(null)
   const [isInspectorOpen, setIsInspectorOpen] = useState(false)
+  const [saveModalOpen, setSaveModalOpen] = useState(false)
+  const [loadModalOpen, setLoadModalOpen] = useState(false)
+  const [currentLessonId, setCurrentLessonId] = useState<string | null>(null)
 
   const { toast } = useToast()
   const isMobile = useMobile()
   const { playFeedback } = useFeedback()
 
-  // Load saved lesson on mount
+  const searchParams = useSearchParams()
+  const lessonIdFromUrl = searchParams.get('lessonId')
+  const [isSaving, setIsSaving] = useState(false)
+
+  // Load lesson on mount - either from DB (if ID present) or localStorage
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedLesson = localStorage.getItem("currentLesson")
-      if (savedLesson) {
+    const initLesson = async () => {
+      if (lessonIdFromUrl) {
+        // Load from Database
         try {
-          const parsed = JSON.parse(savedLesson)
-          setLesson(parsed)
-        } catch (e) {
-          console.error("Failed to parse saved lesson:", e)
+          const fetchedLesson = await apiClient.studio.getLesson(lessonIdFromUrl);
+
+          // Normalize DB response to Lesson type
+          const slides = fetchedLesson.content.slides || [];
+
+          // Ensure at least one slide exists to prevent editor crash
+          if (slides.length === 0) {
+            slides.push({
+              id: `slide-${Date.now()}`,
+              title: "Slide 1",
+              components: [],
+              status: "uncompleted",
+              state: "active"
+            });
+          }
+
+          const normalizedLesson: Lesson = {
+            id: fetchedLesson.content.id || lessonIdFromUrl,
+            title: fetchedLesson.title,
+            description: fetchedLesson.content.description,
+            slides: slides,
+            settings: fetchedLesson.content.settings || {},
+            author: fetchedLesson.content.author,
+            level: fetchedLesson.content.level,
+            duration: fetchedLesson.content.duration,
+            createdAt: fetchedLesson.createdAt,
+            updatedAt: fetchedLesson.updatedAt,
+          }
+
+          setLesson(normalizedLesson)
+          setCurrentLessonId(lessonIdFromUrl)
+          toast({
+            title: "Lesson Loaded",
+            description: "Successfully loaded lesson from database",
+          })
+        } catch (error) {
+          console.error("Failed to load lesson:", error)
+          toast({
+            title: "Load Error",
+            description: "Failed to load lesson from database",
+            variant: "destructive",
+          })
+        }
+      } else if (typeof window !== "undefined") {
+        // Fallback to LocalStorage
+        const savedLesson = localStorage.getItem("currentLesson")
+        if (savedLesson) {
+          try {
+            const parsed = JSON.parse(savedLesson)
+            setLesson(parsed)
+          } catch (e) {
+            console.error("Failed to parse saved lesson:", e)
+          }
         }
       }
       setIsLoaded(true)
     }
-  }, [])
+
+    initLesson()
+  }, [lessonIdFromUrl, toast])
 
   // Save lesson to localStorage whenever it changes
   useEffect(() => {
@@ -215,23 +278,76 @@ export function LessonBuilder() {
     })
   }, [lesson, toast, playFeedback])
 
-  // Import lesson
+  // Save to Database
+  const saveToDatabase = useCallback(async () => {
+    if (!currentLessonId) {
+      setSaveModalOpen(true); // Fallback to "Save As" if no ID
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const lessonData = {
+        title: lesson.title,
+        description: lesson.description,
+        slides: lesson.slides,
+        settings: lesson.settings || {},
+        author: lesson.author,
+        level: lesson.level,
+        duration: lesson.duration,
+      };
+
+      await apiClient.studio.updateLesson(currentLessonId, lessonData);
+
+      toast({
+        title: "Saved to Cloud",
+        description: "Lesson changes synced to database",
+      });
+    } catch (error) {
+      console.error("Save error:", error);
+      toast({
+        title: "Save Failed",
+        description: "Could not save changes to database",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [currentLessonId, lesson, toast]);
+
+  // Import lesson (Wrapper Pattern)
   const importLesson = useCallback(
     async (importedLesson: Lesson) => {
       try {
-        if (!importedLesson.id || !Array.isArray(importedLesson.slides)) {
+        if (!Array.isArray(importedLesson.slides)) {
           throw new Error("Invalid lesson format")
         }
+
+        // WRAPPER LOGIC:
+        // If we have a current DB ID, keep it. Only update content.
+        // If no DB ID, accept the imported ID.
         const updatedLesson = {
           ...importedLesson,
+          // Preserved Identity
+          id: currentLessonId || importedLesson.id,
+          title: currentLessonId ? lesson.title : importedLesson.title, // Keep title if DB (optional, user can rename)
+          author: currentLessonId ? lesson.author : importedLesson.author,
+
+          // Overwritten Content
+          slides: importedLesson.slides,
+          settings: importedLesson.settings || {},
+
           updatedAt: new Date().toISOString(),
         }
+
         setLesson(updatedLesson)
         setCurrentSlideIndex(0)
         await playFeedback('complete')
         toast({
-          title: "Lesson imported",
-          description: `Loaded lesson: ${importedLesson.title}`,
+          title: "Content Imported",
+          description: currentLessonId
+            ? "Updated slides from file (kept database link)"
+            : `Loaded lesson: ${importedLesson.title}`,
         })
       } catch (error) {
         console.error("Import error:", error)
@@ -243,7 +359,7 @@ export function LessonBuilder() {
         })
       }
     },
-    [toast, playFeedback],
+    [toast, playFeedback, currentLessonId, lesson.title, lesson.author],
   )
 
   // Add component to the current slide
@@ -371,6 +487,8 @@ export function LessonBuilder() {
               previewMode={previewMode}
               setPreviewMode={setPreviewMode}
               isMobile={isMobile}
+              onSaveToDatabase={saveToDatabase}
+              isSaving={isSaving}
               className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
             />
             <div className="flex flex-1 min-h-0 overflow-hidden relative">

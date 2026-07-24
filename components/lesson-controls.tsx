@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus } from "lucide-react"
+import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2 } from "lucide-react"
 import type { Lesson } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
@@ -39,6 +39,9 @@ interface LessonControlsProps {
   setPreviewMode: (mode: boolean) => void
   isMobile: boolean
   className?: string
+  onSaveToDatabase?: () => void
+  onLoadFromDatabase?: () => void
+  isSaving?: boolean
 }
 
 export function LessonControls({
@@ -49,7 +52,10 @@ export function LessonControls({
   previewMode,
   setPreviewMode,
   isMobile,
-  className
+  className,
+  onSaveToDatabase,
+  onLoadFromDatabase,
+  isSaving = false
 }: LessonControlsProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportOpen, setIsImportOpen] = useState(false)
@@ -208,7 +214,7 @@ export function LessonControls({
                   <Label htmlFor="title" className="text-slate-400">Project Title</Label>
                   <Input
                     id="title"
-                    value={lesson.title}
+                    value={lesson.title || ""}
                     onChange={(e) => updateLessonMetadata({ title: e.target.value })}
                     className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50"
                   />
@@ -217,7 +223,7 @@ export function LessonControls({
                   <Label htmlFor="description" className="text-slate-400">Description</Label>
                   <Textarea
                     id="description"
-                    value={lesson.description}
+                    value={lesson.description || ""}
                     onChange={(e) => updateLessonMetadata({ description: e.target.value })}
                     className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 min-h-[100px]"
                   />
@@ -291,6 +297,33 @@ export function LessonControls({
         </div>
 
         <div className="flex items-center gap-2">
+          {onSaveToDatabase && (
+            <Button
+              variant={isSaving ? "secondary" : "default"}
+              size="sm"
+              onClick={onSaveToDatabase}
+              disabled={isSaving}
+              className={cn(
+                "rounded-full px-4 font-bold shadow-lg transition-all",
+                isSaving
+                  ? "bg-slate-800 text-slate-400"
+                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20"
+              )}
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save
+                </>
+              )}
+            </Button>
+          )}
+
           <Button
             variant="outline"
             size="sm"
@@ -318,6 +351,19 @@ export function LessonControls({
                 <Upload className="h-4 w-4 mr-3 text-emerald-500" />
                 Import Project
               </DropdownMenuItem>
+              {onSaveToDatabase && (
+                <>
+                  <DropdownMenuSeparator className="bg-slate-800" />
+                  <DropdownMenuItem onClick={onSaveToDatabase} disabled={isSaving} className="hover:bg-slate-800 cursor-pointer">
+                    {isSaving ? (
+                      <Loader2 className="h-4 w-4 mr-3 animate-spin text-blue-500" />
+                    ) : (
+                      <Save className="h-4 w-4 mr-3 text-blue-500" />
+                    )}
+                    Save to Database
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -340,7 +386,7 @@ export function LessonControls({
                   <Label htmlFor="d-title" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Project Title</Label>
                   <Input
                     id="d-title"
-                    value={lesson.title}
+                    value={lesson.title || ""}
                     onChange={(e) => updateLessonMetadata({ title: e.target.value })}
                     className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50"
                   />
@@ -359,7 +405,7 @@ export function LessonControls({
                 <Label htmlFor="d-description" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Project Summary</Label>
                 <Textarea
                   id="d-description"
-                  value={lesson.description}
+                  value={lesson.description || ""}
                   onChange={(e) => updateLessonMetadata({ description: e.target.value })}
                   className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-[106px] resize-none"
                 />

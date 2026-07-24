@@ -10,6 +10,9 @@ interface LessonState {
   currentSlideIndex: number;
   lessonTitle: string;
   lessonDescription: string;
+  progress?: number;
+  score?: number;
+  totalScore?: number;
 }
 
 interface InteractionData {
@@ -43,22 +46,34 @@ export async function saveUserInteraction(
   userId: string,
   lessonId: string,
   interactionData: InteractionData
-) {
+): Promise<{ success: boolean; error?: string }> {
   console.log('[user-interactions] saveUserInteraction', {
     userId,
-    lessonId,
-    interactionData
+    lessonId
   });
 
-  const res = await fetch('/api/interactions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      userId,
-      lessonId,
-      componentsState: interactionData.componentsState,
-      lessonState: interactionData.lessonState
-    })
-  });
-  return res.ok;
+  try {
+    const res = await fetch('/api/interactions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId,
+        lessonId,
+        componentsState: interactionData.componentsState,
+        lessonState: interactionData.lessonState
+      })
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      const errorMsg = errorData.details || errorData.error || `Server responded with ${res.status}`;
+      console.error('[user-interactions] Save failed:', errorMsg);
+      return { success: false, error: errorMsg };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('[user-interactions] Network/Fetch error:', err);
+    return { success: false, error: err.message || 'Network error' };
+  }
 }

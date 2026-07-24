@@ -1,11 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import clientPromise from '@/lib/mongodb';
 
+// Custom config for Next.js API route to handle larger payloads
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+};
+
 // Types from user-interactions.ts
 interface SlideState {
   id: string;
   state: "active" | "disabled";
-  status: "pending" | "completed";
+  status: "uncompleted" | "completed";
 }
 
 interface LessonState {
@@ -13,6 +22,9 @@ interface LessonState {
   currentSlideIndex: number;
   lessonTitle: string;
   lessonDescription: string;
+  progress?: number;
+  score?: number;
+  totalScore?: number;
 }
 
 interface InteractionData {
@@ -35,9 +47,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const db = client.db('ast_lessons');
       const interaction = await db.collection('interactions').findOne({ userId, lessonId });
       console.log('GET found interaction:', interaction);
-      
+
       if (!interaction) return res.status(404).json({ error: 'Not found' });
-      
+
       // Handle backward compatibility
       if (!interaction.lessonState) {
         interaction.lessonState = {
@@ -47,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           lessonDescription: ''
         };
       }
-      
+
       res.status(200).json(interaction);
     } catch (error) {
       console.error('GET error:', error);
@@ -62,33 +74,50 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         componentsState: Record<string, any>;
         lessonState: LessonState;
       };
-      
+
       console.log('POST body:', { userId, lessonId, componentsState, lessonState });
-      
+
       if (!userId || !lessonId) {
-        console.log('Missing userId or lessonId');
         return res.status(400).json({ error: 'Missing userId or lessonId' });
       }
-      
+
       const client = await clientPromise;
       const db = client.db('ast_lessons');
+      const mainDb = client.db('afterschooltech');
+
       const result = await db.collection('interactions').updateOne(
         { userId, lessonId },
-        { 
-          $set: { 
-            componentsState, 
+        {
+          $set: {
+            componentsState,
             lessonState,
-            lastUpdated: new Date() 
-          } 
+            lastUpdated: new Date()
+          }
         },
         { upsert: true }
       );
-      
-      console.log('POST result:', result);
+
+      // Also update last_activity in program_registrations for real-time telemetry
+      try {
+        await mainDb.collection('program_registrations').updateMany(
+          { user_id: userId }, // Best effort: update all active for this user
+          { $set: { last_activity: new Date() } }
+        );
+      } catch (err) {
+        console.error('[TELEMETRY] Failed to update telemetry last_activity:', err);
+      }
+
       res.status(200).json({ success: true, id: result.upsertedId });
-    } catch (error) {
-      console.error('POST error:', error);
-      res.status(500).json({ error: 'Failed to save interaction' });
+    } catch (error: any) {
+      console.error('POST error in /api/interactions:', {
+        message: error.message,
+        stack: error.stack,
+        code: error.code
+      });
+      res.status(500).json({
+        error: 'Failed to save interaction',
+        details: error.message
+      });
     }
   } else {
     console.log('Method not allowed:', req.method);

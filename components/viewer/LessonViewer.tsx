@@ -15,15 +15,38 @@ import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
 import type { Lesson } from '@/types/lesson';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
+import { apiClient } from '@/lib/api-client';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
-  const [lessonData, setLessonData] = useState<Lesson | null>(initialLesson || null);
+  const [lessonData, setLessonData] = useState<Lesson | null>(() => {
+    if (initialLesson && initialInteraction?.lessonState?.slides) {
+      const slidesWithStatus = initialLesson.slides.map(s => {
+        const savedSlide = initialInteraction.lessonState.slides.find((ss: any) => ss.id === s.id);
+        return savedSlide ? { ...s, status: savedSlide.status, state: savedSlide.state } : s;
+      });
+      return { ...initialLesson, slides: slidesWithStatus };
+    }
+    return initialLesson || null;
+  });
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(initialInteraction?.lessonState?.currentSlideIndex || 0);
   const [loading, setLoading] = useState<boolean>(!initialLesson);
   const [slideProgress, setSlideProgress] = useState(0);
+  const [currentScore, setCurrentScore] = useState(0);
+  const [totalPossibleScore, setTotalPossibleScore] = useState(0);
   const lessonContentRef = useRef<any>(null);
+
+  // Refs for tracking latest state in periodic timer
+  const currentSlideIndexRef = useRef(currentSlideIndex);
+  const currentScoreRef = useRef(currentScore);
+  const totalPossibleScoreRef = useRef(totalPossibleScore);
+  const lessonDataRef = useRef(lessonData);
+
+  useEffect(() => { currentSlideIndexRef.current = currentSlideIndex; }, [currentSlideIndex]);
+  useEffect(() => { currentScoreRef.current = currentScore; }, [currentScore]);
+  useEffect(() => { totalPossibleScoreRef.current = totalPossibleScore; }, [totalPossibleScore]);
+  useEffect(() => { lessonDataRef.current = lessonData; }, [lessonData]);
 
   // Function to check if a slide is accessible
   const isSlideAccessible = useCallback((index: number) => {
@@ -64,6 +87,66 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     setSlideProgress(progress);
   };
 
+  const handleScoreUpdate = (score: number, total: number) => {
+    setCurrentScore(score);
+    setTotalPossibleScore(total);
+  };
+
+  // Helper for actual saving
+  const performSave = useCallback(async (isImmediate = false) => {
+    const componentsState = lessonContentRef.current?.getAllComponentStates?.();
+    const currentLessonData = lessonDataRef.current;
+
+    if (componentsState && currentLessonData && userId) {
+      const completedSlides = currentLessonData.slides.filter(s => s.status === 'completed').length;
+      const totalSlides = currentLessonData.slides.length;
+      const overallProgress = totalSlides > 0 ? Math.round((completedSlides / totalSlides) * 100) : 0;
+
+      const { saveUserInteraction } = await import('@/lib/user-interactions');
+      const ok = await saveUserInteraction(userId, currentLessonData.id, {
+        componentsState,
+        lessonState: {
+          slides: currentLessonData.slides.map(s => ({
+            id: s.id,
+            state: s.state,
+            status: s.status
+          })),
+          currentSlideIndex: currentSlideIndexRef.current,
+          lessonTitle: currentLessonData.title,
+          lessonDescription: currentLessonData.description,
+          progress: overallProgress,
+          score: currentScoreRef.current,
+          totalScore: totalPossibleScoreRef.current
+        }
+      });
+      console.log(`[LessonViewer] ${isImmediate ? 'Immediate' : 'Periodic'} save result:`, ok);
+    }
+  }, [userId]);
+
+  const handleSlidesUpdate = useCallback((updatedSlides: any[]) => {
+    if (lessonData && userId) {
+      const newLessonData = { ...lessonData, slides: updatedSlides };
+      setLessonData(newLessonData);
+      lessonDataRef.current = newLessonData; // Update ref immediately for save
+
+      // Check if ALL slides are completed
+      const allCompleted = updatedSlides.every(s => s.status === 'completed');
+      if (allCompleted) {
+        console.log('[LessonViewer] All slides completed. Marking lesson as finished.');
+        const finalScore = totalPossibleScoreRef.current > 0 ? Math.round((currentScoreRef.current / totalPossibleScoreRef.current) * 100) : 0;
+
+        apiClient.lessons.markCompleted(lessonData.id, finalScore).then(() => {
+          console.log('[LessonViewer] Lesson successfully marked as completed on backend');
+        }).catch((err: any) => {
+          console.error('[LessonViewer] Failed to mark lesson as completed:', err);
+        });
+      }
+
+      // Trigger immediate save when slides update
+      performSave(true);
+    }
+  }, [lessonData, userId, performSave]);
+
   // Auto-skip disabled slides on initial load
   useEffect(() => {
     if (lessonData && !isSlideAccessible(currentSlideIndex)) {
@@ -74,34 +157,41 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     }
   }, [lessonData, currentSlideIndex, isSlideAccessible, findNextAccessibleSlide]);
 
-  // Save gamified state every 30s
+  // Save on slide change
+  useEffect(() => {
+    performSave(true);
+  }, [currentSlideIndex, performSave]);
+
+  // Heartbeat save every 30s
   useEffect(() => {
     if (!userId || !lessonData) return;
-    console.log('[LessonViewer] Setting up periodic save for userId:', userId, 'lessonId:', lessonData.id);
-    const interval = setInterval(() => {
-      const componentsState = lessonContentRef.current?.getAllComponentStates?.();
-      console.log('[LessonViewer] Periodic saveUserInteraction', { userId, lessonId: lessonData.id, componentsState });
-      if (componentsState) {
-        import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
-          saveUserInteraction(userId, lessonData.id, componentsState).then((ok) => {
-            console.log('[LessonViewer] Periodic saveUserInteraction result:', ok);
-          });
-        });
-      }
-    }, 30000);
+    const interval = setInterval(() => performSave(), 30000);
     return () => clearInterval(interval);
-  }, [userId, lessonData]);
+  }, [userId, lessonData?.id, performSave]);
 
   // Save an initial interaction if none exists
   useEffect(() => {
     if (!userId || !lessonData) return;
     const componentsState = lessonContentRef.current?.getAllComponentStates?.() || {};
-    console.log('[LessonViewer] Initial saveUserInteraction', { userId, lessonId: lessonData.id, componentsState });
-    import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
-      saveUserInteraction(userId, lessonData.id, componentsState).then((ok) => {
-        console.log('[LessonViewer] Initial saveUserInteraction result:', ok);
+    if (userId && lessonData) {
+      import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
+        saveUserInteraction(userId, lessonData.id, {
+          componentsState,
+          lessonState: {
+            slides: lessonData.slides.map(s => ({
+              id: s.id,
+              state: s.state,
+              status: s.status
+            })),
+            currentSlideIndex,
+            lessonTitle: lessonData.title,
+            lessonDescription: lessonData.description
+          }
+        }).then((ok) => {
+          console.log('[LessonViewer] Initial saveUserInteraction result:', ok);
+        });
       });
-    });
+    }
     // Only run once on mount when userId/lessonData are available
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, lessonData]);
@@ -333,9 +423,11 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                 ref={lessonContentRef}
                 lesson={lessonData!}
                 currentSlideIndex={currentSlideIndex}
-                onSlideChange={setCurrentSlideIndex}
+                onSlideChange={handleSlideChange}
                 initialComponentStates={initialInteraction?.componentsState || {}}
                 onProgressUpdate={handleProgressUpdate}
+                onSlidesUpdate={handleSlidesUpdate}
+                onScoreUpdate={handleScoreUpdate}
               />
             </div>
           </div>

@@ -116,7 +116,7 @@ export function SlideEditor({
               <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]">Scene Title</span>
               <Input
                 placeholder="Enter scene title..."
-                value={slide.title}
+                value={slide.title || ""}
                 onChange={handleTitleChange}
                 className="text-3xl font-black bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-200 text-slate-900 tracking-tight"
               />

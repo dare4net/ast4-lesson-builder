@@ -9,71 +9,84 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 200 20% 20%;
-    
+
     --card: 0 0% 100%;
     --card-foreground: 200 20% 20%;
-    
+
     --popover: 0 0% 100%;
     --popover-foreground: 200 20% 20%;
-    
+
     --primary: 130 70% 45%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 45 100% 50%;
     --secondary-foreground: 200 20% 20%;
-    
+
     --muted: 210 20% 95%;
     --muted-foreground: 215 20% 65%;
-    
+
     --accent: 200 100% 45%;
     --accent-foreground: 0 0% 100%;
-    
+
     --destructive: 0 85% 60%;
     --destructive-foreground: 0 0% 100%;
-    
+
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 130 70% 45%;
-    
+
     --radius: 1rem;
   }
 
   .dark {
-    --background: 200 20% 20%;
-    --foreground: 0 0% 100%;
-    
-    --card: 200 25% 25%;
-    --card-foreground: 0 0% 100%;
-    
-    --popover: 200 25% 25%;
-    --popover-foreground: 0 0% 100%;
-    
-    --primary: 130 60% 40%;
-    --primary-foreground: 0 0% 100%;
-    
-    --secondary: 45 90% 45%;
-    --secondary-foreground: 0 0% 100%;
-    
-    --muted: 200 25% 30%;
-    --muted-foreground: 215 20% 75%;
-    
-    --accent: 200 90% 40%;
-    --accent-foreground: 0 0% 100%;
-    
-    --destructive: 0 75% 50%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 200 25% 30%;
-    --input: 200 25% 30%;
-    --ring: 130 60% 40%;
+    --background: 222 47% 11%;
+    /* slate-950 */
+    --foreground: 210 40% 98%;
+    /* slate-50 */
+
+    --card: 217 33% 17%;
+    /* slate-900 */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 158 64% 52%;
+    /* emerald-500 */
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 158 64% 52%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 158 64% 52%;
+
+    --radius: 0.75rem;
   }
 
-  html, body {
+  html,
+  body {
     font-family: 'Nunito', 'DIN Round Pro', Arial, sans-serif;
     @apply antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6, .font-heading {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-heading {
     font-family: 'Lexend', 'Nunito', 'DIN Round Pro', Arial, sans-serif;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -88,29 +101,32 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
 
 @layer components {
-  /* Duolingo-style button */
+
+  /* Duolingo-style button - FLATTENED */
   .duo-button {
-    @apply rounded-2xl font-bold transition-all duration-200 transform hover:scale-105 active:scale-95;
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+    @apply rounded-xl font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-95;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm hover:shadow-md;
+    @apply border border-white/10;
   }
 
-  /* Duolingo-style card */
+  /* Duolingo-style card - FLATTENED */
   .duo-card {
-    @apply rounded-3xl bg-card p-6 shadow-lg transition-all duration-200;
-    @apply hover:shadow-xl;
+    @apply rounded-2xl bg-card p-6 transition-all duration-200;
+    @apply border border-border shadow-none hover:border-primary/50;
   }
 
-  /* Duolingo-style input */
+  /* Duolingo-style input - FLATTENED */
   .duo-input {
-    @apply rounded-xl border-2 border-input bg-background px-4 py-2;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary;
-    @apply placeholder:text-muted-foreground;
+    @apply rounded-lg border border-input bg-background/50 px-4 py-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary;
+    @apply placeholder:text-muted-foreground transition-all duration-200;
   }
 
   /* Duolingo-style progress bar */
@@ -140,6 +156,7 @@
   from {
     transform: scaleX(0);
   }
+
   to {
     transform: scaleX(1);
   }
@@ -205,21 +222,24 @@
 }
 
 /* Fix for component editor tabs */
-.flex-1.flex.flex-col.overflow-hidden > .w-full > .flex-1.overflow-hidden > [data-state="active"] {
+.flex-1.flex.flex-col.overflow-hidden>.w-full>.flex-1.overflow-hidden>[data-state="active"] {
   height: calc(100vh - 200px);
   overflow-y: auto;
 }
 
 /* Fix for TabsContent to properly handle overflow */
-.flex-1.overflow-hidden > [data-state="active"] {
+.flex-1.overflow-hidden>[data-state="active"] {
   height: 100%;
   overflow-y: auto;
 }
 
 @keyframes highlight-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }

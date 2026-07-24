@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { Inter } from "next/font/google"
 import { FeedbackProvider } from "@/lib/feedback-context"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
+import { AuthProvider } from "@/context/auth-context"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -45,11 +46,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <FeedbackProvider>
-            {children}
-            <Toaster />
-            <PWAInstallPrompt />
-          </FeedbackProvider>
+          <AuthProvider>
+            <FeedbackProvider>
+              {children}
+              <Toaster />
+              <PWAInstallPrompt />
+            </FeedbackProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

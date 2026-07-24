@@ -56,7 +56,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     // Memoized basic properties
     const currentSlide = useMemo(() => lesson.slides[currentSlideIndex], [lesson.slides, currentSlideIndex]);
-    const progress = useMemo(() => ((currentSlideIndex + 1) / lesson.slides.length) * 100, [currentSlideIndex, lesson.slides.length]);
+    const progress = useMemo(() => {
+      const completedCount = lesson.slides.filter(s => s.status === "completed").length;
+      return (completedCount / lesson.slides.length) * 100;
+    }, [lesson.slides]);
 
     // Stable refs for parent callbacks and complex objects
     const onSlidesUpdateRef = useLatestRef(onSlidesUpdate);
@@ -153,11 +156,34 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
       if (!slide || slide.status === "completed") return;
 
-      const interactiveComponents = slide.components.filter(
+      const interactiveComponents = (slide.components || []).filter(
         comp => getComponentCategory(comp.type) === "interactive"
       );
 
-      if (interactiveComponents.length === 0) return;
+      // If no interactive components, slide is completed if visited
+      if (interactiveComponents.length === 0) {
+        const completionKey = `${slide.id}-view-completed`;
+        if (lastCompletedSlideIdRef.current !== completionKey) {
+          lastCompletedSlideIdRef.current = completionKey;
+          const updatedSlides = [...lessonRef.current.slides];
+          updatedSlides[currentSlideIndex] = {
+            ...slide,
+            status: "completed"
+          };
+
+          if (currentSlideIndex < lessonRef.current.slides.length - 1) {
+            updatedSlides[currentSlideIndex + 1] = {
+              ...lessonRef.current.slides[currentSlideIndex + 1],
+              state: "active" as const
+            };
+          }
+
+          setTimeout(() => {
+            onSlidesUpdateRef.current?.(updatedSlides);
+          }, 0);
+        }
+        return;
+      }
 
       const allCompleted = interactiveComponents.every(
         comp => componentStates[comp.id]?.status === "completed"
