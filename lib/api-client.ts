@@ -155,6 +155,7 @@ class APIClient {
     // Programs (Student access)
     programs = {
         list: () => this.get('/programs'),
+        getCatalog: () => this.get('/programs'),
         getMyPrograms: () => this.get('/programs/my/programs'),
         getDetails: (id: string) => this.get(`/programs/${id}`),
         getMyProgramProgress: (id: string) => this.get(`/programs/my/programs/${id}/progress`),

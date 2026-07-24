@@ -25,10 +25,12 @@ export default function CatalogPage() {
         setLoading(true)
         setError(null)
         try {
-            const [catalogData, enrolledData] = await Promise.all([
+            const [rawCatalog, rawEnrolled] = await Promise.all([
                 apiClient.programs.getCatalog(),
                 apiClient.programs.getMyPrograms()
             ])
+            const catalogData = Array.isArray(rawCatalog) ? rawCatalog : (rawCatalog?.data || rawCatalog?.programs || [])
+            const enrolledData = Array.isArray(rawEnrolled) ? rawEnrolled : (rawEnrolled?.data || rawEnrolled?.programs || [])
             setCatalog(catalogData)
             setMyPrograms(enrolledData)
             if (catalogData.length > 0) {
@@ -107,8 +109,8 @@ export default function CatalogPage() {
                                     key={program._id}
                                     onClick={() => setSelectedProgram(program)}
                                     className={`p-6 rounded-2xl transition-all cursor-pointer flex flex-col justify-between h-full border ${isSelected
-                                            ? "border-green-500 ring-2 ring-green-500/10 bg-white dark:bg-slate-900"
-                                            : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700"
+                                        ? "border-green-500 ring-2 ring-green-500/10 bg-white dark:bg-slate-900"
+                                        : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700"
                                         }`}
                                 >
                                     <div className="space-y-4">
