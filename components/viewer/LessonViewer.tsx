@@ -8,8 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Progress } from '@/components/ui/progress';
-import { Menu, Clock, User, Award } from 'lucide-react';
+import { Clock, User, Award, ArrowLeft } from 'lucide-react';
 import { ScoringProvider } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
@@ -37,7 +36,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [totalPossibleScore, setTotalPossibleScore] = useState(0);
   const lessonContentRef = useRef<any>(null);
 
-  // Refs for tracking latest state in periodic timer
   const currentSlideIndexRef = useRef(currentSlideIndex);
   const currentScoreRef = useRef(currentScore);
   const totalPossibleScoreRef = useRef(totalPossibleScore);
@@ -48,13 +46,11 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   useEffect(() => { totalPossibleScoreRef.current = totalPossibleScore; }, [totalPossibleScore]);
   useEffect(() => { lessonDataRef.current = lessonData; }, [lessonData]);
 
-  // Function to check if a slide is accessible
   const isSlideAccessible = useCallback((index: number) => {
     if (!lessonData?.slides[index]) return false;
     return lessonData.slides[index].state !== "disabled";
   }, [lessonData]);
 
-  // Function to find next accessible slide
   const findNextAccessibleSlide = useCallback((currentIndex: number, direction: 1 | -1) => {
     if (!lessonData) return -1;
     let nextIndex = currentIndex;
@@ -65,18 +61,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     }
   }, [lessonData, isSlideAccessible]);
 
-  // Modified slide navigation functions
-  const goToNextSlide = useCallback(() => {
-    const nextIndex = findNextAccessibleSlide(currentSlideIndex, 1);
-    if (nextIndex !== -1) setCurrentSlideIndex(nextIndex);
-  }, [currentSlideIndex, findNextAccessibleSlide]);
-
-  const goToPreviousSlide = useCallback(() => {
-    const prevIndex = findNextAccessibleSlide(currentSlideIndex, -1);
-    if (prevIndex !== -1) setCurrentSlideIndex(prevIndex);
-  }, [currentSlideIndex, findNextAccessibleSlide]);
-
-  // Modified setCurrentSlideIndex to respect disabled state
   const handleSlideChange = useCallback((index: number) => {
     if (isSlideAccessible(index)) {
       setCurrentSlideIndex(index);
@@ -92,7 +76,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     setTotalPossibleScore(total);
   };
 
-  // Helper for actual saving
   const performSave = useCallback(async (isImmediate = false) => {
     const componentsState = lessonContentRef.current?.getAllComponentStates?.();
     const currentLessonData = lessonDataRef.current;
@@ -103,7 +86,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       const overallProgress = totalSlides > 0 ? Math.round((completedSlides / totalSlides) * 100) : 0;
 
       const { saveUserInteraction } = await import('@/lib/user-interactions');
-      const ok = await saveUserInteraction(userId, currentLessonData.id, {
+      await saveUserInteraction(userId, currentLessonData.id, {
         componentsState,
         lessonState: {
           slides: currentLessonData.slides.map(s => ({
@@ -119,7 +102,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           totalScore: totalPossibleScoreRef.current
         }
       });
-      console.log(`[LessonViewer] ${isImmediate ? 'Immediate' : 'Periodic'} save result:`, ok);
     }
   }, [userId]);
 
@@ -127,27 +109,21 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     if (lessonData && userId) {
       const newLessonData = { ...lessonData, slides: updatedSlides };
       setLessonData(newLessonData);
-      lessonDataRef.current = newLessonData; // Update ref immediately for save
+      lessonDataRef.current = newLessonData;
 
-      // Check if ALL slides are completed
       const allCompleted = updatedSlides.every(s => s.status === 'completed');
       if (allCompleted) {
-        console.log('[LessonViewer] All slides completed. Marking lesson as finished.');
         const finalScore = totalPossibleScoreRef.current > 0 ? Math.round((currentScoreRef.current / totalPossibleScoreRef.current) * 100) : 0;
 
-        apiClient.lessons.markCompleted(lessonData.id, finalScore).then(() => {
-          console.log('[LessonViewer] Lesson successfully marked as completed on backend');
-        }).catch((err: any) => {
+        apiClient.lessons.markCompleted(lessonData.id, finalScore).catch((err: any) => {
           console.error('[LessonViewer] Failed to mark lesson as completed:', err);
         });
       }
 
-      // Trigger immediate save when slides update
       performSave(true);
     }
   }, [lessonData, userId, performSave]);
 
-  // Auto-skip disabled slides on initial load
   useEffect(() => {
     if (lessonData && !isSlideAccessible(currentSlideIndex)) {
       const nextIndex = findNextAccessibleSlide(currentSlideIndex, 1);
@@ -157,19 +133,16 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     }
   }, [lessonData, currentSlideIndex, isSlideAccessible, findNextAccessibleSlide]);
 
-  // Save on slide change
   useEffect(() => {
     performSave(true);
   }, [currentSlideIndex, performSave]);
 
-  // Heartbeat save every 30s
   useEffect(() => {
     if (!userId || !lessonData) return;
     const interval = setInterval(() => performSave(), 30000);
     return () => clearInterval(interval);
   }, [userId, lessonData?.id, performSave]);
 
-  // Save an initial interaction if none exists
   useEffect(() => {
     if (!userId || !lessonData) return;
     const componentsState = lessonContentRef.current?.getAllComponentStates?.() || {};
@@ -187,23 +160,18 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
             lessonTitle: lessonData.title,
             lessonDescription: lessonData.description
           }
-        }).then((ok) => {
-          console.log('[LessonViewer] Initial saveUserInteraction result:', ok);
         });
       });
     }
-    // Only run once on mount when userId/lessonData are available
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, lessonData]);
 
-  // Handle file upload with loading state
   const handleFileUpload = async (file: File) => {
     setLoading(true);
     try {
       const content = await file.text();
       const parsed = JSON.parse(content);
 
-      // Validate required Lesson fields
       const requiredFields = ['id', 'title', 'description', 'author', 'level', 'duration', 'slides', 'createdAt', 'updatedAt'];
       for (const field of requiredFields) {
         if (!parsed[field]) {
@@ -215,34 +183,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
         throw new Error('Invalid lesson file format - slides must be an array');
       }
 
-      // Validate slide structure
-      for (const slide of parsed.slides) {
-        const requiredSlideFields = ['id', 'title', 'components'];
-        for (const field of requiredSlideFields) {
-          if (!slide[field]) {
-            throw new Error(`Invalid slide format - missing required field: ${field}`);
-          }
-        }
-
-        if (!Array.isArray(slide.components)) {
-          throw new Error('Invalid slide format - components must be an array');
-        }
-
-        // Validate components
-        for (const component of slide.components) {
-          const requiredComponentFields = ['id', 'type', 'props'];
-          for (const field of requiredComponentFields) {
-            if (!component[field]) {
-              throw new Error(`Invalid component format - missing required field: ${field}`);
-            }
-          }
-        }
-      }
-
       setLessonData(parsed);
       setError(null);
     } catch (err) {
-      setError('Failed to load lesson file. Please make sure it\'s a valid After School Tech lesson file.');
+      setError('Failed to load lesson file. Please make sure it is a valid lesson JSON file.');
       setLessonData(null);
     } finally {
       setLoading(false);
@@ -262,44 +206,44 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   };
 
   const renderSidebarContent = () => (
-    <div className="flex flex-col h-full bg-[#0F172A] border-r border-slate-800">
+    <div className="flex flex-col h-full bg-slate-900 text-white border-r border-slate-800">
       {/* Lesson Title Section */}
-      <div className="p-6 border-b border-slate-800 bg-slate-900/40">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
-          <h2 className="text-xs font-black text-white uppercase tracking-[0.2em]">Active Course</h2>
+      <div className="p-6 border-b border-slate-800 bg-slate-900/60">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-2 h-2 rounded-full bg-green-500" />
+          <h2 className="text-xs font-semibold text-slate-400">Course Lesson</h2>
         </div>
-        <h3 className="text-xl font-black text-emerald-400 tracking-tight leading-tight">{lessonData?.title}</h3>
+        <h3 className="text-lg font-bold text-white tracking-tight leading-snug">{lessonData?.title}</h3>
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="p-6 space-y-10">
+        <div className="p-5 space-y-6">
           {/* Navigation Section */}
-          <div className="space-y-4">
-            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Curriculum Stream</h3>
-            <div className="space-y-2">
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-slate-400">Lesson Modules</h3>
+            <div className="space-y-1.5">
               {lessonData?.slides.map((slide, index) => (
                 <Button
                   key={slide.id}
                   variant="ghost"
                   className={cn(
-                    "w-full justify-start text-left h-auto py-3 px-4 rounded-xl transition-all duration-300 border border-transparent",
+                    "w-full justify-start text-left h-auto py-2.5 px-3.5 rounded-xl transition-all border border-transparent",
                     index === currentSlideIndex
-                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-lg shadow-emerald-500/5 translate-x-1"
-                      : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
+                      ? "bg-green-500/10 border-green-500/30 text-green-400 font-semibold"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
                   )}
                   onClick={() => handleJumpToSlide(index)}
                 >
-                  <div className="flex items-center gap-4 w-full">
+                  <div className="flex items-center gap-3 w-full">
                     <span className={cn(
-                      "text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border shrink-0 transition-colors",
-                      index === currentSlideIndex ? "bg-emerald-500 border-emerald-500 text-slate-950" : "border-slate-800 text-slate-600"
+                      "text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border shrink-0",
+                      index === currentSlideIndex ? "bg-green-500 border-green-500 text-white" : "border-slate-700 text-slate-500"
                     )}>
                       {index + 1}
                     </span>
-                    <span className="text-xs font-bold truncate flex-1">{slide.title}</span>
+                    <span className="text-xs font-medium truncate flex-1">{slide.title}</span>
                     {index === currentSlideIndex && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                     )}
                   </div>
                 </Button>
@@ -308,50 +252,53 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           </div>
 
           {/* Performance Section */}
-          <div className="space-y-4">
-            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
-              <Award className="h-3 w-3 text-emerald-500" />
-              Live Analytics
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
+              <Award className="h-4 w-4 text-green-400" />
+              Score Overview
             </h3>
-            <div className="bg-slate-900/60 rounded-2xl p-5 border border-slate-800 shadow-inner">
+            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
               <ScoreDisplay />
             </div>
           </div>
 
           {/* Metadata Section */}
-          <div className="space-y-6">
-            <div className="space-y-2 group">
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2 transition-colors">
-                <User className="h-3 w-3 text-emerald-500/50" />
-                Architect
-              </h3>
-              <p className="text-sm font-bold text-slate-300 pl-5">{lessonData?.author}</p>
+          <div className="space-y-4 pt-2 border-t border-slate-800 text-xs">
+            <div className="flex items-center justify-between text-slate-300">
+              <span className="text-slate-400 flex items-center gap-1.5">
+                <User className="h-3.5 w-3.5 text-green-400" />
+                Instructor
+              </span>
+              <span className="font-semibold">{lessonData?.author}</span>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1 flex items-center gap-2">
-                <Clock className="h-3 w-3 text-emerald-500/50" />
-                Estimated Flow
-              </h3>
-              <p className="text-sm font-bold text-slate-300 pl-5">{lessonData?.duration} minutes</p>
+            <div className="flex items-center justify-between text-slate-300">
+              <span className="text-slate-400 flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-green-400" />
+                Duration
+              </span>
+              <span className="font-semibold">{lessonData?.duration} minutes</span>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Summary</h3>
-              <p className="text-xs font-medium text-slate-500 leading-relaxed pl-1">{lessonData?.description}</p>
-            </div>
+            {lessonData?.description && (
+              <div className="space-y-1">
+                <span className="text-slate-400 font-medium">Summary</span>
+                <p className="text-slate-400 text-[11px] leading-relaxed">{lessonData.description}</p>
+              </div>
+            )}
           </div>
         </div>
       </ScrollArea>
 
       {/* Footer Section */}
-      <div className="p-6 border-t border-slate-800 bg-slate-950/20">
+      <div className="p-4 border-t border-slate-800 bg-slate-900">
         <Button
-          variant="ghost"
-          className="w-full rounded-full border border-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all font-black uppercase text-[10px] tracking-widest h-11"
+          variant="outline"
+          className="w-full rounded-xl border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold h-10 flex items-center justify-center gap-2"
           onClick={resetViewer}
         >
-          Terminate Session
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Exit Lesson
         </Button>
       </div>
     </div>
@@ -359,15 +306,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   if (loading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center p-4 bg-[#0F172A]">
-        <div className="flex flex-col items-center gap-6">
-          <div className="relative">
-            <div className="w-16 h-16 rounded-full border-4 border-slate-800 border-t-emerald-500 animate-spin" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.8)]" />
-            </div>
-          </div>
-          <h2 className="text-xs font-black text-emerald-400 uppercase tracking-[0.3em] animate-pulse">Initializing Studio Stream</h2>
+      <div className="h-screen w-screen flex items-center justify-center p-4 bg-slate-950">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="w-10 h-10 border-3 border-slate-800 border-t-green-500 rounded-full animate-spin" />
+          <h2 className="text-xs font-semibold text-slate-400">Loading lesson...</h2>
         </div>
       </div>
     );
@@ -375,23 +317,23 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   if (!lessonData) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center p-4 bg-[#0F172A]">
-        <Card className="p-10 w-full max-w-xl bg-slate-900/40 border-slate-800 shadow-2xl rounded-[2rem] backdrop-blur-xl">
-          <div className="text-center space-y-8">
+      <div className="h-screen w-screen flex items-center justify-center p-4 bg-slate-950">
+        <Card className="p-8 w-full max-w-lg bg-slate-900 border-slate-800 shadow-xl rounded-2xl">
+          <div className="text-center space-y-6">
             <div className="flex flex-col items-center">
-              <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 flex items-center justify-center mb-6 shadow-inner border border-emerald-500/20">
-                <Award className="h-10 w-10 text-emerald-400" />
+              <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-4 border border-green-500/20 text-green-400">
+                <Award className="h-7 w-7" />
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tight uppercase">Enter the Studio</h2>
-              <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">Deploy your education artifacts to begin</p>
+              <h2 className="text-xl font-bold text-white">Upload Lesson File</h2>
+              <p className="text-slate-400 text-xs mt-1">Select a lesson JSON file to start learning</p>
             </div>
 
-            <div className="p-8 bg-slate-950/40 border border-slate-800 rounded-2xl shadow-inner">
+            <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-xl">
               <FileUploader onFileUpload={handleFileUpload} />
             </div>
 
             {error && (
-              <div className="rounded-xl bg-rose-500/10 border border-rose-500/20 p-4 text-rose-400 text-xs font-bold uppercase tracking-widest">
+              <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-3 text-red-400 text-xs font-medium">
                 {error}
               </div>
             )}
@@ -404,14 +346,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   return (
     <ScoringProvider lesson={lessonData}>
       <NavigationLockProvider>
-        <div className="h-screen w-screen flex overflow-hidden bg-white selection:bg-emerald-500 selection:text-slate-950">
+        <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
           {/* Desktop/Tablet Sidebar */}
           <div className="hidden md:block w-80 shrink-0">
             {renderSidebarContent()}
           </div>
-          {/* ... */}
+
           {/* Main Content Area */}
-          <div className="flex-1 flex flex-col relative bg-emerald-50/10 overflow-hidden">
+          <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
             <TopProgressBar
               progress={slideProgress}
               isCompleted={lessonData?.slides[currentSlideIndex]?.status === "completed"}
