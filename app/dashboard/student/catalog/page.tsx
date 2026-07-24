@@ -128,7 +128,7 @@ export default function CatalogPage() {
 
                                         <div>
                                             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                                                {program.program_name}
+                                                {program.program_name || program.name || program.title || "Untitled Course"}
                                             </h3>
                                             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                                                 {program.description || "Interactive course modules."}
@@ -176,7 +176,7 @@ export default function CatalogPage() {
                             <div>
                                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Selected Course</span>
                                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">
-                                    {selectedProgram.program_name}
+                                    {selectedProgram.program_name || selectedProgram.name || selectedProgram.title || "Untitled Course"}
                                 </h3>
                                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
                                     {selectedProgram.description || "No description available."}
@@ -191,7 +191,7 @@ export default function CatalogPage() {
                                     {selectedProgram.modules?.map((mod: any, i: number) => (
                                         <div key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                                             <span className="font-semibold text-slate-800 dark:text-slate-200">
-                                                {i + 1}. {mod.title || mod.module_name || `Module ${i + 1}`}
+                                                {i + 1}. {mod.title || mod.name || mod.module_name || `Module ${i + 1}`}
                                             </span>
                                             <span className="text-[10px] text-slate-400 font-medium">
                                                 {mod.lessons?.length || 0} Lessons

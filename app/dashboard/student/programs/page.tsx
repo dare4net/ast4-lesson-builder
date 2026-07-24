@@ -131,8 +131,8 @@ export default function ProgramsPage() {
                     <div className="flex flex-col">
                         <h1 className="text-xl font-bold text-slate-900 dark:text-white">
                             {view === 'programs' && "My Enrolled Courses"}
-                            {view === 'modules' && selectedProgram?.program_name}
-                            {view === 'lessons' && (selectedModule?.title || selectedModule?.module_name)}
+                            {view === 'modules' && (selectedProgram?.program_name || selectedProgram?.name || selectedProgram?.title || "Course")}
+                            {view === 'lessons' && (selectedModule?.title || selectedModule?.name || selectedModule?.module_name)}
                         </h1>
                         <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
                             <span className={cn(view === 'programs' ? "text-green-600 dark:text-green-400 font-semibold" : "")}>Courses</span>
@@ -216,7 +216,7 @@ export default function ProgramsPage() {
 
                                                     <div>
                                                         <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                                                            {prog.program_name || prog.title}
+                                                            {prog.program_name || prog.name || prog.title || "Untitled Course"}
                                                         </h3>
                                                         <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                                                             {prog.description || "Interactive learning course."}
@@ -296,7 +296,7 @@ export default function ProgramsPage() {
                                                     </span>
                                                 </div>
                                                 <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                                    {mod.title || mod.module_name}
+                                                    {mod.title || mod.name || mod.module_name}
                                                 </h3>
                                                 <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                                                     {mod.description || "Module learning content."}
