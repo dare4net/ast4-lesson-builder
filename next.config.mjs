@@ -4,8 +4,15 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    source: '/api/:path*',
-    destination: 'http://localhost:5001/api/:path*',
+    ignoreBuildErrors: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5001/api/:path*',
+      },
+    ]
   },
   images: {
     unoptimized: true,

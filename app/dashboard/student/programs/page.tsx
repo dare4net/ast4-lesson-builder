@@ -1,8 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { useAuth } from "@/context/auth-context"
 import { apiClient } from "@/lib/api-client"
 import { motion, AnimatePresence } from "framer-motion"
@@ -34,11 +32,10 @@ export default function ProgramsPage() {
     const fetchPrograms = async () => {
         setLoading(true)
         try {
-            // Get ONLY registered programs
             const myPrograms = await apiClient.programs.getMyPrograms()
             setPrograms(myPrograms)
         } catch (err) {
-            console.error("Failed to fetch programs", err)
+            console.error("Failed to fetch enrolled courses", err)
         } finally {
             setLoading(false)
         }
@@ -50,18 +47,18 @@ export default function ProgramsPage() {
             const details = await apiClient.programs.getDetails(program._id)
             setSelectedProgram({
                 ...details,
-                registration: program // Keep the registration data (progress, status)
+                registration: program
             })
             setView('modules')
         } catch (err) {
-            console.error("Failed to fetch program details", err)
+            console.error("Failed to fetch course details", err)
         } finally {
             setLoading(false)
         }
     }
 
     const handleUnregister = async (programId: string) => {
-        if (!confirm("Are you sure you want to terminate this deployment? All progress in this sector will be PERMANENTLY RESET.")) return
+        if (!confirm("Are you sure you want to unenroll from this course? Your progress will be removed.")) return
 
         setUnregistering(programId)
         try {
@@ -69,7 +66,7 @@ export default function ProgramsPage() {
             setView('programs')
             fetchPrograms()
         } catch (err) {
-            console.error("Failed to unregister", err)
+            console.error("Failed to unenroll", err)
         } finally {
             setUnregistering(null)
         }
@@ -105,7 +102,6 @@ export default function ProgramsPage() {
         router.push(`/viewer/${lessonId}?userId=${user?.user_id}&token=${token}`)
     }
 
-    // Progress Calculation Helpers
     const calculateProgramProgress = (prog: any) => {
         if (!prog.modules || prog.modules.length === 0) return 0
         const completedCount = prog.progress?.completed_modules?.length || 0
@@ -114,42 +110,42 @@ export default function ProgramsPage() {
 
     const getModuleStatus = (moduleId: string) => {
         if (selectedProgram?.registration?.progress?.completed_modules?.includes(moduleId)) {
-            return "COMPLETED"
+            return "Completed"
         }
-        return "ACTIVE"
+        return "In Progress"
     }
 
     return (
-        <div className="space-y-8">
-            {/* Breadcrumbs / Navigation */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+        <div className="space-y-6">
+            {/* Header & Navigation */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
                     <Button
                         variant="ghost"
                         size="icon"
                         onClick={handleBack}
-                        className="rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-emerald-500/10 hover:border-emerald-500/30 text-slate-400 hover:text-emerald-500 transition-all"
+                        className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300"
                     >
-                        <ArrowLeft className="w-5 h-5" />
+                        <ArrowLeft className="w-4 h-4" />
                     </Button>
                     <div className="flex flex-col">
-                        <h2 className="text-2xl font-black text-white uppercase tracking-[0.1em]">
-                            {view === 'programs' && "Active Directives"}
+                        <h1 className="text-xl font-bold text-slate-900 dark:text-white">
+                            {view === 'programs' && "My Enrolled Courses"}
                             {view === 'modules' && selectedProgram?.program_name}
                             {view === 'lessons' && (selectedModule?.title || selectedModule?.module_name)}
-                        </h2>
-                        <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                            <span className={cn(view === 'programs' ? "text-emerald-500" : "text-slate-500")}>REGISTRY</span>
+                        </h1>
+                        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
+                            <span className={cn(view === 'programs' ? "text-green-600 dark:text-green-400 font-semibold" : "")}>Courses</span>
                             {(view === 'modules' || view === 'lessons') && (
                                 <>
-                                    <ChevronRight className="w-3 h-3" />
-                                    <span className={cn(view === 'modules' ? "text-emerald-500" : "text-slate-500")}>MODULES</span>
+                                    <ChevronRight className="w-3 h-3 text-slate-400" />
+                                    <span className={cn(view === 'modules' ? "text-green-600 dark:text-green-400 font-semibold" : "")}>Modules</span>
                                 </>
                             )}
                             {view === 'lessons' && (
                                 <>
-                                    <ChevronRight className="w-3 h-3" />
-                                    <span className="text-emerald-500">LESSONS</span>
+                                    <ChevronRight className="w-3 h-3 text-slate-400" />
+                                    <span className="text-green-600 dark:text-green-400 font-semibold">Lessons</span>
                                 </>
                             )}
                         </div>
@@ -157,59 +153,40 @@ export default function ProgramsPage() {
                 </div>
 
                 {view === 'modules' && (
-                    <div className="flex items-center gap-3">
-                        <Button
-                            variant="ghost"
-                            disabled={unregistering === selectedProgram?._id}
-                            onClick={() => handleUnregister(selectedProgram?._id)}
-                            className="rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-500 hover:bg-rose-500 hover:text-white font-black text-[10px] tracking-widest h-10 px-6 uppercase transition-all flex items-center gap-2"
-                        >
-                            {unregistering === selectedProgram?._id ? (
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                                <>
-                                    <Trash2 className="w-4 h-4" />
-                                    TERMINATE
-                                </>
-                            )}
-                        </Button>
-                    </div>
-                )}
-
-                {view === 'lessons' && lessons.length > 0 && (
-                    <div className="hidden md:flex flex-col items-end gap-2 pr-4">
-                        <div className="flex items-center gap-3">
-                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Sector Progress</span>
-                            <span className="text-xs font-black text-emerald-500 font-mono">
-                                {Math.round(lessons.reduce((acc, l) => acc + (l.progress || 0), 0) / (lessons.length || 1))}%
-                            </span>
-                        </div>
-                        <div className="h-1 w-32 bg-slate-800 rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"
-                                style={{ width: `${Math.round(lessons.reduce((acc, l) => acc + (l.progress || 0), 0) / (lessons.length || 1))}%` }}
-                            />
-                        </div>
-                    </div>
+                    <Button
+                        variant="ghost"
+                        disabled={unregistering === selectedProgram?._id}
+                        onClick={() => handleUnregister(selectedProgram?._id)}
+                        className="rounded-xl border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 font-medium text-xs h-9 px-4 flex items-center gap-2 self-start sm:self-auto"
+                    >
+                        {unregistering === selectedProgram?._id ? (
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        ) : (
+                            <>
+                                <Trash2 className="w-3.5 h-3.5" />
+                                Unenroll from Course
+                            </>
+                        )}
+                    </Button>
                 )}
 
                 {view === 'programs' && (
-                    <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">{programs.length} ENROLLED</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 text-xs font-semibold text-green-700 dark:text-green-400 self-start sm:self-auto">
+                        <span className="w-2 h-2 rounded-full bg-green-500" />
+                        {programs.length} {programs.length === 1 ? 'Course' : 'Courses'} Enrolled
                     </div>
                 )}
             </div>
 
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-40 gap-4">
-                    <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] animate-pulse">Syncing Directives...</span>
+                <div className="flex flex-col items-center justify-center py-24 gap-3">
+                    <Loader2 className="w-8 h-8 text-green-600 dark:text-green-400 animate-spin" />
+                    <span className="text-xs font-medium text-slate-500">Loading details...</span>
                 </div>
             ) : (
                 <motion.div
                     layout
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
                 >
                     <AnimatePresence mode="wait">
                         {view === 'programs' && (
@@ -219,70 +196,72 @@ export default function ProgramsPage() {
                                     return (
                                         <motion.div
                                             key={prog._id}
-                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            initial={{ opacity: 0, scale: 0.97 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: idx * 0.05 }}
                                         >
                                             <Card
                                                 onClick={() => handleProgramSelect(prog)}
-                                                className="p-8 rounded-[2rem] bg-slate-900/40 border-slate-800 hover:border-emerald-500/40 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between"
+                                                className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:border-green-500/40 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between shadow-sm hover:shadow-md"
                                             >
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-500/10 transition-colors" />
-
-                                                <div className="space-y-6">
+                                                <div className="space-y-4">
                                                     <div className="flex justify-between items-start">
-                                                        <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform">
-                                                            <Book className="w-6 h-6 text-emerald-500" />
+                                                        <div className="w-10 h-10 rounded-xl bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/20 flex items-center justify-center text-green-600 dark:text-green-400">
+                                                            <Book className="w-5 h-5" />
                                                         </div>
-                                                        <div className="text-right">
-                                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">Deployment Status</span>
-                                                            <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">ACTIVE</span>
-                                                        </div>
+                                                        <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 px-2.5 py-0.5 rounded-full border border-green-200 dark:border-green-500/20">
+                                                            Active
+                                                        </span>
                                                     </div>
 
                                                     <div>
-                                                        <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-emerald-400 transition-colors">
+                                                        <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
                                                             {prog.program_name || prog.title}
                                                         </h3>
-                                                        <p className="text-xs text-slate-500 line-clamp-2 uppercase tracking-wider font-bold leading-relaxed">
-                                                            {prog.description || "Experimental curriculum module."}
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                                            {prog.description || "Interactive learning course."}
                                                         </p>
                                                     </div>
 
-                                                    <div className="space-y-2">
-                                                        <div className="flex justify-between items-end">
-                                                            <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Sector Clearance</span>
-                                                            <span className="text-sm font-black text-emerald-400 font-mono">{progressValue}%</span>
+                                                    <div className="space-y-1.5">
+                                                        <div className="flex justify-between items-center text-xs">
+                                                            <span className="text-slate-500 dark:text-slate-400 font-medium">Overall Progress</span>
+                                                            <span className="font-bold text-green-600 dark:text-green-400">{progressValue}%</span>
                                                         </div>
-                                                        <div className="h-1.5 w-full bg-slate-950 rounded-full border border-slate-800 overflow-hidden">
-                                                            <motion.div
-                                                                initial={{ width: 0 }}
-                                                                animate={{ width: `${progressValue}%` }}
-                                                                className="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                                                        <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                            <div
+                                                                className="h-full bg-green-500 transition-all duration-500"
+                                                                style={{ width: `${progressValue}%` }}
                                                             />
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="mt-8 flex items-center justify-between pt-6 border-t border-slate-800/50">
-                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                                                        {prog.modules?.length || 0} SECTOR MODULES
+                                                <div className="mt-6 flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+                                                    <span className="text-slate-500 dark:text-slate-400 font-medium">
+                                                        {prog.modules?.length || 0} Modules
                                                     </span>
-                                                    <ChevronRight className="w-5 h-5 text-slate-700 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+                                                    <div className="flex items-center gap-1 text-green-600 dark:text-green-400 font-semibold group-hover:translate-x-0.5 transition-transform">
+                                                        <span>View Course</span>
+                                                        <ChevronRight className="w-4 h-4" />
+                                                    </div>
                                                 </div>
                                             </Card>
                                         </motion.div>
                                     )
                                 })
                             ) : (
-                                <div className="col-span-full py-20 text-center border border-dashed border-slate-800 rounded-[2.5rem]">
-                                    <Book className="w-12 h-12 text-slate-800 mx-auto mb-4" />
-                                    <p className="text-slate-500 font-black uppercase tracking-[0.2em]">No active deployments found in registry</p>
+                                <div className="col-span-full py-16 text-center border border-dashed border-slate-300 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900/30">
+                                    <Book className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                                    <h3 className="text-base font-bold text-slate-900 dark:text-white">No enrolled courses</h3>
+                                    <p className="text-slate-500 text-xs mt-1 max-w-sm mx-auto">
+                                        You haven't enrolled in any learning courses yet. Browse the catalog to start learning!
+                                    </p>
                                     <Button
                                         onClick={() => router.push('/dashboard/student/catalog')}
-                                        className="mt-6 bg-emerald-500 text-slate-950 font-black rounded-xl hover:bg-emerald-400"
+                                        className="mt-4 bg-green-600 hover:bg-green-500 text-white font-semibold text-xs rounded-xl px-5"
                                     >
-                                        QUERY CATALOG
+                                        Browse Course Catalog
                                     </Button>
                                 </div>
                             )
@@ -294,42 +273,44 @@ export default function ProgramsPage() {
                                 return (
                                     <motion.div
                                         key={mod._id}
-                                        initial={{ opacity: 0, x: 20 }}
+                                        initial={{ opacity: 0, x: 15 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: idx * 0.05 }}
                                     >
                                         <Card
                                             onClick={() => handleModuleSelect(mod)}
-                                            className="p-8 rounded-[2rem] bg-slate-900/40 border-slate-800 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between hover:border-blue-500/40"
+                                            className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between shadow-sm hover:shadow-md hover:border-blue-500/40"
                                         >
-                                            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/10 transition-colors" />
-
                                             <div>
-                                                <div className="flex justify-between items-start mb-6">
-                                                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-transform">
-                                                        <Folder className="w-6 h-6 text-blue-500" />
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                                        <Folder className="w-5 h-5" />
                                                     </div>
-                                                    <div className={cn(
-                                                        "px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest border",
-                                                        status === "COMPLETED" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" :
-                                                            "bg-slate-950 border-slate-800 text-slate-500"
+                                                    <span className={cn(
+                                                        "px-2.5 py-0.5 rounded-full text-xs font-semibold border",
+                                                        status === "Completed"
+                                                            ? "bg-green-50 dark:bg-green-500/10 border-green-200 dark:border-green-500/20 text-green-700 dark:text-green-400"
+                                                            : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
                                                     )}>
                                                         {status}
-                                                    </div>
+                                                    </span>
                                                 </div>
-                                                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2 group-hover:text-blue-400 transition-colors">
+                                                <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                                     {mod.title || mod.module_name}
                                                 </h3>
-                                                <p className="text-xs text-slate-500 line-clamp-2 uppercase tracking-wider font-bold leading-relaxed">
-                                                    {mod.description || "Core Sector Training."}
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                                                    {mod.description || "Module learning content."}
                                                 </p>
                                             </div>
 
-                                            <div className="mt-8 flex items-center justify-between pt-6 border-t border-slate-800/50">
-                                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                                                    {mod.lessons?.length || 0} DIRECTIVES
+                                            <div className="mt-6 flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+                                                <span className="text-slate-500 dark:text-slate-400 font-medium">
+                                                    {mod.lessons?.length || 0} Lessons
                                                 </span>
-                                                <ChevronRight className="w-5 h-5 text-slate-700 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+                                                <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400 font-semibold group-hover:translate-x-0.5 transition-transform">
+                                                    <span>Open Module</span>
+                                                    <ChevronRight className="w-4 h-4" />
+                                                </div>
                                             </div>
                                         </Card>
                                     </motion.div>
@@ -341,85 +322,58 @@ export default function ProgramsPage() {
                             lessons.map((lesson, idx) => (
                                 <motion.div
                                     key={lesson._id}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 15 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.05 }}
                                 >
-                                    <Card
-                                        className="p-6 rounded-[2rem] bg-slate-900/40 border-slate-800 hover:border-emerald-500/40 transition-all group relative overflow-hidden"
-                                    >
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="space-y-4 flex-1">
-                                                <div className="flex items-center gap-3">
-                                                    <div className={cn(
-                                                        "w-10 h-10 rounded-xl flex items-center justify-center border transition-all",
-                                                        lesson.completed
-                                                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-500"
-                                                            : "bg-slate-950 border-slate-800 text-slate-600"
+                                    <Card className="p-5 rounded-2xl bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className={cn(
+                                                "w-9 h-9 rounded-xl flex items-center justify-center border shrink-0 mt-0.5",
+                                                lesson.completed
+                                                    ? "bg-green-50 dark:bg-green-500/10 border-green-200 dark:border-green-500/20 text-green-600 dark:text-green-400"
+                                                    : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500"
+                                            )}>
+                                                <FileText className="w-4 h-4" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                                                    {lesson.title}
+                                                </h4>
+                                                <div className="flex items-center gap-2 mt-0.5">
+                                                    <span className={cn(
+                                                        "text-xs font-semibold",
+                                                        lesson.completed ? "text-green-600 dark:text-green-400" : "text-slate-500"
                                                     )}>
-                                                        <FileText className="w-5 h-5" />
-                                                    </div>
-                                                    <div className="min-w-0">
-                                                        <h4 className="text-sm font-black text-white uppercase tracking-tight group-hover:text-emerald-400 transition-colors truncate">
-                                                            {lesson.title}
-                                                        </h4>
-                                                        <div className="flex items-center gap-2">
-                                                            <span className={cn(
-                                                                "text-[8px] font-black tracking-widest uppercase",
-                                                                lesson.completed ? "text-emerald-500" : "text-slate-500"
-                                                            )}>
-                                                                {lesson.completed ? "Sync Complete" :
-                                                                    (lesson.progress > 0 ? `In Progress: ${lesson.progress}%` : "Ready for Deployment")}
-                                                            </span>
-                                                            {lesson.score !== null && (
-                                                                <span className="text-[8px] font-black text-amber-500 bg-amber-500/10 px-1 rounded">
-                                                                    SCORE: {lesson.score}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-1.5">
-                                                    <div className="flex justify-between items-center px-0.5">
-                                                        <span className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Progress</span>
-                                                        <span className="text-[7px] font-black text-emerald-500 font-mono">{lesson.progress || 0}%</span>
-                                                    </div>
-                                                    <div className="h-1 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800">
-                                                        <div
-                                                            className="h-full bg-emerald-500 transition-all duration-700 shadow-[0_0_8px_rgba(16,185,129,0.4)]"
-                                                            style={{ width: `${lesson.progress || 0}%` }}
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        disabled={!lesson.lessonId}
-                                                        onClick={() => handleLaunchLesson(lesson.lessonId)}
-                                                        className={cn(
-                                                            "w-full rounded-xl font-black uppercase tracking-widest text-[10px] h-10 shadow-lg transition-all",
-                                                            lesson.completed
-                                                                ? "bg-slate-800 hover:bg-slate-700 text-white"
-                                                                : "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/10"
-                                                        )}
-                                                    >
-                                                        <Play className="w-3 h-3 mr-2" />
-                                                        {lesson.completed ? "REVISIT TERMINAL" : "LAUNCH DIRECTIVE"}
-                                                    </Button>
+                                                        {lesson.completed ? "Completed" : (lesson.progress > 0 ? `${lesson.progress}% done` : "Not started")}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <Button
+                                            size="sm"
+                                            disabled={!lesson.lessonId}
+                                            onClick={() => handleLaunchLesson(lesson.lessonId)}
+                                            className={cn(
+                                                "w-full rounded-xl font-semibold text-xs h-9 transition-all flex items-center justify-center gap-2",
+                                                lesson.completed
+                                                    ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                                    : "bg-green-600 hover:bg-green-500 text-white shadow-sm"
+                                            )}
+                                        >
+                                            <Play className="w-3.5 h-3.5" />
+                                            {lesson.completed ? "Review Lesson" : (lesson.progress > 0 ? "Continue Lesson" : "Start Lesson")}
+                                        </Button>
                                     </Card>
                                 </motion.div>
                             ))
                         )}
 
                         {view === 'lessons' && lessons.length === 0 && (
-                            <div className="col-span-full py-20 text-center">
-                                <Search className="w-12 h-12 text-slate-800 mx-auto mb-4" />
-                                <p className="text-slate-500 font-black uppercase tracking-[0.3em]">No directives found in this sector</p>
+                            <div className="col-span-full py-16 text-center">
+                                <Search className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                                <h3 className="text-base font-bold text-slate-900 dark:text-white">No lessons in this module</h3>
                             </div>
                         )}
                     </AnimatePresence>

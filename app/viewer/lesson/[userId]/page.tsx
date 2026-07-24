@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 
 interface Lesson {
@@ -13,8 +13,9 @@ interface Lesson {
   totalPossible?: number;
 }
 
-export default function UserLessonsPage({ params }: { params: { userId: string } }) {
-  const { userId } = params;
+export default function UserLessonsPage({ params }: { params: Promise<{ userId: string }> }) {
+  const resolvedParams = use(params);
+  const userId = resolvedParams.userId;
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,9 +48,9 @@ export default function UserLessonsPage({ params }: { params: { userId: string }
                 {lesson.completed && <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded">Completed</span>}
               </div>
               <div className="mt-2 md:mt-0 md:ml-4 flex items-center space-x-2">
-                {lesson.totalPossible > 0 && (
+                {lesson.totalPossible && lesson.totalPossible > 0 ? (
                   <span className="text-sm text-blue-600 font-medium">Score: {lesson.score ?? 0}/{lesson.totalPossible}</span>
-                )}
+                ) : null}
                 <Link href={`/viewer/${lesson.lessonId}?userId=${userId}`} className="ml-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm font-medium">View</Link>
               </div>
             </li>

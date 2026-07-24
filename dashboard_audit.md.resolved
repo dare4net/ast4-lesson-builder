@@ -1,0 +1,142 @@
+# Dashboard Components — Full Audit Report
+
+> Scope: `components/dashboard/` + all pages under `app/dashboard/student/` and `app/dashboard/tutor/`
+
+---
+
+## 1. Unimplemented Features Sweep
+
+### 🔴 REMOVE IMMEDIATELY — Pure Placeholders With No Backend
+
+| Feature | Location | Why Remove |
+|---|---|---|
+| **Search bar** (`⌘K`) in header | [dashboard-header.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/dashboard-header.tsx#L64-L83) | Just an `<input>` with zero logic — no onChange, no results, no API. Misleads users into thinking search exists. |
+| **Notification bell** | [dashboard-header.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/dashboard-header.tsx#L87-L92) | Permanently shows a fake red dot. No notification system. Clicking does nothing. |
+| **"Identity Overview" menu item** | [dashboard-header.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/dashboard-header.tsx#L121-L126) | Dropdown item with no `onClick` or `href`. Dead UI. |
+| **"System Settings" menu item** | [dashboard-header.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/dashboard-header.tsx#L127-L132) | Same — no click handler, no link. |
+| **Stats cards** (XP: "1,240", Streak: "7", Level: "L8") | [student page.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/page.tsx#L79-L84) | 3 of 4 stats are **hardcoded fake values**. Only "Courses Active" is real. |
+| **Fake "+12" learner avatars** on lesson cards | [lesson-card.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/student/lesson-card.tsx#L61-L66) | Hardcoded grey circles + "+12" badge. No real data behind it. |
+| **"QUICK CREATE" button** (tutor) | [tutor page.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/tutor/page.tsx#L98-L101) | Button with no `onClick`. Does nothing. |
+| **"VIEW ALL LOGS" button** (tutor) | [tutor page.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/tutor/page.tsx#L220-L222) | Button with no handler. Dead end. |
+| **"Export Log" button** (progress) | [progress page.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/progress/page.tsx#L142) | No click handler. |
+| **Uptime "99.9%" stat** (tutor) | [tutor page.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/tutor/page.tsx#L58) | Hardcoded vanity metric — meaningless to users. |
+| **Catalog sidebar metadata** (Rank "L-1", Duration "12H", Complexity "Tier 3", XP "+1,200") | [catalog page.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/catalog/page.tsx#L272-L292) | All hardcoded. None come from actual program data. |
+
+### 🟡 IMPLEMENT IMMEDIATELY — Non-Negotiable Missing Features
+
+| Feature | Why It's Critical |
+|---|---|
+| **User display name** | The welcome banner says `WELCOME BACK, STUDENT` (shows `user.role`, not a name). The [User](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/context/auth-context.tsx#8-13) type only has `user_id`, `role`, `email`. There's no `fullName` field exposed from the JWT or API despite [signup()](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/context/auth-context.tsx#69-84) accepting one. **Fix: decode/store `fullName` and display it.** |
+| **Settings "Save" is fake** | The settings form has an onChange for the name field but the "Synchronize Profile" button has **no onClick handler** — it literally cannot save. Needs a real API call to update profile. |
+| **Password change "Modify" link** | Shows a "Modify" link next to the password field but it's a dead `<Button variant="link">` with no handler. Either implement or remove. |
+| **Notification settings cards** (Alerts, Interface) | Two cards on the settings page with no click behavior. They show fake data ("6 System Directives", "High Contrast Terminal"). Remove or implement real preferences. |
+| **"2FA Initialized" badge in settings** | Shows as if 2FA is active, but no 2FA system exists. Remove this badge. |
+| **Progress page is 100% fake data** | Every single value is hardcoded: skill radar data, XP bars, achievement badges (4/6 "unlocked"), streak "7 CONSECUTIVE DAYS", timeline milestones. None of this comes from any API. |
+
+---
+
+## 2. UI Overhaul — Making This Student/Learning-Ready
+
+### Problem: Military Command-Center Aesthetic
+
+The entire dashboard uses alienating, sci-fi/military language that makes **zero sense for a learning platform**. Students don't operate "terminals" or execute "directives."
+
+### Terminology Purge — What Must Change
+
+| Current (Military) | Replace With (Learning) |
+|---|---|
+| "MISSION CONTROL ACTIVE" | "Welcome back!" |
+| "AGENT" / "Operator" | Student name or "Learner" |
+| "Sector", "Sector-9", "Delta-4" | Remove entirely |
+| "Deployment" / "Deploy" / "Initialize Deployment" | "Enroll" / "Start Course" |
+| "Directive" / "Secure Directive" | "Lesson" / "Activity" |
+| "Synchronizing Terminal" | "Loading your courses..." |
+| "TERMINATE" (unregister) | "Leave Course" / "Unenroll" |
+| "LAUNCH DIRECTIVE" | "Start Lesson" / "Continue" |
+| "REVISIT TERMINAL" | "Review Lesson" |
+| "Sector Clearance" | "Your Progress" |
+| "Deployment Recommendation Required" | "No courses yet" |
+| "INITIALIZE NEW DEPLOYMENT" | "Browse Courses" |
+| "Emerald Hub", "Directive 4.0" | "After-School Academy" (your actual brand) |
+| "Director Clearance Granted" | "Teacher Dashboard" |
+| "Agent Oversight" | "My Students" |
+| "Command Center" | "Dashboard" |
+| "Protocol Settings" | "Settings" |
+| "Deployment Hub" | "My Courses" |
+| "CORE SYNCING..." | "Enrolling..." |
+| "Sync Progress" | "Progress" |
+| "Identity Timeline" | "Activity History" |
+| "Cognitive Profile" | "Skills Breakdown" |
+| "Re-initialize Sync" | "Try Again" |
+| "Terminate Session" | "Log Out" |
+| "Authenticated" (header) | Show user's actual name |
+| "Operator Profile" (dropdown) | "My Account" |
+
+### Visual & Layout Changes Needed
+
+1. **Scanline effect** (`animate-scan` div in layout) — Remove. This is a CRT monitor effect. Students don't use CRT monitors.
+2. **Grid overlay** (4px scanline pattern in [dashboard-shell.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/dashboard-shell.tsx) and layouts) — Remove. Same reason.
+3. **8px–10px ALL-CAPS text everywhere** — Increase to 12–14px mixed-case. Current text is nearly unreadable. Accessibility failure.
+4. **Font weight `font-black` on everything** — Tone down. When everything is bold, nothing stands out.
+5. **`tracking-widest` / `tracking-[0.3em]` letter-spacing** on body text — Remove or reduce. Makes reading slow and painful.
+6. **Header shows `user.role` instead of name** — Fix to show the student's actual name.
+7. **Sidebar footer** ("Operator Active", "Sector-9") — Show actual user info (name, email).
+8. **Color scheme** is fine (dark + emerald accents) but the `animate-pulse` on the sidebar logo icon is distracting — remove or make it subtle.
+9. **Sidebar z-index (60) overlaps header z-index (50)** — The sidebar renders ON TOP of the header. Needs z-index coordination.
+10. **Mobile nav has Settings duplicated** — [student-mobile-nav.tsx](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/dashboard/sidebar/student-mobile-nav.tsx) renders 4 items in the `navItems` array + a separate 5th `<Link>` for Settings hardcoded below, meaning Settings appears in both.
+
+---
+
+## 3. Things You Don't Know Are Broken
+
+### 🐛 Real Bugs
+
+| Issue | File | Details |
+|---|---|---|
+| **Token leaked in URL** | [student page.tsx:76](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/page.tsx#L76), [programs page.tsx:105](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/programs/page.tsx#L105) | `router.push(/viewer/${lessonId}?userId=${user_id}&token=${token})` — The JWT token is passed as a **URL query parameter**. This is a security vulnerability: tokens in URLs get logged in server access logs, browser history, analytics, and proxy logs. Move to an auth header or cookie. |
+| **Progress page redefines [cn()](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/progress/page.tsx#175-178)** | [progress page.tsx:175-177](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/progress/page.tsx#L175-L177) | Defines its own [cn()](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/progress/page.tsx#175-178) function at the bottom instead of importing from `@/lib/utils`. This version just joins strings and doesn't handle Tailwind class conflicts (no `clsx` + `twMerge`). |
+| **Sidebar collapse doesn't update main content padding** | [student layout.tsx:29](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/layout.tsx#L29) | Layout hardcodes `md:pl-[80px] lg:pl-[280px]` but the sidebar collapse state isn't shared. When sidebar is expanded on [md](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/README.md) screens, content is hidden underneath because it only has 80px padding. |
+| **Avatar "Update Seed" hover** | [settings page.tsx:53-55](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/settings/page.tsx#L53-L55) | Shows "Update Seed" text on hover but has no click handler. Users expect to upload a profile photo, not "update a seed." |
+| **`AnimatePresence` without `key` on conditionals** | [student page.tsx:164](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/app/dashboard/student/page.tsx#L164) | `AnimatePresence mode="popLayout"` wraps mapped items but the empty-state div doesn't have a motion wrapper, so exit animations won't work properly. |
+| **Dashboard header duplicated** | Layout includes `<DashboardHeader />` but some pages also import it (unused import in programs page). Potential for double-render if not careful. |
+
+### ⚠️ Architecture & UX Gaps
+
+| Issue | Impact |
+|---|---|
+| **No loading skeleton / shimmer states** | Every page shows a spinner + military text ("Syncing Directives..."). Use skeleton cards for perceived performance. |
+| **No error boundaries** | If any API call fails, console.error is the only handling. No user-facing error states except on the student overview. |
+| **No empty state illustrations** | Empty lists show a text-only message. Use friendly illustrations or SVGs. |
+| **No breadcrumb on most pages** | Only the Programs page has breadcrumbs. Students lose context on other pages. |
+| **No "last accessed" or "continue where you left off"** | The "Resume Session" button just opens the first lesson in the array, not the most recent one. |
+| **No offline/network-down handling** | If the backend is unreachable, pages spin forever. |
+| **No pagination** | Student overview shows `lessons.slice(0, 6)` hardcoded. If a student has 50+ lessons, they can't see them. |
+| **Tutor cannot see individual student progress** | The "Students" link in tutor sidebar goes to `/dashboard/tutor/students` but there's no student detail view for tutors to understand how individual students are doing. |
+| **No confirmation/toast on actions** | Register, unregister, save — no success/error feedback toast. Users don't know if their action worked. |
+| **Program cards don't show instructor/author info** | Students have no idea who created or teaches the program. |
+| **No responsive testing on the catalog details view** | The `lg:grid-cols-3` layout breaks on tablet — the sticky sidebar overlaps content. |
+
+---
+
+## Summary: Priority Action Items
+
+### Do First (Critical Path)
+1. Strip all military/sci-fi terminology → replace with student-friendly language
+2. Fix the JWT-in-URL security vulnerability
+3. Remove all fake/hardcoded stats (XP, streak, level, achievements)
+4. Make the Settings "Save" button actually work
+5. Display user's real name everywhere (header, welcome banner, sidebar)
+
+### Do Next (Usability)
+6. Remove scanline/CRT effects
+7. Fix text sizing (bump from 8-10px to readable sizes)
+8. Add toast notifications for actions
+9. Add skeleton loading states
+10. Remove dead buttons (Quick Create, View All Logs, Export Log, notification bell)
+
+### Do Later (Polish)
+11. Add error boundaries
+12. Add pagination for courses
+13. Fix sidebar/header z-index conflict
+14. Add breadcrumbs to all pages
+15. Implement "continue where you left off" properly

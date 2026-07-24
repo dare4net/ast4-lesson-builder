@@ -1,4 +1,5 @@
 import type React from "react"
+import type { Metadata, Viewport } from "next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from "next/font/google"
@@ -9,13 +10,18 @@ import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata = {
+export const viewport: Viewport = {
+  themeColor: "#4CAF50",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+}
+
+export const metadata: Metadata = {
   title: "Afterschool Interactive Learning Environment",
   description: "The official interactive learning platform for Afterschool Tech",
   generator: "AST",
   manifest: "/manifest.json",
-  themeColor: "#4CAF50",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -41,7 +47,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AST Builder" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <meta name="theme-color" content="#4CAF50" />
         <script src="/register-sw.js" defer></script>
       </head>
       <body className={inter.className}>
