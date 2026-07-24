@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -19,8 +19,16 @@ interface SlideEditModalProps {
 }
 
 export function SlideEditModal({ slide, isOpen, onClose, onSave }: SlideEditModalProps) {
-  const [title, setTitle] = useState(slide.title)
+  const [title, setTitle] = useState(slide.title || "")
   const [isDisabled, setIsDisabled] = useState(slide.state === "disabled")
+
+  // Keep modal state in sync whenever modal opens or slide prop changes
+  useEffect(() => {
+    if (isOpen) {
+      setTitle(slide.title || "")
+      setIsDisabled(slide.state === "disabled")
+    }
+  }, [isOpen, slide.title, slide.state])
 
   const handleSave = () => {
     onSave({
@@ -41,19 +49,19 @@ export function SlideEditModal({ slide, isOpen, onClose, onSave }: SlideEditModa
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
-            <DialogTitle className="text-xl font-black text-white tracking-tight uppercase">Scene Configuration</DialogTitle>
+            <DialogTitle className="text-xl font-bold text-white tracking-tight uppercase">Slide Settings</DialogTitle>
           </div>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest pl-4.5">Fine-tune the behavior of this lesson fragment</p>
+          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider pl-4.5">Configure title and visibility for this slide</p>
         </DialogHeader>
 
         <div className="grid gap-8 py-8 px-2">
           <div className="space-y-3">
-            <Label htmlFor="title" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Internal Reference Title</Label>
+            <Label htmlFor="title" className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">Slide Title</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Inject a descriptive title..."
+              placeholder="Enter slide title..."
               className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-slate-200 placeholder:text-slate-700 h-12 rounded-xl text-lg font-bold"
             />
           </div>
@@ -98,10 +106,10 @@ export function SlideEditModal({ slide, isOpen, onClose, onSave }: SlideEditModa
 
         <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
           <Button variant="ghost" onClick={onClose} className="rounded-full text-slate-400 hover:text-white hover:bg-slate-800 font-bold px-6">
-            Discard
+            Cancel
           </Button>
-          <Button onClick={handleSave} className="rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-8 shadow-lg shadow-emerald-500/10">
-            Push Updates
+          <Button onClick={handleSave} className="rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-8 shadow-lg shadow-emerald-500/10">
+            Save Slide Settings
           </Button>
         </div>
       </DialogContent>

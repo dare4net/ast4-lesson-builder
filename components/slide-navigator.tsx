@@ -125,14 +125,14 @@ export function SlideNavigator({
                                 "text-xs font-bold truncate transition-colors",
                                 currentSlideIndex === index ? "text-white" : "text-slate-400"
                               )}>
-                                {slide.title || "Untitled Fragment"}
+                                {slide.title || "Untitled Slide"}
                               </h4>
 
                               <div className="mt-2 flex flex-wrap gap-1.5">
                                 {(() => {
                                   const categorized = getCategorizedComponents(slide.components);
                                   const total = slide.components.length;
-                                  if (total === 0) return <span className="text-[9px] text-slate-600 italic">Empty scene</span>;
+                                  if (total === 0) return <span className="text-[9px] text-slate-600 italic">Empty slide</span>;
 
                                   return (
                                     <>

@@ -69,10 +69,10 @@ export default function TutorProgramsPage() {
                 <div className="space-y-4">
                     <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/5 w-fit">
                         <Monitor className="w-3 h-3 text-indigo-400" />
-                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">Deployment Hub</span>
+                        <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Instructor Studio</span>
                     </div>
-                    <h1 className="text-4xl font-black text-white tracking-tight">
-                        PROGRAM <span className="text-indigo-500">REPOSITORY</span>
+                    <h1 className="text-3xl font-bold text-white tracking-tight">
+                        COURSE <span className="text-indigo-500">PROGRAMS</span>
                     </h1>
                 </div>
 
@@ -81,18 +81,18 @@ export default function TutorProgramsPage() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                         <input
                             type="text"
-                            placeholder="SEARCH PROJECTS..."
+                            placeholder="Search courses..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full h-11 bg-slate-900/50 border border-slate-800 rounded-xl pl-10 pr-4 text-[10px] font-black text-white uppercase tracking-widest focus:outline-none focus:border-indigo-500/50 transition-all"
+                            className="w-full h-11 bg-slate-900/50 border border-slate-800 rounded-xl pl-10 pr-4 text-xs font-semibold text-white focus:outline-none focus:border-indigo-500/50 transition-all"
                         />
                     </div>
                     <Button
                         onClick={() => router.push('/studio/programs/new')}
-                        className="h-11 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-black uppercase tracking-widest px-6 rounded-xl shadow-lg shadow-indigo-500/20 shrink-0"
+                        className="h-11 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold uppercase tracking-wider px-6 rounded-xl shadow-lg shadow-indigo-500/20 shrink-0 text-xs"
                     >
                         <Plus className="w-4 h-4 mr-2" />
-                        INITIALIZE
+                        Create Course
                     </Button>
                 </div>
             </div>
@@ -103,16 +103,16 @@ export default function TutorProgramsPage() {
                     <div className="w-20 h-20 rounded-3xl bg-slate-900 border border-slate-800 flex items-center justify-center mb-6">
                         <Folder className="w-10 h-10 text-slate-700" />
                     </div>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tight">No Directives Found</h3>
+                    <h3 className="text-xl font-bold text-white uppercase tracking-tight">No Courses Found</h3>
                     <p className="text-slate-500 text-sm mt-2 max-w-xs text-center font-medium">
-                        Your deployment repository is currently empty. Initialize a new program to begin.
+                        Your course catalog is currently empty. Create a new course to get started.
                     </p>
                     <Button
                         variant="ghost"
                         onClick={() => router.push('/studio/programs/new')}
-                        className="mt-8 text-indigo-500 font-black uppercase text-[10px] tracking-widest hover:bg-indigo-500/5"
+                        className="mt-8 text-indigo-500 font-bold uppercase text-xs tracking-wider hover:bg-indigo-500/5"
                     >
-                        CREATE NEW PROJECT
+                        CREATE NEW COURSE
                     </Button>
                 </div>
             ) : (
@@ -139,11 +139,11 @@ export default function TutorProgramsPage() {
                                 </div>
 
                                 <div className="space-y-3 mb-8">
-                                    <h3 className="text-2xl font-black text-white tracking-tight uppercase leading-none">
-                                        {prog.program_name || prog.name}
+                                    <h3 className="text-2xl font-bold text-white tracking-tight uppercase leading-none">
+                                        {prog.program_name || prog.name || "Untitled Course"}
                                     </h3>
                                     <p className="text-slate-500 text-sm font-medium line-clamp-2 leading-relaxed">
-                                        {prog.description || "Experimental curriculum module without active description protocols."}
+                                        {prog.description || "Course program description."}
                                     </p>
                                 </div>
 
@@ -151,13 +151,13 @@ export default function TutorProgramsPage() {
                                     <div className="flex items-center gap-4">
                                         <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-slate-950 border border-slate-800">
                                             <Layers className="w-3 h-3 text-indigo-500" />
-                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                                {prog.modules?.length || 0} SECTORS
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                                {prog.modules?.length || 0} MODULES
                                             </span>
                                         </div>
                                     </div>
-                                    <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">
-                                        PROJECT-{(prog._id).slice(-4).toUpperCase()}
+                                    <span className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
+                                        COURSE-{(prog._id).slice(-4).toUpperCase()}
                                     </span>
                                 </div>
 

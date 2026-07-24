@@ -240,6 +240,16 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             </div>
           </div>
 
+          {/* Current Slide Title Badge */}
+          {currentSlide?.title && (
+            <div className="hidden md:flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 shadow-inner">
+              <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
+              <span className="text-xs font-semibold text-slate-200 truncate max-w-[220px]">
+                {currentSlide.title}
+              </span>
+            </div>
+          )}
+
           {/* Metrics */}
           <div className="flex gap-5 shrink-0 items-center">
             <div className="flex flex-col items-end justify-center">

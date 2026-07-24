@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import { LayoutGrid } from "lucide-react"
 import type { Lesson, Slide, Component, ComponentType, SlideStatus } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
-import { getCategorizedComponents, getInteractiveAndGamifiedComponents } from "@/lib/lesson-utils"
+import { getCategorizedComponents, getInteractiveAndGamifiedComponents, normalizeSlides } from "@/lib/lesson-utils"
 import { CustomDndProvider } from "@/components/dnd-provider"
 import { useFeedback } from "@/lib/feedback-context"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -58,18 +58,18 @@ export function LessonBuilder() {
         try {
           const fetchedLesson = await apiClient.studio.getLesson(lessonIdFromUrl);
 
-          // Normalize DB response to Lesson type
-          const slides = fetchedLesson.content.slides || [];
+          // Normalize DB response to Lesson type with robust slide title fallbacks
+          let slides = normalizeSlides(fetchedLesson.content.slides || []);
 
           // Ensure at least one slide exists to prevent editor crash
           if (slides.length === 0) {
-            slides.push({
+            slides = normalizeSlides([{
               id: `slide-${Date.now()}`,
               title: "Slide 1",
               components: [],
               status: "uncompleted",
               state: "active"
-            });
+            }]);
           }
 
           const normalizedLesson: Lesson = {
@@ -105,6 +105,7 @@ export function LessonBuilder() {
         if (savedLesson) {
           try {
             const parsed = JSON.parse(savedLesson)
+            parsed.slides = normalizeSlides(parsed.slides || [])
             setLesson(parsed)
           } catch (e) {
             console.error("Failed to parse saved lesson:", e)

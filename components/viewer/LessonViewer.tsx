@@ -13,19 +13,24 @@ import { ScoringProvider } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
 import type { Lesson } from '@/types/lesson';
+import { normalizeSlides } from '@/lib/lesson-utils';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
 import { apiClient } from '@/lib/api-client';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
     if (initialLesson && initialInteraction?.lessonState?.slides) {
-      const slidesWithStatus = initialLesson.slides.map(s => {
+      const normalizedSlides = normalizeSlides(initialLesson.slides);
+      const slidesWithStatus = normalizedSlides.map(s => {
         const savedSlide = initialInteraction.lessonState.slides.find((ss: any) => ss.id === s.id);
         return savedSlide ? { ...s, status: savedSlide.status, state: savedSlide.state } : s;
       });
       return { ...initialLesson, slides: slidesWithStatus };
     }
-    return initialLesson || null;
+    if (initialLesson) {
+      return { ...initialLesson, slides: normalizeSlides(initialLesson.slides) };
+    }
+    return null;
   });
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

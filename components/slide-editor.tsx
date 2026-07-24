@@ -113,12 +113,12 @@ export function SlideEditor({
           {/* Header Section */}
           <div className="flex items-center gap-6 border-b border-slate-100 pb-8 group/header">
             <div className="flex-1 space-y-1">
-              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em]">Scene Title</span>
+              <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Slide Title</span>
               <Input
-                placeholder="Enter scene title..."
+                placeholder="Enter slide title..."
                 value={slide.title || ""}
                 onChange={handleTitleChange}
-                className="text-3xl font-black bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-200 text-slate-900 tracking-tight"
+                className="text-3xl font-bold bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-300 text-slate-900 tracking-tight"
               />
             </div>
 
@@ -170,8 +170,8 @@ export function SlideEditor({
               <div className="w-16 h-16 rounded-full bg-white shadow-xl flex items-center justify-center mb-6 group-hover/empty:scale-110 transition-transform">
                 <LayoutGrid className="h-8 w-8 text-slate-200 group-hover/empty:text-emerald-400 transition-colors" />
               </div>
-              <p className="text-slate-400 font-black uppercase tracking-widest text-xs">Stage Empty</p>
-              <p className="text-slate-300 text-[10px] mt-2 font-bold">Inject components from the Studio Library</p>
+              <p className="text-slate-400 font-bold uppercase tracking-wider text-xs">Empty Slide</p>
+              <p className="text-slate-400 text-xs mt-2 font-medium">Add components from the Component Library to build your lesson slide.</p>
             </div>
           )}
         </div>

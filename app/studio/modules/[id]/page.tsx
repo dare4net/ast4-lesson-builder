@@ -21,6 +21,7 @@ interface Lesson {
 interface Module {
     _id: string;
     name: string;
+    title?: string;
     description: string;
     program_id: string;
 }
@@ -137,10 +138,10 @@ function ModuleDetailContent() {
                         <div className="space-y-4 max-w-2xl">
                             <div className="flex items-center gap-2 text-slate-500 mb-2">
                                 <FileText className="h-4 w-4" />
-                                <span className="text-xs font-mono uppercase tracking-[0.2em]">Module Configuration</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider">Module Overview</span>
                             </div>
-                            <h1 className="text-4xl font-black text-white tracking-tight uppercase">
-                                {module.name}
+                            <h1 className="text-4xl font-bold text-white tracking-tight uppercase">
+                                {module.name || module.title || "Untitled Module"}
                             </h1>
                             <p className="text-slate-400 font-medium text-lg leading-relaxed">
                                 {module.description || 'No description provided for this module.'}
@@ -179,8 +180,8 @@ function ModuleDetailContent() {
                                 </span>
                                 Lesson Timeline
                             </h2>
-                            <span className="text-sm font-mono text-slate-500 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
-                                {lessons.length} NODES
+                            <span className="text-xs font-semibold text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
+                                {lessons.length} Lessons
                             </span>
                         </div>
 
@@ -189,13 +190,13 @@ function ModuleDetailContent() {
                                 <div className="p-4 rounded-full bg-slate-900 mb-4">
                                     <FileText className="w-8 h-8 text-slate-600" />
                                 </div>
-                                <p className="text-slate-500 mb-6">No lessons in this timeline yet.</p>
+                                <p className="text-slate-500 mb-6">No lessons in this module timeline yet.</p>
                                 <Button
                                     onClick={() => setIsCreateModalOpen(true)}
                                     className="bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-bold"
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
-                                    Add First Node
+                                    Add First Lesson
                                 </Button>
                             </div>
                         ) : (

@@ -21,6 +21,7 @@ import {
 import { Loader2, FileText } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { Lesson } from '@/types/lesson';
+import { normalizeSlides } from '@/lib/lesson-utils';
 
 interface LoadLessonModalProps {
     open: boolean;
@@ -116,7 +117,7 @@ export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLesso
             const lesson: Lesson = {
                 id: lessonData.content.id,
                 title: lessonData.title,
-                slides: lessonData.content.slides || [],
+                slides: normalizeSlides(lessonData.content.slides || []),
                 settings: lessonData.content.settings || {},
             };
 
@@ -216,8 +217,8 @@ export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLesso
                                                 key={lesson._id}
                                                 onClick={() => setSelectedLessonId(lesson._id)}
                                                 className={`w-full p-3 text-left rounded-md transition-colors ${selectedLessonId === lesson._id
-                                                        ? 'bg-blue-100 border-blue-500 border-2'
-                                                        : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
+                                                    ? 'bg-blue-100 border-blue-500 border-2'
+                                                    : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
                                                     }`}
                                             >
                                                 <div className="flex items-start gap-2">

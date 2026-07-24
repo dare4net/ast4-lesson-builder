@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { getComponentCategory } from '@/lib/lesson-utils';
+import { getComponentCategory, normalizeSlides } from '@/lib/lesson-utils';
 import { FileUploader } from './FileUploader';
 import { LessonContent } from './LessonContent';
 import { Card } from '@/components/ui/card';
@@ -21,7 +21,12 @@ import { SyncStatusHUD } from './SyncStatusHUD';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
-  const [lessonData, setLessonData] = useState<Lesson | null>(initialLesson || null);
+  const [lessonData, setLessonData] = useState<Lesson | null>(() => {
+    if (initialLesson) {
+      return { ...initialLesson, slides: normalizeSlides(initialLesson.slides) };
+    }
+    return null;
+  });
   const [error, setError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -67,7 +72,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
       if (!isMounted) return;
 
-      const initializedSlides = initialLesson.slides.map(slide => {
+      const normalizedSlides = normalizeSlides(initialLesson.slides);
+      const initializedSlides = normalizedSlides.map(slide => {
         const savedSlide = lessonState?.slides?.find((s: { id: string }) => s.id === slide.id);
         const finalState = (savedSlide && 'state' in savedSlide) ?
           savedSlide.state as SlideState : slide.state;

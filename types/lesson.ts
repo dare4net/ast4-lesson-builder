@@ -6,6 +6,7 @@ export interface Lesson {
   level: string
   duration: number
   slides: Slide[]
+  settings?: Record<string, any>
   createdAt: string
   updatedAt: string
 }

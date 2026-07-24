@@ -148,3 +148,22 @@ export function isInteractiveComponent(type: ComponentType | string): boolean {
     const category = getComponentCategory(type)
     return category === "interactive" || category === "gamified"
 }
+
+/**
+ * Normalize slide objects to ensure all required fields exist with robust fallbacks.
+ * Guarantees slide.title is never missing, undefined, or empty.
+ */
+export function normalizeSlides(slides: any[]): import("@/types/lesson").Slide[] {
+    if (!Array.isArray(slides)) return []
+
+    return slides.map((slide, index) => {
+        const title = slide.title || slide.name || slide.header || `Slide ${index + 1}`
+        return {
+            id: slide.id || slide._id || `slide-${index + 1}`,
+            title: typeof title === 'string' && title.trim() ? title.trim() : `Slide ${index + 1}`,
+            status: (slide.status as import("@/types/lesson").SlideStatus) || "uncompleted",
+            state: (slide.state as import("@/types/lesson").SlideState) || "active",
+            components: Array.isArray(slide.components) ? slide.components : [],
+        }
+    })
+}
