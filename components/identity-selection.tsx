@@ -1,123 +1,144 @@
 "use client"
 
+import Image from "next/image"
 import { motion } from "framer-motion"
-import { User, GraduationCap, ArrowRight, Sparkles, ShieldCheck } from "lucide-react"
+import { GraduationCap, BookOpenCheck, ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 const containerVariants = {
     hidden: { opacity: 0 },
     show: {
         opacity: 1,
-        transition: {
-            staggerChildren: 0.15,
-            delayChildren: 0.4
-        }
+        transition: { staggerChildren: 0.15, delayChildren: 0.2 }
     }
 }
 
 const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
-    show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 100 } }
+    hidden: { opacity: 0, y: 20, scale: 0.97 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 120, damping: 15 } }
 }
 
 export function IdentitySelection() {
     const roles = [
         {
             id: "student",
-            title: "Student",
-            subtitle: "Unlock your potential",
-            description: "Access your lessons, track your progress, and earn rewards.",
+            title: "Student Portal",
+            subtitle: "Learn & Grow",
+            description: "Access interactive lessons, complete engaging modules, and track your learning progress.",
             icon: GraduationCap,
             href: "/auth/login?role=student",
-            color: "from-blue-500/20 to-blue-600/20",
-            accent: "text-blue-400",
-            border: "border-blue-500/30",
-            bg: "bg-blue-500/5",
-            glow: "shadow-blue-500/10"
+            accentColor: "#1CB0F6",
+            activeBorderColor: "#1899D6",
+            badgeBg: "bg-[#1CB0F6]/10",
+            badgeBorder: "border-[#1CB0F6]/30",
+            badgeText: "text-[#1CB0F6]",
+            iconBg: "bg-[#1CB0F6]/10 border border-[#1CB0F6]/20",
+            iconColor: "text-[#1CB0F6]",
+            cardHover: "hover:border-[#1CB0F6]/40",
         },
         {
             id: "tutor",
-            title: "Tutor",
-            subtitle: "Master of Studio",
-            description: "Create interactive content, manage classes, and inspire students.",
-            icon: ShieldCheck,
+            title: "Instructor Studio",
+            subtitle: "Create & Empower",
+            description: "Design interactive courses, build engaging learning activities, and inspire your students.",
+            icon: BookOpenCheck,
             href: "/auth/login?role=tutor",
-            color: "from-emerald-500/20 to-emerald-600/20",
-            accent: "text-emerald-400",
-            border: "border-emerald-500/30",
-            bg: "bg-emerald-500/5",
-            glow: "shadow-emerald-500/10"
+            accentColor: "#58CC02",
+            activeBorderColor: "#3B8C00",
+            badgeBg: "bg-[#58CC02]/10",
+            badgeBorder: "border-[#58CC02]/30",
+            badgeText: "text-[#58CC02]",
+            iconBg: "bg-[#58CC02]/10 border border-[#58CC02]/20",
+            iconColor: "text-[#58CC02]",
+            cardHover: "hover:border-[#58CC02]/40",
         }
     ]
 
     return (
-        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-            {/* Background Ambience */}
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+            {/* Top green stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-[#58CC02]" />
+
+            {/* Subtle background blobs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-emerald-500/5 rounded-full blur-[120px]" />
-                <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[120px]" />
+                <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] bg-[#1CB0F6]/5 rounded-full blur-[100px]" />
+                <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-[#58CC02]/5 rounded-full blur-[100px]" />
             </div>
 
+            {/* Header */}
             <motion.div
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -15 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative z-10 text-center mb-16"
+                className="relative z-10 text-center mb-10 max-w-lg"
             >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 mb-6">
-                    <Sparkles className="w-3 h-3 text-emerald-400" />
-                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">IDENTITY PROTOCOL</span>
+                {/* Logo */}
+                <div className="flex justify-center mb-5">
+                    <div className="w-16 h-16 rounded-2xl bg-white border-2 border-slate-200 shadow-md flex items-center justify-center overflow-hidden">
+                        <Image
+                            src="/icons/icon-192x192.png"
+                            alt="AST Logo"
+                            width={48}
+                            height={48}
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
                 </div>
-                <h1 className="text-5xl font-black text-white tracking-tighter mb-4">
-                    IDENTIFY <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">YOURSELF</span>
+
+                <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">
+                    Choose Your Portal
                 </h1>
-                <p className="text-slate-400 text-sm font-medium tracking-wide uppercase">Select your operational interface</p>
+                <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                    Select your role to access your personalized learning or teaching workspace.
+                </p>
             </motion.div>
 
+            {/* Role Cards */}
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="show"
-                className="grid md:grid-cols-2 gap-8 max-w-4xl w-full relative z-10"
+                className="grid md:grid-cols-2 gap-5 max-w-2xl w-full relative z-10"
             >
                 {roles.map((role) => (
                     <motion.div key={role.id} variants={itemVariants}>
                         <Link href={role.href} className="group block h-full">
                             <div className={cn(
-                                "relative h-full p-8 rounded-[2.5rem] border bg-slate-900/40 backdrop-blur-xl transition-all duration-500",
-                                role.border,
-                                "hover:scale-[1.02] hover:bg-slate-900/60 shadow-2xl",
-                                role.glow
+                                "relative h-full p-7 rounded-3xl border-2 border-slate-200 bg-white transition-all duration-200 shadow-sm",
+                                role.cardHover,
+                                "hover:-translate-y-0.5 hover:shadow-md"
                             )}>
-                                {/* Accent Corner */}
-                                <div className={cn("absolute top-0 right-0 w-32 h-32 bg-gradient-to-br opacity-50 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2", role.color)} />
+                                <div className="flex flex-col h-full gap-5">
+                                    <div>
+                                        <div className="flex items-center justify-between mb-5">
+                                            <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center", role.iconBg)}>
+                                                <role.icon className={cn("w-6 h-6", role.iconColor)} />
+                                            </div>
+                                            <span className={cn("text-[11px] font-bold px-3 py-1 rounded-full border", role.badgeBg, role.badgeBorder, role.badgeText)}>
+                                                {role.subtitle}
+                                            </span>
+                                        </div>
 
-                                <div className="relative z-10">
-                                    <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-slate-950 border transition-transform duration-500 group-hover:rotate-12", role.border)}>
-                                        <role.icon className={cn("w-8 h-8", role.accent)} />
+                                        <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-1.5">
+                                            {role.title}
+                                        </h3>
+                                        <p className="text-slate-500 text-sm leading-relaxed">
+                                            {role.description}
+                                        </p>
                                     </div>
 
-                                    <div className="mb-2">
-                                        <span className={cn("text-[10px] font-black uppercase tracking-[0.3em]", role.accent)}>{role.subtitle}</span>
-                                        <h3 className="text-3xl font-black text-white tracking-tight mt-1">{role.title}</h3>
+                                    {/* 3D Duo-style button */}
+                                    <div
+                                        className="mt-auto w-full py-3 px-5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all duration-150 border-b-4 active:border-b-0 active:translate-y-[2px] group-hover:opacity-90"
+                                        style={{
+                                            backgroundColor: role.accentColor,
+                                            borderColor: role.activeBorderColor,
+                                        }}
+                                    >
+                                        Enter Portal
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                                     </div>
-
-                                    <p className="text-slate-400 text-sm leading-relaxed mb-10 min-h-[3rem]">
-                                        {role.description}
-                                    </p>
-
-                                    <div className={cn(
-                                        "inline-flex items-center gap-2 font-bold text-xs uppercase tracking-widest transition-all duration-300 group-hover:gap-4",
-                                        role.accent
-                                    )}>
-                                        Access Terminal <ArrowRight className="w-4 h-4" />
-                                    </div>
-                                </div>
-
-                                {/* Decorative Elements */}
-                                <div className="absolute bottom-6 right-8 opacity-10 font-black text-6xl tracking-tighter select-none pointer-events-none">
-                                    {role.id.toUpperCase()}
                                 </div>
                             </div>
                         </Link>
@@ -128,10 +149,10 @@ export function IdentitySelection() {
             <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                className="mt-16 text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em]"
+                transition={{ delay: 0.8 }}
+                className="mt-10 text-slate-400 text-xs font-medium text-center"
             >
-                SECURE CLOUD-BASED ACCESS | AFTER-SCHOOL TECH v4.0
+                After-School Tech Studio • Interactive Learning Platform
             </motion.p>
         </div>
     )

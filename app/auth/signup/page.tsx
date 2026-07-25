@@ -6,9 +6,9 @@ import { useAuth } from '@/context/auth-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { UserPlus, Mail, Lock, User, Loader2, Sparkles, ChevronRight, Fingerprint } from 'lucide-react';
+import Image from 'next/image';
+import { Mail, Lock, User, Loader2, ArrowRight, GraduationCap, BookOpenCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 function SignupForm() {
@@ -23,177 +23,152 @@ function SignupForm() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const isStudent = role === 'student';
+    const accent = isStudent ? '#1CB0F6' : '#58CC02';
+    const accentBorder = isStudent ? '#1899D6' : '#3B8C00';
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
         if (password.length < 8) {
-            setError('Access Denied: Security Key must be at least 8 characters');
+            setError('Password must be at least 8 characters long.');
             return;
         }
-
         setLoading(true);
-
         try {
             await signup(email, password, fullName, role);
-            if (role === 'student') {
-                router.push('/dashboard/student');
-            } else if (role === 'tutor') {
-                router.push('/dashboard/tutor');
-            } else {
-                router.push('/studio/programs');
-            }
+            router.push(isStudent ? '/dashboard/student' : '/dashboard/tutor');
         } catch (err: any) {
-            setError(err.message || 'Recruitment Failed: Registration Error');
+            setError(err.message || 'Registration failed. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Card className="w-full max-w-md bg-slate-900/40 backdrop-blur-2xl border-slate-800 shadow-2xl relative z-10 rounded-[2rem] overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50" />
+        <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            className="w-full max-w-md bg-white border-2 border-slate-200 shadow-xl rounded-3xl overflow-hidden"
+        >
+            {/* Top accent stripe */}
+            <div className="h-1.5 w-full" style={{ backgroundColor: accent }} />
 
-            <CardHeader className="space-y-4 pt-8 text-center">
-                <div className="flex justify-center">
-                    <div className="w-16 h-16 rounded-2xl bg-slate-950 border border-emerald-500/30 flex items-center justify-center relative shadow-lg shadow-emerald-500/10">
-                        <Fingerprint className="w-8 h-8 text-emerald-500" />
-                        <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-emerald-500 rounded-full animate-pulse" />
+            <div className="p-8">
+                {/* Logo + Role badge */}
+                <div className="flex flex-col items-center gap-3 mb-7">
+                    <div className="w-14 h-14 rounded-2xl bg-white border-2 border-slate-200 shadow-sm flex items-center justify-center overflow-hidden">
+                        <Image src="/icons/icon-192x192.png" alt="AST Logo" width={44} height={44} className="object-contain" priority />
+                    </div>
+                    <div
+                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-bold"
+                        style={{ backgroundColor: `${accent}15`, borderColor: `${accent}30`, color: accent }}
+                    >
+                        {isStudent ? <GraduationCap className="w-3.5 h-3.5" /> : <BookOpenCheck className="w-3.5 h-3.5" />}
+                        <span className="capitalize">{role} Account Registration</span>
+                    </div>
+                    <div className="text-center">
+                        <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Create Account</h1>
+                        <p className="text-slate-500 text-xs font-medium mt-0.5">Get started with After-School Tech Studio</p>
                     </div>
                 </div>
-                <div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/5 mb-2">
-                        <Sparkles className="w-3 h-3 text-emerald-400" />
-                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">{role} Recruitment</span>
-                    </div>
-                    <CardTitle className="text-3xl font-black text-white tracking-tight capitalize">Join The Team</CardTitle>
-                    <CardDescription className="text-slate-400 font-medium">
-                        Register your identity for portal access
-                    </CardDescription>
-                </div>
-            </CardHeader>
 
-            <form onSubmit={handleSubmit}>
-                <CardContent className="space-y-5 px-8">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {error && (
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="p-4 text-xs font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-center gap-3"
+                            className="p-3.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2"
                         >
-                            <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
                             {error}
                         </motion.div>
                     )}
 
                     <div className="space-y-1.5">
-                        <Label htmlFor="fullName" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Identity Name</Label>
-                        <div className="relative group">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-500 transition-colors">
-                                <User className="w-4 h-4" />
-                            </div>
+                        <Label htmlFor="fullName" className="text-xs font-bold text-slate-700">Full Name</Label>
+                        <div className="relative">
+                            <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <Input
-                                id="fullName"
-                                type="text"
-                                placeholder="Operator Name"
-                                value={fullName}
-                                onChange={(e) => setFullName(e.target.value)}
-                                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-white pl-12 h-11 rounded-xl placeholder:text-slate-700 transition-all font-medium"
-                                required
-                                disabled={loading}
+                                id="fullName" type="text" placeholder="Jane Doe"
+                                value={fullName} onChange={(e) => setFullName(e.target.value)}
+                                className="pl-10 h-11 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400 focus:border-[#58CC02] focus:bg-white font-medium text-sm transition-all"
+                                required disabled={loading}
                             />
                         </div>
                     </div>
 
                     <div className="space-y-1.5">
-                        <Label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Terminal ID (Email)</Label>
-                        <div className="relative group">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-500 transition-colors">
-                                <Mail className="w-4 h-4" />
-                            </div>
+                        <Label htmlFor="email" className="text-xs font-bold text-slate-700">Email Address</Label>
+                        <div className="relative">
+                            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <Input
-                                id="email"
-                                type="email"
-                                placeholder="operator@afterschool.tech"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-white pl-12 h-11 rounded-xl placeholder:text-slate-700 transition-all font-medium"
-                                required
-                                disabled={loading}
+                                id="email" type="email" placeholder="you@example.com"
+                                value={email} onChange={(e) => setEmail(e.target.value)}
+                                className="pl-10 h-11 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400 focus:border-[#58CC02] focus:bg-white font-medium text-sm transition-all"
+                                required disabled={loading}
                             />
                         </div>
                     </div>
 
                     <div className="space-y-1.5">
-                        <Label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Access Key</Label>
-                        <div className="relative group">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-emerald-500 transition-colors">
-                                <Lock className="w-4 h-4" />
-                            </div>
+                        <Label htmlFor="password" className="text-xs font-bold text-slate-700">Password</Label>
+                        <div className="relative">
+                            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                             <Input
-                                id="password"
-                                type="password"
-                                placeholder="At least 8 characters"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-white pl-12 h-11 rounded-xl placeholder:text-slate-700 transition-all font-medium"
-                                required
-                                disabled={loading}
-                                minLength={8}
+                                id="password" type="password" placeholder="At least 8 characters"
+                                value={password} onChange={(e) => setPassword(e.target.value)}
+                                className="pl-10 h-11 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400 focus:border-[#58CC02] focus:bg-white font-medium text-sm transition-all"
+                                required disabled={loading} minLength={8}
                             />
                         </div>
                     </div>
-                </CardContent>
 
-                <CardFooter className="flex flex-col space-y-6 pb-8 px-8 pt-4">
-                    <Button
+                    {/* 3D Duo button */}
+                    <button
                         type="submit"
-                        className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black uppercase tracking-widest h-12 rounded-xl shadow-lg shadow-emerald-500/20 group transition-all"
                         disabled={loading}
+                        className="w-full mt-2 py-3 px-5 rounded-xl font-extrabold text-sm text-white flex items-center justify-center gap-2 transition-all duration-150 border-b-4 active:border-b-0 active:translate-y-[2px] disabled:opacity-70 disabled:cursor-not-allowed group"
+                        style={{ backgroundColor: accent, borderColor: accentBorder }}
                     >
                         {loading ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Processing...
-                            </>
+                            <><Loader2 className="w-4 h-4 animate-spin" />Creating account...</>
                         ) : (
-                            <>
-                                Confirm Recruitment
-                                <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                            </>
+                            <>Create Account <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" /></>
                         )}
-                    </Button>
+                    </button>
 
-                    <div className="w-full h-px bg-slate-800/50" />
-
-                    <p className="text-[10px] font-bold text-center text-slate-500 uppercase tracking-widest leading-relaxed">
-                        ALREADY ENLISTED?{' '}
-                        <Link href={`/auth/login?role=${role}`} className="text-emerald-500 hover:text-emerald-400 font-black hover:underline underline-offset-4">
-                            INITIALIZE SESSION
-                        </Link>
-                    </p>
-                </CardFooter>
-            </form>
-        </Card>
+                    <div className="pt-3 border-t border-slate-100 text-center">
+                        <p className="text-xs text-slate-500 font-medium">
+                            Already have an account?{' '}
+                            <Link href={`/auth/login?role=${role}`} className="font-bold hover:underline" style={{ color: accent }}>
+                                Sign In
+                            </Link>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </motion.div>
     );
 }
 
 export default function SignupPage() {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4 relative overflow-hidden">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[10%] right-[10%] w-[40%] h-[40%] bg-emerald-500/5 rounded-full blur-[100px] animate-pulse" />
-                <div className="absolute bottom-[10%] left-[10%] w-[40%] h-[40%] bg-blue-500/5 rounded-full blur-[100px]" />
-                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4 relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-[#58CC02]" />
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-1/3 right-1/4 w-[40%] h-[40%] bg-[#1CB0F6]/5 rounded-full blur-[100px]" />
+                <div className="absolute bottom-1/3 left-1/4 w-[40%] h-[40%] bg-[#58CC02]/5 rounded-full blur-[100px]" />
             </div>
 
-            <Suspense fallback={<div className="text-white text-sm font-semibold">Loading signup...</div>}>
+            <Suspense fallback={<div className="text-slate-600 text-xs font-semibold">Loading...</div>}>
                 <SignupForm />
             </Suspense>
 
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-black text-slate-700 uppercase tracking-[0.5em] pointer-events-none">
-                AST v4.0.1 // RECRUITMENT TERMINAL
-            </div>
+            <p className="mt-6 text-[11px] font-medium text-slate-400">
+                After-School Tech Studio • Account Registration
+            </p>
         </div>
     );
 }
