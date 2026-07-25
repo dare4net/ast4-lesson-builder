@@ -10,7 +10,7 @@ import { SlideNavigator } from "@/components/slide-navigator"
 import { useMobile } from "@/hooks/use-mobile"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { LayoutGrid } from "lucide-react"
+import { LayoutGrid, PanelRightClose, PanelRightOpen, Blocks } from "lucide-react"
 import type { Lesson, Slide, Component, ComponentType, SlideStatus } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { getCategorizedComponents, getInteractiveAndGamifiedComponents, normalizeSlides } from "@/lib/lesson-utils"
@@ -41,6 +41,7 @@ export function LessonBuilder() {
   const [saveModalOpen, setSaveModalOpen] = useState(false)
   const [loadModalOpen, setLoadModalOpen] = useState(false)
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null)
+  const [isLibraryCollapsed, setIsLibraryCollapsed] = useState(false)
 
   const { toast } = useToast()
   const isMobile = useMobile()
@@ -540,24 +541,57 @@ export function LessonBuilder() {
 
               {/* Right sidebar - Unified Inspector/Library */}
               {!isMobile && (
-                <div className="w-[480px] border-l border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm">
-                  {isInspectorOpen && editingComponent ? (
-                    <ComponentEditor
-                      component={editingComponent}
-                      updateComponent={(props) => updateComponent(editingComponent.id, props)}
-                      onClose={handleCloseInspector}
-                    />
-                  ) : (
-                    <div className="flex flex-col h-full overflow-hidden">
-                      <div className="p-4 border-b border-slate-800 bg-slate-900/50">
-                        <h3 className="font-semibold text-emerald-400">Component Library</h3>
+                isLibraryCollapsed ? (
+                  <div className="w-12 border-l border-slate-800 flex flex-col items-center py-4 gap-4 bg-[#1e293b]/30 backdrop-blur-sm transition-all duration-300">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsLibraryCollapsed(false)}
+                      className="text-slate-400 hover:text-emerald-400 hover:bg-slate-800 h-9 w-9 rounded-lg"
+                      title="Expand Component Library"
+                    >
+                      <PanelRightOpen className="w-5 h-5" />
+                    </Button>
+                    <div className="w-8 h-[1px] bg-slate-800/80 my-1" />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsLibraryCollapsed(false)}
+                      className="text-slate-500 hover:text-emerald-400 hover:bg-slate-800 h-9 w-9 rounded-lg"
+                      title="Component Library"
+                    >
+                      <Blocks className="w-5 h-5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="w-[480px] border-l border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm transition-all duration-300">
+                    {isInspectorOpen && editingComponent ? (
+                      <ComponentEditor
+                        component={editingComponent}
+                        updateComponent={(props) => updateComponent(editingComponent.id, props)}
+                        onClose={handleCloseInspector}
+                      />
+                    ) : (
+                      <div className="flex flex-col h-full overflow-hidden">
+                        <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
+                          <h3 className="font-semibold text-emerald-400">Component Library</h3>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setIsLibraryCollapsed(true)}
+                            className="h-7 w-7 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-md"
+                            title="Collapse Component Library"
+                          >
+                            <PanelRightClose className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <ScrollArea className="flex-1">
+                          <ComponentLibrary addComponent={addComponent} />
+                        </ScrollArea>
                       </div>
-                      <ScrollArea className="flex-1">
-                        <ComponentLibrary addComponent={addComponent} />
-                      </ScrollArea>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                )
               )}
 
               {/* Mobile Sheet for Inspector */}

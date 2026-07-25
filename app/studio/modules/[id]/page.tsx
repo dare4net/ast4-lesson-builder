@@ -4,7 +4,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, FileText, ArrowLeft, Trash2 } from 'lucide-react';
+import { Plus, FileText, ArrowLeft, Trash2, LayoutDashboard } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/protected-route';
 import { LessonCreationModal } from '@/components/studio/lesson-creation-modal';
 import { LessonTimelineItem } from '@/components/studio/lesson-timeline-item';
@@ -125,14 +125,25 @@ function ModuleDetailContent() {
             <div className="container mx-auto px-6 py-12 relative z-10">
                 {/* Header Section */}
                 <div className="mb-16">
-                    <Button
-                        variant="ghost"
-                        onClick={() => router.push(`/studio/programs/${module.program_id}`)}
-                        className="mb-8 text-slate-500 hover:text-emerald-400 pl-0 hover:bg-transparent transition-colors group"
-                    >
-                        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                        Back to Program
-                    </Button>
+                    <div className="flex items-center gap-2 mb-8 text-sm">
+                        <Button
+                            variant="ghost"
+                            onClick={() => router.push('/dashboard/tutor')}
+                            className="text-slate-500 hover:text-emerald-400 p-0 hover:bg-transparent h-auto transition-colors flex items-center gap-1.5"
+                        >
+                            <LayoutDashboard className="w-3.5 h-3.5" />
+                            Tutor Dashboard
+                        </Button>
+                        <span className="text-slate-700">/</span>
+                        <Button
+                            variant="ghost"
+                            onClick={() => router.push(`/studio/programs/${module.program_id}`)}
+                            className="text-slate-500 hover:text-white p-0 hover:bg-transparent h-auto transition-colors flex items-center gap-1.5 group"
+                        >
+                            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                            Back to Program
+                        </Button>
+                    </div>
 
                     <div className="flex justify-between items-start border-b border-slate-800/50 pb-8">
                         <div className="space-y-4 max-w-2xl">

@@ -22,7 +22,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard } from "lucide-react"
 import type { Lesson } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
@@ -62,6 +63,7 @@ export function LessonControls({
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
+  const router = useRouter()
 
   const handleImportClick = () => {
     fileInputRef.current?.click()
@@ -160,6 +162,10 @@ export function LessonControls({
                 <SheetDescription className="text-slate-400">Lesson Studio Menu</SheetDescription>
               </SheetHeader>
               <div className="py-6 space-y-3">
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-200" onClick={() => router.push('/dashboard/tutor')}>
+                  <LayoutDashboard className="h-4 w-4 mr-3 text-emerald-400" />
+                  Tutor Dashboard
+                </Button>
                 <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={createNewLesson}>
                   <Plus className="h-4 w-4 mr-3 text-emerald-500" />
                   New Lesson
@@ -251,6 +257,16 @@ export function LessonControls({
     <header className={cn("px-6 py-3 flex items-center justify-between", className)}>
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push('/dashboard/tutor')}
+            className="text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold px-3 h-8 text-xs flex items-center gap-1.5 border border-slate-800/80 rounded-lg bg-slate-900/40 transition-colors"
+            title="Return to Tutor Dashboard"
+          >
+            <LayoutDashboard className="h-4 w-4 text-emerald-400" />
+            <span className="hidden sm:inline">Tutor Dashboard</span>
+          </Button>
           <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <LayoutGrid className="h-5 w-5 text-[#0F172A]" />
           </div>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, BookOpen, LogOut, Layout } from 'lucide-react';
+import { Plus, BookOpen, LogOut, Layout, LayoutDashboard } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/protected-route';
 import { useAuth } from '@/context/auth-context';
 import { ProjectFolder } from '@/components/studio/project-folder';
@@ -79,7 +79,15 @@ function ProgramsContent() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        <Button
+                            onClick={() => router.push('/dashboard/tutor')}
+                            variant="outline"
+                            className="border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800/80 bg-slate-900/50"
+                        >
+                            <LayoutDashboard className="w-4 h-4 mr-2 text-emerald-400" />
+                            Tutor Dashboard
+                        </Button>
                         <Button
                             onClick={handleLogout}
                             variant="ghost"

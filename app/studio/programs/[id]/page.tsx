@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { apiClient } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, FolderOpen, ArrowLeft, Trash2 } from 'lucide-react';
+import { Plus, FolderOpen, ArrowLeft, Trash2, LayoutDashboard } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/protected-route';
 import { ModuleCard } from '@/components/studio/module-card';
 
@@ -116,14 +116,25 @@ function ProgramDetailContent() {
             <div className="fixed top-0 left-0 right-0 h-96 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/20 via-slate-950/0 to-slate-950/0 pointer-events-none" />
 
             <div className="container mx-auto px-6 py-12 relative z-10">
-                <Button
-                    variant="ghost"
-                    onClick={() => router.push('/studio/programs')}
-                    className="mb-8 text-slate-500 hover:text-white pl-0 hover:bg-transparent transition-colors group"
-                >
-                    <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                    My Programs
-                </Button>
+                <div className="flex items-center gap-2 mb-8 text-sm">
+                    <Button
+                        variant="ghost"
+                        onClick={() => router.push('/dashboard/tutor')}
+                        className="text-slate-500 hover:text-emerald-400 p-0 hover:bg-transparent h-auto transition-colors flex items-center gap-1.5"
+                    >
+                        <LayoutDashboard className="w-3.5 h-3.5" />
+                        Tutor Dashboard
+                    </Button>
+                    <span className="text-slate-700">/</span>
+                    <Button
+                        variant="ghost"
+                        onClick={() => router.push('/studio/programs')}
+                        className="text-slate-500 hover:text-white p-0 hover:bg-transparent h-auto transition-colors flex items-center gap-1.5 group"
+                    >
+                        <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                        My Programs
+                    </Button>
+                </div>
 
                 <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16 border-b border-slate-800/50 pb-8">
                     <div className="space-y-4 max-w-2xl">
