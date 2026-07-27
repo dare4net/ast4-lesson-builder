@@ -166,8 +166,8 @@ function FlashcardsContent({
       "w-full flex-1 flex flex-col bg-white overflow-hidden group/flashcards transition-all duration-300",
       disabledProp && "opacity-75"
     )}>
-      {/* Inner portrait-style container */}
-      <div className="flex-1 flex flex-col w-full max-w-sm mx-auto px-4 h-full">
+      {/* Inner responsive container */}
+      <div className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-6 h-full">
 
 
         {/* Header */}
