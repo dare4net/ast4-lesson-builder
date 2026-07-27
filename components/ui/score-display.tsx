@@ -54,7 +54,7 @@ export function ScoreDisplay({ className }: { className?: string }) {
             {isPerfect && (
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
                     <p className="text-xs font-medium text-yellow-800 text-center flex items-center justify-center gap-1">
-                        Perfect Score! You're a rockstar! 🎉
+                        Perfect Score! You're a rockstar!
                     </p>
                 </div>
             )}

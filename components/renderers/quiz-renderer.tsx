@@ -289,12 +289,13 @@ export function QuizRenderer(props: QuizRendererProps) {
                       <button
                         key={option.id}
                         className={cn(
-                          'group/opt w-full p-4 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white shadow-sm overflow-hidden',
-                          isSelected && !isAnswered && 'border-emerald-500 bg-emerald-50 shadow-emerald-500/10',
-                          showCorrect && 'bg-emerald-500 border-emerald-600 text-white shadow-lg shadow-emerald-500/20',
-                          showIncorrect && 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10',
+                          'group/opt w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
+                          'border-b-4 active:border-b-0 active:translate-y-[2px]',
+                          isSelected && !isAnswered && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
+                          showCorrect && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
+                          showIncorrect && 'bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]',
                           (isAnswered || isDisabled) && 'cursor-not-allowed',
-                          !isAnswered && !isDisabled && 'hover:border-emerald-500/50 hover:bg-emerald-50/20 hover:shadow-md'
+                          !isAnswered && !isDisabled && 'hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 hover:shadow-md cursor-pointer'
                         )}
                         onClick={() => handleAnswerSelect(option.id)}
                         disabled={isAnswered || isDisabled}
@@ -302,17 +303,17 @@ export function QuizRenderer(props: QuizRendererProps) {
                         <div className="flex items-center justify-between relative z-10">
                           <div className="flex items-center gap-4">
                             <span className={cn(
-                              "text-[10px] font-black uppercase tracking-widest transition-colors",
-                              isSelected ? "text-emerald-600" : "text-slate-300 group-hover/opt:text-emerald-500",
-                              showCorrect && "text-white",
-                              showIncorrect && "text-rose-600"
+                              "w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black border-2 transition-colors shrink-0",
+                              isSelected && !isAnswered ? "bg-[#1CB0F6] text-white border-[#1CB0F6]" : "bg-slate-50 text-slate-400 border-slate-200 group-hover/opt:border-[#1CB0F6]/50 group-hover/opt:text-[#1CB0F6]",
+                              showCorrect && "bg-white/30 text-white border-white/30",
+                              showIncorrect && "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30"
                             )}>
                               {String.fromCharCode(65 + idx)}
                             </span>
                             <span className="font-bold text-sm tracking-tight">{option.text}</span>
                           </div>
-                          {showCorrect && <CheckCircle2 className="w-4 h-4 text-white stroke-[3] animate-in zoom-in-50 duration-500" />}
-                          {showIncorrect && <XCircle className="w-4 h-4 text-rose-600 stroke-[3] animate-in shake duration-500" />}
+                          {showCorrect && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                          {showIncorrect && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in shake duration-500 shrink-0" />}
                         </div>
                       </button>
                     )
@@ -335,9 +336,9 @@ export function QuizRenderer(props: QuizRendererProps) {
                     {currentQuestion === questions.length - 1 && selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect ? (
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Quiz Completed</span>
+                          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Great Job!</span>
                         </div>
-                        <p className="text-sm font-black text-slate-900 italic line-clamp-2">"Great job! You've successfully completed the quiz."</p>
+                        <p className="text-sm font-black text-slate-900 italic line-clamp-2">You finished the quiz! Keep it up!</p>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Final Score: {score}/{questions.length}</p>
                       </div>
                     ) : (
@@ -350,9 +351,9 @@ export function QuizRenderer(props: QuizRendererProps) {
                           )}
                         </div>
                         {selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect ? (
-                          <p className="text-sm font-black text-slate-900 leading-tight italic">Your response is correct.</p>
+                          <p className="text-sm font-black text-slate-900 leading-tight italic">Correct! Well done!</p>
                         ) : (
-                          <p className="text-sm font-black text-slate-900 leading-tight">That answer is incorrect. Please try again.</p>
+                          <p className="text-sm font-black text-slate-900 leading-tight">Not quite right — keep going, you can do it!</p>
                         )}
                         {question.explanation && (
                           <p className="text-xs font-bold text-slate-600 leading-tight mt-1">{question.explanation}</p>
@@ -367,11 +368,11 @@ export function QuizRenderer(props: QuizRendererProps) {
                 {(!isAnswered || currentQuestion < questions.length - 1) ? (
                   <Button
                     className={cn(
-                      'h-11 w-full rounded-xl font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-md',
+                      'h-12 w-full rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all transform border-b-4 active:border-b-0 active:translate-y-[2px] shadow-md',
                       !isAnswered && selectedAnswer !== null
-                        ? 'bg-emerald-600 text-white shadow-emerald-500/20 hover:bg-emerald-500'
-                        : 'bg-slate-100 text-slate-400 border border-slate-200 shadow-none',
-                      isAnswered && 'bg-slate-900 text-white shadow-slate-900/20 hover:bg-slate-800'
+                        ? 'bg-[#58CC02] text-white shadow-emerald-500/20 hover:bg-[#46a302] border-[#3B8C00]'
+                        : 'bg-slate-100 text-slate-400 border border-slate-200 border-b-slate-200 shadow-none',
+                      isAnswered && 'bg-[#1CB0F6] text-white shadow-sky-500/20 hover:bg-sky-500 border-[#0090CC]'
                     )}
                     onClick={isAnswered ? handleNextQuestion : handleCheckAnswer}
                     disabled={(selectedAnswer === null && !isAnswered) || isDisabled}

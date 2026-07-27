@@ -28,7 +28,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     return null;
   });
   const [error, setError] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [isHydrated, setIsHydrated] = useState(false);
@@ -421,9 +422,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     <ScoringProvider lesson={lessonData} initialScore={resolvedInteraction?.lessonState?.score || 0}>
       <NavigationLockProvider>
         <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
-          {/* Desktop/Tablet Sidebar */}
-          <div className="hidden md:block w-80 shrink-0 h-full">
-            {renderSidebarContent()}
+          {/* Desktop Sidebar — controlled by hamburger, collapses inline */}
+          <div className={cn(
+            "hidden md:flex flex-col shrink-0 h-full transition-all duration-300 ease-in-out overflow-hidden",
+            isSidebarOpen ? "w-80" : "w-0"
+          )}>
+            <div className="w-80 h-full">
+              {renderSidebarContent()}
+            </div>
           </div>
 
           {/* Main Content Area */}
@@ -432,11 +438,17 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
             <TopProgressBar
               progress={slideProgress}
               isCompleted={currentSlide?.status === "completed"}
-              onMenuClick={() => setIsSidebarOpen(true)}
+              onMenuClick={() => {
+                if (window.innerWidth >= 768) {
+                  setIsSidebarOpen(prev => !prev);
+                } else {
+                  setIsMobileSheetOpen(prev => !prev);
+                }
+              }}
             />
 
-            {/* Mobile Menu Sheet */}
-            <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+            {/* Mobile Menu Sheet — small screens only */}
+            <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>
               <SheetContent side="left" className="w-80 p-0 border-r-0">
                 {renderSidebarContent()}
               </SheetContent>

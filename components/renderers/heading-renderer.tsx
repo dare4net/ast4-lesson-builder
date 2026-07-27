@@ -85,7 +85,7 @@ export function HeadingRenderer({
           <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-900 group-hover:scale-110 transition-transform">
             <Play className="h-5 w-5 fill-current ml-1" />
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">Initialize Header Stream</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">Click to Read</span>
         </button>
       </div>
     )
@@ -135,7 +135,7 @@ export function HeadingRenderer({
         <div className="mt-4 flex animate-in slide-in-from-bottom-2 fade-in duration-700">
           <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Header Verified</span>
+            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Nice work! ✓</span>
           </div>
         </div>
       )}

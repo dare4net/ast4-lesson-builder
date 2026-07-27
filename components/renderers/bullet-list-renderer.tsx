@@ -114,7 +114,7 @@ export function BulletListRenderer({
           <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-900 group-hover:scale-110 transition-transform">
             <Play className="h-4 w-4 fill-current ml-1" />
           </div>
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600">Initialize List Sequence</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600">Read the List</span>
         </button>
       </div>
     )
@@ -183,7 +183,7 @@ export function BulletListRenderer({
         <div className="mt-6 flex justify-center animate-in slide-in-from-bottom-2 fade-in duration-700">
           <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Sequence Verified</span>
+            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">All done! ✓</span>
           </div>
         </div>
       )}

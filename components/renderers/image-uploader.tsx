@@ -57,7 +57,7 @@ export function ImageUploader({ value, onChange, className }: ImageUploaderProps
           className="h-10 px-4 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-emerald-500 hover:text-slate-950 transition-all text-xs font-black uppercase tracking-widest"
         >
           <Upload className="h-4 w-4 mr-2" />
-          Deploy
+          Upload
         </Button>
         <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
       </div>
@@ -72,13 +72,13 @@ export function ImageUploader({ value, onChange, className }: ImageUploaderProps
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
             <div className="absolute bottom-3 left-4">
-              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest opacity-0 group-hover/uploader:opacity-100 transition-all">Active Asset</span>
+              <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest opacity-0 group-hover/uploader:opacity-100 transition-all">Image Ready</span>
             </div>
           </>
         ) : (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-700 group-hover/uploader:text-emerald-500/50 transition-colors">
             <ImageIcon className="h-12 w-12 mb-4 stroke-1 animate-pulse" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em]">Void Stream</p>
+            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-[0.2em]">No Image Added</p>
           </div>
         )}
       </div>

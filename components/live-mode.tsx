@@ -23,7 +23,7 @@ export function LiveStartScreen({ onStart, label, icon }: LiveStartScreenProps) 
                 <div className="space-y-2">
                     <h3 className="text-sm font-black uppercase tracking-[0.2em] text-slate-800">{label}</h3>
                     <p className="text-xs font-medium text-slate-500 leading-relaxed max-w-xs mx-auto">
-                        <span className="text-emerald-600 font-bold">LIVE MODE ACTIVE.</span> Navigation is disabled during the data stream. Please read carefully and answer within the time limit. Scores are recorded.
+                        <span className="text-emerald-600 font-bold">LIVE LESSON ACTIVE.</span> Read each question carefully and answer before time runs out! Your score is being recorded. Good luck! 🎯
                     </p>
                 </div>
 
@@ -32,7 +32,7 @@ export function LiveStartScreen({ onStart, label, icon }: LiveStartScreenProps) 
                     variant="outline"
                     className="bg-white hover:bg-emerald-50 text-emerald-600 border-emerald-200 mt-2 font-bold tracking-wider text-[10px] uppercase shadow-sm"
                 >
-                    Initialize Stream
+                    Start Live Challenge
                 </Button>
             </div>
         </div>
@@ -109,7 +109,7 @@ export function LiveTimer({
                 "text-[10px] font-mono font-bold tracking-widest",
                 !isCompleted && secondsRemaining <= 5 && "scale-110"
             )}>
-                {isCompleted ? "STREAM COMPLETE" : `LIVE ${fmt(secondsRemaining)}`}
+                {isCompleted ? "CHALLENGE COMPLETE" : `LIVE ${fmt(secondsRemaining)}`}
             </span>
         </div>
     )

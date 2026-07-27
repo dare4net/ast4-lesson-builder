@@ -72,7 +72,7 @@ export function ParagraphRenderer({
           className="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 border border-emerald-500/50"
         >
           <Play className="w-4 h-4 mr-2" />
-          Initialize Content
+          Read This
         </Button>
       </div>
     )
@@ -119,7 +119,7 @@ export function ParagraphRenderer({
         <div className="mt-4 flex animate-in slide-in-from-bottom-2 fade-in duration-700">
           <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Data Stream Verified</span>
+            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Keep it up! ✓</span>
           </div>
         </div>
       )}

@@ -40,22 +40,21 @@ export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = f
 
       {!isAcknowledged && !isEditing && (
         <div className="flex justify-center flex-col items-center gap-4">
-          <p className="text-[10px] font-black text-emerald-600/40 uppercase tracking-[0.3em]">Visual Data Stream Locked</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Tap to reveal the image</p>
           <button
             onClick={handleAcknowledge}
-            className="group relative px-5 py-2 bg-emerald-600 text-white rounded font-black uppercase text-[8px] tracking-[0.2em] shadow-lg shadow-emerald-500/10 hover:bg-emerald-500 hover:scale-105 active:scale-95 transition-all"
+            className="group relative px-5 py-2 bg-[#58CC02] text-white rounded-xl font-extrabold text-xs shadow-lg shadow-emerald-500/20 hover:bg-[#46a302] hover:scale-105 active:scale-95 transition-all border-b-4 border-[#3B8C00] active:border-b-0 active:translate-y-[2px]"
           >
-            <span>Synchronize Visuals</span>
-            <div className="absolute inset-0 bg-white/10 rounded animate-pulse" />
+            <span>Show Image</span>
           </button>
         </div>
       )}
 
       {isAcknowledged && caption && (
         <figcaption className="text-center mt-6 animate-in fade-in slide-in-from-top-2 duration-700">
-          <span className="text-[10px] font-black text-emerald-600/60 uppercase tracking-[0.3em] block mb-2">Visual Asset Manifest</span>
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-2">Image Caption</span>
           <span className="text-slate-900 text-base font-black italic tracking-tight">
-            "{caption}"
+            {caption}
           </span>
         </figcaption>
       )}
