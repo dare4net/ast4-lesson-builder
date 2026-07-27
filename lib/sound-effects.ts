@@ -28,66 +28,67 @@ class SoundEffectManager {
   };
 
   constructor() {
-    // Configure Howler to use the cached audio files
+    // Configure Howler to use Web Audio API for short UI/game sound effects
+    // Setting html5: false avoids creating HTML5 Audio tags and prevents pool exhaustion
     this.sounds = {
-      correct: new Howl({ 
+      correct: new Howl({
         src: ['/sounds/correct.mp3'],
-        html5: true, // Enable HTML5 Audio to work better with service worker cache
-        preload: false // We'll handle preloading manually
+        html5: false,
+        preload: false
       }),
-      incorrect: new Howl({ 
+      incorrect: new Howl({
         src: ['/sounds/incorrect.wav'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      complete: new Howl({ 
+      complete: new Howl({
         src: ['/sounds/complete.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      click: new Howl({ 
+      click: new Howl({
         src: ['/sounds/click.wav'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      levelUp: new Howl({ 
+      levelUp: new Howl({
         src: ['/sounds/level-up.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      streak: new Howl({ 
+      streak: new Howl({
         src: ['/sounds/streak.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      flashcardFlip: new Howl({ 
+      flashcardFlip: new Howl({
         src: ['/sounds/flashcard-flip.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      uiClick: new Howl({ 
+      uiClick: new Howl({
         src: ['/sounds/ui-click.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      dngClick: new Howl({ 
+      dngClick: new Howl({
         src: ['/sounds/dng-click.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      dngSuccess: new Howl({ 
+      dngSuccess: new Howl({
         src: ['/sounds/dng-success.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      quizSuccess: new Howl({ 
+      quizSuccess: new Howl({
         src: ['/sounds/quiz-success.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
-      finishedLesson: new Howl({ 
+      finishedLesson: new Howl({
         src: ['/sounds/finished-lesson.mp3'],
-        html5: true,
+        html5: false,
         preload: false
       }),
     };
@@ -111,7 +112,7 @@ class SoundEffectManager {
 
   async play(effect: SoundEffect): Promise<void> {
     if (this.isMuted || this.status[effect].error) return;
-    
+
     const sound = this.sounds[effect];
     if (!sound) return;
 
@@ -149,7 +150,7 @@ class SoundEffectManager {
     // Ensure volume is between 0 and 1
     const normalizedVolume = Math.max(0, Math.min(1, volume));
     this.soundVolumes[effect] = normalizedVolume;
-    
+
     // Update the sound's current volume
     const sound = this.sounds[effect];
     if (sound) {
@@ -171,7 +172,7 @@ class SoundEffectManager {
       try {
         // Check cache first
         const cache = await caches.open('ast-builder-sounds-v1');
-        
+
         // Load sounds that are cached
         await Promise.all(
           Object.entries(this.sounds).map(async ([key, sound]) => {
