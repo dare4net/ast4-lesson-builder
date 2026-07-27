@@ -6,27 +6,23 @@ import { apiClient } from "@/lib/api-client"
 import {
     Users,
     ArrowLeft,
-    Target,
-    Activity,
     Mail,
-    Shield,
-    Monitor,
-    Layers,
-    Clock,
+    BookOpen,
     Zap,
     Loader2,
-    CheckCircle2
+    GraduationCap,
+    ChevronRight,
+    Clock
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { cn } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { formatDistanceToNow } from "date-fns"
 
 interface StudentDetail {
     user_id: string;
-    fullName: string;
+    fullName?: string;
+    full_name?: string;
     email: string;
     avatar?: string;
     registrations: any[];
@@ -34,6 +30,8 @@ interface StudentDetail {
         totalEnrolled: number;
         averageProgress: number;
     };
+    lastActive?: string;
+    last_active?: string;
 }
 
 export default function StudentDetailPage() {
@@ -58,11 +56,21 @@ export default function StudentDetailPage() {
         }
     }
 
+    const getDisplayName = (s: StudentDetail) => {
+        if (s.fullName) return s.fullName
+        if (s.full_name) return s.full_name
+        if (s.email) {
+            const prefix = s.email.split('@')[0]
+            return prefix.charAt(0).toUpperCase() + prefix.slice(1).replace(/[._-]/g, ' ')
+        }
+        return 'Student Learner'
+    }
+
     if (loading) {
         return (
-            <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
-                <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] animate-pulse">Accessing Agent File...</p>
+            <div className="h-[70vh] flex flex-col items-center justify-center gap-3">
+                <Loader2 className="w-8 h-8 text-[#58CC02] animate-spin" />
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Loading Student Profile...</p>
             </div>
         )
     }
@@ -70,150 +78,136 @@ export default function StudentDetailPage() {
     if (!student) {
         return (
             <div className="h-[70vh] flex flex-col items-center justify-center gap-4">
-                <Shield className="w-12 h-12 text-slate-800" />
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Agent data inaccessible in current sector</p>
-                <Button variant="ghost" onClick={() => router.back()} className="text-indigo-500 mt-4">TERMINATE SEARCH</Button>
+                <GraduationCap className="w-12 h-12 text-slate-300" />
+                <p className="text-sm font-bold text-slate-700">Student Profile Not Found</p>
+                <button
+                    onClick={() => router.back()}
+                    className="h-10 px-5 rounded-xl font-extrabold text-xs text-white bg-[#58CC02] border-b-4 border-[#3B8C00]"
+                >
+                    Back to Student Roster
+                </button>
             </div>
         )
     }
 
+    const studentName = getDisplayName(student)
+
     return (
-        <div className="space-y-10">
-            {/* Header Section */}
+        <div className="space-y-8">
+            {/* Navigation & Header */}
             <div className="flex flex-col gap-6">
-                <Button
-                    variant="ghost"
+                <button
                     onClick={() => router.back()}
-                    className="w-fit flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-indigo-400 transition-colors p-0 h-auto"
+                    className="w-fit flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#58CC02] transition-colors"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                    Back to Oversight
-                </Button>
+                    Back to Student Roster
+                </button>
 
-                <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-slate-900/40 border border-slate-800 p-10 rounded-[2.5rem] backdrop-blur-xl">
-                    <div className="flex items-center gap-8">
-                        <div className="relative">
-                            <Avatar className="h-28 w-28 border-4 border-slate-950 ring-4 ring-indigo-500/20 shadow-2xl">
-                                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${student.user_id}`} />
-                                <AvatarFallback className="bg-slate-950 text-2xl font-black text-indigo-500">
-                                    {student.fullName?.[0] || 'A'}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-indigo-500 border-4 border-slate-950 flex items-center justify-center text-slate-950">
-                                <Shield className="w-5 h-5" />
-                            </div>
-                        </div>
+                <Card className="p-8 md:p-10 rounded-3xl bg-white border-2 border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div className="flex items-center gap-6">
+                        <Avatar className="h-24 w-24 border-4 border-[#58CC02]/20 shadow-md">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${student.user_id}`} />
+                            <AvatarFallback className="bg-[#58CC02]/10 text-2xl font-extrabold text-[#58CC02]">
+                                {studentName[0] || 'S'}
+                            </AvatarFallback>
+                        </Avatar>
 
-                        <div className="space-y-2 text-center md:text-left">
+                        <div className="space-y-1 text-center md:text-left">
                             <div className="flex items-center justify-center md:justify-start gap-3">
-                                <h1 className="text-4xl font-black text-white tracking-tight uppercase">
-                                    {student.fullName || 'Unknown Agent'}
+                                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
+                                    {studentName}
                                 </h1>
                             </div>
-                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
-                                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
-                                    <Mail className="w-3.5 h-3.5" />
-                                    {student.email}
+                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs font-medium text-slate-500">
+                                <span className="flex items-center gap-1.5 font-semibold">
+                                    <Mail className="w-3.5 h-3.5 text-slate-400" />
+                                    {student.email || 'No email registered'}
                                 </span>
-                                <div className="w-1 h-1 rounded-full bg-slate-800" />
-                                <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest flex items-center gap-1.5">
-                                    <Zap className="w-3.5 h-3.5" />
-                                    Active Deployment
+                                <span className="inline-flex items-center gap-1 text-[#58CC02] font-bold bg-[#58CC02]/10 px-2.5 py-0.5 rounded-full border border-[#58CC02]/20">
+                                    <Zap className="w-3 h-3" />
+                                    Enrolled Student
                                 </span>
                             </div>
                         </div>
                     </div>
 
                     <div className="flex gap-4">
-                        <div className="p-6 rounded-[2rem] bg-indigo-500/5 border border-indigo-500/10 text-center space-y-1">
-                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Sector Mastery</p>
-                            <p className="text-2xl font-black text-indigo-400">{student.sectorSummary.averageProgress}%</p>
+                        <div className="p-5 rounded-2xl bg-[#58CC02]/10 border border-[#58CC02]/20 text-center space-y-0.5 min-w-[120px]">
+                            <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Average Progress</p>
+                            <p className="text-2xl font-extrabold text-[#58CC02]">{student.sectorSummary?.averageProgress || 0}%</p>
                         </div>
-                        <div className="p-6 rounded-[2rem] bg-indigo-500/5 border border-indigo-500/10 text-center space-y-1">
-                            <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Total Deployments</p>
-                            <p className="text-2xl font-black text-indigo-400">{student.sectorSummary.totalEnrolled}</p>
+                        <div className="p-5 rounded-2xl bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 text-center space-y-0.5 min-w-[120px]">
+                            <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Enrolled Courses</p>
+                            <p className="text-2xl font-extrabold text-[#1CB0F6]">{student.sectorSummary?.totalEnrolled || 0}</p>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
 
-            {/* Active Programs Section */}
-            <div className="space-y-6">
+            {/* Enrolled Courses Grid */}
+            <div className="space-y-5">
                 <div className="flex items-center gap-3">
-                    <Monitor className="w-5 h-5 text-indigo-500" />
-                    <h2 className="text-xl font-black text-white uppercase tracking-wider">Assigned Trajectories</h2>
+                    <BookOpen className="w-5 h-5 text-[#58CC02]" />
+                    <h2 className="text-xl font-extrabold text-slate-800">Enrolled Courses & Progress</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {student.registrations.map((reg, i) => (
+                    {student.registrations?.map((reg, i) => (
                         <motion.div
                             key={reg._id}
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.1 }}
+                            transition={{ delay: i * 0.08 }}
                         >
-                            <Card className="p-8 bg-slate-900/40 border-slate-800 rounded-[2.5rem] backdrop-blur-xl group hover:border-indigo-500/30 transition-all">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="space-y-1">
-                                        <h3 className="text-2xl font-black text-white tracking-tight uppercase group-hover:text-indigo-400 transition-colors line-clamp-1">
-                                            {reg.program_name}
-                                        </h3>
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                                                <Layers className="w-3 h-3" />
-                                                {reg.moduleCount} Sectors
-                                            </span>
-                                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                                                <Clock className="w-3 h-3" />
-                                                Deployed {formatDistanceToNow(new Date(reg.registered_at))} ago
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <Card className="p-7 rounded-3xl bg-white border-2 border-slate-200 shadow-sm hover:border-[#58CC02]/50 transition-all group flex flex-col justify-between h-full">
                                 <div className="space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em]">Mastery Progress</span>
-                                        <span className="text-sm font-black text-white">{reg.progress?.percent_complete || 0}%</span>
+                                    <div className="flex justify-between items-start">
+                                        <div className="space-y-1">
+                                            <h3 className="text-lg font-extrabold text-slate-800 group-hover:text-[#58CC02] transition-colors line-clamp-1">
+                                                {reg.program_name || reg.name || "Course"}
+                                            </h3>
+                                            <div className="flex items-center gap-3 text-xs font-semibold text-slate-400">
+                                                <span>{reg.moduleCount || 0} Modules</span>
+                                                {reg.registered_at && (
+                                                    <>
+                                                        <span>•</span>
+                                                        <span>Joined {formatDistanceToNow(new Date(reg.registered_at))} ago</span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="h-2 w-full bg-slate-950 border border-slate-800 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${reg.progress?.percent_complete || 0}%` }}
-                                            transition={{ duration: 1.5, ease: "easeOut" }}
-                                            className="h-full bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]"
-                                        />
+
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between text-xs font-extrabold">
+                                            <span className="text-slate-500 uppercase tracking-wider">Course Progress</span>
+                                            <span className="text-[#58CC02]">{reg.progress?.percent_complete || 0}%</span>
+                                        </div>
+                                        <div className="h-2.5 w-full bg-slate-100 border border-slate-200 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full bg-[#58CC02] rounded-full transition-all duration-500"
+                                                style={{ width: `${reg.progress?.percent_complete || 0}%` }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="mt-8 flex flex-wrap gap-2">
-                                    {reg.progress?.completed_lessons?.slice(0, 3).map((lessonId: string, idx: number) => (
-                                        <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-emerald-500">
-                                            <CheckCircle2 className="w-3 h-3" />
-                                            <span className="text-[9px] font-black uppercase tracking-widest">Sector Cleared</span>
-                                        </div>
-                                    ))}
-                                    {reg.progress?.completed_lessons?.length > 3 && (
-                                        <div className="px-2.5 py-1 rounded-full bg-slate-950 border border-slate-800 text-slate-500">
-                                            <span className="text-[9px] font-black uppercase tracking-widest">+ {reg.progress.completed_lessons.length - 3} MORE</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <Button
+                                <button
                                     onClick={() => router.push(`/dashboard/tutor/students/${student.user_id}/programs/${reg.program_id}`)}
-                                    className="w-full mt-8 h-12 bg-slate-950 border border-slate-800 text-[10px] font-black uppercase tracking-[0.2em] group-hover:border-indigo-500/30 group-hover:text-indigo-400 transition-all"
+                                    className="w-full mt-6 h-11 bg-slate-50 hover:bg-[#58CC02] hover:text-white border-2 border-slate-200 hover:border-[#3B8C00] text-slate-700 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all"
                                 >
-                                    Analyze Performance
-                                </Button>
+                                    <span>View Detailed Progress</span>
+                                    <ChevronRight className="w-4 h-4" />
+                                </button>
                             </Card>
                         </motion.div>
                     ))}
                 </div>
 
-                {student.registrations.length === 0 && (
-                    <div className="py-20 flex flex-col items-center justify-center border border-dashed border-slate-800 rounded-[2.5rem] bg-slate-900/20">
-                        <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest">No active deployments detected for this agent</p>
+                {(!student.registrations || student.registrations.length === 0) && (
+                    <div className="py-16 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-3xl bg-white text-center">
+                        <p className="text-xs font-bold text-slate-400">This student is not enrolled in any courses yet.</p>
                     </div>
                 )}
             </div>

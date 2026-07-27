@@ -3,10 +3,17 @@
 import { useState, useEffect } from "react"
 import { apiClient } from "@/lib/api-client"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, Compass, Sparkles, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw } from "lucide-react"
+import { BookOpen, Compass, Sparkles, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
+
+const DUO_THEME_PALETTES = [
+    { bg: "bg-[#1CB0F6]/10", border: "border-[#1CB0F6]/20", text: "text-[#1CB0F6]", buttonBg: "bg-[#1CB0F6] hover:bg-[#1899D6] border-[#1482B8]" },
+    { bg: "bg-[#58CC02]/10", border: "border-[#58CC02]/20", text: "text-[#58CC02]", buttonBg: "bg-[#58CC02] hover:bg-[#46a302] border-[#3B8C00]" },
+    { bg: "bg-[#FF9600]/10", border: "border-[#FF9600]/20", text: "text-[#FF9600]", buttonBg: "bg-[#FF9600] hover:bg-[#e08400] border-[#cc7700]" },
+    { bg: "bg-[#CE82FF]/10", border: "border-[#CE82FF]/20", text: "text-[#CE82FF]", buttonBg: "bg-[#CE82FF] hover:bg-[#b866eb] border-[#9e4ed4]" }
+]
 
 export default function CatalogPage() {
     const router = useRouter()
@@ -15,6 +22,8 @@ export default function CatalogPage() {
     const [loading, setLoading] = useState(true)
     const [registeringId, setRegisteringId] = useState<string | null>(null)
     const [selectedProgram, setSelectedProgram] = useState<any | null>(null)
+    const [loadingDetails, setLoadingDetails] = useState(false)
+    const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
@@ -34,7 +43,7 @@ export default function CatalogPage() {
             setCatalog(catalogData)
             setMyPrograms(enrolledData)
             if (catalogData.length > 0) {
-                setSelectedProgram(catalogData[0])
+                selectProgram(catalogData[0])
             }
         } catch (err: any) {
             console.error("Failed to load catalog data", err)
@@ -44,16 +53,30 @@ export default function CatalogPage() {
         }
     }
 
+    const selectProgram = async (program: any) => {
+        setSelectedProgram(program)
+        setLoadingDetails(true)
+        try {
+            const details = await apiClient.programs.getDetails(program._id)
+            setSelectedProgram(details)
+        } catch (err) {
+            console.error("Failed to fetch program details", err)
+        } finally {
+            setLoadingDetails(false)
+        }
+    }
+
     const isEnrolled = (programId: string) => {
         return myPrograms.some(p => p._id === programId || p.program_id === programId)
     }
 
-    const handleRegister = async (programId: string) => {
+    const handleRegister = async (programId: string, e?: React.MouseEvent) => {
+        if (e) e.stopPropagation()
         setRegisteringId(programId)
         try {
             await apiClient.programs.register(programId)
             const enrolled = await apiClient.programs.getMyPrograms()
-            setMyPrograms(enrolled)
+            setMyPrograms(Array.isArray(enrolled) ? enrolled : (enrolled?.data || enrolled?.programs || []))
         } catch (err: any) {
             console.error("Failed to enroll in course", err)
             alert(err.message || "Failed to enroll in course")
@@ -62,172 +85,275 @@ export default function CatalogPage() {
         }
     }
 
-    return (
-        <div className="space-y-8">
-            {/* Header */}
-            <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-green-200 dark:border-green-500/20 bg-green-50 dark:bg-green-500/10">
-                    <Compass className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
-                    <span className="text-xs font-semibold text-green-700 dark:text-green-400">Course Catalog</span>
+    const handleGoToCourse = (programId: string, e?: React.MouseEvent) => {
+        if (e) e.stopPropagation()
+        router.push(`/dashboard/student/programs/${programId}`)
+    }
+
+    const handleCardClick = (program: any) => {
+        selectProgram(program)
+        if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+            setIsMobileModalOpen(true)
+        }
+    }
+
+    const getModuleTitle = (mod: any, idx: number) => {
+        if (!mod || typeof mod !== 'object') return `Module ${idx + 1}`
+        return mod.name || mod.title || mod.module_name || mod.moduleTitle || mod.module_title || `Module ${idx + 1}`
+    }
+
+    const getModuleLessonCount = (mod: any) => {
+        if (!mod || typeof mod !== 'object') return 0
+        if (Array.isArray(mod.lessons)) return mod.lessons.length
+        if (typeof mod.lessonCount === 'number') return mod.lessonCount
+        if (typeof mod.lessonsCount === 'number') return mod.lessonsCount
+        if (typeof mod.lesson_count === 'number') return mod.lesson_count
+        if (typeof mod.lessons_count === 'number') return mod.lessons_count
+        return 0
+    }
+
+    const renderCourseOverviewContent = (program: any) => {
+        const enrolled = isEnrolled(program._id)
+        return (
+            <div className="space-y-6">
+                <div>
+                    <span className="text-[10px] font-extrabold text-[#1CB0F6] uppercase tracking-wider bg-[#1CB0F6]/10 px-2.5 py-1 rounded-full border border-[#1CB0F6]/20 inline-block mb-2">
+                        Course Overview
+                    </span>
+                    <h3 className="text-xl font-extrabold text-slate-800">
+                        {program.name || program.program_name || program.title || "Untitled Course"}
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-2 leading-relaxed font-medium">
+                        {program.description || "No description available."}
+                    </p>
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                    Explore Learning Courses
-                </h1>
-                <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xl">
-                    Discover new courses and modules designed to enhance your skills.
-                </p>
+
+                <div className="space-y-3">
+                    <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                        <span>Course Modules</span>
+                        {loadingDetails && <Loader2 className="w-3.5 h-3.5 text-[#1CB0F6] animate-spin" />}
+                    </h4>
+
+                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                        {program.modules && program.modules.length > 0 ? (
+                            program.modules.map((mod: any, idx: number) => {
+                                const moduleTitle = getModuleTitle(mod, idx)
+                                const lessonCount = getModuleLessonCount(mod)
+                                const palette = DUO_THEME_PALETTES[idx % DUO_THEME_PALETTES.length]
+
+                                return (
+                                    <div
+                                        key={typeof mod === 'object' ? (mod._id || idx) : idx}
+                                        className="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs"
+                                    >
+                                        <div className="flex items-center gap-2.5">
+                                            <div className={`w-7 h-7 rounded-xl ${palette.bg} ${palette.text} flex items-center justify-center font-extrabold text-[11px]`}>
+                                                {idx + 1}
+                                            </div>
+                                            <div>
+                                                <p className="font-extrabold text-slate-800 line-clamp-1">{moduleTitle}</p>
+                                                {typeof mod === 'object' && mod.description && (
+                                                    <p className="text-[11px] text-slate-400 font-medium line-clamp-1">{mod.description}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <span className="text-[11px] font-extrabold text-slate-400 bg-white border border-slate-200 px-2 py-0.5 rounded-full shrink-0">
+                                            {lessonCount} {lessonCount === 1 ? 'Lesson' : 'Lessons'}
+                                        </span>
+                                    </div>
+                                )
+                            })
+                        ) : (
+                            <p className="text-xs text-slate-400 font-semibold italic">No modules listed for this course.</p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex flex-col gap-2">
+                    {enrolled ? (
+                        <Button
+                            onClick={(e) => handleGoToCourse(program._id, e)}
+                            className="w-full bg-[#1CB0F6] hover:bg-[#1899D6] border-b-4 border-[#1482B8] text-white font-extrabold text-xs h-10 rounded-xl flex items-center justify-center gap-2"
+                        >
+                            <span>Go to Course</span>
+                            <ArrowRight className="w-4 h-4" />
+                        </Button>
+                    ) : (
+                        <Button
+                            disabled={registeringId === program._id}
+                            onClick={(e) => handleRegister(program._id, e)}
+                            className="w-full bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white font-extrabold text-xs h-10 rounded-xl flex items-center justify-center gap-2"
+                        >
+                            {registeringId === program._id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <>
+                                    <Sparkles className="w-4 h-4" />
+                                    <span>Enroll in Course</span>
+                                </>
+                            )}
+                        </Button>
+                    )}
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <Compass className="w-6 h-6 text-[#1CB0F6]" />
+                        <span>Explore Course Catalog</span>
+                    </h1>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">
+                        Discover new learning modules and enroll to build your tech skills.
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 text-xs font-bold text-[#1CB0F6] self-start sm:self-auto">
+                    <BookOpen className="w-4 h-4" />
+                    <span>{catalog.length} Available Courses</span>
+                </div>
             </div>
 
-            {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 gap-3">
-                    <Loader2 className="w-8 h-8 text-green-600 dark:text-green-400 animate-spin" />
-                    <span className="text-xs font-medium text-slate-500">Fetching available courses...</span>
-                </div>
-            ) : error ? (
-                <div className="p-8 rounded-2xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/5 text-center space-y-3">
+            {error ? (
+                <div className="p-8 rounded-3xl bg-red-50 border-2 border-red-200 text-center space-y-3">
                     <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
-                    <p className="text-red-600 dark:text-red-400 text-sm font-semibold">{error}</p>
+                    <p className="text-xs font-extrabold text-red-700">{error}</p>
                     <Button
                         onClick={loadData}
-                        variant="outline"
-                        className="rounded-xl text-xs flex items-center gap-2 mx-auto"
+                        className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs h-9 rounded-xl inline-flex items-center gap-2"
                     >
                         <RefreshCw className="w-3.5 h-3.5" />
-                        Try Again
+                        <span>Retry</span>
                     </Button>
                 </div>
+            ) : loading ? (
+                <div className="flex flex-col items-center justify-center py-24 gap-3">
+                    <Loader2 className="w-8 h-8 text-[#1CB0F6] animate-spin" />
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Loading Course Catalog...</span>
+                </div>
             ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                    {/* Courses Grid */}
-                    <div className="lg:col-span-2 grid sm:grid-cols-2 gap-5">
-                        {catalog.map((program) => {
-                            const enrolled = isEnrolled(program._id)
-                            const isSelected = selectedProgram?._id === program._id
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {catalog.map((prog, idx) => {
+                            const enrolled = isEnrolled(prog._id)
+                            const isSelected = selectedProgram?._id === prog._id
+                            const palette = DUO_THEME_PALETTES[idx % DUO_THEME_PALETTES.length]
 
                             return (
-                                <Card
-                                    key={program._id}
-                                    onClick={() => setSelectedProgram(program)}
-                                    className={`p-6 rounded-2xl transition-all cursor-pointer flex flex-col justify-between h-full border ${isSelected
-                                        ? "border-green-500 ring-2 ring-green-500/10 bg-white dark:bg-slate-900"
-                                        : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:border-slate-300 dark:hover:border-slate-700"
-                                        }`}
+                                <motion.div
+                                    key={prog._id || idx}
+                                    initial={{ opacity: 0, scale: 0.97 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: idx * 0.05 }}
                                 >
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-start">
-                                            <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-                                                <BookOpen className="w-5 h-5" />
+                                    <Card
+                                        onClick={() => handleCardClick(prog)}
+                                        className={`p-6 rounded-3xl bg-white border-2 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between shadow-sm ${isSelected ? "border-[#1CB0F6] ring-2 ring-[#1CB0F6]/20" : "border-slate-200 hover:border-slate-300"
+                                            }`}
+                                    >
+                                        <div className="space-y-4">
+                                            <div className="flex justify-between items-start">
+                                                <div className={`w-11 h-11 rounded-2xl ${palette.bg} border ${palette.border} flex items-center justify-center ${palette.text}`}>
+                                                    <BookOpen className="w-5.5 h-5.5" />
+                                                </div>
+                                                {enrolled && (
+                                                    <span className="text-xs font-extrabold text-[#58CC02] bg-[#58CC02]/10 px-2.5 py-0.5 rounded-full border border-[#58CC02]/20 flex items-center gap-1">
+                                                        <CheckCircle2 className="w-3 h-3" />
+                                                        Enrolled
+                                                    </span>
+                                                )}
                                             </div>
-                                            {enrolled && (
-                                                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-500/10 px-2.5 py-0.5 rounded-full border border-green-200 dark:border-green-500/20">
-                                                    <CheckCircle2 className="w-3 h-3" />
-                                                    Enrolled
-                                                </span>
-                                            )}
+
+                                            <div>
+                                                <h3 className="text-base font-extrabold text-slate-800 mb-1 group-hover:text-[#1CB0F6] transition-colors">
+                                                    {prog.name || prog.program_name || prog.title || "Untitled Course"}
+                                                </h3>
+                                                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium">
+                                                    {prog.description || "Interactive learning course."}
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div>
-                                            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                                                {program.program_name || program.name || program.title || "Untitled Course"}
-                                            </h3>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
-                                                {program.description || "Interactive course modules."}
-                                            </p>
-                                        </div>
-                                    </div>
+                                        <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
+                                            <span className="text-slate-400 font-bold">
+                                                {prog.modules?.length || 0} Modules
+                                            </span>
 
-                                    <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
-                                        <span className="text-slate-500 font-medium">
-                                            {program.modules?.length || 0} Modules
-                                        </span>
-                                        <Button
-                                            size="sm"
-                                            disabled={registeringId === program._id}
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                if (enrolled) {
-                                                    router.push('/dashboard/student/programs')
-                                                } else {
-                                                    handleRegister(program._id)
-                                                }
-                                            }}
-                                            className={enrolled
-                                                ? "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl font-semibold text-xs h-8 px-3"
-                                                : "bg-green-600 hover:bg-green-500 text-white rounded-xl font-semibold text-xs h-8 px-3 shadow-sm"
-                                            }
-                                        >
-                                            {registeringId === program._id ? (
-                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                                            ) : enrolled ? (
-                                                "Go to Course"
+                                            {enrolled ? (
+                                                <Button
+                                                    onClick={(e) => handleGoToCourse(prog._id, e)}
+                                                    className="bg-[#1CB0F6] hover:bg-[#1899D6] border-b-2 border-[#1482B8] text-white font-extrabold text-xs h-8 px-3.5 rounded-xl flex items-center gap-1.5 shrink-0"
+                                                >
+                                                    <span>Go to Course</span>
+                                                    <ArrowRight className="w-3.5 h-3.5" />
+                                                </Button>
                                             ) : (
-                                                "Enroll Now"
+                                                <Button
+                                                    disabled={registeringId === prog._id}
+                                                    onClick={(e) => handleRegister(prog._id, e)}
+                                                    className="bg-[#58CC02] hover:bg-[#46a302] border-b-2 border-[#3B8C00] text-white font-extrabold text-xs h-8 px-3.5 rounded-xl flex items-center gap-1.5 shrink-0"
+                                                >
+                                                    {registeringId === prog._id ? (
+                                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                    ) : (
+                                                        <span>Enroll</span>
+                                                    )}
+                                                </Button>
                                             )}
-                                        </Button>
-                                    </div>
-                                </Card>
+                                        </div>
+                                    </Card>
+                                </motion.div>
                             )
                         })}
                     </div>
 
-                    {/* Selected Course Details Sidebar */}
-                    {selectedProgram && (
-                        <Card className="p-6 rounded-2xl border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/80 space-y-6 sticky top-24">
-                            <div>
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Selected Course</span>
-                                <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">
-                                    {selectedProgram.program_name || selectedProgram.name || selectedProgram.title || "Untitled Course"}
-                                </h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-                                    {selectedProgram.description || "No description available."}
-                                </p>
-                            </div>
-
-                            <div className="space-y-3">
-                                <h4 className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                                    Course Modules ({selectedProgram.modules?.length || 0})
-                                </h4>
-                                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                                    {selectedProgram.modules?.map((mod: any, i: number) => (
-                                        <div key={i} className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
-                                            <span className="font-semibold text-slate-800 dark:text-slate-200">
-                                                {i + 1}. {mod.title || mod.name || mod.module_name || `Module ${i + 1}`}
-                                            </span>
-                                            <span className="text-[10px] text-slate-400 font-medium">
-                                                {mod.lessons?.length || 0} Lessons
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <Button
-                                disabled={registeringId === selectedProgram._id}
-                                onClick={() => {
-                                    if (isEnrolled(selectedProgram._id)) {
-                                        router.push('/dashboard/student/programs')
-                                    } else {
-                                        handleRegister(selectedProgram._id)
-                                    }
-                                }}
-                                className="w-full bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl h-11 text-xs shadow-sm flex items-center justify-center gap-2"
-                            >
-                                {isEnrolled(selectedProgram._id) ? (
-                                    <>
-                                        <span>View in My Courses</span>
-                                        <ArrowRight className="w-4 h-4" />
-                                    </>
-                                ) : (
-                                    <>
-                                        <Sparkles className="w-4 h-4" />
-                                        <span>Enroll in Course</span>
-                                    </>
-                                )}
-                            </Button>
-                        </Card>
-                    )}
+                    <div className="hidden lg:block">
+                        {selectedProgram ? (
+                            <Card className="p-6 rounded-3xl bg-white border-2 border-slate-200 shadow-sm sticky top-6">
+                                {renderCourseOverviewContent(selectedProgram)}
+                            </Card>
+                        ) : (
+                            <Card className="p-8 rounded-3xl bg-white border-2 border-dashed border-slate-200 text-center py-16">
+                                <BookOpen className="w-10 h-10 text-slate-300 mx-auto mb-2" />
+                                <p className="text-xs font-extrabold text-slate-400">Select a course to view details</p>
+                            </Card>
+                        )}
+                    </div>
                 </div>
             )}
+
+            <AnimatePresence>
+                {isMobileModalOpen && selectedProgram && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-end justify-center p-4 lg:hidden"
+                        onClick={() => setIsMobileModalOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ y: "100%" }}
+                            animate={{ y: 0 }}
+                            exit={{ y: "100%" }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="bg-white rounded-t-3xl p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto space-y-4 shadow-2xl relative"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => setIsMobileModalOpen(false)}
+                                className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                            {renderCourseOverviewContent(selectedProgram)}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }

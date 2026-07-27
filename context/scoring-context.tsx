@@ -28,6 +28,13 @@ export function ScoringProvider({
     const [currentScore, setCurrentScore] = useState(initialScore)
     const [totalScore, setTotalScore] = useState(0)
 
+    // Sync initialScore when loaded asynchronously
+    useEffect(() => {
+        if (initialScore !== undefined) {
+            setCurrentScore(initialScore)
+        }
+    }, [initialScore])
+
     // Calculate total possible points whenever the lesson changes
     useEffect(() => {
         if (lesson) {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { SplashScreen } from '@/components/splash-screen';
@@ -9,13 +9,13 @@ import { IdentitySelection } from '@/components/identity-selection';
 
 export default function Home() {
   const router = useRouter();
-  const { isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
   const [showIdentitySelection, setShowIdentitySelection] = useState(false);
 
   const handleSplashFinished = () => {
     if (isAuthenticated) {
-      router.push('/studio/programs');
+      router.push(user?.role === 'tutor' ? '/dashboard/tutor' : '/dashboard/student');
     } else {
       setShowSplash(false);
       setShowIdentitySelection(true);

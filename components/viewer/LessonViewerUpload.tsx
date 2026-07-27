@@ -110,6 +110,15 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
       setLessonData({ ...initialLesson, slides: processedSlides });
       setResolvedInteraction(latestData);
+
+      // Restore persisted score values
+      if (latestData?.lessonState?.score !== undefined) {
+        setCurrentScore(latestData.lessonState.score);
+      }
+      if (latestData?.lessonState?.totalScore !== undefined) {
+        setTotalPossibleScore(latestData.lessonState.totalScore);
+      }
+
       setIsHydrated(true);
     }
 
@@ -304,12 +313,17 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
           {/* Performance Section */}
           <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
-              <Award className="h-4 w-4 text-green-400" />
-              Score Overview
-            </h3>
-            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
+                <Award className="h-4 w-4 text-green-400" />
+                Score Overview
+              </h3>
+            </div>
+            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50 space-y-3">
               <ScoreDisplay />
+              <div className="pt-2 border-t border-slate-700/50">
+                <SyncStatusHUD />
+              </div>
             </div>
           </div>
 
@@ -348,11 +362,15 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           className="w-full rounded-xl border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold h-10 flex items-center justify-center gap-2"
           onClick={() => {
             saveInteraction();
-            router.push('/dashboard/student');
+            if (window.history.length > 1) {
+              router.back();
+            } else {
+              router.push('/dashboard/student');
+            }
           }}
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Dashboard
+          Back to Module
         </Button>
       </div>
     </div>
@@ -400,7 +418,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const currentSlide = lessonData?.slides[currentSlideIndex];
 
   return (
-    <ScoringProvider lesson={lessonData}>
+    <ScoringProvider lesson={lessonData} initialScore={resolvedInteraction?.lessonState?.score || 0}>
       <NavigationLockProvider>
         <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
           {/* Desktop/Tablet Sidebar */}
@@ -416,11 +434,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
               isCompleted={currentSlide?.status === "completed"}
               onMenuClick={() => setIsSidebarOpen(true)}
             />
-
-            {/* Sync HUD Layer */}
-            <div className="absolute top-16 right-5 z-50 pointer-events-auto">
-              <SyncStatusHUD />
-            </div>
 
             {/* Mobile Menu Sheet */}
             <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>

@@ -3,19 +3,21 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiClient } from '@/lib/api-client';
 import { jwtDecode } from 'jwt-decode';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-interface User {
+export interface User {
     user_id: string;
     role: string;
     email?: string;
+    full_name?: string;
+    fullName?: string;
 }
 
 interface AuthContextType {
     user: User | null;
     token: string | null;
     loading: boolean;
-    login: (email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<User>;
     signup: (email: string, password: string, fullName: string, role: string) => Promise<void>;
     logout: () => void;
     isAuthenticated: boolean;
@@ -28,7 +30,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [token, setToken] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const pathname = usePathname();
 
     // Initialize auth from localStorage on mount
     useEffect(() => {
@@ -50,16 +51,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         initAuth();
     }, []);
 
-    const login = async (email: string, password: string) => {
+    const login = async (email: string, password: string): Promise<User> => {
         try {
             const data = await apiClient.login(email, password);
-            const { token: newToken } = data;
+            const { token: newToken, user: responseUser } = data;
 
             apiClient.setToken(newToken);
             const decoded = jwtDecode<User>(newToken);
 
+            // Merge decoded JWT with any extra fields returned in the API login response
+            const fullUserData: User = {
+                ...decoded,
+                email: responseUser?.email || decoded.email || email,
+                full_name: responseUser?.full_name || responseUser?.fullName || decoded.full_name || decoded.fullName,
+            };
+
             setToken(newToken);
-            setUser(decoded);
+            setUser(fullUserData);
+            return fullUserData;
         } catch (error: any) {
             console.error('Login failed:', error);
             throw new Error(error.response?.data?.message || 'Login failed');
@@ -69,13 +78,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const signup = async (email: string, password: string, fullName: string, role: string) => {
         try {
             const data = await apiClient.signup(email, password, fullName, role);
-            const { token: newToken } = data;
+            const { token: newToken, user: responseUser } = data;
 
             apiClient.setToken(newToken);
             const decoded = jwtDecode<User>(newToken);
 
+            const fullUserData: User = {
+                ...decoded,
+                email: responseUser?.email || decoded.email || email,
+                full_name: fullName || responseUser?.full_name || decoded.full_name,
+            };
+
             setToken(newToken);
-            setUser(decoded);
+            setUser(fullUserData);
         } catch (error: any) {
             console.error('Signup failed:', error);
             throw new Error(error.response?.data?.message || 'Signup failed');

@@ -3,7 +3,6 @@
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
@@ -15,7 +14,7 @@ function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const role = searchParams?.get('role') || 'tutor';
-    const { login } = useAuth();
+    const { login, logout } = useAuth();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -31,11 +30,21 @@ function LoginForm() {
         setError('');
         setLoading(true);
         try {
-            await login(email, password);
-            router.push(isStudent ? '/dashboard/student' : '/dashboard/tutor');
+            const loggedInUser = await login(email, password);
+            const userRole = loggedInUser?.role?.toLowerCase() || 'student';
+
+            // Role guard check: If logging in via Tutor Portal, user MUST have role 'tutor'
+            if (!isStudent && userRole === 'student') {
+                logout(); // clear token session created
+                setError('Access denied: This account is registered as a Student. Please log in via the Student Portal.');
+                setLoading(false);
+                return;
+            }
+
+            // Redirect based on user role
+            router.push(userRole === 'tutor' ? '/dashboard/tutor' : '/dashboard/student');
         } catch (err: any) {
             setError(err.message || 'Invalid email or password. Please try again.');
-        } finally {
             setLoading(false);
         }
     };

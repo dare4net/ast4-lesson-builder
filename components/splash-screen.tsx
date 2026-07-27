@@ -2,74 +2,131 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 
 interface SplashScreenProps {
     onFinished: () => void
-    progress?: number
     isLoading?: boolean
 }
 
 export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProps) {
-    const [fakeProgress, setFakeProgress] = useState(0)
-    const [phase, setPhase] = useState<'loading' | 'welcome'>('loading')
+    const [progress, setProgress] = useState(0)
+    const [phase, setPhase] = useState<'loading' | 'ready'>('loading')
 
     useEffect(() => {
-        // Animate progress from 0 → 100 over ~3 seconds
         let current = 0
         const interval = setInterval(() => {
-            const jump = isLoading ? Math.random() * 4 : Math.random() * 8 + 4
-            current = Math.min(current + jump, isLoading ? 85 : 100)
-            setFakeProgress(Math.round(current))
+            const increment = Math.random() * 5 + 3
+            current = Math.min(current + increment, 100)
+            setProgress(Math.round(current))
 
             if (current >= 100) {
                 clearInterval(interval)
-                // Show welcome text briefly then finish
                 setTimeout(() => {
-                    setPhase('welcome')
+                    setPhase('ready')
                     setTimeout(() => {
                         onFinished()
-                    }, 1800)
+                    }, 1000)
                 }, 300)
             }
-        }, 120)
+        }, 75)
 
         return () => clearInterval(interval)
-    }, [isLoading, onFinished])
+    }, [onFinished])
 
-    // If auth finishes loading, let progress complete
-    useEffect(() => {
-        if (!isLoading && fakeProgress < 100) {
-            setFakeProgress(100)
-        }
-    }, [isLoading])
+    const drawVariant = {
+        hidden: { pathLength: 0, opacity: 0 },
+        visible: (i: number) => ({
+            pathLength: 1,
+            opacity: 1,
+            transition: {
+                pathLength: { delay: i * 0.15, type: "spring", duration: 1.2, bounce: 0 },
+                opacity: { delay: i * 0.15, duration: 0.2 }
+            }
+        })
+    }
+
+    const titleText = "After-School Tech Studio"
 
     return (
         <motion.div
-            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white overflow-hidden"
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FAF9F5] select-none overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3 }}
         >
-            {/* Top green stripe */}
-            <div className="absolute top-0 inset-x-0 h-1.5 bg-[#58CC02]" />
+            {/* Subtle Flat Notebook Grid */}
+            <div
+                className="absolute inset-0 opacity-[0.2] pointer-events-none"
+                style={{
+                    backgroundImage: `radial-gradient(#1CB0F6 1px, transparent 1px)`,
+                    backgroundSize: '24px 24px'
+                }}
+            />
 
-            {/* Subtle ambient blob */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#58CC02]/5 rounded-full blur-[100px]" />
-            </div>
+            {/* Flat Duo Top Stripe */}
+            <div className="absolute top-0 inset-x-0 h-2 bg-[#58CC02]" />
 
-            <div className="relative z-10 flex flex-col items-center gap-8 w-full max-w-sm px-8">
-                {/* Logo */}
+            {/* Flat SVG Doodle Animations */}
+            {/* Flat Doodle Star Top Right */}
+            <svg className="absolute top-12 right-12 w-12 h-12 text-[#FFC800]" viewBox="0 0 100 100" fill="none">
+                <motion.path
+                    d="M50 5 L63 35 L95 38 L70 60 L78 92 L50 75 L22 92 L30 60 L5 38 L37 35 Z"
+                    stroke="currentColor"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    custom={1}
+                    initial="hidden"
+                    animate="visible"
+                    variants={drawVariant}
+                />
+            </svg>
+
+            {/* Flat Doodle Spiral Bottom Left */}
+            <svg className="absolute bottom-16 left-12 w-14 h-14 text-[#FF4B4B]" viewBox="0 0 100 100" fill="none">
+                <motion.path
+                    d="M 50,50 A 10,10 0 0 1 60,60 A 20,20 0 0 1 40,70 A 30,30 0 0 1 20,40 A 40,40 0 0 1 80,30"
+                    stroke="currentColor"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    custom={2}
+                    initial="hidden"
+                    animate="visible"
+                    variants={drawVariant}
+                />
+            </svg>
+
+            {/* Flat Doodle Spark Top Left */}
+            <svg className="absolute top-16 left-16 w-10 h-10 text-[#1CB0F6]" viewBox="0 0 60 60" fill="none">
+                <motion.path
+                    d="M30 5 V55 M5 30 H55 M12 12 L48 48 M48 12 L12 48"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    custom={3}
+                    initial="hidden"
+                    animate="visible"
+                    variants={drawVariant}
+                />
+            </svg>
+
+            {/* Main Center Flat Content */}
+            <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-sm px-6 text-center">
+
+                {/* Flat Logo Container */}
                 <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
+                    initial={{ scale: 0.7, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 220,
+                        damping: 16
+                    }}
                     className="relative"
                 >
-                    <div className="absolute inset-0 rounded-3xl bg-[#58CC02]/10 blur-xl" />
-                    <div className="relative w-24 h-24 rounded-3xl bg-white border-2 border-slate-200 shadow-lg flex items-center justify-center overflow-hidden">
+                    <div className="w-24 h-24 rounded-3xl bg-white border-2 border-slate-200 shadow-md flex items-center justify-center overflow-hidden p-3">
                         <Image
                             src="/icons/icon-192x192.png"
                             alt="After-School Tech Studio"
@@ -81,62 +138,61 @@ export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProp
                     </div>
                 </motion.div>
 
-                {/* Title */}
-                <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.4 }}
-                    className="text-center space-y-1"
-                >
-                    <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">After-School Tech Studio</h1>
-                    <p className="text-sm text-slate-400 font-medium">
-                        {phase === 'welcome' ? 'Ready!' : 'Preparing your experience...'}
-                    </p>
-                </motion.div>
+                {/* Flat Staggered Doodle Title */}
+                <div className="space-y-1">
+                    <motion.div className="flex flex-wrap justify-center gap-[2px]">
+                        {titleText.split("").map((char, index) => (
+                            <motion.span
+                                key={index}
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 + index * 0.02, duration: 0.25 }}
+                                className="text-2xl font-extrabold text-slate-800 tracking-tight"
+                            >
+                                {char === " " ? "\u00A0" : char}
+                            </motion.span>
+                        ))}
+                    </motion.div>
 
-                {/* Progress bar */}
-                <AnimatePresence mode="wait">
-                    {phase === 'loading' ? (
+                    {/* Hand-drawn Underline SVG */}
+                    <div className="flex justify-center pt-1">
+                        <svg className="w-48 h-3 text-[#58CC02]" viewBox="0 0 200 12" fill="none">
+                            <motion.path
+                                d="M 5,7 Q 50,2 100,7 T 195,6"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                                strokeLinecap="round"
+                                custom={4}
+                                initial="hidden"
+                                animate="visible"
+                                variants={drawVariant}
+                            />
+                        </svg>
+                    </div>
+                </div>
+
+                {/* Horizontal Progress Bar */}
+                <div className="w-full space-y-2 pt-3">
+                    <div className="h-3 w-full bg-slate-200/70 rounded-full p-0.5 overflow-hidden">
                         <motion.div
-                            key="progress"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="w-full space-y-2"
-                        >
-                            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
-                                <motion.div
-                                    className="h-full bg-[#58CC02] rounded-full"
-                                    animate={{ width: `${fakeProgress}%` }}
-                                    transition={{ duration: 0.15, ease: "easeOut" }}
-                                />
-                            </div>
-                            <div className="flex justify-between items-center text-xs font-semibold text-slate-400">
-                                <span>Loading</span>
-                                <span>{fakeProgress}%</span>
-                            </div>
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="done"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="w-full"
-                        >
-                            <div className="w-full h-2.5 bg-[#58CC02]/20 rounded-full overflow-hidden border border-[#58CC02]/30">
-                                <div className="h-full w-full bg-[#58CC02] rounded-full" />
-                            </div>
-                            <div className="flex justify-end mt-2">
-                                <span className="text-xs font-bold text-[#58CC02]">100%</span>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                            className="h-full bg-[#58CC02] rounded-full"
+                            animate={{ width: `${progress}%` }}
+                            transition={{ duration: 0.1, ease: "easeOut" }}
+                        />
+                    </div>
+
+                    <div className="flex justify-between items-center px-1 text-xs font-bold text-slate-500">
+                        <span className="uppercase tracking-wider text-[11px]">
+                            {phase === 'ready' ? '🎉 Ready!' : 'Loading...'}
+                        </span>
+                        <span className="font-mono">{progress}%</span>
+                    </div>
+                </div>
             </div>
 
-            {/* Footer */}
-            <div className="absolute bottom-6 text-[11px] font-semibold text-slate-300 tracking-wider uppercase">
-                After-School Tech Studio
+            {/* Flat Footer */}
+            <div className="absolute bottom-6 text-xs font-bold text-slate-400 tracking-widest uppercase">
+                ✦ Play • Code • Learn ✦
             </div>
         </motion.div>
     )

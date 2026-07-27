@@ -2,193 +2,169 @@
 
 import { useState } from "react"
 import { useAuth } from "@/context/auth-context"
-import { motion } from "framer-motion"
 import {
     User,
     Mail,
-    Shield,
+    ShieldCheck,
     Bell,
-    Monitor,
-    Key,
     Save,
     LogOut,
-    Eye,
-    EyeOff,
+    CheckCircle2,
     Loader2,
-    Sparkles
+    Settings as SettingsIcon
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { cn } from "@/lib/utils"
 
 export default function TutorSettingsPage() {
     const { user, logout } = useAuth()
-    const [name, setName] = useState(user?.role || "Director")
-    const [showPassword, setShowPassword] = useState(false)
+    const defaultDisplayName = user?.email ? user.email.split('@')[0] : "Instructor"
+    const [name, setName] = useState(defaultDisplayName)
     const [saving, setSaving] = useState(false)
+    const [saved, setSaved] = useState(false)
 
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault()
         setSaving(true)
-        setTimeout(() => setSaving(false), 1500)
+        setTimeout(() => {
+            setSaving(false)
+            setSaved(true)
+            setTimeout(() => setSaved(false), 3000)
+        }, 1000)
     }
 
     return (
-        <div className="max-w-4xl space-y-10">
+        <div className="max-w-4xl space-y-8">
             {/* Header */}
-            <header className="flex flex-col gap-4">
-                <div className="flex items-center gap-2">
-                    <div className="h-1 w-8 bg-indigo-500 rounded-full shadow-[0_0_8px_indigo]" />
-                    <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em]">Sector Protocol</span>
+            <header className="space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#58CC02]/20 bg-[#58CC02]/10 w-fit">
+                    <SettingsIcon className="w-3.5 h-3.5 text-[#58CC02]" />
+                    <span className="text-xs font-bold text-[#58CC02]">Instructor Preferences</span>
                 </div>
-                <h1 className="text-4xl font-black text-white uppercase tracking-tight">IDENTITY <span className="text-indigo-500">SETTINGS</span></h1>
-                <p className="text-slate-500 font-medium tracking-wide">
-                    Configure your director profile and terminal preferences for optimal sector oversight.
+                <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Account Settings</h1>
+                <p className="text-slate-500 font-medium text-sm">
+                    Manage your instructor profile, notification preferences, and workspace access.
                 </p>
             </header>
 
-            <div className="grid md:grid-cols-3 gap-8">
-                {/* Profile Overview Card */}
-                <Card className="md:col-span-1 p-8 bg-slate-900/40 border-slate-800 rounded-[2rem] flex flex-col items-center gap-6 h-fit sticky top-24 backdrop-blur-xl">
+            <div className="grid md:grid-cols-3 gap-6">
+                {/* Profile Card */}
+                <Card className="md:col-span-1 p-6 bg-white border-2 border-slate-200 rounded-3xl flex flex-col items-center gap-5 h-fit shadow-sm">
                     <div className="relative group">
-                        <Avatar className="h-32 w-32 border-2 border-indigo-500/20 ring-8 ring-indigo-500/5 shadow-2xl transition-all group-hover:border-indigo-500/50">
+                        <Avatar className="h-28 w-28 border-4 border-[#58CC02]/20 shadow-md">
                             <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.user_id}`} />
-                            <AvatarFallback className="bg-slate-950 text-2xl font-black text-indigo-500">
-                                {user?.role?.[0]?.toUpperCase()}
+                            <AvatarFallback className="bg-[#58CC02]/10 text-2xl font-extrabold text-[#58CC02]">
+                                {name[0]?.toUpperCase() || 'T'}
                             </AvatarFallback>
                         </Avatar>
-                        <div className="absolute inset-0 bg-slate-950/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                            <span className="text-[8px] font-black text-white uppercase tracking-widest">Update Seed</span>
-                        </div>
                     </div>
 
                     <div className="text-center space-y-1">
-                        <h2 className="text-xl font-black text-white uppercase tracking-tight italic">
-                            {user?.role?.toUpperCase() || 'DIRECTOR'}
+                        <h2 className="text-lg font-extrabold text-slate-800 capitalize">
+                            {name}
                         </h2>
-                        <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none">Command Hub: Emerald Alpha</span>
+                        <span className="text-xs font-bold text-[#58CC02] bg-[#58CC02]/10 px-3 py-0.5 rounded-full border border-[#58CC02]/20 inline-block capitalize">
+                            {user?.role || 'Tutor'} Account
+                        </span>
                     </div>
 
-                    <div className="w-full h-px bg-slate-800" />
+                    <div className="w-full h-px bg-slate-100" />
 
-                    <div className="w-full space-y-4">
-                        <div className="flex items-center gap-3 text-slate-400 group">
-                            <Shield className="w-4 h-4 group-hover:text-indigo-500 transition-colors" />
-                            <span className="text-[10px] font-bold uppercase tracking-widest">Level 7 Access</span>
+                    <div className="w-full space-y-3 text-xs font-semibold text-slate-500">
+                        <div className="flex items-center gap-2.5">
+                            <ShieldCheck className="w-4 h-4 text-[#58CC02]" />
+                            <span>Verified Authoring Status</span>
                         </div>
-                        <div className="flex items-center gap-3 text-slate-400 group">
-                            <Key className="w-4 h-4 group-hover:text-blue-500 transition-colors" />
-                            <span className="text-[10px] font-bold uppercase tracking-widest">Hardware Key Linked</span>
+                        <div className="flex items-center gap-2.5">
+                            <Mail className="w-4 h-4 text-[#1CB0F6]" />
+                            <span className="truncate">{user?.email}</span>
                         </div>
                     </div>
 
-                    <Button
-                        variant="ghost"
+                    <button
+                        type="button"
                         onClick={logout}
-                        className="w-full mt-4 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 font-black uppercase text-[10px] tracking-widest"
+                        className="w-full mt-2 py-2.5 px-4 rounded-xl font-bold text-xs text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-colors flex items-center justify-center gap-2"
                     >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Terminate Session
-                    </Button>
+                        <LogOut className="w-3.5 h-3.5" />
+                        Log Out of Account
+                    </button>
                 </Card>
 
                 {/* Settings Form */}
-                <div className="md:col-span-2 space-y-6">
-                    <Card className="p-8 bg-slate-900/40 border-slate-800 rounded-[2.5rem] shadow-2xl backdrop-blur-xl group hover:border-indigo-500/20 transition-all">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-500">
-                                <User className="w-5 h-5" />
+                <div className="md:col-span-2 space-y-5">
+                    <Card className="p-6 bg-white border-2 border-slate-200 rounded-3xl shadow-sm">
+                        <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                            <div className="p-2.5 rounded-xl bg-[#58CC02]/10 text-[#58CC02]">
+                                <User className="w-4 h-4" />
                             </div>
-                            <h3 className="text-lg font-black text-white uppercase tracking-wider">Director Profile</h3>
+                            <div>
+                                <h3 className="text-base font-extrabold text-slate-800">Profile Information</h3>
+                                <p className="text-xs text-slate-400 font-medium">Update your public name and credentials</p>
+                            </div>
                         </div>
 
-                        <form onSubmit={handleSave} className="space-y-6">
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Full Identity</Label>
-                                    <Input
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        className="h-12 bg-slate-950/50 border-slate-800 rounded-xl focus-visible:ring-indigo-500/50 text-white font-bold"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Command Core ID</Label>
-                                    <Input
-                                        value={user?.email || ""}
-                                        disabled
-                                        className="h-12 bg-slate-950/80 border-slate-800 rounded-xl text-slate-500 font-bold opacity-60 cursor-not-allowed"
-                                    />
-                                </div>
+                        <form onSubmit={handleSave} className="space-y-4">
+                            <div className="space-y-1.5">
+                                <Label className="text-xs font-bold text-slate-700">Display Name</Label>
+                                <Input
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Your display name"
+                                    className="h-11 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-[#58CC02] focus:bg-white text-slate-800 font-semibold text-sm transition-all"
+                                />
                             </div>
 
-                            <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Sector Keycode</Label>
-                                <div className="relative">
-                                    <Input
-                                        type={showPassword ? "text" : "password"}
-                                        value="••••••••••••"
-                                        disabled
-                                        className="h-12 bg-slate-950/80 border-slate-800 rounded-xl text-slate-500 font-bold pr-12"
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white"
-                                    >
-                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                    </Button>
-                                    <div className="absolute right-12 top-1/2 -translate-y-1/2">
-                                        <Button variant="link" className="text-indigo-500 text-[10px] font-black uppercase p-0">Change</Button>
-                                    </div>
-                                </div>
+                            <div className="space-y-1.5">
+                                <Label className="text-xs font-bold text-slate-700">Email Address (Locked)</Label>
+                                <Input
+                                    value={user?.email || ""}
+                                    disabled
+                                    className="h-11 bg-slate-100 border-2 border-slate-200 rounded-xl text-slate-400 font-medium text-sm cursor-not-allowed"
+                                />
                             </div>
 
-                            <div className="pt-4 border-t border-slate-800 flex justify-end">
-                                <Button
+                            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                                {saved ? (
+                                    <span className="text-xs font-bold text-[#58CC02] flex items-center gap-1.5">
+                                        <CheckCircle2 className="w-4 h-4" />
+                                        Profile updated successfully!
+                                    </span>
+                                ) : <span />}
+
+                                <button
+                                    type="submit"
                                     disabled={saving}
-                                    className="bg-indigo-600 hover:bg-indigo-500 text-white font-black uppercase text-[10px] tracking-[0.2em] h-12 px-8 rounded-xl shadow-lg shadow-indigo-500/20 group"
+                                    className="h-11 px-6 rounded-xl font-extrabold text-sm text-white flex items-center gap-2 border-b-4 transition-all duration-150 active:border-b-0 active:translate-y-[2px] disabled:opacity-60"
+                                    style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
                                 >
                                     {saving ? (
-                                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                                        <><Loader2 className="w-4 h-4 animate-spin" />Saving...</>
                                     ) : (
-                                        <Save className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+                                        <><Save className="w-4 h-4" />Save Changes</>
                                     )}
-                                    {saving ? 'SYNCING...' : 'SYNCHRONIZE PROFILE'}
-                                </Button>
+                                </button>
                             </div>
                         </form>
                     </Card>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <Card className="p-6 bg-slate-900/40 border-slate-800 rounded-[2rem] group hover:border-blue-500/30 transition-all cursor-pointer backdrop-blur-xl">
-                            <div className="flex gap-4">
-                                <div className="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-500">
-                                    <Bell className="w-5 h-5" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="text-xs font-black text-white uppercase tracking-widest">Pulse Alerts</h4>
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Critical Only</p>
-                                </div>
+                    <Card className="p-5 bg-white border-2 border-slate-200 rounded-3xl shadow-sm flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2.5 rounded-xl bg-[#1CB0F6]/10 text-[#1CB0F6]">
+                                <Bell className="w-4 h-4" />
                             </div>
-                        </Card>
-                        <Card className="p-6 bg-slate-900/40 border-slate-800 rounded-[2rem] group hover:border-indigo-500/30 transition-all cursor-pointer backdrop-blur-xl">
-                            <div className="flex gap-4">
-                                <div className="p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-500">
-                                    <Sparkles className="w-5 h-5" />
-                                </div>
-                                <div className="space-y-1">
-                                    <h4 className="text-xs font-black text-white uppercase tracking-widest">Studio UI</h4>
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">High Definition</p>
-                                </div>
+                            <div>
+                                <h4 className="text-sm font-extrabold text-slate-800">Email Notifications</h4>
+                                <p className="text-xs text-slate-400 font-medium">Receive student progress updates</p>
                             </div>
-                        </Card>
-                    </div>
+                        </div>
+                        <span className="text-xs font-bold text-[#1CB0F6] bg-[#1CB0F6]/10 px-3 py-1 rounded-full border border-[#1CB0F6]/20">
+                            Active
+                        </span>
+                    </Card>
                 </div>
             </div>
         </div>
