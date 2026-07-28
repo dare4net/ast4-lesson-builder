@@ -2,15 +2,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { apiClient } from '@/lib/api-client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, FileText, ArrowLeft, Trash2, LayoutDashboard, Loader2, Sparkles } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Plus, FileText, ArrowLeft, Trash2, LayoutDashboard, Loader2, Edit3, Clock, BookOpen } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/protected-route';
 import { LessonCreationModal } from '@/components/studio/lesson-creation-modal';
 import { LessonTimelineItem } from '@/components/studio/lesson-timeline-item';
+import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
 
 interface Lesson { _id: string; title: string; description: string; order: number; duration?: number; level?: string; }
-interface Module { _id: string; name: string; title?: string; description: string; program_id: string; }
+interface Module { _id: string; name: string; title?: string; description: string; program_id: string; image_url?: string; cover_image?: string; is_published?: boolean; }
 
 function ModuleDetailContent() {
     const router = useRouter();
@@ -22,6 +22,7 @@ function ModuleDetailContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     useEffect(() => { if (moduleId) fetchModuleData(); }, [moduleId]);
 
@@ -33,11 +34,8 @@ function ModuleDetailContent() {
             ]);
             setModule(moduleData);
             setLessons(lessonsData);
-        } catch (err: any) {
-            setError('Failed to load module');
-        } finally {
-            setLoading(false);
-        }
+        } catch { setError('Failed to load module'); }
+        finally { setLoading(false); }
     };
 
     const handleDeleteModule = async () => {
@@ -59,169 +57,195 @@ function ModuleDetailContent() {
         } catch { alert('Failed to delete lesson'); }
     };
 
+    const handleSaveModule = async (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean }) => {
+        try { await apiClient.studio.updateModule(id, data); await fetchModuleData(); }
+        catch { alert('Failed to update module'); }
+    };
+
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="w-8 h-8 text-[#58CC02] animate-spin" />
-                    <p className="text-sm font-medium text-slate-500">Loading module...</p>
-                </div>
+            <div className="min-h-screen bg-[#F7F8FA] flex items-center justify-center">
+                <Loader2 className="w-6 h-6 text-[#1CB0F6] animate-spin" />
             </div>
         );
     }
 
     if (!module) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <Card className="bg-white border-2 border-slate-200 rounded-3xl">
-                    <CardContent className="py-12 text-center space-y-4">
-                        <p className="text-red-500 font-semibold">Module not found</p>
-                        <button onClick={() => router.push('/studio/programs')} className="h-10 px-5 rounded-xl font-bold text-sm text-white border-b-4 active:border-b-0 active:translate-y-[2px]" style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}>
-                            Back to Programs
-                        </button>
-                    </CardContent>
-                </Card>
+            <div className="min-h-screen bg-[#F7F8FA] flex items-center justify-center p-4">
+                <div className="bg-white border-2 border-slate-200 rounded-2xl p-8 text-center w-full max-w-sm space-y-4">
+                    <p className="text-red-500 font-bold text-sm">Module not found</p>
+                    <button onClick={() => router.push('/studio/programs')} className="h-9 px-4 rounded-xl font-bold text-xs text-white border-b-[3px] active:border-b-0 active:translate-y-px" style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}>
+                        Back to Programs
+                    </button>
+                </div>
             </div>
         );
     }
 
-    return (
-        <div className="min-h-screen bg-slate-50">
-            <div className="h-1.5 w-full bg-[#58CC02] fixed top-0 left-0 right-0 z-50" />
+    const imageUrl = module.image_url || module.cover_image;
+    const totalDuration = lessons.reduce((acc, l) => acc + (l.duration || 0), 0);
 
-            <div className="container mx-auto px-6 pt-14 pb-12">
+    return (
+        <div className="min-h-screen bg-[#F7F8FA]">
+            <div className="h-1 w-full fixed top-0 left-0 right-0 z-50 bg-[#CE82FF]" />
+
+            {/* ── MODULE COVER HERO ── */}
+            <div className="relative w-full bg-slate-900 overflow-hidden" style={{ minHeight: 'clamp(160px, 26vw, 240px)' }}>
+                {imageUrl && (
+                    <>
+                        <img src={imageUrl} alt={module.name} className="absolute inset-0 w-full h-full object-cover opacity-70 scale-105" style={{ filter: 'blur(1px)' }} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-900/50 to-transparent" />
+                    </>
+                )}
+                {!imageUrl && <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />}
+
                 {/* Breadcrumb */}
-                <div className="flex items-center gap-2 mt-6 mb-8 text-sm">
-                    <button onClick={() => router.push('/dashboard/tutor')} className="flex items-center gap-1.5 text-slate-400 hover:text-[#58CC02] font-semibold transition-colors">
-                        <LayoutDashboard className="w-3.5 h-3.5" />
-                        Dashboard
+                <div className="relative z-10 px-4 sm:px-6 pt-6 flex items-center gap-2 text-xs font-bold text-white/50">
+                    <button onClick={() => router.push('/dashboard/tutor')} className="flex items-center gap-1 hover:text-white transition-colors">
+                        <LayoutDashboard className="w-3.5 h-3.5" /><span className="hidden sm:inline">Dashboard</span>
                     </button>
-                    <span className="text-slate-300">/</span>
-                    <button onClick={() => router.push(`/studio/programs/${module.program_id}`)} className="flex items-center gap-1.5 text-slate-400 hover:text-slate-700 font-semibold transition-colors group">
-                        <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
-                        Back to Program
+                    <span>/</span>
+                    <button onClick={() => router.push(`/studio/programs/${module.program_id}`)} className="flex items-center gap-1 hover:text-white transition-colors group">
+                        <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />Program
                     </button>
                 </div>
 
-                {/* Header */}
-                <div className="flex justify-between items-start gap-5 pb-8 mb-10 border-b-2 border-slate-200">
-                    <div className="space-y-2 max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1CB0F6]/10 border border-[#1CB0F6]/20">
-                            <FileText className="w-3.5 h-3.5 text-[#1CB0F6]" />
-                            <span className="text-xs font-bold text-[#1CB0F6]">Module Overview</span>
+                {/* Hero content */}
+                <div className="relative z-10 px-4 sm:px-6 pt-3 pb-0 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                    <div className="space-y-1.5 max-w-2xl min-w-0">
+                        <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#CE82FF]/30 border border-[#CE82FF]/40">
+                            <FileText className="w-3 h-3 text-[#CE82FF]" />
+                            <span className="text-[9px] font-black text-[#CE82FF]">Module</span>
                         </div>
-                        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
-                            {module.name || module.title || "Untitled Module"}
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight drop-shadow">
+                            {module.name || module.title || 'Untitled Module'}
                         </h1>
-                        <p className="text-slate-500 text-sm leading-relaxed">{module.description || 'No description provided.'}</p>
+                        <p className="text-slate-300 text-xs sm:text-sm font-medium leading-relaxed line-clamp-2">{module.description || 'No description provided.'}</p>
                     </div>
 
-                    <button
-                        onClick={handleDeleteModule}
-                        className="h-10 px-4 rounded-xl text-sm font-bold text-red-500 bg-red-50 border-2 border-red-200 hover:bg-red-100 transition-colors flex items-center gap-2 shrink-0"
-                    >
-                        <Trash2 className="w-4 h-4" />
-                        Delete Module
-                    </button>
+                    <div className="flex flex-wrap gap-2 shrink-0 pb-4 sm:pb-0">
+                        <button
+                            onClick={() => setIsEditModalOpen(true)}
+                            className="h-9 px-3 sm:px-4 rounded-xl border-2 border-white/20 bg-white/10 hover:bg-white/20 text-white font-bold text-xs flex items-center gap-1.5 transition-colors"
+                        >
+                            <Edit3 className="w-3.5 h-3.5 text-[#1CB0F6]" /><span className="hidden xs:inline">Edit</span>
+                        </button>
+                        <button
+                            onClick={handleDeleteModule}
+                            className="h-9 px-3 rounded-xl border-2 border-red-500/30 bg-red-500/20 hover:bg-red-500/30 text-red-300 font-bold text-xs flex items-center gap-1.5 transition-colors"
+                        >
+                            <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                            onClick={() => setIsCreateModalOpen(true)}
+                            className="h-9 px-3 sm:px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-1.5 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                            style={{ backgroundColor: '#1CB0F6', borderColor: '#0E86C0' }}
+                        >
+                            <Plus className="w-4 h-4" /><span className="hidden xs:inline">New Lesson</span>
+                        </button>
+                    </div>
                 </div>
 
+                {/* Stats strip */}
+                <div className="relative z-10 px-4 sm:px-6 flex items-center gap-4 sm:gap-6 text-xs font-bold text-white/50 border-t border-white/10 mt-3">
+                    <div className="flex items-center gap-1.5 py-2.5">
+                        <BookOpen className="w-3.5 h-3.5 text-[#1CB0F6]" />
+                        <span className="text-white/70">{lessons.length} Lessons</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 py-2.5">
+                        <Clock className="w-3.5 h-3.5 text-[#FF9600]" />
+                        <span className="text-white/70">{totalDuration}m Total</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* ── BODY ── */}
+            <main className="px-4 sm:px-6 py-4 sm:py-5">
                 {error && (
-                    <div className="mb-6 p-3.5 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />{error}
+                    <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-xs flex items-center gap-2">
+                        <div className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse shrink-0" />{error}
                     </div>
                 )}
 
-                {/* Content Grid */}
-                <div className="grid lg:grid-cols-[1fr_320px] gap-10">
-                    {/* Lesson Timeline */}
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-extrabold text-slate-800 flex items-center gap-2.5">
-                                <span className="p-2 bg-[#58CC02]/10 rounded-xl border border-[#58CC02]/20">
-                                    <FileText className="w-4 h-4 text-[#58CC02]" />
-                                </span>
+                {/* Responsive two column: timeline + sidebar stacks on mobile */}
+                <div className="flex flex-col lg:flex-row gap-4 lg:gap-5">
+                    {/* Lesson Timeline — takes full width on mobile */}
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-xs font-black text-slate-600 uppercase tracking-widest flex items-center gap-2">
+                                <span className="w-1 h-3.5 rounded-full bg-[#1CB0F6] inline-block" />
                                 Lesson Timeline
                             </h2>
-                            <span className="text-xs font-bold text-slate-500 bg-white px-3 py-1 rounded-full border-2 border-slate-200">
-                                {lessons.length} Lessons
+                            <span className="text-[10px] font-black text-slate-400 bg-white border-2 border-slate-100 px-2.5 py-1 rounded-full">
+                                {lessons.length} lessons
                             </span>
                         </div>
 
                         {lessons.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-slate-300 rounded-3xl bg-white">
-                                <div className="w-14 h-14 rounded-2xl bg-[#58CC02]/10 border border-[#58CC02]/20 text-[#58CC02] flex items-center justify-center mb-4">
-                                    <FileText className="w-7 h-7" />
+                            <div className="flex flex-col items-center justify-center py-14 border-2 border-dashed border-slate-200 rounded-2xl bg-white text-center px-4">
+                                <div className="w-11 h-11 rounded-xl bg-[#EAF6FE] text-[#1CB0F6] flex items-center justify-center mb-3">
+                                    <FileText className="w-5 h-5" />
                                 </div>
-                                <p className="text-slate-500 text-sm mb-6">No lessons in this module yet.</p>
+                                <p className="text-sm font-black text-slate-700 mb-1">No Lessons Yet</p>
+                                <p className="text-xs text-slate-400 font-medium mb-4 max-w-xs">Add lessons to build out this module's curriculum.</p>
                                 <button
                                     onClick={() => setIsCreateModalOpen(true)}
-                                    className="h-11 px-6 rounded-xl font-extrabold text-sm text-white flex items-center gap-2 border-b-4 transition-all duration-150 active:border-b-0 active:translate-y-[2px]"
-                                    style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
+                                    className="h-9 px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                                    style={{ backgroundColor: '#1CB0F6', borderColor: '#0E86C0' }}
                                 >
-                                    <Plus className="w-4 h-4" />
-                                    Add First Lesson
+                                    <Plus className="w-4 h-4" />Add First Lesson
                                 </button>
                             </div>
                         ) : (
-                            <div className="space-y-0 relative pl-4">
+                            <div className="space-y-3">
                                 {lessons.map((lesson, index) => (
-                                    <div key={lesson._id} className="pb-6 last:pb-0">
-                                        <LessonTimelineItem
-                                            lesson={lesson}
-                                            index={index}
-                                            isLast={index === lessons.length - 1}
-                                            onEdit={() => handleEditLesson(lesson._id)}
-                                            onDelete={() => handleDeleteLesson(lesson._id)}
-                                        />
-                                    </div>
+                                    <LessonTimelineItem
+                                        key={lesson._id}
+                                        lesson={lesson}
+                                        index={index}
+                                        isLast={index === lessons.length - 1}
+                                        onEdit={() => handleEditLesson(lesson._id)}
+                                        onDelete={() => handleDeleteLesson(lesson._id)}
+                                    />
                                 ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Sidebar Quick Actions */}
-                    <div className="lg:sticky lg:top-8 space-y-5">
-                        <Card className="bg-white border-2 border-slate-200 shadow-sm rounded-3xl">
-                            <CardHeader className="border-b border-slate-100 pb-4">
-                                <CardTitle className="text-base font-extrabold text-slate-800">Quick Actions</CardTitle>
-                                <CardDescription className="text-slate-500 text-xs">Manage this module's content</CardDescription>
+                    {/* Sidebar — full width on mobile, fixed-width sidebar on lg+ */}
+                    <div className="w-full lg:w-64 xl:w-72 shrink-0">
+                        <Card className="bg-white border-2 border-slate-100 rounded-2xl shadow-none sticky top-4">
+                            <CardHeader className="pb-3 border-b border-slate-100 px-4 pt-4">
+                                <CardTitle className="text-xs font-black text-slate-700 uppercase tracking-wider">Quick Actions</CardTitle>
+                                <CardDescription className="text-slate-400 text-xs">Add and manage lessons</CardDescription>
                             </CardHeader>
-                            <CardContent className="space-y-4 pt-5">
+                            <CardContent className="pt-4 px-4 pb-4 space-y-3">
                                 <button
                                     onClick={() => setIsCreateModalOpen(true)}
-                                    className="w-full h-12 rounded-xl font-extrabold text-sm text-white flex items-center justify-center gap-2 border-b-4 transition-all duration-150 active:border-b-0 active:translate-y-[2px]"
-                                    style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
+                                    className="w-full h-10 rounded-xl font-extrabold text-xs text-white flex items-center justify-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                                    style={{ backgroundColor: '#1CB0F6', borderColor: '#0E86C0' }}
                                 >
-                                    <Plus className="w-5 h-5" />
-                                    New Lesson
+                                    <Plus className="w-4 h-4" />New Lesson
                                 </button>
-
-                                <div className="pt-3 border-t border-slate-100">
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <div className="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 text-center">
-                                            <div className="text-2xl font-extrabold text-slate-800">{lessons.length}</div>
-                                            <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mt-0.5">Lessons</div>
-                                        </div>
-                                        <div className="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200 text-center">
-                                            <div className="text-2xl font-extrabold text-slate-800">
-                                                {lessons.reduce((acc, l) => acc + (l.duration || 0), 0)}m
-                                            </div>
-                                            <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mt-0.5">Total Time</div>
-                                        </div>
+                                <div className="grid grid-cols-2 gap-2 pt-1">
+                                    <div className="p-3 rounded-xl bg-[#EAF6FE] border border-[#1CB0F6]/20 text-center">
+                                        <div className="text-xl font-black text-slate-800">{lessons.length}</div>
+                                        <div className="text-[9px] uppercase font-black text-[#1CB0F6] tracking-wider mt-0.5">Lessons</div>
+                                    </div>
+                                    <div className="p-3 rounded-xl bg-[#FFF4E0] border border-[#FF9600]/20 text-center">
+                                        <div className="text-xl font-black text-slate-800">{totalDuration}m</div>
+                                        <div className="text-[9px] uppercase font-black text-[#FF9600] tracking-wider mt-0.5">Duration</div>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
                     </div>
                 </div>
-            </div>
+            </main>
 
-            <LessonCreationModal
-                isOpen={isCreateModalOpen}
-                onClose={() => setIsCreateModalOpen(false)}
-                moduleId={moduleId}
-                programId={module.program_id}
-            />
+            <LessonCreationModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} moduleId={moduleId} programId={module.program_id} />
+            {module && <EditModuleDialog isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} module={module} onSave={handleSaveModule} />}
         </div>
     );
 }

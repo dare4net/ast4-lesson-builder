@@ -242,6 +242,7 @@ export default function CatalogPage() {
                             const enrolled = isEnrolled(prog._id)
                             const isSelected = selectedProgram?._id === prog._id
                             const palette = DUO_THEME_PALETTES[idx % DUO_THEME_PALETTES.length]
+                            const imageUrl = prog.image_url || prog.cover_image
 
                             return (
                                 <motion.div
@@ -250,26 +251,44 @@ export default function CatalogPage() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: idx * 0.05 }}
                                 >
-                                    <Card
+                                    <div
                                         onClick={() => handleCardClick(prog)}
-                                        className={`p-6 rounded-3xl bg-white border-2 transition-all cursor-pointer group relative overflow-hidden h-full flex flex-col justify-between shadow-sm ${isSelected ? "border-[#1CB0F6] ring-2 ring-[#1CB0F6]/20" : "border-slate-200 hover:border-slate-300"
+                                        className={`rounded-3xl bg-white border transition-all cursor-pointer group overflow-hidden h-full flex flex-col justify-between shadow-sm ${isSelected ? "border-[#1CB0F6] ring-2 ring-[#1CB0F6]/20" : "border-slate-200 hover:border-slate-300"
                                             }`}
                                     >
-                                        <div className="space-y-4">
-                                            <div className="flex justify-between items-start">
-                                                <div className={`w-11 h-11 rounded-2xl ${palette.bg} border ${palette.border} flex items-center justify-center ${palette.text}`}>
-                                                    <BookOpen className="w-5.5 h-5.5" />
+                                        <div>
+                                            {/* Edge-to-Edge Media Header */}
+                                            {imageUrl ? (
+                                                <div className="h-44 w-full relative overflow-hidden bg-slate-100">
+                                                    <img
+                                                        src={imageUrl}
+                                                        alt={prog.name}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                                                    />
+                                                    {enrolled && (
+                                                        <span className="absolute top-3.5 right-3.5 text-xs font-extrabold text-[#58CC02] bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200 shadow-sm flex items-center gap-1">
+                                                            <CheckCircle2 className="w-3.5 h-3.5" />
+                                                            Enrolled
+                                                        </span>
+                                                    )}
                                                 </div>
-                                                {enrolled && (
-                                                    <span className="text-xs font-extrabold text-[#58CC02] bg-[#58CC02]/10 px-2.5 py-0.5 rounded-full border border-[#58CC02]/20 flex items-center gap-1">
-                                                        <CheckCircle2 className="w-3 h-3" />
-                                                        Enrolled
-                                                    </span>
-                                                )}
-                                            </div>
+                                            ) : (
+                                                <div className="h-28 w-full p-6 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                                                    <div className={`w-12 h-12 rounded-2xl ${palette.bg} border ${palette.border} flex items-center justify-center ${palette.text}`}>
+                                                        <BookOpen className="w-6 h-6" />
+                                                    </div>
+                                                    {enrolled && (
+                                                        <span className="text-xs font-extrabold text-[#58CC02] bg-white px-3 py-1 rounded-full border border-slate-200 flex items-center gap-1 shadow-sm">
+                                                            <CheckCircle2 className="w-3.5 h-3.5" />
+                                                            Enrolled
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
 
-                                            <div>
-                                                <h3 className="text-base font-extrabold text-slate-800 mb-1 group-hover:text-[#1CB0F6] transition-colors">
+                                            <div className="p-5 space-y-1.5">
+                                                <h3 className="text-base font-extrabold text-slate-800 group-hover:text-[#1CB0F6] transition-colors leading-snug">
                                                     {prog.name || prog.program_name || prog.title || "Untitled Course"}
                                                 </h3>
                                                 <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium">
@@ -278,15 +297,15 @@ export default function CatalogPage() {
                                             </div>
                                         </div>
 
-                                        <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
-                                            <span className="text-slate-400 font-bold">
+                                        <div className="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
+                                            <span className="text-slate-400 font-extrabold">
                                                 {prog.modules?.length || 0} Modules
                                             </span>
 
                                             {enrolled ? (
                                                 <Button
                                                     onClick={(e) => handleGoToCourse(prog._id, e)}
-                                                    className="bg-[#1CB0F6] hover:bg-[#1899D6] border-b-2 border-[#1482B8] text-white font-extrabold text-xs h-8 px-3.5 rounded-xl flex items-center gap-1.5 shrink-0"
+                                                    className="bg-[#1CB0F6] hover:bg-[#1899D6] border-b-2 border-[#1482B8] text-white font-extrabold text-xs h-8 px-4 rounded-xl flex items-center gap-1.5 shrink-0"
                                                 >
                                                     <span>Go to Course</span>
                                                     <ArrowRight className="w-3.5 h-3.5" />
@@ -295,7 +314,7 @@ export default function CatalogPage() {
                                                 <Button
                                                     disabled={registeringId === prog._id}
                                                     onClick={(e) => handleRegister(prog._id, e)}
-                                                    className="bg-[#58CC02] hover:bg-[#46a302] border-b-2 border-[#3B8C00] text-white font-extrabold text-xs h-8 px-3.5 rounded-xl flex items-center gap-1.5 shrink-0"
+                                                    className="bg-[#58CC02] hover:bg-[#46a302] border-b-2 border-[#3B8C00] text-white font-extrabold text-xs h-8 px-4 rounded-xl flex items-center gap-1.5 shrink-0"
                                                 >
                                                     {registeringId === prog._id ? (
                                                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -305,7 +324,7 @@ export default function CatalogPage() {
                                                 </Button>
                                             )}
                                         </div>
-                                    </Card>
+                                    </div>
                                 </motion.div>
                             )
                         })}

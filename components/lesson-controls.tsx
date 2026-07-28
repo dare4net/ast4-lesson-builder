@@ -162,9 +162,9 @@ export function LessonControls({
                 <SheetDescription className="text-slate-400">Lesson Studio Menu</SheetDescription>
               </SheetHeader>
               <div className="py-6 space-y-3">
-                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-200" onClick={() => router.push('/dashboard/tutor')}>
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-200" onClick={() => router.push('/studio')}>
                   <LayoutDashboard className="h-4 w-4 mr-3 text-emerald-400" />
-                  Tutor Dashboard
+                  Creator Studio
                 </Button>
                 <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={createNewLesson}>
                   <Plus className="h-4 w-4 mr-3 text-emerald-500" />
@@ -260,12 +260,12 @@ export function LessonControls({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => router.push('/dashboard/tutor')}
+            onClick={() => router.push('/studio')}
             className="text-slate-400 hover:text-white hover:bg-slate-800/60 font-semibold px-3 h-8 text-xs flex items-center gap-1.5 border border-slate-800/80 rounded-lg bg-slate-900/40 transition-colors"
-            title="Return to Tutor Dashboard"
+            title="Return to Creator Studio"
           >
             <LayoutDashboard className="h-4 w-4 text-emerald-400" />
-            <span className="hidden sm:inline">Tutor Dashboard</span>
+            <span className="hidden sm:inline">Creator Studio</span>
           </Button>
           <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <LayoutGrid className="h-5 w-5 text-[#0F172A]" />
