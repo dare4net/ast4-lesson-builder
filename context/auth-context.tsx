@@ -35,10 +35,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const initAuth = () => {
             const storedToken = apiClient.getToken();
+            const storedUser = apiClient.getUser();
+
             if (storedToken) {
                 try {
                     const decoded = jwtDecode<User>(storedToken);
-                    setUser(decoded);
+                    // Merge decoded token claims with stored full profile details (email, full_name)
+                    const fullUser: User = {
+                        ...decoded,
+                        ...(storedUser || {}),
+                        email: storedUser?.email || decoded.email,
+                        full_name: storedUser?.full_name || storedUser?.fullName || decoded.full_name || decoded.fullName,
+                    };
+                    setUser(fullUser);
                     setToken(storedToken);
                 } catch (error) {
                     console.error('Invalid token:', error);
@@ -66,6 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 full_name: responseUser?.full_name || responseUser?.fullName || decoded.full_name || decoded.fullName,
             };
 
+            apiClient.setUser(fullUserData);
             setToken(newToken);
             setUser(fullUserData);
             return fullUserData;
@@ -89,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 full_name: fullName || responseUser?.full_name || decoded.full_name,
             };
 
+            apiClient.setUser(fullUserData);
             setToken(newToken);
             setUser(fullUserData);
         } catch (error: any) {

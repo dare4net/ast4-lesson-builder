@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl;
   const token = request.cookies.get('ast_token')?.value;
 
-  // Protect /dashboard routes
+  // Protect /dashboard routes via ast_token cookie
   if (url.pathname.startsWith('/dashboard')) {
     if (!token) {
       console.log('[Middleware] No token found for dashboard access. Redirecting to home.');
@@ -22,25 +22,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Handle /viewer routes (stays same as requested previously or as currently exists)
-  if (url.pathname.startsWith('/viewer')) {
-    const viewerToken = url.searchParams.get('token');
-    if (!viewerToken) {
-      return new NextResponse('Access Denied: Missing token', { status: 403 });
-    }
-
-    try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'dami');
-      await jwtVerify(viewerToken, secret, { algorithms: ['HS256'] });
-      return NextResponse.next();
-    } catch (err: any) {
-      return new NextResponse('Access Denied: Invalid token', { status: 403 });
-    }
-  }
-
+  // Allow /viewer routes to pass through directly to the client/SW so offline lesson caching works seamlessly!
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/viewer/:path*'],
+  matcher: ['/dashboard/:path*'],
 };

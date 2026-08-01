@@ -56,15 +56,16 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Sound files: Cache-First
-  if (event.request.url.includes('/sounds/')) {
+  // Audio & Sound files: Cache-First (Offline Cloudinary TTS & SFX playback)
+  if (event.request.url.includes('/sounds/') || event.request.url.includes('/audio/') || event.request.url.includes('res.cloudinary.com')) {
     event.respondWith(
       caches.match(event.request).then((response) => {
         if (response) return response;
         return fetch(event.request.clone()).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             const responseToCache = networkResponse.clone();
-            caches.open(SOUND_CACHE_NAME).then((cache) => {
+            const targetCache = event.request.url.includes('/sounds/') ? SOUND_CACHE_NAME : CACHE_NAME;
+            caches.open(targetCache).then((cache) => {
               cache.put(event.request, responseToCache);
             });
           }

@@ -72,22 +72,38 @@ export async function generateBatchAudio(
 ): Promise<Record<string, string | null>> {
     if (items.length === 0) return {}
 
-    try {
-        const res = await fetch('/api/audio/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items }),
-        })
+    const MAX_RETRIES = 3
+    const RETRY_DELAY_MS = 2000
 
-        if (!res.ok) {
-            console.error('[audio] Batch generate failed:', await res.text())
-            return {}
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+            const res = await fetch('/api/audio/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items }),
+            })
+
+            if (!res.ok) {
+                const errText = await res.text()
+                console.error(`[audio] Batch generate failed (attempt ${attempt}):`, errText)
+                if (attempt < MAX_RETRIES) {
+                    await new Promise(r => setTimeout(r, RETRY_DELAY_MS))
+                    continue
+                }
+                return {}
+            }
+
+            const { results }: { results: AudioBatchResult[] } = await res.json()
+            return Object.fromEntries(results.map(r => [r.componentId, r.audioUrl]))
+        } catch (err) {
+            console.warn(`[audio] generateBatchAudio network error (attempt ${attempt}/${MAX_RETRIES}):`, err)
+            if (attempt < MAX_RETRIES) {
+                await new Promise(r => setTimeout(r, RETRY_DELAY_MS))
+            } else {
+                console.error('[audio] All retries exhausted. Failed to generate audio batch.')
+                return {}
+            }
         }
-
-        const { results }: { results: AudioBatchResult[] } = await res.json()
-        return Object.fromEntries(results.map(r => [r.componentId, r.audioUrl]))
-    } catch (err) {
-        console.error('[audio] generateBatchAudio error:', err)
-        return {}
     }
+    return {}
 }

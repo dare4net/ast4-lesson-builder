@@ -694,6 +694,7 @@ export function LessonBuilder() {
                         component={editingComponent}
                         updateComponent={(props) => updateComponent(editingComponent.id, props)}
                         onClose={handleCloseInspector}
+                        lessonId={currentLessonId || lesson.id}
                       />
                     ) : (
                       <div className="flex flex-col h-full overflow-hidden">
@@ -727,6 +728,7 @@ export function LessonBuilder() {
                       updateComponent={(props) => updateComponent(editingComponent.id, props)}
                       onClose={handleCloseInspector}
                       isMobile={true}
+                      lessonId={currentLessonId || lesson.id}
                     />
                   </SheetContent>
                 </Sheet>

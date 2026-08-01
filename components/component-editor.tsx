@@ -29,9 +29,10 @@ interface ComponentEditorProps {
   updateComponent: (props: Record<string, any>) => void
   onClose: () => void
   isMobile?: boolean
+  lessonId?: string
 }
 
-export function ComponentEditor({ component, updateComponent, onClose, isMobile = false }: ComponentEditorProps) {
+export function ComponentEditor({ component, updateComponent, onClose, isMobile = false, lessonId }: ComponentEditorProps) {
   const [props, setProps] = useState<Record<string, any>>(component.props)
 
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
@@ -162,6 +163,8 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                     <ImageUploader
                       value={props[propDef.name] || ""}
                       onChange={(value) => handleChange(propDef.name, value)}
+                      lessonId={lessonId}
+                      componentId={component.id}
                     />
                   </div>
                 )}

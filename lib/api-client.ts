@@ -54,10 +54,31 @@ class APIClient {
         return this.token;
     }
 
+    setUser(user: any) {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('ast_user', JSON.stringify(user));
+        }
+    }
+
+    getUser(): any | null {
+        if (typeof window !== 'undefined') {
+            const stored = localStorage.getItem('ast_user');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
     clearToken() {
         this.token = null;
         if (typeof window !== 'undefined') {
             localStorage.removeItem('ast_token');
+            localStorage.removeItem('ast_user');
             document.cookie = 'ast_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
     }
