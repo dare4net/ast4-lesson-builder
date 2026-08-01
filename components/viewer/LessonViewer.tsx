@@ -13,9 +13,11 @@ import { ScoringProvider } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
 import type { Lesson } from '@/types/lesson';
-import { normalizeSlides } from '@/lib/lesson-utils';
+import { normalizeSlides, formatSlideTitle } from '@/lib/lesson-utils';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
 import { apiClient } from '@/lib/api-client';
+
+import { ReadAloudProvider } from '@/context/read-aloud-context';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
@@ -246,7 +248,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                     )}>
                       {index + 1}
                     </span>
-                    <span className="text-xs font-medium truncate flex-1">{slide.title}</span>
+                    <span className="text-xs font-medium truncate flex-1">{formatSlideTitle(slide.title, 20)}</span>
                     {index === currentSlideIndex && (
                       <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                     )}
@@ -351,34 +353,36 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   return (
     <ScoringProvider lesson={lessonData}>
       <NavigationLockProvider>
-        <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
-          {/* Desktop/Tablet Sidebar */}
-          <div className="hidden md:block w-80 shrink-0">
-            {renderSidebarContent()}
-          </div>
+        <ReadAloudProvider>
+          <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
+            {/* Desktop/Tablet Sidebar */}
+            <div className="hidden md:block w-80 shrink-0">
+              {renderSidebarContent()}
+            </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
-            <TopProgressBar
-              progress={slideProgress}
-              isCompleted={lessonData?.slides[currentSlideIndex]?.status === "completed"}
-              onMenuClick={() => setIsSidebarOpen(true)}
-            />
-
-            <div className="flex-1 relative overflow-hidden">
-              <LessonContent
-                ref={lessonContentRef}
-                lesson={lessonData!}
-                currentSlideIndex={currentSlideIndex}
-                onSlideChange={handleSlideChange}
-                initialComponentStates={initialInteraction?.componentsState || {}}
-                onProgressUpdate={handleProgressUpdate}
-                onSlidesUpdate={handleSlidesUpdate}
-                onScoreUpdate={handleScoreUpdate}
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
+              <TopProgressBar
+                progress={slideProgress}
+                isCompleted={lessonData?.slides[currentSlideIndex]?.status === "completed"}
+                onMenuClick={() => setIsSidebarOpen(true)}
               />
+
+              <div className="flex-1 relative overflow-hidden">
+                <LessonContent
+                  ref={lessonContentRef}
+                  lesson={lessonData!}
+                  currentSlideIndex={currentSlideIndex}
+                  onSlideChange={handleSlideChange}
+                  initialComponentStates={initialInteraction?.componentsState || {}}
+                  onProgressUpdate={handleProgressUpdate}
+                  onSlidesUpdate={handleSlidesUpdate}
+                  onScoreUpdate={handleScoreUpdate}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </ReadAloudProvider>
       </NavigationLockProvider>
     </ScoringProvider>
   );

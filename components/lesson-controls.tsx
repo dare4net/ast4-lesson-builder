@@ -23,7 +23,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useRouter } from "next/navigation"
-import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard } from "lucide-react"
+import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard, Mic } from "lucide-react"
 import type { Lesson } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
@@ -43,6 +43,9 @@ interface LessonControlsProps {
   onSaveToDatabase?: () => void
   onLoadFromDatabase?: () => void
   isSaving?: boolean
+  onPublishAndGenerateAudio?: () => Promise<void>
+  isGeneratingAudio?: boolean
+  hasUnpublishedChanges?: boolean
 }
 
 export function LessonControls({
@@ -56,7 +59,10 @@ export function LessonControls({
   className,
   onSaveToDatabase,
   onLoadFromDatabase,
-  isSaving = false
+  isSaving = false,
+  onPublishAndGenerateAudio,
+  isGeneratingAudio = false,
+  hasUnpublishedChanges = false,
 }: LessonControlsProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportOpen, setIsImportOpen] = useState(false)
@@ -313,73 +319,98 @@ export function LessonControls({
         </div>
 
         <div className="flex items-center gap-2">
-          {onSaveToDatabase && (
+          {/* Consolidated Primary Action: Publish Lesson */}
+          {onPublishAndGenerateAudio ? (
             <Button
-              variant={isSaving ? "secondary" : "default"}
               size="sm"
-              onClick={onSaveToDatabase}
-              disabled={isSaving}
+              onClick={onPublishAndGenerateAudio}
+              disabled={!hasUnpublishedChanges || isGeneratingAudio}
               className={cn(
-                "rounded-full px-4 font-bold shadow-lg transition-all",
-                isSaving
-                  ? "bg-slate-800 text-slate-400"
-                  : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-500/20"
+                "rounded-full px-5 font-bold shadow-md transition-all",
+                !hasUnpublishedChanges
+                  ? "bg-slate-800/80 text-slate-500 border border-slate-800 cursor-not-allowed"
+                  : isGeneratingAudio
+                    ? "bg-slate-800 text-slate-400 border border-slate-700"
+                    : "bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/30"
               )}
+              title={hasUnpublishedChanges ? "Generate audio & save lesson changes" : "All changes and audio are up to date"}
             >
-              {isSaving ? (
+              {isGeneratingAudio ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin text-emerald-400" />
+                  Generating Audio...
+                </>
+              ) : hasUnpublishedChanges ? (
+                <>
+                  <Mic className="h-4 w-4 mr-2" />
+                  Publish Lesson
                 </>
               ) : (
                 <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save
+                  <span className="text-emerald-400 mr-1.5">✓</span>
+                  Published & Saved
                 </>
               )}
             </Button>
+          ) : (
+            onSaveToDatabase && (
+              <Button
+                variant={isSaving ? "secondary" : "default"}
+                size="sm"
+                onClick={onSaveToDatabase}
+                disabled={isSaving || !hasUnpublishedChanges}
+                className={cn(
+                  "rounded-full px-4 font-bold shadow-md transition-all",
+                  !hasUnpublishedChanges
+                    ? "bg-slate-800/80 text-slate-500 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-500 text-white"
+                )}
+              >
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+            )
           )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={createNewLesson}
-            className="border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-300 rounded-full px-4"
-          >
-            <Plus className="h-4 w-4 mr-2 text-emerald-500" />
-            New
-          </Button>
-
+          {/* More Options Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="default" size="sm" className="bg-emerald-500 hover:bg-emerald-600 text-[#0F172A] font-bold rounded-full px-4 shadow-lg shadow-emerald-500/10">
-                <Upload className="h-4 w-4 mr-2" />
-                Publish
-                <ChevronDown className="h-4 w-4 ml-1 opacity-50" />
+              <Button
+                variant="outline"
+                size="sm"
+                className="border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-300 rounded-full px-3"
+                title="More Options"
+              >
+                <span className="text-xs font-semibold mr-1">More</span>
+                <ChevronDown className="h-3.5 w-3.5 opacity-60" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-[#0F172A] border-slate-800 text-slate-200">
+            <DropdownMenuContent align="end" className="bg-[#0F172A] border-slate-800 text-slate-200 w-52">
+              {onSaveToDatabase && (
+                <DropdownMenuItem
+                  onClick={onSaveToDatabase}
+                  disabled={!hasUnpublishedChanges || isSaving}
+                  className={cn(
+                    "cursor-pointer",
+                    !hasUnpublishedChanges && "opacity-50 cursor-not-allowed"
+                  )}
+                >
+                  <Save className="h-4 w-4 mr-3 text-blue-400" />
+                  Save Draft (Quick)
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={exportLesson} className="hover:bg-slate-800 cursor-pointer">
                 <Download className="h-4 w-4 mr-3 text-emerald-500" />
                 Export Project (.json)
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleImportClick} className="hover:bg-slate-800 cursor-pointer">
                 <Upload className="h-4 w-4 mr-3 text-emerald-500" />
-                Import Project
+                Import Project (.json)
               </DropdownMenuItem>
-              {onSaveToDatabase && (
-                <>
-                  <DropdownMenuSeparator className="bg-slate-800" />
-                  <DropdownMenuItem onClick={onSaveToDatabase} disabled={isSaving} className="hover:bg-slate-800 cursor-pointer">
-                    {isSaving ? (
-                      <Loader2 className="h-4 w-4 mr-3 animate-spin text-blue-500" />
-                    ) : (
-                      <Save className="h-4 w-4 mr-3 text-blue-500" />
-                    )}
-                    Save to Database
-                  </DropdownMenuItem>
-                </>
-              )}
+              <DropdownMenuSeparator className="bg-slate-800" />
+              <DropdownMenuItem onClick={createNewLesson} className="hover:bg-slate-800 cursor-pointer">
+                <Plus className="h-4 w-4 mr-3 text-emerald-500" />
+                New Lesson
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

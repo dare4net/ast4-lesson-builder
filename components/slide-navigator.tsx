@@ -10,7 +10,7 @@ import { Plus, Trash2, GripVertical, ChevronUp, ChevronDown, Lock, CheckCircle, 
 import type { Slide } from "@/types/lesson"
 import { useFeedback } from "@/lib/feedback-context"
 import { cn } from "@/lib/utils"
-import { getCategorizedComponents } from "@/lib/lesson-utils"
+import { getCategorizedComponents, formatSlideTitle } from "@/lib/lesson-utils"
 
 interface SlideNavigatorProps {
   slides: Slide[]
@@ -125,7 +125,7 @@ export function SlideNavigator({
                                 "text-xs font-bold truncate transition-colors",
                                 currentSlideIndex === index ? "text-white" : "text-slate-400"
                               )}>
-                                {slide.title || "Untitled Slide"}
+                                {formatSlideTitle(slide.title, 20)}
                               </h4>
 
                               <div className="mt-2 flex flex-wrap gap-1.5">

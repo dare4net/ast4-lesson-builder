@@ -33,3 +33,4 @@ next-env.d.ts
 /scripts/bulk-personalize.mjs
 /scripts/create-personalized-lesson.js
 /scripts/personalize.js
+/public/audio/*

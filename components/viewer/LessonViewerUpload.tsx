@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { getComponentCategory, normalizeSlides } from '@/lib/lesson-utils';
+import { getComponentCategory, normalizeSlides, formatSlideTitle } from '@/lib/lesson-utils';
 import { FileUploader } from './FileUploader';
 import { LessonContent } from './LessonContent';
 import { Card } from '@/components/ui/card';
@@ -18,6 +18,7 @@ import { NavigationLockProvider } from '@/context/navigation-lock-context';
 import { useRouter } from 'next/navigation';
 import { syncEngine } from '@/lib/sync-engine';
 import { SyncStatusHUD } from './SyncStatusHUD';
+import { ReadAloudProvider } from '@/context/read-aloud-context';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
@@ -264,7 +265,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           <div className="w-2 h-2 rounded-full bg-green-500" />
           <h2 className="text-xs font-semibold text-slate-400">Course Lesson</h2>
         </div>
-        <h3 className="text-lg font-bold text-white tracking-tight leading-snug">{lessonData?.title}</h3>
+        <h3 className="text-lg font-bold text-white tracking-tight leading-snug">{formatSlideTitle(lessonData?.title, 20)}</h3>
       </div>
 
       <ScrollArea className="flex-1">
@@ -292,7 +293,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                     )}>
                       {index + 1}
                     </span>
-                    <span className="text-xs font-medium truncate flex-1">{slide.title}</span>
+                    <span className="text-xs font-medium truncate flex-1">{formatSlideTitle(slide.title, 20)}</span>
 
                     <div className="flex items-center gap-1.5">
                       {slide.status === "completed" ? (

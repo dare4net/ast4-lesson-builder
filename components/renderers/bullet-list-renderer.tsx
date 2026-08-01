@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { useTypingAnimation } from "@/hooks/use-typing-animation"
-import { Play, CheckCircle2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Play, CheckCircle2, Volume2 } from "lucide-react"
+import { useReadAloud } from "@/context/read-aloud-context"
+import { useAudioPlayer } from "@/hooks/use-audio-player"
 
 interface BulletListRendererProps {
   items: string[]
   type?: "ordered" | "unordered"
+  audioUrl?: string
   isEditing?: boolean
+  isBuilder?: boolean
+  autoPlayAudio?: boolean
   savedState?: any
   setComponentState?: (state: any) => void
   id?: string
@@ -78,17 +82,35 @@ const AnimatedListItem = ({
 export function BulletListRenderer({
   items,
   type = "unordered",
+  audioUrl,
   isEditing = false,
+  isBuilder = false,
+  autoPlayAudio,
   savedState,
   setComponentState,
   id = "list-renderer"
 }: BulletListRendererProps) {
-  const [hasStarted, setHasStarted] = useState(false)
+  const [hasStarted, setHasStarted] = useState(true)
   const [currentIndex, setCurrentIndex] = useState(0)
   const isPreviouslyCompleted = savedState?.status === "completed"
+  const { speak, isSpeaking: isTtsSpeaking, isEnabled: isReadAloudEnabled } = useReadAloud()
 
-  const handleStart = () => {
-    setHasStarted(true)
+  // Disable autoPlay in builder or editing mode unless explicitly enabled
+  const shouldAutoPlay = (autoPlayAudio ?? (!isBuilder && !isEditing)) && isReadAloudEnabled
+  const { isPlaying: isAudioPlaying, hasAudio, play: playAudio } = useAudioPlayer({
+    audioUrl,
+    autoPlay: shouldAutoPlay
+  })
+
+  const isSpeaking = isAudioPlaying || isTtsSpeaking
+
+  const handleSpeak = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (hasAudio) {
+      playAudio()
+    } else if (Array.isArray(items)) {
+      speak(items.join(". "))
+    }
   }
 
   const handleItemComplete = () => {
@@ -104,24 +126,20 @@ export function BulletListRenderer({
 
   const ListComponent = type === "ordered" ? "ol" : "ul"
 
-  if (!hasStarted && !isPreviouslyCompleted && !isEditing) {
-    return (
-      <div className="flex flex-col items-center justify-center py-6 space-y-4 animate-in fade-in duration-500">
+  return (
+    <div className="space-y-4 my-4 max-w-2xl mx-auto w-full">
+      <div className="flex items-center justify-between px-4">
+        <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">List Items</span>
         <button
-          onClick={handleStart}
-          className="group relative flex flex-col items-center gap-3 p-6 rounded-2xl border-2 border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/40 hover:scale-105 transition-all w-full max-w-md cursor-pointer"
+          onClick={handleSpeak}
+          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 font-bold text-xs transition-all border border-emerald-500/30 active:scale-95 cursor-pointer"
+          title="Read List Aloud"
         >
-          <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-slate-900 group-hover:scale-110 transition-transform">
-            <Play className="h-4 w-4 fill-current ml-1" />
-          </div>
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600">Read the List</span>
+          <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-emerald-500")} />
+          <span className="text-[10px] uppercase tracking-wider">Read Aloud</span>
         </button>
       </div>
-    )
-  }
 
-  return (
-    <div className="space-y-6 my-4">
       <ListComponent className={cn(
         "space-y-4 px-4 mx-auto max-w-2xl", // Center align container
         type === "ordered" ? "list-none counter-reset-item" : "list-none"

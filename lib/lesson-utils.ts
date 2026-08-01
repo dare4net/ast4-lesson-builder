@@ -167,3 +167,19 @@ export function normalizeSlides(slides: any[]): import("@/types/lesson").Slide[]
         }
     })
 }
+
+/**
+ * Format slide title to enforce a maximum character length with ellipsis truncation.
+ * Prevents UI overflow in sidebars.
+ * 
+ * @param title - Raw slide title
+ * @param maxLength - Maximum allowed characters before ellipsis (default 20)
+ * @returns Formatted slide title
+ */
+export function formatSlideTitle(title?: string, maxLength: number = 20): string {
+    if (!title || !title.trim()) return "Untitled Slide"
+    const trimmed = title.trim()
+    if (trimmed.length <= maxLength) return trimmed
+    return `${trimmed.slice(0, maxLength).trim()}...`
+}
+

@@ -162,8 +162,39 @@ export function QuizRenderer(props: QuizRendererProps) {
         const handleAnswerSelect = async (optionId: string) => {
           const effectiveDisabled = isDisabled || state.isComplete
           if (isAnswered || effectiveDisabled) return
-          setState((prev: QuizState) => ({ ...prev, selectedAnswer: optionId }))
-          await playFeedback('click', { animation: false, sound: true })
+
+          if (isLive) {
+            // Live Mode: Tapping an option picks it immediately, eliminating the 'Check Answer' step!
+            const selectedOption = questions[currentQuestion].options.find(opt => opt.id === optionId)
+            const isCorrect = selectedOption?.isCorrect ?? false
+            const isLastQuestion = currentQuestion === questions.length - 1
+            const newScore = isCorrect ? score + 1 : score
+
+            const newState = {
+              ...state,
+              selectedAnswer: optionId,
+              isAnswered: true,
+              score: newScore,
+              ...(isLastQuestion ? { isComplete: true, status: 'completed' } : {})
+            }
+
+            setState(newState)
+            handleScore(isCorrect)
+
+            if (isCorrect) {
+              await playFeedback('quizSuccess', { animation: false })
+            } else {
+              await playFeedback('incorrect')
+            }
+
+            if (props.onScoreUpdate) {
+              props.onScoreUpdate(newScore)
+            }
+          } else {
+            // Practice Mode: Select option, require 'Check Answer' button confirmation
+            setState((prev: QuizState) => ({ ...prev, selectedAnswer: optionId }))
+            await playFeedback('click', { animation: false, sound: true })
+          }
         }
 
         const handleCheckAnswer = async () => {
@@ -369,15 +400,22 @@ export function QuizRenderer(props: QuizRendererProps) {
                   <Button
                     className={cn(
                       'h-12 w-full rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all transform border-b-4 active:border-b-0 active:translate-y-[2px] shadow-md',
-                      !isAnswered && selectedAnswer !== null
-                        ? 'bg-[#58CC02] text-white shadow-emerald-500/20 hover:bg-[#46a302] border-[#3B8C00]'
-                        : 'bg-slate-100 text-slate-400 border border-slate-200 border-b-slate-200 shadow-none',
-                      isAnswered && 'bg-[#1CB0F6] text-white shadow-sky-500/20 hover:bg-sky-500 border-[#0090CC]'
+                      isLive
+                        ? isAnswered
+                          ? 'bg-[#1CB0F6] text-white shadow-sky-500/20 hover:bg-sky-500 border-[#0090CC]'
+                          : 'bg-slate-100 text-slate-400 border border-slate-200 border-b-slate-200 shadow-none'
+                        : (!isAnswered && selectedAnswer !== null
+                          ? 'bg-[#58CC02] text-white shadow-emerald-500/20 hover:bg-[#46a302] border-[#3B8C00]'
+                          : isAnswered
+                            ? 'bg-[#1CB0F6] text-white shadow-sky-500/20 hover:bg-sky-500 border-[#0090CC]'
+                            : 'bg-slate-100 text-slate-400 border border-slate-200 border-b-slate-200 shadow-none')
                     )}
-                    onClick={isAnswered ? handleNextQuestion : handleCheckAnswer}
-                    disabled={(selectedAnswer === null && !isAnswered) || isDisabled}
+                    onClick={isLive ? handleNextQuestion : (isAnswered ? handleNextQuestion : handleCheckAnswer)}
+                    disabled={isLive ? !isAnswered || isDisabled : (selectedAnswer === null && !isAnswered) || isDisabled}
                   >
-                    {isAnswered ? 'Next Question' : 'Check Answer'}
+                    {isLive
+                      ? (currentQuestion < questions.length - 1 ? 'Next Question' : 'Finish Quiz')
+                      : (isAnswered ? 'Next Question' : 'Check Answer')}
                   </Button>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

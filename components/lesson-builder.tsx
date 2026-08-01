@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { ComponentLibrary } from "@/components/component-library"
 import { SlideEditor } from "@/components/slide-editor"
@@ -25,6 +25,7 @@ import { LoadLessonModal } from "@/components/modals/load-lesson-modal"
 import { useSearchParams } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
+import { generateBatchAudio, hashText, normalizeTextForSpeech } from '@/lib/audio-generator'
 
 export function LessonBuilder() {
   // Initialize with default lesson or from localStorage
@@ -42,6 +43,8 @@ export function LessonBuilder() {
   const [loadModalOpen, setLoadModalOpen] = useState(false)
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null)
   const [isLibraryCollapsed, setIsLibraryCollapsed] = useState(false)
+  const [hasUnpublishedChanges, setHasUnpublishedChanges] = useState(false)
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false)
 
   const { toast } = useToast()
   const isMobile = useMobile()
@@ -50,6 +53,8 @@ export function LessonBuilder() {
   const searchParams = useSearchParams()
   const lessonIdFromUrl = searchParams.get('lessonId')
   const [isSaving, setIsSaving] = useState(false)
+
+  const lastSavedLessonRef = useRef<string>("")
 
   // Load lesson on mount - either from DB (if ID present) or localStorage
   useEffect(() => {
@@ -88,6 +93,8 @@ export function LessonBuilder() {
 
           setLesson(normalizedLesson)
           setCurrentLessonId(lessonIdFromUrl)
+          lastSavedLessonRef.current = JSON.stringify(normalizedLesson)
+          setHasUnpublishedChanges(false)
           toast({
             title: "Lesson Loaded",
             description: "Successfully loaded lesson from database",
@@ -108,6 +115,8 @@ export function LessonBuilder() {
             const parsed = JSON.parse(savedLesson)
             parsed.slides = normalizeSlides(parsed.slides || [])
             setLesson(parsed)
+            lastSavedLessonRef.current = JSON.stringify(parsed)
+            setHasUnpublishedChanges(false)
           } catch (e) {
             console.error("Failed to parse saved lesson:", e)
           }
@@ -119,12 +128,32 @@ export function LessonBuilder() {
     initLesson()
   }, [lessonIdFromUrl, toast])
 
-  // Save lesson to localStorage whenever it changes
+  // Save lesson to localStorage whenever it changes and update unpublished state based on baseline
   useEffect(() => {
     if (isLoaded && typeof window !== "undefined") {
       localStorage.setItem("currentLesson", JSON.stringify(lesson))
+
+      const currentJson = JSON.stringify(lesson)
+      if (!lastSavedLessonRef.current) {
+        lastSavedLessonRef.current = currentJson
+        setHasUnpublishedChanges(false)
+      } else {
+        setHasUnpublishedChanges(currentJson !== lastSavedLessonRef.current)
+      }
     }
   }, [lesson, isLoaded])
+
+  // Warn creator before navigating away without publishing
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnpublishedChanges) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [hasUnpublishedChanges])
 
   // Make sure currentSlideIndex is valid
   useEffect(() => {
@@ -300,6 +329,8 @@ export function LessonBuilder() {
       };
 
       await apiClient.studio.updateLesson(currentLessonId, lessonData);
+      lastSavedLessonRef.current = JSON.stringify(lesson);
+      setHasUnpublishedChanges(false);
 
       toast({
         title: "Saved to Cloud",
@@ -316,6 +347,96 @@ export function LessonBuilder() {
       setIsSaving(false);
     }
   }, [currentLessonId, lesson, toast]);
+
+  // Publish & Generate Audio for all text components (single batch server call)
+  const handlePublishAndGenerateAudio = useCallback(async () => {
+    const lessonId = currentLessonId || lesson.id
+    setIsGeneratingAudio(true)
+
+    // 1. Collect all text components that need (re)generation
+    type Item = { componentId: string; text: string; lessonId: string; slideIdx: number; compIdx: number; newHash: string }
+    const itemsToGenerate: Item[] = []
+    const skippedIds = new Set<string>()
+
+    lesson.slides.forEach((slide, si) => {
+      slide.components.forEach((comp, ci) => {
+        if (!['paragraph', 'bulletList', 'heading'].includes(comp.type)) return
+
+        const rawText = comp.type === 'bulletList'
+          ? (comp.props?.items || []).join('. ')
+          : (comp.props?.content || '')
+
+        const cleanText = normalizeTextForSpeech(rawText)
+        if (!cleanText) return
+
+        const newHash = hashText(cleanText)
+        const enableCache = process.env.NEXT_PUBLIC_ENABLE_AUDIO_CACHE === 'true'
+
+        if (enableCache && comp.props?.textHash === newHash && comp.props?.audioUrl) {
+          skippedIds.add(comp.id)
+          return // Cache enabled and unchanged — reuse existing audio
+        }
+
+        itemsToGenerate.push({ componentId: comp.id, text: cleanText, lessonId, slideIdx: si, compIdx: ci, newHash })
+      })
+    })
+
+    // 2. Send ALL items to backend in one call
+    let urlMap: Record<string, string | null> = {}
+    if (itemsToGenerate.length > 0) {
+      urlMap = await generateBatchAudio(itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId })))
+    }
+
+    const generated = Object.values(urlMap).filter(Boolean).length
+    const skipped = skippedIds.size
+
+    // 3. Patch lesson with new audioUrls and hashes
+    const updatedSlides = lesson.slides.map((slide, si) => ({
+      ...slide,
+      components: slide.components.map((comp, ci) => {
+        const item = itemsToGenerate.find(i => i.slideIdx === si && i.compIdx === ci)
+        if (!item) return comp
+        return {
+          ...comp,
+          props: {
+            ...comp.props,
+            audioUrl: urlMap[comp.id] ?? comp.props?.audioUrl,
+            textHash: item.newHash,
+          }
+        }
+      })
+    }))
+
+    const updatedLesson = { ...lesson, slides: updatedSlides }
+    lastSavedLessonRef.current = JSON.stringify(updatedLesson)
+    setLesson(updatedLesson)
+    setIsGeneratingAudio(false)
+    setHasUnpublishedChanges(false)
+
+    // 4. Auto-save to database
+    if (currentLessonId) {
+      try {
+        await apiClient.studio.updateLesson(currentLessonId, {
+          title: updatedLesson.title,
+          description: updatedLesson.description,
+          slides: updatedLesson.slides,
+          settings: updatedLesson.settings || {},
+          author: updatedLesson.author,
+          level: updatedLesson.level,
+          duration: updatedLesson.duration,
+        })
+      } catch (e) {
+        console.error('[publish] DB save failed:', e)
+      }
+    }
+
+    toast({
+      title: '🎙️ Audio Published!',
+      description: itemsToGenerate.length === 0
+        ? `All audio up to date (${skipped} unchanged)`
+        : `Generated: ${generated}${skipped > 0 ? `, Skipped: ${skipped}` : ''}`,
+    })
+  }, [lesson, currentLessonId, toast])
 
   // Import lesson (Wrapper Pattern)
   const importLesson = useCallback(
@@ -491,6 +612,9 @@ export function LessonBuilder() {
               isMobile={isMobile}
               onSaveToDatabase={saveToDatabase}
               isSaving={isSaving}
+              onPublishAndGenerateAudio={handlePublishAndGenerateAudio}
+              isGeneratingAudio={isGeneratingAudio}
+              hasUnpublishedChanges={hasUnpublishedChanges}
               className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
             />
             <div className="flex flex-1 min-h-0 overflow-hidden relative">

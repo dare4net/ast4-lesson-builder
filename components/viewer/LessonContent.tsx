@@ -2,14 +2,16 @@
 
 import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
 import type { Lesson } from '@/types/lesson';
-import { getComponentCategory } from '@/lib/lesson-utils';
+import { getComponentCategory, formatSlideTitle } from '@/lib/lesson-utils';
 import isEqual from 'lodash.isequal';
+import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
+import { useReadAloud } from '@/context/read-aloud-context';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -90,6 +92,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     const activeComponent = processedComponents[innerStepIndex];
     const { isLocked } = useNavigationLock();
+    const { isEnabled, toggleReadAloud } = useReadAloud();
 
     const canGoNext = !isLocked && (innerStepIndex < (processedComponents.length - 1) || currentSlideIndex < (lesson.slides.length - 1));
     const canGoPrev = !isLocked && (innerStepIndex > 0 || currentSlideIndex > 0);
@@ -245,13 +248,29 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             <div className="hidden md:flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 shadow-inner">
               <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
               <span className="text-xs font-semibold text-slate-200 truncate max-w-[220px]">
-                {currentSlide.title}
+                {formatSlideTitle(currentSlide.title, 20)}
               </span>
             </div>
           )}
 
-          {/* Metrics */}
-          <div className="flex gap-5 shrink-0 items-center">
+          {/* Metrics & Controls */}
+          <div className="flex gap-4 shrink-0 items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleReadAloud}
+              className={cn(
+                "h-8 px-2.5 rounded-full font-bold text-xs flex items-center gap-1.5 transition-all border",
+                isEnabled
+                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
+                  : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700"
+              )}
+              title={isEnabled ? "Disable Read Aloud" : "Enable Read Aloud"}
+            >
+              {isEnabled ? <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" /> : <VolumeX className="w-3.5 h-3.5 text-slate-500" />}
+              <span className="hidden sm:inline text-[10px] uppercase tracking-wider">{isEnabled ? "Voice On" : "Voice Off"}</span>
+            </Button>
+
             <div className="flex flex-col items-end justify-center">
               <span className="text-[10px] font-medium text-slate-400">Score</span>
               <span className="text-sm font-bold text-white tabular-nums">{score}</span>
