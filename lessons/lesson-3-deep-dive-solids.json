@@ -1,0 +1,431 @@
+{
+    "id": "lesson-states-of-matter-003",
+    "title": "Lesson 3: Deep Dive — SOLIDS (Packed and Proud!)",
+    "description": "Year 4 Science — Lesson 3: SOLIDS. Discover solid properties, particle theory in solids, fixed shape and volume, and investigate tricky solids like sand and sponges.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "State 1: SOLIDS — Packed and Proud! 🧊",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 3: SOLIDS — Packed and Proud! 🧊",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "What Makes a Solid... Solid?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Have you ever tried to squash a rock? Of course not — because solids keep their shape! But WHY? The secret lies in something so tiny, you can't even see it with your naked eyes...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Rock, ice cube, and wooden block showing solid shapes",
+                        "caption": "Solids keep their shape wherever you put them!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Why can't you easily squash a solid rock with your hands?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Because it is made of tightly packed solid particles",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Because it is filled with pressurized air",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "Because it is liquid inside",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Solid particles are tightly packed together, giving solids their hard structure."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🔬 Zoom In: Particle Theory in Solids",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔬 Microscopic View: Particle Theory",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Everything is made of billions of tiny building blocks called <b>particles</b>! In a SOLID, these particles are squeezed tightly together in neat rows. They vibrate in place, but CANNOT move around freely!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-2-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Diagram of tightly packed grid layout of particles in a solid",
+                        "caption": "Solid particles: locked in a neat grid, vibrating in place!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🔒 Fixed Shape — Doesn't change shape unless cut, bent, or broken",
+                            "🎯 Fixed Volume — Always takes up the exact same amount of space",
+                            "💪 Hard to Compress — Particles are already touching, so no room to squash",
+                            "🎵 Particles Vibrate — They wiggle in fixed spots like trembling dancers"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🌍 Real-World Solids & Tricky Cases",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Real-World Solids & Tricky Cases",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Some solids seem sneaky! What about sand or flour? You can pour them into a bowl... does that make them liquids?",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Tricky Solids Detective Cards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Is Sand a Solid or Liquid?",
+                                "back": "SOLID! Even though sand pours, each tiny grain of sand has its own fixed shape!"
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Is a Sponge a Solid?",
+                                "back": "SOLID! A sponge squeezes because you are pushing AIR out of its holes, not squashing the solid plastic/cellulose!"
+                            },
+                            {
+                                "id": "card-3",
+                                "front": "Why is Ice a Solid?",
+                                "back": "Water particles freeze into a rigid crystalline lattice structure."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-3-4",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Solid Particle Behavior Check",
+                        "text": "In a solid, particles are packed {{blank}} and can only {{blank}} in place.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "tightly",
+                                "alternatives": [
+                                    "Tightly",
+                                    "close",
+                                    "closely"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "vibrate",
+                                "alternatives": [
+                                    "Vibrate",
+                                    "wiggle"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 Solid Properties Lab",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Lab: Identify Solid Properties",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Solid Concept to Definition",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Fixed Shape 🔒",
+                                "right": "Keeps its own shape when moved to a new dish"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Fixed Volume 📦",
+                                "right": "Takes up the exact same amount of space always"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Incompressible 💪",
+                                "right": "Cannot be squashed because particles are already touching"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-4-3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Order these solids from softest to hardest",
+                        "items": [
+                            {
+                                "id": "item-1",
+                                "text": "1. Soft Clay 🧱",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-2",
+                                "text": "2. Wooden Block 🪵",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-3",
+                                "text": "3. Diamond Gemstone 💎",
+                                "correctIndex": 2
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 3 Summary & Mastery Quiz 🏆",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 3 Summary & Assessment 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 Solids have a fixed shape and fixed volume.",
+                            "🔬 Particles in a solid are tightly packed in an ordered grid.",
+                            "🎵 Solid particles vibrate in place and cannot slide around.",
+                            "🏜️ Pourable solids like sand are made of millions of tiny solid grains!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-solids-1",
+                                "question": "Which of these is a key property of ALL solids?",
+                                "options": [
+                                    {
+                                        "id": "opt-s1-1",
+                                        "text": "They keep their own fixed shape",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-s1-2",
+                                        "text": "They take the shape of whatever cup they are in",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-s1-3",
+                                        "text": "They expand to fill the whole room",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solids maintain their own fixed shape regardless of container."
+                            },
+                            {
+                                "id": "q-solids-2",
+                                "question": "How do particles move inside a solid ice cube?",
+                                "options": [
+                                    {
+                                        "id": "opt-s2-1",
+                                        "text": "They vibrate in fixed spots",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-s2-2",
+                                        "text": "They slide and roll past each other",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-s2-3",
+                                        "text": "They fly around at high speed",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "In a solid, particles are locked in place and vibrate!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:29:00.000Z",
+    "updatedAt": "2026-07-28T17:29:00.000Z"
+}

@@ -1,0 +1,424 @@
+{
+    "id": "lesson-states-of-matter-007",
+    "title": "Lesson 7: Changing States — Heating & Cooling",
+    "description": "Year 4 Science — Lesson 7: Changing States. Discover how adding or removing heat changes matter: Melting, Freezing, Evaporation, Condensation, and Sublimation.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Change Is Possible! How Matter Switches State 🔥❄️",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 7: Changing States — Heating & Cooling 🔥❄️",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Add Energy → Change State",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Matter doesn't stay locked in one state forever! Add enough HEAT energy and particles start moving faster — eventually breaking free from each other. Remove heat and they slow down and pack closer together. This is how matter switches state!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "State change cycle diagram showing solid, liquid, and gas transitions",
+                        "caption": "Heating adds energy; cooling removes energy!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What happens to particles when you add heat energy to a solid ice cube?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "They gain energy and move faster until sliding past each other",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "They freeze completely still",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "They shrink and disappear",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Heat energy makes particles vibrate faster until they break free into a liquid!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🔥 The 5 Key State Changes",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The 5 State Changes to Master:",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "❄️→💧 MELTING — Solid to Liquid (Ice melting into water on a hot day)",
+                            "💧→❄️ FREEZING — Liquid to Solid (Water turning into ice in the freezer)",
+                            "💧→💨 EVAPORATION — Liquid to Gas (Puddles drying up under the hot sun)",
+                            "💨→💧 CONDENSATION — Gas to Liquid (Foggy mirror after a steamy shower)",
+                            "🧊→💨 SUBLIMATION — Solid straight to Gas (Dry ice turning directly into vapor!)"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🔍 Interactive Hotspot: State Change Cycle",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Investigate the State Change Cycle",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-3-2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Click on each state change step to learn how it works!",
+                        "image": "/placeholder.svg?height=350&width=500",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.2,
+                                "y": 0.3,
+                                "label": "Melting 🫠",
+                                "content": "Heat causes solid particles to gain energy and slide past each other into a liquid."
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.8,
+                                "y": 0.3,
+                                "label": "Evaporation 💨",
+                                "content": "Liquid particles absorb heat, speed up, and break completely free into gas!"
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.8,
+                                "y": 0.7,
+                                "label": "Condensation 🌧️",
+                                "content": "Gas particles cool down, lose energy, and clump back into liquid droplets."
+                            },
+                            {
+                                "id": "hs4",
+                                "x": 0.2,
+                                "y": 0.7,
+                                "label": "Freezing 🧊",
+                                "content": "Liquid particles cool further until locked in a rigid solid grid."
+                            }
+                        ],
+                        "behavior": "discovery",
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-3-3",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "State Change Lab Check",
+                        "text": "When ice is heated it {{blank}} into water. When water loses heat it {{blank}}. When water boils it {{blank}} into steam.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "melts",
+                                "alternatives": [
+                                    "Melts"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "freezes",
+                                "alternatives": [
+                                    "Freezes"
+                                ]
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "evaporates",
+                                "alternatives": [
+                                    "Evaporates",
+                                    "boils"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 State Change Lab & Drag-Drop",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Lab: Match & Order Changes",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Transition to State Change Name",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Solid → Liquid 🫠",
+                                "right": "Melting"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Liquid → Solid 🧊",
+                                "right": "Freezing"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Liquid → Gas 💨",
+                                "right": "Evaporation"
+                            },
+                            {
+                                "id": "pair-4",
+                                "left": "Gas → Liquid 🌧️",
+                                "right": "Condensation"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-4-3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Order these state changes from coldest to hottest energy state",
+                        "items": [
+                            {
+                                "id": "item-1",
+                                "text": "1. Freezing (Liquid to Solid) 🧊",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-2",
+                                "text": "2. Melting (Solid to Liquid) 💧",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-3",
+                                "text": "3. Evaporation (Liquid to Gas) 💨",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "item-4",
+                                "text": "4. Sublimation (Solid straight to Gas) ⚡",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 7 Summary & Assessment 🏆",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 7 Summary & Assessment 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🔥 Heating adds energy → particles move faster and spread apart.",
+                            "❄️ Cooling removes energy → particles slow down and pack together.",
+                            "🔄 5 Key Changes: Melting, Freezing, Evaporation, Condensation, Sublimation."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-change-1",
+                                "question": "What process turns liquid water into gas steam when heated?",
+                                "options": [
+                                    {
+                                        "id": "opt-ch1-1",
+                                        "text": "Evaporation",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-ch1-2",
+                                        "text": "Condensation",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-ch1-3",
+                                        "text": "Freezing",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Heating liquid water turns it into gas via evaporation!"
+                            },
+                            {
+                                "id": "q-change-2",
+                                "question": "When steam touches a cold mirror and turns back into water droplets, this is called...",
+                                "options": [
+                                    {
+                                        "id": "opt-ch2-1",
+                                        "text": "Condensation",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-ch2-2",
+                                        "text": "Sublimation",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Cooling gas into liquid droplets is condensation!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-08-01T12:53:00.000Z",
+    "updatedAt": "2026-08-01T12:53:00.000Z"
+}

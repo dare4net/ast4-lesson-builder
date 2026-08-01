@@ -1,0 +1,204 @@
+{
+  "id": "0a40916d-be70-46a0-90e0-5712dd01f439",
+  "title": "Prerequisites ",
+  "slides": [
+    {
+      "id": "slide-1784983347920",
+      "title": "Devina as a concept",
+      "status": "completed",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-1784983385948",
+          "type": "heading",
+          "props": {
+            "content": "What is devinna ",
+            "level": 2,
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-1784983405073",
+          "type": "paragraph",
+          "props": {
+            "content": "Devina is a t3ch comPany ",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-1784983445158",
+          "type": "bulletList",
+          "props": {
+            "items": [
+              "Discovery ",
+              "Innovation ",
+              "Development ",
+              "Paul "
+            ],
+            "type": "unordered"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-1784983520099",
+      "title": "About devinna",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "flashcards-1784983582332",
+          "type": "flashcards",
+          "props": {
+            "title": "Flashcards",
+            "cards": [
+              {
+                "id": "1",
+                "front": "What is the capital of France?",
+                "back": "Paris"
+              },
+              {
+                "id": "2",
+                "front": "What is the capital of Japan?",
+                "back": "Tokyo"
+              },
+              {
+                "id": "3",
+                "front": "What is the capital of Australia?",
+                "back": "Canberra"
+              },
+              {
+                "id": "card-1784983603211",
+                "front": "CEO of devinna ",
+                "back": "Paul"
+              }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-1784983631079",
+      "title": "Test",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "quiz-1784983672268",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "What is the capital of France?",
+                "options": [
+                  {
+                    "id": "1",
+                    "text": "London",
+                    "isCorrect": false
+                  },
+                  {
+                    "id": "2",
+                    "text": "Paris",
+                    "isCorrect": true
+                  },
+                  {
+                    "id": "3",
+                    "text": "Berlin",
+                    "isCorrect": false
+                  },
+                  {
+                    "id": "4",
+                    "text": "Madrid",
+                    "isCorrect": false
+                  }
+                ],
+                "explanation": "Paris is the capital and most populous city of France."
+              },
+              {
+                "id": "q1784983682563",
+                "question": "New Question",
+                "options": [
+                  {
+                    "id": "opt-1784983682563-1",
+                    "text": "Option 1",
+                    "isCorrect": false
+                  },
+                  {
+                    "id": "opt-1784983682563-2",
+                    "text": "Option 2",
+                    "isCorrect": true
+                  }
+                ],
+                "explanation": ""
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": false,
+            "points": 10,
+            "mode": "live",
+            "state": "active",
+            "status": "uncompleted"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-1785052971687",
+      "title": "Final slide",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "dragDrop-1785053002726",
+          "type": "dragDrop",
+          "props": {
+            "title": "Arrange in the correct order",
+            "items": [
+              {
+                "id": "1",
+                "text": "Age",
+                "correctIndex": 0
+              },
+              {
+                "id": "2",
+                "text": "Ball",
+                "correctIndex": 1
+              },
+              {
+                "id": "3",
+                "text": "Cat",
+                "correctIndex": 2
+              }
+            ],
+            "shuffled": true,
+            "points": 15,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "duration": 30,
+    "level": "Beginner"
+  }
+}

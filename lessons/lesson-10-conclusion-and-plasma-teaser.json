@@ -1,0 +1,314 @@
+{
+    "id": "lesson-states-of-matter-010",
+    "title": "Lesson 10: Course Conclusion, Recap & The Secret 4th State (Plasma!)",
+    "description": "Year 4 Science — Lesson 10: Conclusion & Teaser. Course summary, 10-lesson recap, master vocabulary review, and an exciting teaser for PLASMA (the 4th state of matter).",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "You Did It! 🎉 Matter Expert Unlocked",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 10: Course Conclusion & Beyond! 🎉",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Certified Matter Expert Unlocked!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You have officially completed all core lessons on States of Matter & Particle Theory! You understand what everything is made of, how particles move, and how heat energy transforms matter!",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Celebrating scientist with diploma and lab flasks",
+                        "caption": "Congratulations! You have completed the States of Matter Master Series!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "How do you feel about your new science superpowers?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Ready for the secrets of the universe! 🚀",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Proud and curious! 🔬",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Curiosity is the key to all scientific discovery!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 5,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "📚 What You Mastered Across 10 Lessons",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Course Master Key Takeaways:",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "⚖️ Matter: Anything that has mass (weight) and volume (takes up space).",
+                            "🧊 Solids: Fixed shape, fixed volume, particles vibrating in neat grid.",
+                            "💧 Liquids: Container shape, fixed volume, particles sliding & rolling.",
+                            "💨 Gases: Expanding shape & volume, fast free particles, compressible.",
+                            "🔄 State Changes: Melting, Freezing, Evaporation, Condensation, Sublimation.",
+                            "🌍 Real World: Weather, rocket fuel, dry ice, and everyday cooking!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🃏 Vocabulary Lockdown Flashcards",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Master Vocabulary Lock-In",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-2",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Vocabulary Mastery Cards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Matter",
+                                "back": "Anything that has mass and takes up space."
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Particle Theory",
+                                "back": "The scientific principle that all matter is made of tiny moving particles."
+                            },
+                            {
+                                "id": "card-3",
+                                "front": "Sublimation",
+                                "back": "State change directly from solid to gas without becoming liquid."
+                            },
+                            {
+                                "id": "card-4",
+                                "front": "Compressibility",
+                                "back": "Ability to squeeze particles closer together (only gas can be compressed easily)."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🌩️ Coming Up Next: The Secret 4th State (PLASMA!)",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "👀 Coming Up Next: The Secret 4th State!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You know Solid, Liquid, and Gas... but what if I told you there is a <b>FOURTH state of matter</b>? One that exists inside lightning bolts, neon light tubes, nuclear reactors, and the Sun? It's called <b>PLASMA</b> — and it makes up 99% of the visible universe!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-4-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Lightning bolt striking with glowing electric plasma energy",
+                        "caption": "Lightning bolts and the Sun are made of supercharged PLASMA!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-4-4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-plasma",
+                                "question": "What state of matter makes up 99% of the visible universe (including stars and lightning)?",
+                                "options": [
+                                    {
+                                        "id": "opt-p1",
+                                        "text": "PLASMA ⚡",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-p2",
+                                        "text": "Gas",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-p3",
+                                        "text": "Liquid",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Plasma is superheated ionized gas, making up stars, lightning, and 99% of the visible universe!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "🎓 Final Graduation & Congratulations",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎓 Course Graduation!",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Incredible work, Junior Science Detective! You have mastered States of Matter & Particle Theory. Keep that curiosity alive — science rewards the curious!",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "✅ All 10 Lessons Completed",
+                            "🏆 Science Detective Badge Unlocked",
+                            "🌟 Ready for Year 4 Science Mastery & Beyond!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-08-01T12:56:00.000Z",
+    "updatedAt": "2026-08-01T12:56:00.000Z"
+}

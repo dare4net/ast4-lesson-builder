@@ -1,0 +1,464 @@
+{
+    "id": "lesson-states-of-matter-001",
+    "title": "Lesson 1: What Is Everything Made Of?",
+    "description": "Year 4 Science — Lesson 1: The Hook & Big Question. Explore what stuff is made of, solve the mystery of ice, water, and steam, and learn the definition of matter.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 20,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "What Is Everything Made Of? 🌍",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "What Is Everything Made Of? 🌍",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Science Detectives: Matter",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Look around you. The chair you're sitting on. The air you're breathing. Even YOU. What are they all made of? Today, we become matter scientists and discover the secret of EVERYTHING.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "A glass of water with ice cubes and steam rising",
+                        "caption": "Ice, liquid water, and steam — three forms of the exact same material!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-5",
+                    "type": "heading",
+                    "props": {
+                        "content": "🤔 Here's the Big Question:",
+                        "level": 3,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "If you take a piece of ice and heat it, it turns into water. Heat it more and it disappears as steam. But... where does it GO? Is it the same stuff? How does that even work?",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-7",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Before we start — what do YOU think matter is?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Everything that takes up space and has mass",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Only things you can see",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "Only liquids and solids",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-4",
+                                        "text": "Air and water only",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Exactly! Matter is anything that takes up space and has mass — including air!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "The Mystery of Ice, Water, and Steam 🧊💧💨",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Where Does the Ice Go?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "When an ice cube melts into water, it looks completely different. When water boils into steam, it seems to vanish into thin air! But is it really gone?",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 Ice is hard, cold, and holds its shape",
+                            "💧 Water is wet, flows, and spills easily",
+                            "💨 Steam is warm, invisible, and floats away"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-2-4",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Ice, Water & Steam Facts",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Did the ice disappear?",
+                                "back": "No! It just changed form from solid to liquid."
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Is steam still water?",
+                                "back": "Yes! Steam is water in gas form floating in the air."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-2-5",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the Mystery",
+                        "text": "When ice is heated, it melts into {{blank}}. When water is heated, it turns into {{blank}}.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "water",
+                                "alternatives": [
+                                    "Water"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "steam",
+                                "alternatives": [
+                                    "water vapour",
+                                    "vapour",
+                                    "vapor"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Are They All the Same Stuff? 🔬",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Science Detective's Clues",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Let's investigate the evidence! Ice, liquid water, and steam look different, but they are ALL made of the exact same stuff.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-3-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 Ice: Solid & hard — YES, it is Matter! ✅",
+                            "💧 Water: Liquid & flowing — YES, it is Matter! ✅",
+                            "💨 Steam: Gas & spreading — YES, it is Matter! ✅"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-3-4",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match the Form of Water to Its Description",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Ice 🧊",
+                                "right": "Solid form of water"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Water 💧",
+                                "right": "Liquid form of water"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Steam 💨",
+                                "right": "Gas form of water"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "What is Matter? The Big Discovery 🌟",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Defining Matter",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<b>Scientific Principle:</b> <i>Matter is anything that has mass and takes up space.</i>",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "So whether it's an ice cube, a splash of water, or the air filling a balloon — if it has weight (mass) and takes up room (space), it IS matter!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-4-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "✅ Mass = how much stuff is inside it",
+                            "✅ Volume = how much space it takes up",
+                            "✅ Ice, water, and steam ALL have mass and volume!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-4-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q2",
+                                "question": "What do ice, liquid water, and steam ALL have in common?",
+                                "options": [
+                                    {
+                                        "id": "opt-2-1",
+                                        "text": "They are all made of matter, taking up space and having mass",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-2-2",
+                                        "text": "They are all freezing cold",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-2-3",
+                                        "text": "They are all completely invisible",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "All three forms are matter! They have mass and occupy space."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 1 Summary & Big Mystery Solved 🎉",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 1 Recap: What IS Stuff Made Of?",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You solved the first mystery of science! Here is what we learned today:",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🔍 Everything around us is made of MATTER.",
+                            "⚖️ Matter is anything that has mass and takes up space.",
+                            "🧊 Water can exist as ice (solid), water (liquid), or steam (gas).",
+                            "💨 Even invisible air and steam are made of matter!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-5-4",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎉 Mystery #1 Solved!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Great job, Science Detective! You now know what everything is made of.",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 20,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:25:00.000Z",
+    "updatedAt": "2026-07-28T17:25:00.000Z"
+}

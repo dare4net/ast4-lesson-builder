@@ -1,0 +1,513 @@
+{
+    "id": "lesson-states-of-matter-009",
+    "title": "Lesson 9: Full Assessment — Prove You Know Your Matter!",
+    "description": "Year 4 Science — Lesson 9: Full Assessment. Test your mastery of states of matter, particle theory, volume, mass, compression, and state changes.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 30,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "🏆 Science Challenge: Prove You Know Your Matter!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 9: Full Assessment Challenge 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Grand Science Exam!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "This is your moment to shine, Science Detective! Take your time, read each question carefully, and show off everything you've learned about states of matter and particle theory! 💪",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Trophy and celebration scientist illustration",
+                        "caption": "Get ready for the ultimate Matter Mastery Exam!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Are you ready to test your knowledge?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Yes! Let me get top points! 🚀",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Born ready! Let's go! 🔬",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Awesome enthusiasm! Good luck!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 5,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "📝 Core Concepts Quiz (Part 1)",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Part 1: Core Concepts Quiz",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-2-2",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-ass-1",
+                                "question": "1. What are the three main states of matter?",
+                                "options": [
+                                    {
+                                        "id": "opt-a1-1",
+                                        "text": "Hot, warm, cold",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-a1-2",
+                                        "text": "Solid, liquid, gas",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a1-3",
+                                        "text": "Hard, soft, invisible",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "The three primary physical states are Solid, Liquid, and Gas!"
+                            },
+                            {
+                                "id": "q-ass-2",
+                                "question": "2. Which state has particles that vibrate in fixed spots?",
+                                "options": [
+                                    {
+                                        "id": "opt-a2-1",
+                                        "text": "Solid",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a2-2",
+                                        "text": "Liquid",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-a2-3",
+                                        "text": "Gas",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solid particles are locked in place and vibrate!"
+                            },
+                            {
+                                "id": "q-ass-3",
+                                "question": "3. Which state takes the shape of its container but keeps its volume?",
+                                "options": [
+                                    {
+                                        "id": "opt-a3-1",
+                                        "text": "Liquid",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a3-2",
+                                        "text": "Solid",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-a3-3",
+                                        "text": "Gas",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Liquids conform to container shapes while maintaining fixed volume!"
+                            },
+                            {
+                                "id": "q-ass-4",
+                                "question": "4. What do you call the process of liquid turning into gas?",
+                                "options": [
+                                    {
+                                        "id": "opt-a4-1",
+                                        "text": "Evaporation",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a4-2",
+                                        "text": "Freezing",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-a4-3",
+                                        "text": "Condensation",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Liquid changing to gas via heating is evaporation!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 40,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🔬 Particle Theory Quiz (Part 2)",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Part 2: Particle Theory & Compression",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-3-2",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-ass-5",
+                                "question": "5. Can gases be compressed (squashed)?",
+                                "options": [
+                                    {
+                                        "id": "opt-a5-1",
+                                        "text": "Yes, because gas particles have empty space between them",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a5-2",
+                                        "text": "No, never",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Yes! Empty space allows gas particles to be squeezed together."
+                            },
+                            {
+                                "id": "q-ass-6",
+                                "question": "6. Why can't solids be easily compressed?",
+                                "options": [
+                                    {
+                                        "id": "opt-a6-1",
+                                        "text": "Because their particles are already packed tightly together",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a6-2",
+                                        "text": "Because they are too heavy",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solid particles are touching, leaving no gaps to compress!"
+                            },
+                            {
+                                "id": "q-ass-7",
+                                "question": "7. Which of these is NOT matter?",
+                                "options": [
+                                    {
+                                        "id": "opt-a7-1",
+                                        "text": "A shadow",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a7-2",
+                                        "text": "Air in a tire",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-a7-3",
+                                        "text": "An ice cube",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "A shadow is the absence of light; it has no mass and takes up no space!"
+                            },
+                            {
+                                "id": "q-ass-8",
+                                "question": "8. What happens to particles during melting?",
+                                "options": [
+                                    {
+                                        "id": "opt-a8-1",
+                                        "text": "They gain energy and move faster",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-a8-2",
+                                        "text": "They disappear",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Heat energy speeds up particles until they break out of the solid grid!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 40,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 Interactive Sorting & Matching Assessment",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Part 3: Practical Lab Assessment",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Substance/Process to Correct Category",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Ice 🧊",
+                                "right": "Solid form of H₂O"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Milk 🥛",
+                                "right": "Liquid state"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Oxygen 💨",
+                                "right": "Gas state"
+                            },
+                            {
+                                "id": "pair-4",
+                                "left": "Evaporation ☀️",
+                                "right": "Liquid to Gas"
+                            },
+                            {
+                                "id": "pair-5",
+                                "left": "Condensation 🌧️",
+                                "right": "Gas to Liquid"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 25,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-4-3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange these state processes from coldest energy to hottest energy",
+                        "items": [
+                            {
+                                "id": "item-1",
+                                "text": "1. Freezing (Liquid to Solid) 🧊",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-2",
+                                "text": "2. Solid at room temperature 🪵",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-3",
+                                "text": "3. Melting (Solid to Liquid) 💧",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "item-4",
+                                "text": "4. Evaporation (Liquid to Gas) 💨",
+                                "correctIndex": 3
+                            },
+                            {
+                                "id": "item-5",
+                                "text": "5. Gas expansion at high temp ⚡",
+                                "correctIndex": 4
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 25,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "✍️ Final Fill-in-the-Blank & Mastery Check",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Part 4: Final Master Certificate 🎓",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-5-2",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Final Vocabulary Statement",
+                        "text": "A {{blank}} has a fixed shape. A {{blank}} takes the shape of its container. A {{blank}} fills all available space. When steam cools it {{blank}} into water droplets.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "solid",
+                                "alternatives": [
+                                    "Solid"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "liquid",
+                                "alternatives": [
+                                    "Liquid"
+                                ]
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "gas",
+                                "alternatives": [
+                                    "Gas"
+                                ]
+                            },
+                            {
+                                "id": "b4",
+                                "answer": "condenses",
+                                "alternatives": [
+                                    "Condenses"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "bulletList-5-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🌟 CONGRATULATIONS! You have completed the 15-Point Assessment Challenge!",
+                            "🎓 You are officially certified in States of Matter & Particle Theory."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 30,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-08-01T12:55:00.000Z",
+    "updatedAt": "2026-08-01T12:55:00.000Z"
+}

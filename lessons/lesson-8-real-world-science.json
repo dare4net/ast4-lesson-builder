@@ -1,0 +1,411 @@
+{
+    "id": "lesson-states-of-matter-008",
+    "title": "Lesson 8: Real-World Science — States of Matter Around Us",
+    "description": "Year 4 Science — Lesson 8: Real-World Science. Explore matter in daily life, household examples, nature (weather/dew/geysers), and engineering (rocket fuel/dry ice).",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Matter Is Everywhere — Even Inside You! 🌍🫀",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 8: Real-World Matter Science 🌍",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "States of Matter in Daily Life",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Now that you know the science, let's look at the world with NEW eyes! States of matter and state changes are happening around you constantly — in your home, out in nature, and even inside your own body!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Montage of geyser, foggy mirror, boiling kettle, and icy road",
+                        "caption": "Matter science in action: geysers, kettles, foggy mirrors, and icy roads!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Where can you observe condensation happening at home?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "On a foggy bathroom mirror after a hot shower",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Inside a microwave",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "In a dry wooden chair",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Warm steam in the air touches the cold mirror glass and condenses into liquid drops!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🧊 At Home & 🌧️ In Nature",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Matter Science in Action",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-2-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "🧊 At Home:",
+                        "level": 3,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🥤 Freezing juice into ice lollies → Liquid to Solid",
+                            "🫖 Boiling a kettle for tea → Liquid to Gas (Steam)",
+                            "🧊 Ice cubes melting in your soda → Solid to Liquid",
+                            "🪞 Foggy bathroom mirror → Gas to Liquid (Condensation)"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-2-4",
+                    "type": "heading",
+                    "props": {
+                        "content": "🌧️ In Nature:",
+                        "level": 3,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-5",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🌧️ Rain clouds → Water vapor condenses into heavy liquid drops",
+                            "❄️ Snowflakes → Water drops freeze into crystalline ice",
+                            "🍃 Morning dew on grass → Overnight condensation from air",
+                            "🌋 Volcanic geysers → Underground water turns to steam and erupts!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🚀 High-Tech Science & Engineering",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🚀 In Rocket Science & Technology",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-3-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🚀 Rocket Fuel: Liquid hydrogen stored super-cold, burns as high-speed gas!",
+                            "🧊 Dry Ice in Medicine: Solid CO₂ subliming straight to gas keeps vaccines frozen",
+                            "⚔️ Steel Foundries: Solid iron melted into glowing liquid for casting beams",
+                            "🌤️ Weather Forecasting: Tracking evaporation and condensation to predict storms"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Engineering Matter Flashcards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Why do rockets use liquid fuel instead of gas?",
+                                "back": "Liquid fuel is thousands of times denser than gas, fitting huge energy into rocket tanks!"
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "What makes dry ice special?",
+                                "back": "It sublimes straight from solid to gas at -78.5°C without leaving a wet puddle!"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 Real-World Case Study Matching",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Lab: Name That State Change!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Real-World Event to Scientific Change",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Puddle drying in the sun ☀️",
+                                "right": "Evaporation (Liquid to Gas)"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Breath fogging on cold window 🪞",
+                                "right": "Condensation (Gas to Liquid)"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Juice lolly hardening in freezer 🧊",
+                                "right": "Freezing (Liquid to Solid)"
+                            },
+                            {
+                                "id": "pair-4",
+                                "left": "Dry ice smoking at room temp 💨",
+                                "right": "Sublimation (Solid to Gas)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "fillInTheBlank-4-3",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Real-World State Change Check",
+                        "text": "Morning dew on grass leaves is formed by {{blank}}. A drying puddle is an example of {{blank}}.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "condensation",
+                                "alternatives": [
+                                    "Condensation"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "evaporation",
+                                "alternatives": [
+                                    "Evaporation"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 8 Summary & Assessment 🏆",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 8 Summary & Assessment 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🌍 States of matter drive weather, cooking, nature, and engineering.",
+                            "💧 Water is the only natural substance found everywhere as solid, liquid, and gas.",
+                            "🚀 Advanced science uses state changes for rocket fuel, medical dry ice, and metal casting."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-rw-1",
+                                "question": "What state change happens when a rain puddle dries up under the hot sun?",
+                                "options": [
+                                    {
+                                        "id": "opt-rw1-1",
+                                        "text": "Evaporation",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-rw1-2",
+                                        "text": "Condensation",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-rw1-3",
+                                        "text": "Freezing",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Liquid water turns into invisible gas vapor through evaporation!"
+                            },
+                            {
+                                "id": "q-rw-2",
+                                "question": "Dry ice turns straight from solid to gas without melting into liquid. This is called...",
+                                "options": [
+                                    {
+                                        "id": "opt-rw2-1",
+                                        "text": "Sublimation",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-rw2-2",
+                                        "text": "Melting",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solid straight to gas is sublimation!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-08-01T12:54:00.000Z",
+    "updatedAt": "2026-08-01T12:54:00.000Z"
+}

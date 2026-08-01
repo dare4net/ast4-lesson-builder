@@ -1,0 +1,420 @@
+{
+    "id": "lesson-states-of-matter-004",
+    "title": "Lesson 4: Deep Dive — LIQUIDS (Shape-Shifters!)",
+    "description": "Year 4 Science — Lesson 4: LIQUIDS. Explore liquid properties, particle theory in liquids, container shape vs fixed volume, surface tension, and liquid vs solid comparisons.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "State 2: LIQUIDS — Shape-shifters! 💧",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 4: LIQUIDS — Shape-shifters! 💧",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "What Makes a Liquid Flow?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Pour water into a tall glass — it becomes tall and thin. Pour it into a wide bowl — now it's flat and broad! Liquids are nature's ultimate shape-shifters! But they follow one strict rule: they ALWAYS keep the same volume.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Water poured into flask, cup, and bowl showing different shapes",
+                        "caption": "Different container shapes, but the exact same volume of water!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What happens to 250ml of liquid water when you pour it from a glass into a bowl?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Its shape changes but its volume stays 250ml",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Both its shape and volume change to fill the bowl",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "Its volume decreases",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Liquids change shape to match their container, but their volume stays constant."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🔬 Zoom In: Liquid Particles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔬 Microscopic View: Liquid Particles",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In a liquid, particles are still close together, but they are NOT locked in rigid rows. Instead, they can <b>SLIDE and ROLL</b> past each other! Imagine dancers in a crowded hall — they bump into each other, but they can move around freely!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-2-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Diagram of liquid particles sliding past each other",
+                        "caption": "Liquid particles: close together, sliding and rolling freely!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🌊 Takes Container Shape — Fills the bottom of whatever container it is in",
+                            "📦 Fixed Volume — 1 litre of juice is ALWAYS 1 litre",
+                            "💦 Flows & Pours — Particles slide past one another easily",
+                            "🔵 Hard to Compress — Particles are touching, so you can't squash liquid!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🔍 Interactive Hotspot & Cool Liquid Facts",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Investigate Liquid Secrets!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-3-2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Click on the hotspots to reveal liquid properties!",
+                        "image": "/placeholder.svg?height=350&width=500",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.5,
+                                "y": 0.15,
+                                "label": "Surface Tension 💧",
+                                "content": "Particles on top pull tightly together, creating an invisible skin that lets small bugs walk on water!"
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.2,
+                                "y": 0.5,
+                                "label": "Container Shape 🏺",
+                                "content": "Liquid particles slide around until they fill the exact shape of the bottom of the container."
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.8,
+                                "y": 0.8,
+                                "label": "Fixed Volume 📦",
+                                "content": "The total amount of liquid remains constant no matter how wide the glass is."
+                            }
+                        ],
+                        "behavior": "discovery",
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "flashcards-3-3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Cool Liquid Facts Cards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Is Mercury a Solid or Liquid?",
+                                "back": "LIQUID! Mercury is a shiny metal that stays liquid at room temperature."
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Can you squash liquid water?",
+                                "back": "NO! Liquid particles are touching, so liquids cannot be compressed."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 Liquids vs Solids Lab",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Lab: Solid vs Liquid Properties",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match the Property to Solid or Liquid",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Solid Shape 🧱",
+                                "right": "Fixed shape, does not change"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Liquid Shape 💧",
+                                "right": "Takes the shape of its container"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Solid Particles 🔒",
+                                "right": "Locked in grid, vibrate in place"
+                            },
+                            {
+                                "id": "pair-4",
+                                "left": "Liquid Particles 🌊",
+                                "right": "Close together, slide past each other"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "fillInTheBlank-4-3",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Liquid Particle Motion Check",
+                        "text": "Liquid particles are close together but can {{blank}} past each other, allowing liquids to {{blank}}.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "slide",
+                                "alternatives": [
+                                    "roll",
+                                    "flow"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "flow",
+                                "alternatives": [
+                                    "pour"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 4 Summary & Mastery Quiz 🏆",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 4 Summary & Assessment 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "💧 Liquids flow and take the shape of their container.",
+                            "📦 Liquids have a FIXED volume (amount of space does not change).",
+                            "🔬 Liquid particles are close together but slide and roll past each other.",
+                            "🔵 Liquids cannot be easily compressed."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-liquids-1",
+                                "question": "Why can liquid water be poured?",
+                                "options": [
+                                    {
+                                        "id": "opt-l1-1",
+                                        "text": "Because liquid particles can slide past each other",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-l1-2",
+                                        "text": "Because liquid particles are locked in rigid rows",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-l1-3",
+                                        "text": "Because liquids have no mass",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Freedom to slide past each other allows liquids to pour and flow!"
+                            },
+                            {
+                                "id": "q-liquids-2",
+                                "question": "What stays the SAME when you pour orange juice into a glass?",
+                                "options": [
+                                    {
+                                        "id": "opt-l2-1",
+                                        "text": "Its volume (amount of space it takes up)",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-l2-2",
+                                        "text": "Its shape",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Liquids change shape, but their volume always stays the exact same!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:30:00.000Z",
+    "updatedAt": "2026-07-28T17:30:00.000Z"
+}

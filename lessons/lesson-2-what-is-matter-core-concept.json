@@ -1,0 +1,420 @@
+{
+    "id": "lesson-states-of-matter-002",
+    "title": "Lesson 2: Core Concept — What is Matter?",
+    "description": "Year 4 Science — Lesson 2: Core Concept. Discover the definition of matter, the two key rules (mass and volume), and meet the three main states of matter.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Matter: The Building Block of Everything 🧱",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 2: What is Matter? 🧱",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Building Blocks of the Universe",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Scientists have a special word for all the <i>stuff</i> in the universe — it's called <b>MATTER</b>. Whether it's your pencil, your lunch, or the air you breathe — it's ALL matter.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Bubble map showing examples of matter: rock, water, air, wood, milk",
+                        "caption": "Everything around you is made of matter!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which of the following is made of matter?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "A wooden pencil",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "A rainbow",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "A quiet whisper",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "A pencil has weight and takes up space, so it is made of matter!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "The Two Golden Rules of Matter ⚖️📦",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Two Key Things About Matter:",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "✅ It has MASS — that means it has weight",
+                            "✅ It takes up SPACE — also called 'volume'",
+                            "❌ Light is NOT matter (it has no mass!)",
+                            "❌ Sound is NOT matter (it takes up no space!)"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-3",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "The Matter Rule Check",
+                        "text": "To be matter, something must have {{blank}} and take up {{blank}}.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "mass",
+                                "alternatives": [
+                                    "Mass",
+                                    "weight"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "space",
+                                "alternatives": [
+                                    "Space",
+                                    "volume"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Meet the 3 Superhero Disguises 🦸‍♂️",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "💡 Remember — 3 Main States!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Matter can exist in THREE main states. Like a superhero with three disguises — same identity, totally different look!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-3-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Diagram showing SOLID (ice), LIQUID (water), GAS (steam) side by side",
+                        "caption": "Solid ice, liquid water, and gas steam — the 3 disguises of matter!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-4",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "The 3 States of Matter Flashcards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Solid",
+                                "back": "Ice, rocks, wood — keeps a fixed shape and volume."
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Liquid",
+                                "back": "Water, milk, oil — flows and takes the shape of its container."
+                            },
+                            {
+                                "id": "card-3",
+                                "front": "Gas",
+                                "back": "Steam, air, oxygen — fills up all available space."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Sorting Everyday Objects 🧩",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Lab: Categorise Matter States",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Each Object to Its State of Matter",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Wood & Rocks 🧱",
+                                "right": "Solid State"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Juice & Milk 🥛",
+                                "right": "Liquid State"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Oxygen & Helium 🎈",
+                                "right": "Gas State"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-4-3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the States of Matter from most packed to least packed",
+                        "items": [
+                            {
+                                "id": "item-1",
+                                "text": "1. Solid (Ice) 🧊",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-2",
+                                "text": "2. Liquid (Water) 💧",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-3",
+                                "text": "3. Gas (Steam) 💨",
+                                "correctIndex": 2
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 2 Recap & Mastery Check 🎓",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 2 Summary & Master Quiz 🎓",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🔍 Matter is the scientific word for all physical stuff.",
+                            "⚖️ All matter has MASS (weight) and VOLUME (space).",
+                            "🧊 Three main states: Solid, Liquid, and Gas.",
+                            "❌ Light and sound are NOT matter (they are forms of energy)."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-eval-1",
+                                "question": "What two conditions MUST be met for something to be called matter?",
+                                "options": [
+                                    {
+                                        "id": "opt-e1-1",
+                                        "text": "It must have mass and take up space",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-e1-2",
+                                        "text": "It must be hard and cold",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-e1-3",
+                                        "text": "It must shine bright in the dark",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Matter must have mass and occupy space (volume)."
+                            },
+                            {
+                                "id": "q-eval-2",
+                                "question": "Which of the following is NOT matter?",
+                                "options": [
+                                    {
+                                        "id": "opt-e2-1",
+                                        "text": "Light from a flashlight",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-e2-2",
+                                        "text": "Invisible air in a balloon",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-e2-3",
+                                        "text": "A drop of rain",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Light is energy! It does not have mass or take up physical space."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:26:00.000Z",
+    "updatedAt": "2026-07-28T17:26:00.000Z"
+}

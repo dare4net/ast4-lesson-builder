@@ -1,0 +1,1220 @@
+{
+    "id": "lesson-year4-science-001",
+    "title": "Lesson 1: What Is Everything Made Of? The Mystery of Matter",
+    "description": "Become a Science Detective! Explore what matter is, discover mass and volume, solve the 'Matter vs Not Matter' mystery, and meet the three disguises of matter in this interactive Year 4 lesson.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 40,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "🌟 Welcome Science Detectives! The Great Mystery",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-1-1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Lesson 1: The Great Matter Mystery 🕵️‍♂️",
+                        "align": "center",
+                        "color": "black",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "lessonIntro-1-2",
+                    "type": "lessonIntro",
+                    "props": {
+                        "title": "Welcome to the Science Lab!",
+                        "content": "Today you become an official <b>Science Detective</b>. Look around your room. The chair beneath you, the water in your bottle, the air filling your lungs, even your own body... What are they ALL made of? Are they connected by a secret scientific superpower?",
+                        "video": "",
+                        "image": "/placeholder.svg?height=300&width=500"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-3",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Three Mission Objectives Today",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-1-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🔍 Discover the scientific word for ALL stuff in the universe: MATTER",
+                            "⚖️ Learn the two secret rules every piece of matter MUST follow (Mass & Volume)",
+                            "🕵️ Crack the 'Matter vs NOT Matter' puzzle (Is a rainbow matter? Is a shadow?)"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-1-5",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Detective Warm-Up Cards",
+                        "cards": [
+                            {
+                                "id": "c1",
+                                "front": "What does a Science Detective do?",
+                                "back": "Asks big questions, observes closely, and uses evidence to solve mysteries!"
+                            },
+                            {
+                                "id": "c2",
+                                "front": "What is the biggest mystery today?",
+                                "back": "What is everything in the entire universe made of?"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-1-6",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Are you ready to begin your mission as a Science Detective?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Yes! Let's solve the mystery of matter! 🚀",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "Born ready! Let's go! 🔬",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Fantastic! Curiosity is the single most important tool of any scientist."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 5,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🔍 Look Around You! Everything is Something",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Word of the Day: MATTER",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In everyday speech, we use words like 'stuff', 'things', or 'objects'. But scientists have one powerful word that covers EVERYTHING in the physical world: <b>MATTER</b>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-2-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=600",
+                        "alt": "Examples of matter: rocks, water bottle, trees, clouds, puppies",
+                        "caption": "From giant planets down to microscopic dust — it's ALL matter!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-2-4",
+                    "type": "quote",
+                    "props": {
+                        "text": "Matter is anything that has mass and takes up space.",
+                        "author": "Scientific Definition",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-5",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "📱 Your tablet or computer = MATTER",
+                            "🍎 The apple in your lunchbox = MATTER",
+                            "🥛 The milk in your glass = MATTER",
+                            "🎈 The invisible air inside a balloon = MATTER!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-2-6",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match the Everyday Object to Why It's Matter",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Heavy Wooden Table",
+                                "right": "Has lots of mass & takes up space in the room"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Glass of Orange Juice",
+                                "right": "Liquid matter that fills up the glass"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Air inside a Football",
+                                "right": "Gas matter that pumps up the ball"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-2-7",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Vocabulary Check",
+                        "text": "The scientific word for all physical stuff in the universe is {{blank}}.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "matter",
+                                "alternatives": [
+                                    "Matter",
+                                    "MATTER"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "⚖️ The Two Rules: Mass & Volume",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Two Golden Rules of Matter",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "To qualify as matter, an item MUST pass two tests. If it passes both, it's matter! If it fails even one, it is NOT matter.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-3-3",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Rule",
+                                "What it Means",
+                                "How We Measure It"
+                            ],
+                            [
+                                "1. Must have MASS ⚖️",
+                                "The amount of 'stuff' inside it (gives it weight)",
+                                "Grams (g) or Kilograms (kg)"
+                            ],
+                            [
+                                "2. Must have VOLUME 📦",
+                                "Takes up physical space (3D room)",
+                                "Litres (L), Millilitres (mL), or cm³"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-3-4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Rule 1: What is MASS?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Mass is how much material is squeezed inside an object. An elephant has a HUGE mass. A tiny feather has a SMALL mass. But BOTH have mass!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-3-6",
+                    "type": "heading",
+                    "props": {
+                        "content": "Rule 2: What is VOLUME?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-7",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Volume is the amount of space an object occupies. If you step into a full bathtub, the water level rises because YOUR body takes up volume and pushes water out of the way!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-8",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Mass vs Volume Flashcards",
+                        "cards": [
+                            {
+                                "id": "card1",
+                                "front": "Mass",
+                                "back": "How much matter/stuff is inside an object (measured in grams or kg)."
+                            },
+                            {
+                                "id": "card2",
+                                "front": "Volume",
+                                "back": "How much 3D space an object takes up (measured in litres or cm³)."
+                            },
+                            {
+                                "id": "card3",
+                                "front": "Does invisible air have mass?",
+                                "back": "YES! If you weigh a blown-up balloon, it is heavier than an empty balloon!"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-3-9",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What two conditions MUST be met for something to be called matter?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "It must be hard and cold",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "It must have mass and take up volume (space)",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "3",
+                                        "text": "It must be visible to the human eye",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Matter MUST have mass (weight/stuff) AND volume (take up space)."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🕵️ Detective Challenge: Matter vs NOT Matter",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Trick Questions: What ISN'T Matter?",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Here is where even adult scientists get tripped up! Not everything you can see, hear, or feel is matter. Things like <b>light</b>, <b>sound</b>, <b>heat</b>, and <b>feelings</b> are forms of <b>ENERGY</b> or concepts — they do NOT have mass and do NOT take up physical space!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-4-3",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Interactive Scene: Click items to investigate if they are Matter!",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.2,
+                                "y": 0.3,
+                                "label": "Sunlight ☀️",
+                                "content": "NOT MATTER! Light is energy. It has no mass and doesn't take up physical space."
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.5,
+                                "y": 0.5,
+                                "label": "Wooden Desk 🪵",
+                                "content": "MATTER! Wood has mass and takes up volume in the room."
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.8,
+                                "y": 0.3,
+                                "label": "Shadow on Wall 👥",
+                                "content": "NOT MATTER! A shadow is just the absence of light. You can't weigh a shadow!"
+                            },
+                            {
+                                "id": "hs4",
+                                "x": 0.3,
+                                "y": 0.7,
+                                "label": "Water Bottle 💧",
+                                "content": "MATTER! Liquid water has mass and takes up volume."
+                            }
+                        ],
+                        "behavior": "discovery",
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "dragDrop-4-4",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Sort items into Matter or NOT Matter!",
+                        "items": [
+                            {
+                                "id": "item1",
+                                "text": "1. Ice Cube 🧊 (MATTER)",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item2",
+                                "text": "2. Sunlight ☀️ (ENERGY / NOT MATTER)",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item3",
+                                "text": "3. Steam 💨 (MATTER)",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "item4",
+                                "text": "4. Music Sound 🎵 (ENERGY / NOT MATTER)",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-4-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Is a shadow considered matter?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Yes, because you can see it",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "No, because a shadow has no mass and takes up no physical space",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Correct! Seeing something does not automatically make it matter. A shadow has 0 grams of mass!"
+                            },
+                            {
+                                "id": "q2",
+                                "question": "What about heat coming from a radiator?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "It is energy, NOT matter",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "It is matter because it warms your hands",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Heat is thermal energy, not physical matter!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "🧊 The Three Secret Disguises of Matter",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Meet the 3 States of Matter",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Think of matter like a master of disguise. Depending on conditions, matter appears in THREE primary physical forms called <b>States of Matter</b>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-5-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=600",
+                        "alt": "Ice cube (Solid), Glass of water (Liquid), Steam from kettle (Gas)",
+                        "caption": "Water in its three famous states: Solid ice, Liquid water, and Gas steam!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 <b>SOLID</b>: Rigid, keeps its own shape, hard to squash (e.g. rocks, wood, ice).",
+                            "💧 <b>LIQUID</b>: Flows, changes shape to fit its container, fixed volume (e.g. water, milk, oil).",
+                            "💨 <b>GAS</b>: Fills all available space, no fixed shape, can be compressed (e.g. air, steam, helium)."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-5-5",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "The Three States Flashcard Challenge",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "Solid",
+                                "back": "Has a fixed shape and fixed volume. Example: Brick, Diamond."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "Liquid",
+                                "back": "Has a fixed volume but takes the shape of its container. Example: Juice, Rain."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "Gas",
+                                "back": "Has NO fixed shape and NO fixed volume. Expands everywhere! Example: Oxygen."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "matchingPairs-5-6",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match State to Description",
+                        "pairs": [
+                            {
+                                "id": "pair1",
+                                "left": "Solid 🧱",
+                                "right": "Keeps its own shape everywhere"
+                            },
+                            {
+                                "id": "pair2",
+                                "left": "Liquid 🌊",
+                                "right": "Takes the shape of whatever cup it is poured into"
+                            },
+                            {
+                                "id": "pair3",
+                                "left": "Gas ☁️",
+                                "right": "Spreads out to fill the ENTIRE room or container"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "🔬 The Microscope View: Particle Power!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Why Do States Behave Differently?",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "If you had super-powered atomic goggles, you'd discover that ALL matter is built from microscopic building blocks called <b>PARTICLES</b>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-6-3",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "State of Matter",
+                                "How Particles Are Arranged",
+                                "How Particles Move"
+                            ],
+                            [
+                                "Solid 🧊",
+                                "Packed tightly in neat rows",
+                                "Vibrate gently in fixed spots"
+                            ],
+                            [
+                                "Liquid 💧",
+                                "Close together but random layout",
+                                "Slide and roll past each other"
+                            ],
+                            [
+                                "Gas 💨",
+                                "Far apart with lots of empty space",
+                                "Zoom around fast in all directions"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "codeBlock-6-4",
+                    "type": "codeBlock",
+                    "props": {
+                        "language": "javascript",
+                        "code": "// Particle Simulation Rulebook:\nconst solid = { spacing: 'tight', movement: 'vibrate' };\nconst liquid = { spacing: 'close', movement: 'slide' };\nconst gas = { spacing: 'far apart', movement: 'fly fast' };"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-6-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "How do particles move in a solid?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "They fly around at high speed",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "They vibrate in place while held tightly together",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "3",
+                                        "text": "They roll and slide past each other",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solid particles are locked in position, vibrating like trembling dancers!"
+                            },
+                            {
+                                "id": "q2",
+                                "question": "Why can gas be squashed (compressed)?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Because gas particles are soft",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "Because there is lots of empty space between gas particles",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Yes! The empty space allows particles to be pushed closer together when compressed."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-7",
+            "title": "⚡ The Ice & Steam Experiment",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-7-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Case Study: The Magic of Water (H₂O)",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-7-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Did you know that water is one of the ONLY substances on Earth that naturally exists as a solid, a liquid, AND a gas in daily life?",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-7-3",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🥶 Freeze water below 0°C → It turns into SOLID Ice!",
+                            "🛋️ Keep water at room temperature → It remains LIQUID Water!",
+                            "🔥 Heat water above 100°C → It turns into GAS Steam / Water Vapour!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-7-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=600",
+                        "alt": "Ice cube melting into water glass and steam rising from kettle",
+                        "caption": "Same chemical particles — completely different behavior based on temperature!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-7-5",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Water State Change Lab",
+                        "text": "When solid ice melts, it becomes liquid {{blank}}. When liquid water boils, it becomes gaseous {{blank}}.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "water",
+                                "alternatives": [
+                                    "Water"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "steam",
+                                "alternatives": [
+                                    "water vapour",
+                                    "vapour",
+                                    "vapor"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-8",
+            "title": "🧩 The Great Sorting Mystery",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-8-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lab Activity: Classify the Substances",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-8-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Test your detective skills by matching each item with its correct state of matter category!",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-8-3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Item to State of Matter",
+                        "pairs": [
+                            {
+                                "id": "m1",
+                                "left": "Golden Ingot 🪙",
+                                "right": "Solid State"
+                            },
+                            {
+                                "id": "m2",
+                                "left": "Fresh Lemonade 🍋",
+                                "right": "Liquid State"
+                            },
+                            {
+                                "id": "m3",
+                                "left": "Helium in Balloon 🎈",
+                                "right": "Gas State"
+                            },
+                            {
+                                "id": "m4",
+                                "left": "Snowflake ❄️",
+                                "right": "Solid State"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcards-8-4",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Tricky Materials Flashcards",
+                        "cards": [
+                            {
+                                "id": "tf1",
+                                "front": "Is Sand a Solid or Liquid?",
+                                "back": "SOLID! Even though sand pours, each grain of sand has its own fixed shape!"
+                            },
+                            {
+                                "id": "tf2",
+                                "front": "Is Jelly a Solid or Liquid?",
+                                "back": "Jelly is a mixture called a colloid (liquid trapped inside solid mesh)!"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-9",
+            "title": "🏆 The Matter Detective Final Exam",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-9-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Final Assessment: Detective Certification 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-9-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Answer all 5 questions correctly to earn your Junior Science Detective badge!",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-9-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "final1",
+                                "question": "1. What is the definition of matter?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Anything that is shiny and heavy",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "Anything that has mass and takes up space",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "3",
+                                        "text": "Anything that flows like water",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Matter MUST have mass and volume!"
+                            },
+                            {
+                                "id": "final2",
+                                "question": "2. Which of the following is NOT matter?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Air inside a ball",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "Sunlight",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "3",
+                                        "text": "Ice cube",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Sunlight is energy, not physical matter!"
+                            },
+                            {
+                                "id": "final3",
+                                "question": "3. Which state of matter keeps its own shape and volume?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Solid",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "Liquid",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "3",
+                                        "text": "Gas",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solids maintain fixed shape and volume."
+                            },
+                            {
+                                "id": "final4",
+                                "question": "4. What happens to particles in a liquid?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "They are locked tight and vibrate in place",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "They slide and roll past each other",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "3",
+                                        "text": "They shoot far apart in space",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Liquid particles roll and slide freely."
+                            },
+                            {
+                                "id": "final5",
+                                "question": "5. Why does liquid take the shape of its container?",
+                                "options": [
+                                    {
+                                        "id": "1",
+                                        "text": "Because its particles can slide around",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "2",
+                                        "text": "Because it has no mass",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Freedom of particle sliding gives liquids container-conforming ability!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 25,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-10",
+            "title": "🎖️ Certified Matter Detective & Lesson 2 Teaser",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-10-1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Badge Unlocked: Matter Master 🎖️",
+                        "align": "center",
+                        "color": "black",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "lessonSummary-10-2",
+                    "type": "lessonSummary",
+                    "props": {
+                        "title": "Lesson 1 Summary: What We Mastered Today",
+                        "content": "Congratulations Science Detective! You have cracked the mystery of matter.",
+                        "showKeyPoints": true,
+                        "keyPoints": [
+                            "Matter is anything that has MASS (weight) and VOLUME (space).",
+                            "Light, sound, heat, and shadows are NOT matter — they are energy or optical effects.",
+                            "Three primary states: Solid, Liquid, Gas.",
+                            "Particle theory explains behavior: Solid (vibrate), Liquid (slide), Gas (fly freely)."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-10-3",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔍 Coming Up in Lesson 2: Deep Dive into SOLIDS!",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-10-4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Why can some solids bend while others snap? Why is glass transparent while wood is opaque? Next time, we enter the world of <b>SOLIDS & MATERIAL PROPERTIES</b>!",
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "lessonComplete-10-5",
+                    "type": "lessonComplete",
+                    "props": {
+                        "title": "Mission Accomplished!",
+                        "content": "You are officially a certified Junior Science Detective. See you in Lesson 2!",
+                        "showReplayButton": true,
+                        "showNextLessonButton": true
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 40,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:10:00.000Z",
+    "updatedAt": "2026-07-28T17:10:00.000Z"
+}

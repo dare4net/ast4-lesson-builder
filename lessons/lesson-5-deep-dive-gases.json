@@ -1,0 +1,424 @@
+{
+    "id": "lesson-states-of-matter-005",
+    "title": "Lesson 5: Deep Dive — GASES (The Invisible Expanders!)",
+    "description": "Year 4 Science — Lesson 5: GASES. Explore gas properties, particle theory in gases, compression, gas expansion, and state property sorting.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "State 3: GASES — The Invisible Expanders! 💨",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 5: GASES — The Invisible Expanders! 💨",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Can You See Air?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Right now, you are surrounded by billions of gas particles — and you can't see a single one! Gases are the sneaky state of matter. They have NO fixed shape AND no fixed volume. They expand to fill whatever room or container they are in.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Gas particles spreading out inside a balloon and throughout a room",
+                        "caption": "Gas particles spread out to fill every corner of their container!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Why does air expand to fill up a balloon completely?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Gas particles move freely and expand to fill all available space",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Gas particles settle down at the very bottom",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "Air is a solid that locks in place",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Gas particles are constantly flying in all directions, expanding to fill any container."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🔬 Zoom In: Gas Particles & Compression",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔬 Microscopic View: Gas Particles",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Gas particles are FAR APART and move SUPER FAST — zipping around and bouncing off container walls constantly! Because there is so much empty space between gas particles, you can COMPRESS (squash) a gas!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-2-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Diagram showing gas particles far apart bouncing off container walls",
+                        "caption": "Gas particles: far apart, flying fast, lots of empty space!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🪄 No Fixed Shape — Fills its container completely",
+                            "📏 No Fixed Volume — Expands to fill large rooms or squashes into small tanks",
+                            "💨 Fast Motion — Particles fly freely in all directions at high speeds",
+                            "✅ Compressible — Can be squeezed into tiny spaces because of empty gaps"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🎈 Gas in Action & Real World Science",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Gas in Action: Real World & Science",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Even though gases are often invisible, we feel and see their power everywhere — from bicycle tires to hot air balloons and scuba diving tanks!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Gas Science Flashcards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Why can you pump gas into a bicycle tire?",
+                                "back": "Gas particles inside have empty space between them, so lots of gas can be squashed inside!"
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Are all gases invisible?",
+                                "back": "No! Some gases have color, like chlorine gas (yellow-green) or brown nitrogen dioxide."
+                            },
+                            {
+                                "id": "card-3",
+                                "front": "What is Steam?",
+                                "back": "Water vapor in gas form floating in the air."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-3-4",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Gas Compression Check",
+                        "text": "Unlike solids and liquids, gases CAN be {{blank}} because their particles are {{blank}} apart.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "compressed",
+                                "alternatives": [
+                                    "squashed",
+                                    "squeezed"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "far",
+                                "alternatives": [
+                                    "spread"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 Sorting State Properties Lab",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Lab: Sort the 3 States",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-4-2",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the states from Solid to Liquid to Gas based on particle movement",
+                        "items": [
+                            {
+                                "id": "item-1",
+                                "text": "1. Solid: Particles vibrate in fixed position 🧊",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-2",
+                                "text": "2. Liquid: Particles slide and roll past each other 💧",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-3",
+                                "text": "3. Gas: Particles fly freely at high speeds 💨",
+                                "correctIndex": 2
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "matchingPairs-4-3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Particle Motion to State",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Solid Particle Motion 🔒",
+                                "right": "Vibrates in fixed position"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Liquid Particle Motion 🌊",
+                                "right": "Slides and rolls past each other"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Gas Particle Motion 💨",
+                                "right": "Flies freely at high speed in all directions"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 5 Summary & Mastery Quiz 🏆",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 5 Summary & Assessment 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "💨 Gases have NO fixed shape and NO fixed volume.",
+                            "🔬 Gas particles are far apart and move rapidly in all directions.",
+                            "✅ Gases can be compressed (squashed) into smaller volumes.",
+                            "🎈 Gases expand to fill any container or space completely."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-gases-1",
+                                "question": "What happens to gas particles when you squeeze a gas into a smaller container?",
+                                "options": [
+                                    {
+                                        "id": "opt-g1-1",
+                                        "text": "They get pushed closer together",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-g1-2",
+                                        "text": "They disappear",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-g1-3",
+                                        "text": "They stop moving completely",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Because there is empty space between gas particles, squashing the gas pushes particles closer together!"
+                            },
+                            {
+                                "id": "q-gases-2",
+                                "question": "Which statement about gases is TRUE?",
+                                "options": [
+                                    {
+                                        "id": "opt-g2-1",
+                                        "text": "Gases take the shape of their container AND expand to fill it completely",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-g2-2",
+                                        "text": "Gases have a fixed volume that never changes",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Gases expand to fill whatever volume and shape container they are given!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:31:00.000Z",
+    "updatedAt": "2026-07-28T17:31:00.000Z"
+}

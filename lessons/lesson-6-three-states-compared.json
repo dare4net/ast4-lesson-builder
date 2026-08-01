@@ -1,0 +1,388 @@
+{
+    "id": "lesson-states-of-matter-006",
+    "title": "Lesson 6: The Three States — Side-by-Side Comparison",
+    "description": "Year 4 Science — Lesson 6: Side-by-Side Comparison. Compare solid, liquid, and gas in shape, volume, particle movement, and compressibility.",
+    "author": "After School Tech Science Team",
+    "level": "Year 4 (Age 8-9)",
+    "duration": 25,
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "The Three States: Side-by-Side Comparison ⚔️",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 6: The Three States Compared ⚔️",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-1-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Let's Put Them All Together",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You've met all three main states of matter! Now let's lay them side-by-side to compare shape, volume, particle spacing, and movement. Understanding the DIFFERENCES is the secret to mastering matter!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1-4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=400",
+                        "alt": "Side-by-side particle diagrams of Solid grid, Liquid sliding, and Gas spread out",
+                        "caption": "Solid grid, Liquid sliding particles, and Gas free flight — side by side!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1-5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which state of matter has BOTH a fixed shape AND a fixed volume?",
+                                "options": [
+                                    {
+                                        "id": "opt-1-1",
+                                        "text": "Solid",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1-2",
+                                        "text": "Liquid",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1-3",
+                                        "text": "Gas",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Solids maintain both their shape and their volume!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "🔍 The Master Comparison Breakdown",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Comparison Breakdown: Solid vs Liquid vs Gas",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 SOLID: Fixed shape | Fixed volume | Particles locked in grid, vibrating in place",
+                            "💧 LIQUID: Container shape | Fixed volume | Particles close together, sliding & rolling past each other",
+                            "💨 GAS: Fills all space | Expanding volume | Particles far apart, flying fast in all directions"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-2-3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Compressibility Comparison:",
+                        "level": 3,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-2-4",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 Solid: CANNOT be compressed (particles touching)",
+                            "💧 Liquid: CANNOT be compressed (particles touching)",
+                            "💨 Gas: CAN be compressed! ✅ (particles have empty space between them)"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "🃏 The Ultimate 3-State Flashcard Review",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Master Flashcard Drill",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-2",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "3-State Mastery Cards",
+                        "cards": [
+                            {
+                                "id": "card-1",
+                                "front": "Which state can be compressed?",
+                                "back": "GAS! Because gas particles have lots of empty space between them."
+                            },
+                            {
+                                "id": "card-2",
+                                "front": "Which states have a FIXED volume?",
+                                "back": "SOLIDS and LIQUIDS both keep their volume constant."
+                            },
+                            {
+                                "id": "card-3",
+                                "front": "Which state expands to fill an entire room?",
+                                "back": "GAS!"
+                            },
+                            {
+                                "id": "card-4",
+                                "front": "Can water be solid, liquid, AND gas?",
+                                "back": "YES! Ice (solid), liquid water (liquid), and steam (gas) are all H₂O."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "🧩 Side-by-Side Sorting Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Interactive Matching & Ordering",
+                        "level": 2,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match State to Core Property Pair",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Solid 🧊",
+                                "right": "Fixed shape and fixed volume"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Liquid 💧",
+                                "right": "Container shape and fixed volume"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Gas 💨",
+                                "right": "No fixed shape and no fixed volume"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-4-3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Order from most rigid to most free particle movement",
+                        "items": [
+                            {
+                                "id": "item-1",
+                                "text": "1. Solid Grid (Vibrating in place) 🧊",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-2",
+                                "text": "2. Liquid Flow (Sliding past each other) 💧",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-3",
+                                "text": "3. Gas Expansion (Free flight in all directions) 💨",
+                                "correctIndex": 2
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Lesson 6 Summary & Assessment 🏆",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Lesson 6 Summary & Assessment 🏆",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-2",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "🧊 Solids: Fixed shape, fixed volume, vibrating particles.",
+                            "💧 Liquids: Container shape, fixed volume, sliding particles.",
+                            "💨 Gases: Container shape, expanding volume, fast free particles, compressible."
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-3",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q-comp-1",
+                                "question": "Which states of matter CANNOT be easily compressed?",
+                                "options": [
+                                    {
+                                        "id": "opt-c1-1",
+                                        "text": "Solids and Liquids",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-c1-2",
+                                        "text": "Gases and Liquids",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-c1-3",
+                                        "text": "Gases only",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Because particles in solids and liquids are already touching, neither can be easily compressed!"
+                            },
+                            {
+                                "id": "q-comp-2",
+                                "question": "What is true for BOTH liquids AND gases?",
+                                "options": [
+                                    {
+                                        "id": "opt-c2-1",
+                                        "text": "They both take the shape of their container",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-c2-2",
+                                        "text": "They both have a fixed volume",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Liquids and gases both adjust their shape to match their container."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active",
+                        "status": "uncompleted"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 25,
+        "level": "Year 4 (Age 8-9)"
+    },
+    "createdAt": "2026-07-28T17:33:00.000Z",
+    "updatedAt": "2026-07-28T17:33:00.000Z"
+}
