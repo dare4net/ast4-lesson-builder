@@ -1,0 +1,1048 @@
+{
+    "id": "year7-english-lesson-9-final-comprehensive-assessment",
+    "title": "Lesson 9: Full Module Comprehensive Assessment – Verb Mastery & Time-Travel Tenses",
+    "description": "The ultimate 100% live-mode evaluation testing every single concept across all 8 previous lessons: action/state verbs, agreement, irregular mutations, progressive timelines, present & past perfect, future structures, and multi-clause proofreading.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 40,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:40:00.000Z",
+    "updatedAt": "2026-08-03T15:40:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Assessment 1: Verb Core, Action/State & Subject Agreement",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Assessment 1: Subject-Verb Agreement & Verb Types",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Welcome to the Full Module Comprehensive Assessment! All activities on every slide are in <strong>LIVE MODE</strong> with dynamic timer limits. Test your mastery of verb classification and subject agreement.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each verb to its correct structural classification.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Sprint, Write, Bake",
+                                "right": "Physical Action Verbs"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Believe, Belong, Know",
+                                "right": "Stative / State of Being Verbs"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Is, Are, Was, Were",
+                                "right": "Auxiliary Helping Verbs"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "timeLimit": 40,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "fillInTheBlank-1-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the missing present-tense verbs to maintain correct subject-verb agreement.",
+                        "text": "Neither the head teacher nor the assistant {{blank}} (know) the code, but the students {{blank}} (understand) the instructions.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "knows",
+                                "alternatives": [
+                                    "Knows"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "understand",
+                                "alternatives": [
+                                    "Understand"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quiz-1-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which subject pronoun ALWAYS takes plural verb agreement ('were' / 'are') even when referring to one person?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "YOU",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "HE",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "IT",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'You' always takes plural agreement ('you were', 'you are')."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "What is the subject-verb agreement rule when joining singular subjects with 'EITHER... OR'?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The verb agrees with the subject closest to it",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "The verb must always be plural",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "The verb is always in past participle",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correlative conjunctions ('either... or', 'neither... nor') dictate that the verb agrees with the nearest subject."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Assessment 2: Simple Tenses & Irregular Verb Mutations",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Assessment 2: Simple Timelines & Irregular Mutations",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-2-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Order these timeline events from Past to Present to Future.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Simple Past: Yesterday, the architect drew the floor plan.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Simple Present: Today, the engineers analyze the structural beams.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. Simple Future: Tomorrow, the construction crew will lay the foundation.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Future Intention: Next week, inspectors are going to evaluate the site.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "multiSelectQuiz-2-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that contain CORRECT irregular past tense mutations:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences correctly avoid false -ed irregular traps?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "The choir sang beautiful harmonies in the cathedral.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "The choir singed beautiful harmonies in the cathedral.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "She brought her laptop to the library.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "She brang her laptop to the library.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "'Sing -> sang' and 'bring -> brought' are correct standard irregular past forms."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the irregular past tense forms for 'fly' and 'catch'.",
+                        "text": "The pilot {{blank}} (fly) above the storm clouds, and the radar {{blank}} (catch) the signal.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "flew",
+                                "alternatives": [
+                                    "Flew"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "caught",
+                                "alternatives": [
+                                    "Caught"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Assessment 3: Past Progressive & Interrupted Timelines",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Assessment 3: Progressive Timelines & Interrupted Clauses",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-3-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each -ING spelling rule to its example base -> participle transformation.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Drop Silent -E",
+                                "right": "make -> making, write -> writing"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Double Final CVC Consonant",
+                                "right": "run -> running, swim -> swimming"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Keep -Y Ending",
+                                "right": "play -> playing, study -> studying"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Stative Verb Prohibition",
+                                "right": "understand -> understood (NO -ing)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-3-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which clause structure correctly pairs with 'WHEN' in an interrupted timeline sentence?",
+                                "options": [
+                                    "Simple Past (when the phone rang)",
+                                    "Past Progressive (when the phone was ringing)",
+                                    "Future Continuous (when the phone will ring)",
+                                    "Past Perfect (when the phone had rung)"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'When' introduces the sudden interrupting action in Simple Past."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Which sentence correctly pairs Past Progressive with a plural subject?",
+                                "options": [
+                                    "The researchers were recording data.",
+                                    "The researchers was recording data.",
+                                    "The researchers is recording data.",
+                                    "The researchers was record data."
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Plural subjects take 'were + verb-ing'."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly describes TWO parallel ongoing actions in the past?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "While Maya was coding, Alex was designing the graphics.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "While Maya coded, Alex was designing the graphics.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "While Maya was coding, Alex designed the graphics.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Two simultaneous ongoing actions both use Past Progressive introduced by 'while'."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "Why is 'She was knowing the secret' ungrammatical?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "'Know' is a stative verb and cannot be used in continuous -ing forms.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "'Know' requires the auxiliary 'were'.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "'Know' is a future tense verb.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Stative verbs (mental states, possession) are not used in continuous tenses."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Assessment 4: Present Perfect & Signal Word Precision",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Assessment 4: Present Perfect & Signal Words",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-4-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the Present Perfect sentences with 'for' or 'since'.",
+                        "text": "The astronomers have observed the comet {{blank}} three weeks, ever {{blank}} it passed Jupiter.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "for",
+                                "alternatives": [
+                                    "For"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "since",
+                                "alternatives": [
+                                    "Since"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "multiSelectQuiz-4-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that correctly distinguish Present Perfect from Simple Past:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences correctly pair time markers to tense?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "I have already finished my homework.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "I have finished my homework yesterday.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "She submitted the proposal two days ago.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "She has submitted the proposal two days ago.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "Specific past dates/tags ('yesterday', 'two days ago') require Simple Past, NOT Present Perfect."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-4-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the words into a grammatically valid Present Perfect sentence with 'yet'.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Has the research team",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. published their final report",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. on climate patterns",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. yet?",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Assessment 5: Past Perfect Layering & Narrative Flashbacks",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Assessment 5: Past Perfect Layering & Double Auxiliaries",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-5-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each Past Perfect conjunction to its timeline function.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "BY THE TIME + Simple Past",
+                                "right": "Marks the deadline by which an earlier Past Perfect action completed"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "AFTER + Past Perfect",
+                                "right": "Introduces the earliest completed action before a simple past event"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "HAD HAD",
+                                "right": "Helping auxiliary 'had' + V3 participle of 'have' (possessed/ate)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 40,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quiz-5-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "In the sentence 'She HAD HAD the car for ten years before selling it', what does the second 'HAD' represent?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The V3 Past Participle of 'have' (meaning possessed)",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "A typo that should be deleted",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "A future tense auxiliary",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "The second 'had' is the V3 past participle of 'to have'."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "Which sentence correctly layers an earlier backstory event using Past Perfect?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The archaeologist recognized the artifact because he had studied it in college.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "The archaeologist recognized the artifact because he has studied it in college.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "The archaeologist recognizes the artifact because he had studied it in college.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Had studied' happened prior to the past recognition ('recognized')."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "fillInTheBlank-5-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the Past Perfect form of 'complete' and 'leave'.",
+                        "text": "By the time the bell rang, the students {{blank}} (complete) the exam and {{blank}} (leave) the room.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "had completed",
+                                "alternatives": [
+                                    "Had completed"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "had left",
+                                "alternatives": [
+                                    "Had left",
+                                    "left"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Assessment 6: Future Structures, Timetables & Time Clauses",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Assessment 6: Future Expressions & Subordinate Time Clauses",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-6-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that correctly handle Future Time Clauses (when / as soon as):",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences correctly drop 'will' in the subordinate time clause?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "When the train arrives, we will board immediately.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "When the train will arrive, we will board immediately.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "As soon as the results are ready, the director will email us.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "As soon as the results will be ready, the director will email us.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "Subordinate time clauses starting with 'when' or 'as soon as' must use Simple Present ('arrives', 'are'), NEVER 'will'."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Match each future scenario to its correct expressive tense structure.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Instant Spontaneous Offer: 'I will help you with that box!'",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Pre-planned Intention: 'We are going to remodel the kitchen.'",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. Official Timetable: 'The flight lands at 21:15 tonight.'",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Future Progressive: 'This time tomorrow, we will be flying.'",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which tense is used for fixed social arrangements with another person?",
+                                "options": [
+                                    "Present Continuous",
+                                    "Simple Future",
+                                    "Past Perfect",
+                                    "Simple Present"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Present Continuous (e.g. 'We are meeting the director tomorrow') expresses fixed social arrangements."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "What is the Future Progressive formula?",
+                                "options": [
+                                    "WILL BE + VERB-ING",
+                                    "WILL + V3",
+                                    "AM/IS/ARE + V2",
+                                    "HAD BEEN + V1"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Future Progressive = WILL BE + VERB-ING."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-7",
+            "title": "Assessment 7: Grand Master Synthesis & Final Proofreading Audit",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-7-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎓 Assessment 7: Grand Master Synthesis & Final Graduation",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-7-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each tense aspect name to its core communicative function.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Simple Tense",
+                                "right": "States completed facts, habits, or single events"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Progressive (Continuous) Tense",
+                                "right": "Emphasizes ongoing duration and action in motion"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Present Perfect Tense",
+                                "right": "Links unspecified past events or experiences to the present"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Past Perfect Tense",
+                                "right": "Establishes the earliest past event before another past action"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "fillInTheBlank-7-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the final multi-tense synthesis narrative.",
+                        "text": "By the time the conference started, Dr. Vance {{blank}} (publish) her study, and the audience {{blank}} (listen) attentively.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "had published",
+                                "alternatives": [
+                                    "Had published"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "was listening",
+                                "alternatives": [
+                                    "Was listening"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "dragDrop-7-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Order these complex multi-tense narrative events from past origin to future conclusion.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Backstory: Decades ago, founders HAD ESTABLISHED the academy.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Past Event: Last year, students DEVELOPED a new AI curriculum.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. Ongoing Action: Currently, researchers ARE TESTING the interactive modules.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Future Milestone: Next semester, all schools WILL ADOPT the platform.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-7-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which sentence demonstrates 100% flawless multi-clause verb tense control?",
+                                "options": [
+                                    "Although it was raining, because we had brought umbrellas, we arrived dry.",
+                                    "Although it was raining, because we brought umbrellas, we arrive dry.",
+                                    "Although it rained, because we bring umbrellas, we had arrived dry.",
+                                    "Although it is raining, because we had brought umbrellas, we arrive dry."
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Was raining' (past progressive atmosphere) + 'had brought' (prior past preparation) + 'arrived' (simple past outcome)."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Congratulations! You have mastered Verb Tenses & Timelines. What is your final status?",
+                                "options": [
+                                    "Module Master",
+                                    "Novice Explorer",
+                                    "Beginner Student",
+                                    "Uncertified Writer"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "You have completed all 9 full lessons and passed the Grand Master Comprehensive Assessment!"
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

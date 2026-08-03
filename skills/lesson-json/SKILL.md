@@ -112,10 +112,14 @@ Every item placed on a slide is a component. The shape is:
 | `state` | `"active" \| "disabled"` | ⬜ | Default `"active"` |
 | `status` | `"completed" \| "uncompleted"` | ⬜ | Default `"uncompleted"` |
 | `mode` | `"practice" \| "live"` | ⬜ | Only for interactive/gamified components |
-| `timeLimit` | `number` | ⬜ | Time limit in seconds for `live` mode. Defaults to `10` (10s) if omitted |
+| `timeLimit` | `number` | ⬜ | Time limit in seconds for `live` mode components, placed **inside `props`** |
 
-> **Important**: Interactive components (`quiz`, `dragDrop`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `hotspot`) have `mode` at **both** the top component level AND inside `props`. Both must be set for correct rendering.
-> **Live Mode Timer Gotcha**: When `mode: "live"`, the system applies a default timer of **10 seconds** per activity/question if `timeLimit` is omitted. 10s can be too short for complex questions or multi-item activities! Always specify `"timeLimit": 20`, `"timeLimit": 30`, or `"timeLimit": 60` in `props` when creating live-mode activities that require extra reading or sorting time.
+> **Important**: Interactive components (`quiz`, `dragDrop`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `hotspot`, `flashcardQuiz`, `multiSelectQuiz`, `codeEditor`) have `mode` at **both** the top component level AND inside `props`. Both must be set for correct rendering.
+> **`timeLimit` placement**: Always place `timeLimit` inside `props` — NOT at the top component level. Renderers read it from `props`. Example: `"props": { "timeLimit": 45, ... }`.
+> **Live Mode Dynamic Timer Rule**: When `mode: "live"`, the system applies a default fallback timer of **10 seconds** if `timeLimit` is omitted. 10s is almost NEVER sufficient for multi-item or text-heavy activities!
+> **Mandatory Calculation Formula**: Always calculate `props.timeLimit` dynamically using:
+> `timeLimit = Base Setup Time (10-20s) + (Per-Item Time × Item Count)`
+> Refer to `skills/curriculum-lesson-generator/SKILL.md` Section 3 for the complete reference matrix (e.g. 3-question quiz = 40s, 2 blanks = 45s, 4 drag items = 50s).
 
 ---
 

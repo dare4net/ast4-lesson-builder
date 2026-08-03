@@ -1,0 +1,646 @@
+{
+    "id": "year7-english-lesson-2-simple-tenses",
+    "title": "Lesson 2: Simple Tenses – Navigating Past, Present & Future Timelines",
+    "description": "Master the structure, usage, and signal words for Simple Present, Simple Past, and Simple Future tenses to write clear, consistent narratives.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T14:50:00.000Z",
+    "updatedAt": "2026-08-03T14:50:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "The Three Time Axes: Past, Present & Future",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⏳ Understanding the Three Primary Time Axes",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In English grammar, every event occurs along a linear <strong>time axis</strong>. The <strong>Simple Tenses</strong> are our primary tools for anchoring actions to a specific point on that line: <em>Past</em> (already happened), <em>Present</em> (happening now or regularly), and <em>Future</em> (yet to happen).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which time axis does the word 'Yesterday' anchor a sentence to?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "Past Time Axis"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "Present Time Axis"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "Future Time Axis"
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "They are called <strong>Simple Tenses</strong> because they express single, complete states or actions without adding continuous (-ing) or perfect (has/had) extensions. Let's test your ability to match time adverbs to their correct time axis:",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each time signal word to its corresponding Time Axis.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Yesterday / Last week / In 1969",
+                                "right": "Past Tense Axis"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Every day / Currently / Always",
+                                "right": "Present Tense Axis"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Tomorrow / Next year / Soon",
+                                "right": "Future Tense Axis"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Simple Present Tense: Habits & Timeless Truths",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "☀️ Simple Present: Expressing Habits & Universal Truths",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The <strong>Simple Present Tense</strong> is used for two main purposes: 1) <em>Habits and routines</em> that happen repeatedly, and 2) <em>Universal facts or general truths</em> that are always true.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-2-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip the cards to see how Simple Present handles Habits vs. Universal Facts!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "HABIT / ROUTINE: 'Leo walks to school every morning.'",
+                                "back": "Uses simple present 'walks' because it happens repeatedly every day."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "UNIVERSAL FACT: 'The Earth revolves around the Sun.'",
+                                "back": "Uses simple present 'revolves' because it is a permanent scientific truth."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "GENERAL STATE: 'She lives in London.'",
+                                "back": "Uses simple present 'lives' for an ongoing general state of being."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Structure Rule</strong>: Use the base verb (e.g. <em>write, run</em>) for I/You/We/They, and add <strong>-s or -es</strong> (e.g. <em>writes, runs</em>) for He/She/It. Signal words include <em>always, usually, often, every day, frequently</em>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the sentences in the Simple Present Tense.",
+                        "text": "Water {{blank}} (boil/boils) at 100 degrees Celsius. Every evening, the researchers {{blank}} (analyze/analyzes) their findings.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "boils",
+                                "alternatives": [
+                                    "Boils"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "analyze",
+                                "alternatives": [
+                                    "Analyze"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Simple Past Tense: Completed Historical Actions",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "📜 Simple Past: Actions Completed in the Past",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The <strong>Simple Past Tense</strong> describes actions or situations that began and completely finished in the past. It is often accompanied by specific past time markers such as <em>yesterday, last night, two years ago, in 1945</em>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-3-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Verb Type",
+                                "Base Form (Present)",
+                                "Simple Past Form"
+                            ],
+                            [
+                                "Regular Verb (+ed)",
+                                "explore / launch / discover",
+                                "explored / launched / discovered"
+                            ],
+                            [
+                                "Irregular Type A (Vowel Change)",
+                                "write / begin / speak",
+                                "wrote / began / spoke"
+                            ],
+                            [
+                                "Irregular Type B (Total Change)",
+                                "go / buy / catch",
+                                "went / bought / caught"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-3-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each present base verb with its correct Irregular Simple Past form.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Write",
+                                "right": "Wrote"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Fly",
+                                "right": "Flew"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Catch",
+                                "right": "Caught"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Begin",
+                                "right": "Began"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-3-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the historical log entry in the Simple Past Tense.",
+                        "text": "In 1920, the team {{blank}} (discover) an ancient manuscript and {{blank}} (bring) it back to the museum.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "discovered",
+                                "alternatives": [
+                                    "Discovered"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "brought",
+                                "alternatives": [
+                                    "Brought"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Simple Future Tense: Will vs. Going To",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🚀 Simple Future: 'Will' vs. 'Be Going To'",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The <strong>Simple Future Tense</strong> expresses actions that have not yet occurred. In English, there are two primary structures used to form the simple future: <strong>will + base verb</strong> and <strong>is/are going to + base verb</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-4-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip to learn when to use 'WILL' versus 'BE GOING TO'!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "SPONTANEOUS DECISIONS / PROMISES: 'Will'",
+                                "back": "Use 'will' for sudden decisions made on the spot or promises ('I will answer the phone!')."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "PRE-PLANNED INTENTIONS: 'Be Going To'",
+                                "back": "Use 'be going to' when a decision or plan was already made before speaking ('We are going to launch tomorrow')."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "FUTURE PREDICTIONS WITH EVIDENCE",
+                                "back": "Both can express predictions, but 'going to' is often used when there is present evidence ('Look at those clouds! It is going to rain')."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-4-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly expresses a pre-planned future intention?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "I am going to visit the observatory next Friday.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "I visited the observatory next Friday.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "I visit the observatory yesterday.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Am going to visit' correctly expresses a planned future action for 'next Friday'."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Tense Consistency: Avoiding Narrative Shifts",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔒 Maintaining Tense Consistency Across Paragraphs",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A major writing error is <strong>unintended tense switching</strong>—accidentally jumping between past and present tense within the same narrative paragraph without a time signal word.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-5-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 2,
+                        "data": [
+                            [
+                                "Inconsistent Passage (INCORRECT)",
+                                "Consistent Past Passage (CORRECT)"
+                            ],
+                            [
+                                "The explorer opened the door and sees a dark room. He steps inside and found a key.",
+                                "The explorer opened the door and saw a dark room. He stepped inside and found a key."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL passages that maintain PERFECT Tense Consistency:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which of these passages stay in a single consistent tense throughout?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "Maya picked up the map, examined the route, and packed her bag.",
+                                        "isCorrect": true,
+                                        "color": "bg-violet-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "Maya picked up the map, examines the route, and packed her bag.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "The Sun rises in the east and sets in the west every day.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "The Sun rose in the east and sets in the west every day.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    }
+                                ],
+                                "explanation": "Passage A is consistently Past Tense ('picked', 'examined', 'packed'). Passage C is consistently Present Tense ('rises', 'sets'). Passages B and D contain jarring tense shifts."
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Golden Rule of Writing: Choose your main story tense (Past or Present) before you write, and lock into that timeline unless a new time marker forces a change!",
+                        "author": "AST Grammar Guidebook",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Mastery Challenge & Chronological Sequencing",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Master Challenge: Chronological Narrative Assembly",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Let's put everything together! Arrange these story steps in chronological order starting from Past events, moving through Present habits, to Future plans.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the narrative steps into chronological order (Past -> Present -> Future).",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. PAST: Last year, the research team discovered a subterranean cavern.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. PRESENT: Today, scientists study the rock samples daily in the lab.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. FUTURE (Plan): Next month, they are going to publish their research paper.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. FUTURE (Prediction): In 2030, this discovery will revolutionize geology.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 40,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which verb tense is used for universal scientific facts?",
+                                "options": [
+                                    "Simple Present",
+                                    "Simple Past",
+                                    "Simple Future",
+                                    "Past Continuous"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Simple Present is used for facts that are permanently true ('Water freezes at 0°C')."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "What is the Simple Past form of the irregular verb 'WRITE'?",
+                                "options": [
+                                    "Wrote",
+                                    "Writed",
+                                    "Written",
+                                    "Writing"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Wrote' is the simple past form (V2) of 'write'."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

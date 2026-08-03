@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -13,7 +13,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon } from "lucide-react"
+import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X } from "lucide-react"
 import { generateArtisticThumbnail } from "@/lib/thumbnail-generator"
 
 interface EditProgramDialogProps {
@@ -39,6 +39,7 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
     const [imageUrl, setImageUrl] = useState(program.image_url || program.cover_image || "")
     const [isPublished, setIsPublished] = useState(program.is_published ?? true)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleAutoGenerate = async () => {
         if (!name.trim()) return
@@ -48,13 +49,25 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
         setImageUrl(autoThumbnail)
     }
 
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file) return
+        const reader = new FileReader()
+        reader.onload = (event) => {
+            if (event.target?.result) {
+                setImageUrl(event.target.result as string)
+            }
+        }
+        reader.readAsDataURL(file)
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!name.trim()) return
         setIsSubmitting(true)
         try {
             let finalImage = imageUrl.trim()
-            if (!finalImage || name.trim() !== originalName) {
+            if (!finalImage) {
                 finalImage = await generateArtisticThumbnail(name.trim(), "PROGRAM CURRICULUM")
             }
 
@@ -144,28 +157,55 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                             </div>
                         </div>
 
-                        {/* RIGHT COLUMN: Thumbnail & Preview */}
+                        {/* RIGHT COLUMN: Thumbnail Upload & Preview */}
                         <div className="space-y-3">
                             <div className="flex items-center justify-between">
                                 <label className="text-[11px] font-black uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
                                     <ImageIcon className="w-3.5 h-3.5 text-[#1CB0F6]" />
                                     Cover Thumbnail
                                 </label>
-                                <button
-                                    type="button"
-                                    onClick={handleAutoGenerate}
-                                    className="text-[11px] font-extrabold text-[#1CB0F6] hover:text-[#0090CC] flex items-center gap-1 bg-[#EAF6FE] px-2.5 py-1 rounded-lg transition-colors"
-                                >
-                                    <RefreshCw className="w-3 h-3" /> Auto-Generate
-                                </button>
+                                <div className="flex items-center gap-1.5">
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileUpload}
+                                        accept="image/*"
+                                        className="hidden"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="text-[11px] font-extrabold text-slate-700 hover:text-[#1CB0F6] flex items-center gap-1 bg-slate-100 hover:bg-[#EAF6FE] px-2.5 py-1 rounded-lg transition-colors border border-slate-200"
+                                    >
+                                        <Upload className="w-3 h-3 text-[#1CB0F6]" /> Upload
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleAutoGenerate}
+                                        className="text-[11px] font-extrabold text-[#1CB0F6] hover:text-[#0090CC] flex items-center gap-1 bg-[#EAF6FE] px-2.5 py-1 rounded-lg transition-colors"
+                                    >
+                                        <RefreshCw className="w-3 h-3" /> Auto-Generate
+                                    </button>
+                                </div>
                             </div>
 
-                            <Input
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                placeholder="Image URL or Auto-Generated Base64"
-                                className="h-9 text-xs font-medium border-2 border-slate-200 focus-visible:ring-0 focus-visible:border-[#1CB0F6] rounded-xl bg-slate-50/50"
-                            />
+                            <div className="relative">
+                                <Input
+                                    value={imageUrl}
+                                    onChange={(e) => setImageUrl(e.target.value)}
+                                    placeholder="Paste Image URL or click Upload / Auto-Generate"
+                                    className="h-9 text-xs font-medium border-2 border-slate-200 focus-visible:ring-0 focus-visible:border-[#1CB0F6] rounded-xl bg-slate-50/50 pr-8"
+                                />
+                                {imageUrl && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setImageUrl("")}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                    >
+                                        <X className="w-3.5 h-3.5" />
+                                    </button>
+                                )}
+                            </div>
 
                             <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-950 shadow-inner group">
                                 {imageUrl ? (
@@ -174,7 +214,7 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                                     <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center">
                                         <ImageIcon className="w-8 h-8 text-slate-600 mb-2" />
                                         <p className="text-xs font-bold text-slate-400">No Cover Image</p>
-                                        <p className="text-[10px] text-slate-500">Click Auto-Generate or paste a URL</p>
+                                        <p className="text-[10px] text-slate-500">Upload a file, paste a URL, or click Auto-Generate</p>
                                     </div>
                                 )}
                                 <div className="absolute top-2 right-2 px-2 py-0.5 bg-slate-950/80 backdrop-blur-sm text-[9px] font-black text-emerald-400 rounded-full border border-slate-800">

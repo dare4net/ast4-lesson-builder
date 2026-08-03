@@ -1,0 +1,577 @@
+{
+    "id": "year7-english-lesson-5-present-perfect",
+    "title": "Lesson 5: Present Perfect Tense – Connecting Past Actions to the Present",
+    "description": "Master the Present Perfect tense using has/have + past participle, differentiate specified vs unspecified time, and utilize signal words like for, since, already, yet, and just.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:20:00.000Z",
+    "updatedAt": "2026-08-03T15:20:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction: What is the Present Perfect Tense?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔗 The Present Perfect: Connecting Past and Present",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The <strong>Present Perfect Tense</strong> connects a past action or experience to the current moment. We use it when the exact time of the action is unspecified, or when a past event has direct consequences right now. Formula: <strong>HAS / HAVE + PAST PARTICIPLE</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which sentence highlights a past life experience connected to the present?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "I have visited the Natural History Museum twice."
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "I visited the Natural History Museum last Tuesday."
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "I visit the Natural History Museum every winter."
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Compare: <em>'I lost my keys'</em> (Simple Past: happened in the past) vs. <em>'I have lost my keys'</em> (Present Perfect: I still don't have them right now!).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each tense concept to its primary communicative purpose.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Present Perfect",
+                                "right": "Past action with present result or life experience"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Simple Past",
+                                "right": "Action completed at a specific finished time"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Past Progressive",
+                                "right": "Action in progress at a specific past moment"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Subject Agreement & Past Participles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚙️ Auxiliary HAS/HAVE & Participle Selection",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "To construct the Present Perfect correctly, select <strong>HAS</strong> for third-person singular subjects (<em>he, she, it, Maya</em>) and <strong>HAVE</strong> for all other subjects (<em>I, you, we, they</em>). Then append the <strong>Past Participle</strong> (V3).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-2-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Base Verb (V1)",
+                                "Simple Past (V2)",
+                                "Past Participle (V3 - Present Perfect)"
+                            ],
+                            [
+                                "Write",
+                                "Wrote",
+                                "has / have written"
+                            ],
+                            [
+                                "See",
+                                "Saw",
+                                "has / have seen"
+                            ],
+                            [
+                                "Finish",
+                                "Finished",
+                                "has / have finished"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the Present Perfect sentences with correct auxiliary and participle forms.",
+                        "text": "The lead astronomer {{blank}} (discover) a new satellite, and the researchers {{blank}} (write) their lab reports.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "has discovered",
+                                "alternatives": [
+                                    "Has discovered"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "have written",
+                                "alternatives": [
+                                    "Have written"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Signal Words: FOR vs. SINCE",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "📍 Time Signal Markers: FOR vs. SINCE",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "We use <strong>FOR</strong> to state the total <em>duration</em> of time. We use <strong>SINCE</strong> to mark the specific <em>starting point</em> in time.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip cards to compare FOR vs. SINCE usage!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "FOR + Duration / Length of Time",
+                                "back": "Examples: 'for three hours', 'for five years', 'for a decade'."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "SINCE + Specific Starting Point",
+                                "back": "Examples: 'since 8:00 AM', 'since 2021', 'since last Monday'."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "FOR vs. SINCE Example",
+                                "back": "'I have lived in London FOR 4 years' (duration) vs 'I have lived in London SINCE 2022' (start date)."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly uses 'SINCE' to indicate a starting point in time?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "She has studied robotics since 2020.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "She has studied robotics since four years.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "She studied robotics since 2020.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Since' requires a specific starting point in time (2020) paired with the Present Perfect tense."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "Which prepositions state a total duration of time with Present Perfect?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "FOR",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "SINCE",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "AGO",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'For' indicates a span or duration of time (e.g. 'for six months')."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Signal Words: ALREADY, YET & JUST",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ Precision Markers: ALREADY, YET & JUST",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Three key adverbs add temporal nuance to Present Perfect sentences: <strong>ALREADY</strong> (sooner than expected), <strong>JUST</strong> (a short moment ago), and <strong>YET</strong> (expected, used in negative sentences and questions).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each precision signal word to its sentence position and meaning.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "JUST",
+                                "right": "Happened a moment ago (between has/have and V3)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "ALREADY",
+                                "right": "Happened earlier than expected (between has/have and V3)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "YET",
+                                "right": "Until now (used at the end of negative sentences/questions)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Present Perfect vs. Simple Past Distinction",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Unspecified vs. Specified Past Time",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The most common grammatical error in English essays is confusing <strong>Present Perfect</strong> with <strong>Simple Past</strong>. Use Simple Past when a specific finished time word is present (<em>yesterday, in 2019, ago, last week</em>). NEVER use Present Perfect with specific past dates!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that correctly match tense to time indicators:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences avoid mixing Present Perfect with specific finished past dates?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "He completed the report yesterday.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "He has completed the report yesterday.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "They have lived here for five years.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "They lived here since 2018.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "'Yesterday' specifies a finished past time requiring Simple Past ('completed'). 'Since 2018' requires Present Perfect ('have lived')."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Golden Rule: Specific past time tag (yesterday, last week, 2022) = Simple Past. Unspecified time or connection to NOW (ever, never, for, since, already) = Present Perfect.",
+                        "author": "AST Writing Handbook",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Present Perfect Mastery Evaluation",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Present Perfect Mastery Challenge",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Demonstrate complete mastery of Present Perfect mechanics, signal word placement, and auxiliary selection!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the words into a grammatically flawless Present Perfect sentence.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. The research team",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. has already published",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. three breakthrough studies",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. since the project started.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which sentence correctly places 'YET' in a Present Perfect question?",
+                                "options": [
+                                    "Have you finished your essay yet?",
+                                    "Have yet you finished your essay?",
+                                    "You have finished yet your essay?",
+                                    "Has you finished your essay yet?"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Yet' goes at the end of Present Perfect questions and negative sentences."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "What is the correct V3 Past Participle of the verb 'GO'?",
+                                "options": [
+                                    "Gone",
+                                    "Went",
+                                    "Goed",
+                                    "Goes"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "The V3 Past Participle of 'go' is 'gone' (e.g. 'She has gone to the library')."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

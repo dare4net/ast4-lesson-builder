@@ -96,7 +96,10 @@ const DiscoveryWrapper = ({
 }) => {
   const timeLimit = component.props?.timeLimit || 0;
   const isLive = !!timeLimit;
-  const [isRevealed, setIsRevealed] = React.useState(!!savedState?.revealed || component.type === 'slideTitle' || !isLive);
+  // Always start revealed — interactive components manage their own LiveStartScreen and LiveTimer internally.
+  // The outer DiscoveryWrapper gate is not used for any registered component type.
+  const [isRevealed, setIsRevealed] = React.useState(true);
+
   const [timeLeft, setTimeLeft] = React.useState<number | null>(null);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
 

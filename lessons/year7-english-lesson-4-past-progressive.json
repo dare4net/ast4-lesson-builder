@@ -1,0 +1,619 @@
+{
+    "id": "year7-english-lesson-4-past-progressive",
+    "title": "Lesson 4: Past Progressive & Continuous Timelines – Actions in Progress",
+    "description": "Master the Past Progressive tense, form subject-auxiliary agreement with was/were, combine ongoing background actions with interrupted events using 'when' and 'while', and navigate stative verb rules.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:15:00.000Z",
+    "updatedAt": "2026-08-03T15:15:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction: What is the Past Progressive Tense?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⏳ The Past Progressive: Actions in Motion",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "While the Simple Past describes a completed action at a specific time (<em>'I ate lunch'</em>), the <strong>Past Progressive</strong> (also called Past Continuous) shows an action that was ongoing or unfolding in the background of the past. Formula: <strong>WAS / WERE + VERB-ING</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which sentence describes an ONGOING action unfolding in the past?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "At 8:00 PM, she was reading a mystery novel."
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "She read a mystery novel yesterday."
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "She reads mystery novels every weekend."
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The Past Progressive focuses on the duration or activity in progress at a specific temporal reference point (e.g. <em>'At midnight, rain was pouring outside'</em>).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each timeline aspect to its correct sentence structure.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Completed Past Action",
+                                "right": "The thunder clapped once loudly."
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Ongoing Past Action",
+                                "right": "The storm was howling for hours."
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Habitual Present Action",
+                                "right": "Storms frequently blow across the coast."
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Subject-Auxiliary Agreement: WAS vs. WERE",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Auxiliary Agreement: Was vs. Were",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "To form the Past Progressive correctly, you must match the auxiliary helping verb (<strong>was</strong> or <strong>were</strong>) to your subject pronoun or noun.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-2-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Subject Type",
+                                "Auxiliary Verb",
+                                "Example Sentence"
+                            ],
+                            [
+                                "Singular (I, He, She, It, Maya)",
+                                "WAS",
+                                "He was studying in the library."
+                            ],
+                            [
+                                "Plural & You (You, We, They, Students)",
+                                "WERE",
+                                "They were analyzing the manuscript."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Special Rule for 'YOU'</strong>: Even when <em>you</em> refers to a single individual, it ALWAYS takes the plural auxiliary <strong>were</strong> (e.g. <em>'You were standing near the doorway'</em>, NEVER <em>'You was'</em>).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the missing auxiliary verbs (was / were) to complete the sentences.",
+                        "text": "Yesterday at noon, I {{blank}} writing my essay while you {{blank}} taking notes.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "was",
+                                "alternatives": [
+                                    "Was"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "were",
+                                "alternatives": [
+                                    "Were"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Interrupted Actions: Combining WHEN and WHILE",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ Interrupted Timelines: WHEN vs. WHILE",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Writers frequently combine the <strong>Past Progressive</strong> (long background action) with the <strong>Simple Past</strong> (short interrupting event) using the conjunctions <strong>WHEN</strong> and <strong>WHILE</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip cards to master WHEN vs. WHILE clauses!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "WHEN + Simple Past (Interrupting Event)",
+                                "back": "Example: 'I was presenting my slides WHEN the power failed.' (Power failing interrupted the presentation)."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "WHILE + Past Progressive (Background Action)",
+                                "back": "Example: 'WHILE the technician was fixing the router, the team organized the notes.' (Action in progress)."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "Parallel Past Progressive Actions",
+                                "back": "Example: 'WHILE Nina was coding, Alex was testing the user interface.' (Two simultaneous actions)."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly joins a background continuous action with a sudden interruption?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "We were observing the chemical reaction when the alarm sounded.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "We observed the chemical reaction when the alarm was sounding.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "We were observing the chemical reaction while the alarm sounded.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Use Past Progressive ('were observing') for the long ongoing action and 'WHEN + Simple Past' ('when the alarm sounded') for the sudden interruption."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "What tense follows 'WHILE' when describing simultaneous ongoing past events?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Past Progressive (was/were + -ing)",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "Simple Present",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "Future Continuous",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'While' introduces continuous duration, which requires the Past Progressive tense."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Spelling Rules for -ING Participles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "✍️ Spelling Mechanics for -ING Verbs",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Before attaching <strong>-ing</strong> to a verb, apply these 3 fundamental spelling rules depending on the base verb's ending.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-4-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Base Verb Pattern",
+                                "Spelling Rule",
+                                "Example Base -> -ING"
+                            ],
+                            [
+                                "Ends in Silent -E",
+                                "Drop the -e, add -ing",
+                                "write -> writing, make -> making"
+                            ],
+                            [
+                                "1 Syllable, Short Vowel + 1 Consonant (CVC)",
+                                "Double the final consonant",
+                                "run -> running, swim -> swimming"
+                            ],
+                            [
+                                "Ends in -Y or Vowel+Consonant",
+                                "Keep -y, just add -ing",
+                                "play -> playing, study -> studying"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each base verb to its correctly spelled -ING participle form.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Write",
+                                "right": "Writing (Drop silent -e)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Run",
+                                "right": "Running (Double final consonant)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Study",
+                                "right": "Studying (Keep -y)"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Explore",
+                                "right": "Exploring (Drop silent -e)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Stative Verbs Warning: Verbs That CANNOT Be Continuous",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🚫 Stative Verbs: The Non-Continuous Trap",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Stative Verbs</strong> describe states of mind, feelings, possession, or perception (e.g. <em>know, believe, understand, love, own, belong</em>). Because they are not physical actions, they are <strong>NEVER used in continuous -ing tenses</strong>!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL grammatically correct sentences that avoid stative verb errors:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences correctly use Simple Past instead of ungrammatical Stative Continuous?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "I knew the answer to the quiz question.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "I was knowing the answer to the quiz question.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "She owned the antique microscope.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "She was owning the antique microscope.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "'Know' and 'own' are stative verbs. Forms like 'was knowing' or 'was owning' are incorrect in standard English."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Golden Rule: If a verb refers to a thought, emotion, or ownership, use Simple Past ('I understood', 'She wanted'). Reserve Past Progressive for physical, observable activities ('I was running', 'She was painting').",
+                        "author": "AST Grammar Reference",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Past Progressive Mastery Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Past Progressive Mastery Evaluation",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Demonstrate your complete command of Past Progressive timelines, auxiliary agreement, and interrupted clause order!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Sequence this narrative timeline from background action to final outcome.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. While the sun was setting over the horizon, the scientists prepared the radio transmitter.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Suddenly, a strange signal was broadcasting across all frequencies.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. The lead researcher was recording the data when the power grid glitched.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Afterwards, the team quickly saved all logs to secure storage.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which sentence correctly pairs a plural subject with the Past Progressive auxiliary?",
+                                "options": [
+                                    "The students were debating the topic.",
+                                    "The students was debating the topic.",
+                                    "The students is debating the topic.",
+                                    "The students were debate the topic."
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Plural subjects take 'were + verb-ing' ('The students were debating')."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Which spelling is correct for the base verb 'MAKE' in continuous tense?",
+                                "options": [
+                                    "Making",
+                                    "Makeing",
+                                    "Makking",
+                                    "Makeing"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Drop the silent -e before adding -ing (make -> making)."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

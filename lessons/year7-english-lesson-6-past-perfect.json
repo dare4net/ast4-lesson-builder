@@ -1,0 +1,596 @@
+{
+    "id": "year7-english-lesson-6-past-perfect",
+    "title": "Lesson 6: Past Perfect & Timeline Layering – Sequence of Past Events",
+    "description": "Master the Past Perfect tense using had + past participle to layer past timelines, order earlier vs later past events, and master conjunctions like before, after, and by the time.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:25:00.000Z",
+    "updatedAt": "2026-08-03T15:25:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction: The 'Past of the Past'",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🕰️ The Past Perfect: Layering the Past",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "When narrating events in the past, we often need to explain that one action happened <strong>before another past action</strong>. The earlier event takes the <strong>Past Perfect Tense</strong>. Formula: <strong>HAD + PAST PARTICIPLE</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which action happened FIRST in time?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "When the bell rang, the students HAD FINISHED their exam."
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "When the bell rang, the students FINISHED their exam."
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In sentence 1 above, <em>'had finished'</em> happened <strong>FIRST</strong> (before the bell rang). In sentence 2, both actions happened almost at the same time.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each timeline layer to its correct tense form.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Earliest Past Action (Event A)",
+                                "right": "Past Perfect (HAD + Past Participle)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Later Past Action (Event B)",
+                                "right": "Simple Past (V2)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Current Present Moment",
+                                "right": "Simple Present (V1)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Forming the Past Perfect: HAD + V3",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚙️ Structure & Uniform Auxiliary HAD",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Unlike the Present Perfect (which splits between <em>has</em> and <em>have</em>), the Past Perfect is refreshingly simple: <strong>HAD</strong> is used for ALL subjects (<em>I, you, he, she, it, we, they</em>) followed by the <strong>Past Participle (V3)</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-2-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Subject",
+                                "Auxiliary Verb",
+                                "Past Participle + Complement"
+                            ],
+                            [
+                                "I / You / He / She",
+                                "HAD",
+                                "had left the laboratory."
+                            ],
+                            [
+                                "We / They / Students",
+                                "HAD",
+                                "had locked the gates."
+                            ],
+                            [
+                                "The Scientists",
+                                "HAD",
+                                "had discovered the anomaly."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the narrative sentences with the correct Past Perfect forms.",
+                        "text": "Before the rain started, the gardeners {{blank}} (plant) all the seeds and {{blank}} (store) the equipment.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "had planted",
+                                "alternatives": [
+                                    "Had planted"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "had stored",
+                                "alternatives": [
+                                    "Had stored",
+                                    "stored"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Conjunctions for Timeline Layering: BY THE TIME, BEFORE & AFTER",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔀 Connecting Past Clauses: BEFORE, AFTER & BY THE TIME",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "We use time conjunctions to connect Past Perfect and Simple Past clauses smoothly in creative writing.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip cards to study past timeline conjunction rules!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "BY THE TIME + Simple Past, Past Perfect",
+                                "back": "Example: 'By the time the rescue team arrived, the storm HAD PASSED.'"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "BEFORE + Simple Past, Past Perfect",
+                                "back": "Example: 'Before she submitted the manuscript, she HAD PROOFREAD it twice.'"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "AFTER + Past Perfect, Simple Past",
+                                "back": "Example: 'After they HAD SOLVED the riddle, the heavy door unlocked.'"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly uses 'BY THE TIME' with Past Perfect timeline layering?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "By the time the museum opened, a crowd had gathered.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "By the time the museum had opened, a crowd gathered.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "By the time the museum opens, a crowd had gathered.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'By the time' takes Simple Past ('opened'), while the earlier background event takes Past Perfect ('had gathered')."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "In the clause 'After they HAD COMPLETED the experiment, they wrote the report', which action occurred FIRST?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Completing the experiment",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "Writing the report",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Past Perfect ('had completed') marks the earlier action in time."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Mastering the 'HAD HAD' Double Auxiliary Pattern",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "💡 Demystifying 'HAD HAD' in English",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Students often think seeing <strong>HAD HAD</strong> in a sentence is a typo. It is actually 100% correct! The first <em>had</em> is the auxiliary helping verb; the second <em>had</em> is the V3 past participle of the verb <em>to have</em> (meaning possess, eat, or experience).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-4-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Verb Meaning",
+                                "Past Perfect Construction",
+                                "Example Sentence"
+                            ],
+                            [
+                                "Possession",
+                                "had (auxiliary) + had (V3)",
+                                "She had had the bicycle for years before selling it."
+                            ],
+                            [
+                                "Eating / Meals",
+                                "had (auxiliary) + had (V3)",
+                                "They had had breakfast before setting off at dawn."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each double-auxiliary element to its grammatical role.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "First 'HAD'",
+                                "right": "Past Perfect Auxiliary Helping Verb"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Second 'HAD'",
+                                "right": "V3 Past Participle of 'have'"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Had + Eaten",
+                                "right": "Alternative phrasing for meals"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Narrative Flashbacks: Past Perfect in Storytelling",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "📖 Storytelling Depth: Using Past Perfect for Flashbacks",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In narrative writing, Past Perfect allows authors to drop back in time to explain a character's backstory or motivation without confusing the reader about chronological order.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that correctly use Past Perfect for narrative backstory:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences establish clear chronological backstory depth?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "Arthur recognized the old key because his grandfather had given it to him.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "Arthur recognized the old key because his grandfather gives it to him.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "She unlocked the chest that her ancestors had buried centuries ago.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "She unlocked the chest that her ancestors have buried centuries ago.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "Past backstory events occurring prior to past narrative action require Past Perfect ('had given', 'had buried')."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Author's Tip: Use Past Perfect to establish a flashback at the beginning of a paragraph. Once the backstory timeline is anchored, you can transition back to Simple Past to keep the prose swift.",
+                        "author": "AST Creative Writing Guide",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Past Perfect Mastery Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Past Perfect Mastery Evaluation",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Demonstrate complete mastery of Past Perfect timeline sequence and conjunction ordering!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Order these narrative timeline events from earliest past event to final event.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Years before the voyage, the cartographer HAD DRAWN the ancient sea map.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Before setting sail, the captain HAD SECURED all permissions.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. The ship finally departed the harbor at dawn.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. By evening, they reached open waters.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "What is the Past Perfect form of the verb 'KNOW'?",
+                                "options": [
+                                    "Had known",
+                                    "Has known",
+                                    "Had knew",
+                                    "Had knowed"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Past Perfect = HAD + V3 Past Participle ('had known')."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Which conjunction introduces a clause completed PRIOR to a past event?",
+                                "options": [
+                                    "By the time",
+                                    "So that",
+                                    "Unless",
+                                    "Whereas"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'By the time' indicates a time limit before which an earlier Past Perfect action occurred."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

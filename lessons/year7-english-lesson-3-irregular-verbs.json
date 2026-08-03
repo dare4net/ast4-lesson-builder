@@ -1,0 +1,658 @@
+{
+    "id": "year7-english-lesson-3-irregular-verbs",
+    "title": "Lesson 3: Irregular Verbs – Patterns, Mutations & Common Traps",
+    "description": "Discover the hidden rules behind irregular verb mutations, master vowel-change patterns, zero-change verbs, and eliminate common past-tense writing errors.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:10:00.000Z",
+    "updatedAt": "2026-08-03T15:10:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction: Why Do Irregular Verbs Mutate?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🧬 Unlocking Irregular Verbs: History & Mechanics",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "While regular verbs simply add <strong>-ed</strong> or <strong>-d</strong> to form the past tense (e.g. <em>walk → walked</em>), hundreds of the most common verbs in English do not follow this standard rule. These are <strong>Irregular Verbs</strong>. Their forms evolved from ancient Germanic speech patterns, mutating their internal vowels or consonants over centuries.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which of these simple past forms is an IRREGULAR verb?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "Flew (from Fly)"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "Jumped (from Jump)"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "Looked (from Look)"
+                            },
+                            {
+                                "id": "opt4",
+                                "text": "Painted (from Paint)"
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Instead of memorizing hundreds of random words, linguists group irregular verbs into <strong>3 main mutation categories</strong>: 1) Vowel Changes, 2) Zero-Change Invariables, and 3) Total Stem Transformations.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each base verb to its Irregular Past category.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Sing -> Sang",
+                                "right": "Vowel Sound Mutation"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Cost -> Cost",
+                                "right": "Zero-Change Invariable"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Go -> Went",
+                                "right": "Total Stem Transformation"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Pattern 1: Vowel Mutations (I -> A -> U)",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎵 Vowel Mutations: The I-A-U Sound Shift",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Many irregular verbs follow a musical vowel shift pattern: the base vowel <strong>i</strong> changes to <strong>a</strong> in the simple past, and to <strong>u</strong> in the past participle.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-2-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip cards to observe the I -> A -> U vowel shift pattern!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "SING: Sing (Base) -> Sang (Past)",
+                                "back": "Example: 'She sings today, but she sang in the concert yesterday.'"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "SWIM: Swim (Base) -> Swam (Past)",
+                                "back": "Example: 'They swim every week, but they swam across the lake last summer.'"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "BEGIN: Begin (Base) -> Began (Past)",
+                                "back": "Example: 'The bell rings to begin, and the exam began at 9:00 AM.'"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Key Rule</strong>: Never add -ed to these verbs! Writing <em>'singed'</em> (meaning slightly burned) instead of <em>'sang'</em> changes the meaning completely.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the sentences using the correct I -> A vowel shift.",
+                        "text": "The choir {{blank}} (sing) beautifully at yesterday's assembly. The athlete {{blank}} (swim) two miles during training.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "sang",
+                                "alternatives": [
+                                    "Sang"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "swam",
+                                "alternatives": [
+                                    "Swam"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Pattern 2: Zero-Change (Invariable) Verbs",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🛑 Zero-Change Verbs: Form Remains Identical",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Some irregular verbs are completely <strong>invariable</strong>: their base form, simple past, and past participle are identical in spelling! We rely on sentence context and time signal words to know if they refer to the present or past.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-3-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 5,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Base Verb",
+                                "Simple Past Form",
+                                "Example Past Sentence"
+                            ],
+                            [
+                                "Cut",
+                                "Cut",
+                                "Yesterday, Maya cut the paper into shapes."
+                            ],
+                            [
+                                "Cost",
+                                "Cost",
+                                "The antique textbook cost fifty pounds last year."
+                            ],
+                            [
+                                "Put",
+                                "Put",
+                                "He put the keys on the table an hour ago."
+                            ],
+                            [
+                                "Read",
+                                "Read (pronounced 'red')",
+                                "She read three chapters before sleeping."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Special Pronunciation Case: READ</strong>: The verb <em>read</em> keeps its exact spelling in the past tense, but its pronunciation changes from <em>/reed/</em> (present) to <em>/red/</em> (past)!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly uses a Zero-Change irregular verb in the past tense?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "He cutted the string with scissors yesterday.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "He cut the string with scissors yesterday.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "He catched the string with scissors yesterday.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Cut' is an invariable zero-change verb. Forms like 'cutted' do not exist in standard English."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Pattern 3: Total Stem & OUGHT/AUGHT Transformations",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔮 Total Stem Shifts: The -OUGHT and -AUGHT Families",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Some irregular verbs undergo dramatic spelling transformations in the past tense. A famous family of irregulars changes their stem to end in <strong>-ought</strong> or <strong>-aught</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each base verb to its -OUGHT or -AUGHT past tense transformation.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Buy",
+                                "right": "Bought"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Bring",
+                                "right": "Brought"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Think",
+                                "right": "Thought"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Catch / Teach",
+                                "right": "Caught / Taught"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "paragraph-4-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Watch out for 'Brang'!</strong> In informal slang, people sometimes say <em>'brang'</em> or <em>'brung'</em>. In standard academic writing, the simple past of <em>bring</em> is ALWAYS <strong>brought</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-4-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the narrative sentences with the correct -OUGHT/-AUGHT verbs.",
+                        "text": "The teacher {{blank}} (teach) us how the astronomer {{blank}} (catch) a view of the passing comet.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "taught",
+                                "alternatives": [
+                                    "Taught"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "caught",
+                                "alternatives": [
+                                    "Caught"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Eliminating Common Irregular Verb Traps",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🛡️ Proofreading: Spotting Fake Irregular Verb Forms",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "When writers are in a rush, they often attach <strong>-ed</strong> onto irregular verbs by accident. Proofreading requires detecting these 'fake' forms and replacing them with correct irregular past spellings.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-5-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Incorrect Fake Form",
+                                "Correct Irregular Past Form",
+                                "Example Sentence"
+                            ],
+                            [
+                                "throwed",
+                                "threw",
+                                "She threw the baseball to first base."
+                            ],
+                            [
+                                "knowed",
+                                "knew",
+                                "Leo knew the correct mathematical formula."
+                            ],
+                            [
+                                "flyed",
+                                "flew",
+                                "The plane flew above the thunderclouds."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that contain 100% CORRECT Irregular Past Verbs:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences avoid fake '-ed' irregular verb traps?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "The falcon flew gracefully over the canyon.",
+                                        "isCorrect": true,
+                                        "color": "bg-violet-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "The falcon flyed gracefully over the canyon.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "She threw the ball directly into the net.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "She throwed the ball directly into the net.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    }
+                                ],
+                                "explanation": "'Flew' and 'threw' are correct standard irregular past forms. 'Flyed' and 'throwed' are incorrect non-standard errors."
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Proofreading Tip: If a past-tense verb sounds strange with '-ed' at the end, consult an irregular verb list! Many of English's most expressive verbs use unique historical forms.",
+                        "author": "AST Writing Handbook",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Mastery Challenge & Synthesis Assessment",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Irregular Verb Mastery Evaluation",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Test your complete mastery of irregular verb patterns! Arrange the story events chronologically, then complete the final flip-card evaluation.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the narrative actions in correct sequence using irregular past verbs.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. First, the bell rang to signal the start of the expedition.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Next, the explorers chose their equipment and bought provisions.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. Then, they drove across the mountains to the research site.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Finally, they wrote their summary report in the journal.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 40,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "What is the Simple Past of the irregular verb 'THINK'?",
+                                "options": [
+                                    "Thought",
+                                    "Thinked",
+                                    "Thank",
+                                    "Thoughted"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Thought' belongs to the -OUGHT irregular family (think -> thought)."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Which verb remains UNCHANGED in spelling in the simple past?",
+                                "options": [
+                                    "Cost",
+                                    "Run",
+                                    "Write",
+                                    "Catch"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Cost' is a zero-change invariable verb (cost -> cost)."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

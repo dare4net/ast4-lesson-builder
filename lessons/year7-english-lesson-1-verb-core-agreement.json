@@ -1,0 +1,761 @@
+{
+    "id": "year7-english-lesson-1-verb-core",
+    "title": "Lesson 1: The Verb Core – Action, State & Subject-Verb Agreement",
+    "description": "Master the difference between action and stative verbs, and lock in solid subject-verb agreement rules for clear, powerful sentence construction.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T14:45:00.000Z",
+    "updatedAt": "2026-08-03T14:45:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Welcome: The Power of Verbs",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "✨ Welcome to Verb Mastery: The Engines of Language",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Every sentence you read, write, or speak needs a central engine to give it life and motion. That engine is the <strong>verb</strong>. Without verbs, ideas remain motionless fragments. In this lesson, you will explore the two fundamental types of verbs—<strong>Action Verbs</strong> and <strong>Stative Verbs</strong>—and master the golden rule of <strong>Subject-Verb Agreement</strong> to make your writing clear, precise, and grammatically accurate.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which type of word brings physical movement or action to a sentence?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "Action Verb (e.g. Sprinted, Launched)"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "Noun (e.g. Telescope, Planet)"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "Adjective (e.g. Bright, Ancient)"
+                            },
+                            {
+                                "id": "opt4",
+                                "text": "Preposition (e.g. Under, Through)"
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Action Verbs: Physical & Observable Motion",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏃 Action Verbs: Expressing Physical Movement",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Action verbs</strong> (also called dynamic verbs) describe physical activities, movements, or processes that can be observed. Think of them as kinetic energy in writing. Examples include <em>run, leap, write, calculate, build,</em> and <em>whisper</em>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A key feature of action verbs is that they can easily take the <strong>continuous (-ing) tense</strong> to show an ongoing activity (for example: <em>'The scientist is building a prototype'</em> or <em>'The students were discussing the results'</em>).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-2-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Action Verb Cards: Flip to see how action verbs create vivid pictures!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "SWIFT MOVEMENT: Sprinted",
+                                "back": "Action Verb: Describes high-speed physical running ('Maya sprinted across the field')."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "CREATIVE WORK: Crafted",
+                                "back": "Action Verb: Describes physical or mental construction ('The artist crafted a sculpture')."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "SOUND & SPEECH: Whispered",
+                                "back": "Action Verb: Describes vocal physical production ('Leo whispered the answer')."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Stative Verbs: States of Being, Mind & Emotion",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🧠 Stative Verbs: Expressing Thoughts, Feelings & States",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Unlike action verbs, <strong>stative verbs</strong> describe a state of being, an emotion, a mental thought, or a condition of possession. They express things that exist rather than physical actions you can watch someone do. Common stative verbs include <em>know, believe, understand, love, own, belong,</em> and <em>seem</em>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Important Rule</strong>: Stative verbs are rarely used in continuous (-ing) tenses. We say <em>'I understand the lesson'</em> (CORRECT), not <em>'I am understanding the lesson'</em> (INCORRECT).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-3-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each stative verb to its correct category of meaning.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Believes / Remembers",
+                                "right": "Mental Thought or Knowledge"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Admires / Loves",
+                                "right": "Emotion or Feeling"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Owns / Possesses",
+                                "right": "Possession or Ownership"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Appears / Seems",
+                                "right": "State of Condition or Perception"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Action vs. Stative Comparison Matrix",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "📊 Comparing Action and Stative Verbs in Sentences",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Some verbs can act as either Action or Stative depending on how they are used in a sentence! Notice how the meaning changes in the plain text table below:",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-4-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Verb",
+                                "Action Usage (Physical Activity)",
+                                "Stative Usage (State of Being)"
+                            ],
+                            [
+                                "Look",
+                                "The astronomer looked through the telescope.",
+                                "The ancient manuscript looks delicate."
+                            ],
+                            [
+                                "Taste",
+                                "The chef tasted the soup carefully.",
+                                "The fresh soup tastes delicious."
+                            ],
+                            [
+                                "Think",
+                                "Dr. Vance is thinking about the problem.",
+                                "Dr. Vance thinks the answer is correct."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-4-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Identify whether the verb is used as an Action or Stative verb.",
+                        "text": "In the sentence 'She owns a rare edition book', the verb 'owns' expresses a {{blank}} (stative/action) state. In 'She painted a canvas', 'painted' is an {{blank}} (stative/action) verb.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "stative",
+                                "alternatives": [
+                                    "Stative"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "action",
+                                "alternatives": [
+                                    "Action"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "The Golden Rule of Subject-Verb Agreement",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Subject-Verb Agreement: The Balance Scale",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Subject-Verb Agreement</strong> is the foundational grammatical rule requiring a verb to match the number of its subject. Think of it as a two-sided balance scale: if the subject side is singular, the verb side must match in singular form.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-5-1",
+                    "type": "bulletList",
+                    "props": {
+                        "items": [
+                            "Singular Subject → Singular Verb (adds -s / -es in present tense): 'The researcher discovers new evidence.'",
+                            "Plural Subject → Plural Verb (no -s in present tense): 'The researchers discover new evidence.'",
+                            "Remember: Adding an -s to a noun makes it plural (book → books), but adding -s to a present-tense verb makes it singular (reads)!"
+                        ],
+                        "type": "unordered"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-5-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence follows correct Subject-Verb Agreement?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The student write a detailed essay.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "The student writes a detailed essay.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "The students writes a detailed essay.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Student' is a singular subject, so it requires the singular present verb 'writes'."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Pronoun Agreement in Present Tense",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "👥 Matching Verbs with Pronouns",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Pronouns replace specific nouns in sentences. In the present tense, third-person singular pronouns (<em>He, She, It</em>) take singular verbs ending in <strong>-s</strong>. First-person, second-person, and third-person plural pronouns (<em>I, You, We, They</em>) take the base verb form without -s.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-6-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each pronoun group to its correct present-tense verb form.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "He / She / It (Singular 3rd Person)",
+                                "right": "explores the library thoroughly."
+                            },
+                            {
+                                "id": "p2",
+                                "left": "They / We (Plural)",
+                                "right": "explore the library thoroughly."
+                            },
+                            {
+                                "id": "p3",
+                                "left": "I / You",
+                                "right": "explore the library thoroughly."
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-7",
+            "title": "The Intervening Phrase Trap",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-7-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚠️ Beware of Intervening Prepositional Phrases",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-7-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "One of the most common grammar traps occurs when descriptive words get placed between the subject and the verb. Always locate the true subject of the sentence and ignore the intervening phrase!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-7-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Example Sentence",
+                                "Intervening Phrase (Ignore)",
+                                "True Subject and Correct Verb"
+                            ],
+                            [
+                                "The box of historical maps is on the desk.",
+                                "of historical maps",
+                                "Subject: 'box' (singular) -> Verb: 'is'"
+                            ],
+                            [
+                                "The towers near the harbor stand tall.",
+                                "near the harbor",
+                                "Subject: 'towers' (plural) -> Verb: 'stand'"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-7-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that have CORRECT Subject-Verb Agreement:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which of the following sentences correctly match subject and verb?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "The jar of marbles rests on the shelf.",
+                                        "isCorrect": true,
+                                        "color": "bg-violet-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "The jar of marbles rest on the shelf.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "The keys to the laboratory belong to Sarah.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "The keys to the laboratory belongs to Sarah.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    }
+                                ],
+                                "explanation": "'Jar' is singular (rests) and 'keys' is plural (belong). Intervening words ('of marbles', 'to the laboratory') do not alter the main subject!"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-8",
+            "title": "Collective Nouns: Units vs. Individuals",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-8-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "👨‍👩‍👧‍👦 Collective Nouns: Grouping as One",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-8-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A <strong>collective noun</strong> names a group of people, animals, or items acting together as a single unit (for example: <em>team, class, jury, family, committee, squad</em>). In standard English, when the group acts as one unified body, the collective noun takes a <strong>singular verb</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-8-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Example: <em>'The debate team <strong>prepares</strong> for the finals.'</em> ('Team' is treated as one single unit, so we use the singular verb 'prepares').",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-8-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete the sentences with the correct verb agreement for collective nouns.",
+                        "text": "The science committee {{blank}} (meets/meet) every Tuesday afternoon. The school choir {{blank}} (sings/sing) in harmony.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "meets",
+                                "alternatives": [
+                                    "Meets"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "sings",
+                                "alternatives": [
+                                    "Sings"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-9",
+            "title": "Mastery Strategy: 4 Steps to Perfect Agreement",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-9-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🛠️ The 4-Step Checklist for Verifying Agreement",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-9-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Whenever you review your sentences during editing, apply this 4-step checklist to ensure 100% subject-verb agreement accuracy:",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-9-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange the 4 steps of subject-verb agreement checking into the correct order.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Identify the main verb performing or expressing the action/state.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Ask 'Who or what is performing this verb?' to locate the true subject.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. Cross out any intervening prepositional phrases (e.g. 'of the students').",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Verify if the subject is singular or plural, and adjust verb ending accordingly.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 40,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-10",
+            "title": "Lesson Evaluation & Summary Review",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-10-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎓 Final Mastery Assessment & Lesson Summary",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-10-1",
+                    "type": "bulletList",
+                    "props": {
+                        "items": [
+                            "Action Verbs describe physical, observable movement (run, write, build); Stative Verbs express internal states, thoughts, or feelings (know, admire, belong).",
+                            "Subject-Verb Agreement requires singular subjects to pair with singular verbs (-s in present tense) and plural subjects to pair with plural verbs.",
+                            "Ignore intervening prepositional phrases when determining agreement, and remember that collective nouns (team, class) act as singular units!"
+                        ],
+                        "type": "unordered"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcardQuiz-10-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which of the following is a STATIVE verb?",
+                                "options": [
+                                    "Understand",
+                                    "Sprinted",
+                                    "Constructed",
+                                    "Galloped"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Understand' expresses an internal mental state rather than physical movement."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Which sentence has correct Subject-Verb Agreement?",
+                                "options": [
+                                    "The box of maps is heavy.",
+                                    "The box of maps are heavy.",
+                                    "The box of maps being heavy.",
+                                    "The box of maps stay heavy."
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "'Box' is singular, so it pairs with 'is'. Ignore the prepositional phrase 'of maps'."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,604 @@
+{
+    "id": "year7-english-lesson-7-future-tenses",
+    "title": "Lesson 7: Future Tenses – Intentions, Predictions & Timelines",
+    "description": "Master expressing future time in English using Will vs Going To, Present Continuous for scheduled arrangements, Simple Present for official timetables, and Future Progressive.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 30,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:30:00.000Z",
+    "updatedAt": "2026-08-03T15:30:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction: Expressing Future Time in English",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🚀 Future Expressive Structures",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Unlike the past or present, English does not have a single verb ending for the future (like '-ed'). Instead, we choose from four different future structures depending on whether we are expressing a <strong>spontaneous decision</strong>, a <strong>prior plan</strong>, a <strong>fixed arrangement</strong>, or an <strong>official timetable</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which sentence expresses a SPONTANEOUS decision made right now?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "Hold on, I will open the door for you."
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "I am going to open a business next summer."
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "The train arrives at 4:00 PM."
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Notice how <em>'I will open'</em> is a instant offer made on the spot, whereas <em>'I am going to open'</em> indicates prior thought and planning.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each future sentence form to its communicative intention.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "WILL + Verb",
+                                "right": "Spontaneous decision, promise, or instant offer"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "BE GOING TO + Verb",
+                                "right": "Pre-planned intention or evidence-based prediction"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "PRESENT CONTINUOUS",
+                                "right": "Fixed social arrangement with another person"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "WILL vs. BE GOING TO Deep Dive",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ WILL vs. BE GOING TO: Choosing the Right Form",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Understanding the subtle contrast between <strong>WILL</strong> and <strong>BE GOING TO</strong> elevates sentence precision in formal writing.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-2-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Future Function",
+                                "Grammar Structure",
+                                "Example Sentence"
+                            ],
+                            [
+                                "Spontaneous Offer",
+                                "WILL + Base Verb",
+                                "Don't carry those heavy books—I will carry them for you."
+                            ],
+                            [
+                                "Pre-planned Intention",
+                                "AM/IS/ARE GOING TO + Base Verb",
+                                "We are going to launch the weather balloon next Tuesday."
+                            ],
+                            [
+                                "Prediction with Present Evidence",
+                                "AM/IS/ARE GOING TO + Base Verb",
+                                "Look at those dark storm clouds! It is going to rain."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the blanks with 'will' or 'is going to' based on contextual cues.",
+                        "text": "Leo has already bought his plane tickets; he {{blank}} (fly) to Sydney. Suddenly the phone rings: 'I {{blank}} (answer) it!'",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "is going to fly",
+                                "alternatives": [
+                                    "is going to fly"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "will answer",
+                                "alternatives": [
+                                    "will answer"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Present Tenses with Future Meaning: Schedules & Arrangements",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "📅 Present Forms Expressing Future Time",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In standard English, two present tenses are commonly used to talk about future time: <strong>Present Continuous</strong> (for fixed personal arrangements) and <strong>Simple Present</strong> (for published timetables/schedules).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip cards to master present tenses for future events!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "Present Continuous (Fixed Arrangement)",
+                                "back": "Example: 'We are hosting a seminar tomorrow at 2:00 PM.' (Personal arrangement with participants)."
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "Simple Present (Official Timetable / Schedule)",
+                                "back": "Example: 'The shuttle departs at 07:30 AM sharp.' (Public schedule outside personal control)."
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "Timetable vs. Personal Plan",
+                                "back": "'The museum opens at 9:00 AM' (Timetable) vs 'I am visiting the museum at 10:00 AM' (Personal plan)."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which sentence correctly uses Simple Present for an official public timetable?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The flight arrives at Heathrow at 18:45 tonight.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "The flight will be arriving at Heathrow at 18:45 tonight.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "The flight is going to arrive at Heathrow at 18:45 tonight.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Official schedules and timetables (flights, trains, film times) use the Simple Present ('arrives')."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "What future meaning does 'We are dining with the headmaster tonight' express?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "A fixed personal arrangement",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "A spontaneous guess",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "A physical law of nature",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Present Continuous ('are dining') expresses a confirmed personal arrangement."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "The Future Progressive (Continuous): Actions in Future Motion",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⌛ Future Progressive: Actions in Progress in the Future",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The <strong>Future Progressive</strong> describes an action that will be actively unfolding at a specific future moment. Formula: <strong>WILL BE + VERB-ING</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-4-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Future Time Marker",
+                                "Structure",
+                                "Example Sentence"
+                            ],
+                            [
+                                "At 10:00 AM tomorrow",
+                                "WILL BE + VERB-ING",
+                                "At 10:00 AM tomorrow, the students will be taking their final examination."
+                            ],
+                            [
+                                "This time next week",
+                                "WILL BE + VERB-ING",
+                                "This time next week, we will be flying over the Alps."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each future temporal viewpoint to its sentence.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Future Progressive (In Motion)",
+                                "right": "At midnight, the satellite will be orbiting the moon."
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Simple Future (Completed Point)",
+                                "right": "The satellite will launch at midnight."
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Future Plan (Pre-determined)",
+                                "right": "The team is going to monitor the satellite."
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Future Time Clauses: Time Words Drop WILL",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚠️ The Future Time Clause Rule: WHEN / AS SOON AS",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Critical Grammar Rule</strong>: In subordinate time clauses introduced by <em>when, as soon as, before, after, until, or if</em>, we NEVER use 'will'. We use the <strong>Simple Present</strong> instead, even though the sentence refers to the future!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that correctly apply the Future Time Clause rule:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences correctly use Simple Present in the 'when/as soon as' clause?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "When the package arrives, I will call you.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "When the package will arrive, I will call you.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "As soon as the bell rings, we will leave.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "As soon as the bell will ring, we will leave.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "Subordinate clauses starting with 'when' or 'as soon as' take Simple Present ('arrives', 'rings'), NOT 'will arrive'."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Golden Rule: Main Clause = Will / Going to. Time Clause (when, as soon as, before, after) = Simple Present. Never double 'will' in time clause sentences!",
+                        "author": "AST Grammar Mastery Guide",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Future Tenses Mastery Evaluation",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Future Tenses Synthesis Evaluation",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Demonstrate your complete mastery of future structures, intentions, timetables, and time clauses!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Arrange this future project timeline from initial plan to final milestone.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Next month, our team is going to conduct field research.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. The conference opens at 09:00 AM sharp on Monday.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. During the keynote, our director will be presenting our findings.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. As soon as the keynote ends, we will publish the full report.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "Which tense is used for official timetables and train schedules?",
+                                "options": [
+                                    "Simple Present",
+                                    "Future Continuous",
+                                    "Past Perfect",
+                                    "Future Perfect"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Official timetables take Simple Present (e.g. 'The train leaves at 8:00 AM')."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Complete the time clause: 'We will celebrate as soon as the project ______.'",
+                                "options": [
+                                    "finishes",
+                                    "will finish",
+                                    "finished",
+                                    "will be finishing"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Time clauses introduced by 'as soon as' require Simple Present ('finishes')."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}

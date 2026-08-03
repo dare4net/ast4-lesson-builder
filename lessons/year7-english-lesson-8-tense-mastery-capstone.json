@@ -1,0 +1,610 @@
+{
+    "id": "year7-english-lesson-8-tense-mastery-capstone",
+    "title": "Lesson 8: Tense Mastery & Timeline Synthesis – Capstone Challenge",
+    "description": "Synthesize all verb tenses across past, present, and future timelines, eliminate tense consistency errors, master complex multi-clause sentence structures, and achieve module graduation.",
+    "author": "AST English Academy",
+    "level": "Year 7 / KS3",
+    "duration": 35,
+    "settings": {
+        "theme": "educational",
+        "subject": "English Language",
+        "topic": "Grammar & Mechanics"
+    },
+    "createdAt": "2026-08-03T15:35:00.000Z",
+    "updatedAt": "2026-08-03T15:35:00.000Z",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "The Grand Verb Matrix: All Tenses Unified",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🌐 The Master Verb Matrix",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Congratulations on reaching the Capstone Challenge! In this final lesson, we synthesize all 12 core English verb aspects across <strong>Past</strong>, <strong>Present</strong>, and <strong>Future</strong> timelines into a unified system.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which verb tense aspect feels most powerful when building narrative suspense?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "Past Progressive (was/were + -ing for background atmosphere)"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "Past Perfect (had + V3 for dramatic backstory flashbacks)"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "Simple Past (punctuating sudden action events)"
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Master writers weave all three aspects together: using <strong>Past Progressive</strong> for atmosphere, <strong>Past Perfect</strong> for backstory, and <strong>Simple Past</strong> for action punchiness.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each tense aspect category to its precise formula.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Simple Tense Aspect",
+                                "right": "Base Verb / V2 / Will + Base Verb"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Progressive (Continuous) Aspect",
+                                "right": "Am/Is/Are/Was/Were/Will be + Verb-ING"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Perfect Tense Aspect",
+                                "right": "Has/Have/Had/Will have + Past Participle (V3)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Tense Consistency: Eliminating Jarring Timeline Shifts",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-2-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Paragraph Tense Consistency",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-2-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A common essay mistake is <strong>unintentional tense shifting</strong>—switching between past and present within the same paragraph without a valid time reason.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-2-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 3,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Text Type",
+                                "Incorrect Jarring Shift",
+                                "Corrected Consistent Tense"
+                            ],
+                            [
+                                "Flawed Student Essay",
+                                "The detective entered the room and looks around carefully.",
+                                "The detective entered the room and looked around carefully."
+                            ],
+                            [
+                                "Flawed Lab Report",
+                                "We recorded the data and then we measure the temperature.",
+                                "We recorded the data and then we measured the temperature."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-2-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Correct the paragraph by filling in verbs that maintain consistent past tense narrative flow.",
+                        "text": "The expedition crew arrived at the base camp, {{blank}} (set up) their tents, and {{blank}} (light) a campfire.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "set up",
+                                "alternatives": [
+                                    "Set up"
+                                ]
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "lit",
+                                "alternatives": [
+                                    "Lit",
+                                    "lighted"
+                                ]
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Multi-Clause Complex Sentence Architecture",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-3-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏛️ Complex Multi-Clause Sentence Engineering",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-3-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Advanced writers combine multiple tense layers in a single complex sentence to convey rich, multi-stage events.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-3-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Flip cards to analyze complex multi-tense sentences!",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "Past Perfect + Past Progressive + Simple Past",
+                                "back": "Example: 'Although the team HAD PREPARED for months, while they WERE TESTING the engine, a pipe snapped.'"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "Present Perfect + Future Time Clause",
+                                "back": "Example: 'Because we HAVE COMPLETED the design, as soon as the funding arrives, we will begin construction.'"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "Future Continuous + Simple Present Schedule",
+                                "back": "Example: 'While the public is sleeping tonight, the automated train system will be running tests.'"
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-3-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which multi-clause sentence correctly sequences Past Perfect (earliest), Past Progressive (ongoing), and Simple Past (interruption)?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Although he had lost his map, while he was searching the forest, he found a landmark.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "Although he lost his map, while he had searched the forest, he was finding a landmark.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "Although he was losing his map, while he found the forest, he had searched a landmark.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Had lost' is the earliest past event, 'was searching' is the ongoing background search, and 'found' is the sudden simple past discovery."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "What is the primary role of Past Perfect in complex multi-clause prose?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "To anchor the earliest past backstory event prior to other past actions",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "To describe an action happening right now in the present",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "To predict a future event without evidence",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Past Perfect ('had + V3') serves as the earliest temporal layer."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": false,
+                        "points": 20,
+                        "timeLimit": 30,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Master Proofreading: Traps & Mutations Audit",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-4-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔍 The Master Proofreading Audit",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-4-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Proofread your writing against the four main verb traps: <strong>False -ed Irregulars</strong> (*brang, runned*), <strong>Stative Continuous Errors</strong> (*was believing*), <strong>Agreement Errors</strong> (*you was*), and <strong>Double Will in Time Clauses</strong> (*when he will arrive*).",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-4-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Verb Trap Category",
+                                "Ungrammatical Error",
+                                "Flawless Correct Standard"
+                            ],
+                            [
+                                "Irregular Mutation Trap",
+                                "The bird flyed into the sky.",
+                                "The bird flew into the sky."
+                            ],
+                            [
+                                "Stative Verb Trap",
+                                "She was loving the orchestral concert.",
+                                "She loved the orchestral concert."
+                            ],
+                            [
+                                "Future Time Clause Trap",
+                                "When the bell will ring, we will go.",
+                                "When the bell rings, we will go."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-4-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match each error example to its underlying grammatical trap category.",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "They was running fast.",
+                                "right": "Subject-Auxiliary Agreement Mismatch"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "I was knowing the answer.",
+                                "right": "Stative Verb Continuous Error"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "He throwed the ball.",
+                                "right": "False -ED Irregular Verb Trap"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "When I will see her, I will tell her.",
+                                "right": "Subordinate Time Clause Double Will Error"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Capstone Proofreading Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-5-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Capstone Proofreading Challenge",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-5-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Analyze the multi-sentence passage below and identify the sentences that exhibit flawless verb tense control.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-5-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL sentences that contain FLAWLESS verb tense choices:",
+                        "questions": [
+                            {
+                                "id": "msq1",
+                                "question": "Which sentences demonstrate 100% correct verb tense agreement, aspect, and spelling?",
+                                "options": [
+                                    {
+                                        "id": "a",
+                                        "text": "By the time the expedition reached the summit, they had exhausted their supplies.",
+                                        "isCorrect": true,
+                                        "color": "bg-emerald-500"
+                                    },
+                                    {
+                                        "id": "b",
+                                        "text": "By the time the expedition reached the summit, they exhausted their supplies yesterday.",
+                                        "isCorrect": false,
+                                        "color": "bg-rose-500"
+                                    },
+                                    {
+                                        "id": "c",
+                                        "text": "While Nina was writing her thesis, her brother was reviewing the data.",
+                                        "isCorrect": true,
+                                        "color": "bg-sky-500"
+                                    },
+                                    {
+                                        "id": "d",
+                                        "text": "While Nina was writing her thesis, her brother was knowing the answer.",
+                                        "isCorrect": false,
+                                        "color": "bg-amber-500"
+                                    }
+                                ],
+                                "explanation": "'Had exhausted' correctly marks the prior past event. 'Knowing' is a stative verb that cannot be used in continuous tense."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 45,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "quote-5-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "Mastery Creed: Verbs drive the pulse of human storytelling. Control your tenses, command your timelines, and express every thought with unwavering clarity.",
+                        "author": "AST Grammar Faculty",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-6",
+            "title": "Module Graduation & Final Synthesis",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-6-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎓 Graduation & Capstone Synthesis Evaluation",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-6-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You have completed all 8 packed lessons of the <strong>Verb Mastery & Time-Travel Tenses</strong> module! Complete the final timed challenge below to earn your Module Mastery Badge.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-6-1",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Sequence this multi-temporal story paragraph into perfect narrative order.",
+                        "items": [
+                            {
+                                "id": "1",
+                                "text": "1. Long ago, ancient astronomers HAD CONSTRUCTED stone observatories.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "2",
+                                "text": "2. Yesterday, modern researchers EXAMINED the alignment of the monoliths.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "3",
+                                "text": "3. Currently, the computer algorithms ARE ANALYZING the light data.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "4",
+                                "text": "4. Tomorrow, the team IS GOING TO PUBLISH their complete findings.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "flashcardQuiz-6-1",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq1",
+                                "question": "What is the Past Participle (V3) of the irregular verb 'WRITE'?",
+                                "options": [
+                                    "Written",
+                                    "Wrote",
+                                    "Write",
+                                    "Writing"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Write (V1) -> Wrote (V2) -> Written (V3)."
+                            },
+                            {
+                                "id": "fq2",
+                                "question": "Which auxiliary verb pairs with third-person singular (she/he/it) in Present Perfect?",
+                                "options": [
+                                    "Has",
+                                    "Have",
+                                    "Had",
+                                    "Will"
+                                ],
+                                "correctAnswer": 0,
+                                "explanation": "Third-person singular subjects take 'has + V3' (e.g. 'She has finished')."
+                            }
+                        ],
+                        "points": 20,
+                        "timeLimit": 35,
+                        "mode": "live",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        }
+    ]
+}
