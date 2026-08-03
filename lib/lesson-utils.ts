@@ -159,6 +159,7 @@ export function normalizeSlides(slides: any[]): import("@/types/lesson").Slide[]
     return slides.map((slide, index) => {
         const title = slide.title || slide.name || slide.header || `Slide ${index + 1}`
         return {
+            ...slide,
             id: slide.id || slide._id || `slide-${index + 1}`,
             title: typeof title === 'string' && title.trim() ? title.trim() : `Slide ${index + 1}`,
             status: (slide.status as import("@/types/lesson").SlideStatus) || "uncompleted",

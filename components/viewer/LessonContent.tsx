@@ -12,6 +12,8 @@ import isEqual from 'lodash.isequal';
 import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
 import { useReadAloud } from '@/context/read-aloud-context';
+import { SlideTransitionOverlay } from '@/components/viewer/SlideTransitionOverlay';
+import { getSlideTheme } from '@/lib/slide-themes';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -68,9 +70,16 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     const [componentStates, setComponentStates] = useState<Record<string, any>>(initialComponentStates);
     const [innerStepIndex, setInnerStepIndex] = useState(0);
+    const [showOverlay, setShowOverlay] = useState(false);
+    const prevSlideIndexRef = useRef<number>(-1);
 
     useEffect(() => {
       setInnerStepIndex(0);
+      // Show overlay whenever we actually change slides (skip first load where prev === current)
+      if (prevSlideIndexRef.current !== -1 && prevSlideIndexRef.current !== currentSlideIndex) {
+        setShowOverlay(true);
+      }
+      prevSlideIndexRef.current = currentSlideIndex;
     }, [currentSlideIndex]);
 
     useImperativeHandle(ref, () => ({
@@ -105,6 +114,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         setInnerStepIndex(prev => prev + 1);
       } else if (currentSlideIndex < lesson.slides.length - 1) {
         onSlideChange(currentSlideIndex + 1);
+        // overlay is triggered via the useEffect watching currentSlideIndex
       }
     };
 
@@ -305,6 +315,18 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           </div>
         </main>
 
+        {/* Slide Transition Overlay */}
+        <SlideTransitionOverlay
+          isVisible={showOverlay}
+          lessonId={lesson.id}
+          lessonTitle={lesson.title}
+          slideIndex={currentSlideIndex}
+          slideTitle={lesson.slides[currentSlideIndex]?.title || `Slide ${currentSlideIndex + 1}`}
+          titleAudioUrl={lesson.slides[currentSlideIndex]?.titleAudioUrl}
+          totalSlides={lesson.slides.length}
+          onBegin={() => setShowOverlay(false)}
+        />
+
         {/* Footer Navigation */}
         <footer className="shrink-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30 py-3.5 px-6 shadow-sm">
           <div className="max-w-md mx-auto flex items-center justify-center gap-3">
@@ -334,17 +356,33 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                 End Lesson
                 <LogOut className="h-3.5 w-3.5 ml-1" />
               </Button>
-            ) : (
-              <Button
-                variant="default"
-                className="h-10 px-5 w-full rounded-xl bg-green-600 hover:bg-green-500 text-white font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center"
-                onClick={handleAdvance}
-                disabled={!canGoNext}
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-1.5" />
-              </Button>
-            )}
+            ) : (() => {
+              // Detect if we are on the last component of the current slide (not the last slide)
+              const isLastComponentOfSlide =
+                innerStepIndex >= processedComponents.length - 1 &&
+                currentSlideIndex < lesson.slides.length - 1;
+              const nextSlideTheme = isLastComponentOfSlide
+                ? getSlideTheme(currentSlideIndex + 1)
+                : null;
+              return (
+                <Button
+                  variant="default"
+                  className={cn(
+                    "h-10 px-5 w-full rounded-xl font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center transition-all duration-200",
+                    !isLastComponentOfSlide && "bg-green-600 hover:bg-green-500 text-white"
+                  )}
+                  style={isLastComponentOfSlide && nextSlideTheme ? {
+                    backgroundColor: nextSlideTheme.btnBgHex,
+                    color: nextSlideTheme.btnTextHex,
+                  } : undefined}
+                  onClick={handleAdvance}
+                  disabled={!canGoNext}
+                >
+                  {isLastComponentOfSlide ? "Next Slide" : "Next"}
+                  <ChevronRight className="h-4 w-4 ml-1.5" />
+                </Button>
+              );
+            })()}
           </div>
         </footer>
       </div>

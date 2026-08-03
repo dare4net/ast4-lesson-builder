@@ -17,6 +17,10 @@ export interface Slide {
   components: Component[]
   status: SlideStatus
   state: SlideState
+  /** Pre-generated audio URL for the slide transition cue announcement */
+  titleAudioUrl?: string
+  /** Hash used to detect when the title has changed and needs re-generation */
+  titleTextHash?: string
 }
 
 

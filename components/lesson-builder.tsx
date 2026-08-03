@@ -381,19 +381,45 @@ export function LessonBuilder() {
       })
     })
 
-    // 2. Send ALL items to backend in one call
+    // 1b. Collect slide title cue items (one per slide)
+    type SlideCueItem = { componentId: string; text: string; lessonId: string; slideIdx: number; newHash: string }
+    const slideCueItems: SlideCueItem[] = []
+
+    lesson.slides.forEach((slide, si) => {
+      const rawTitle = `Slide ${si + 1}. ${slide.title}`
+      const cleanTitle = normalizeTextForSpeech(rawTitle)
+      if (!cleanTitle) return
+
+      const newHash = hashText(cleanTitle)
+      const enableCache = process.env.NEXT_PUBLIC_ENABLE_AUDIO_CACHE === 'true'
+      const cueId = `slide-cue-${slide.id}`
+
+      if (enableCache && slide.titleTextHash === newHash && slide.titleAudioUrl) {
+        skippedIds.add(cueId)
+        return // Title unchanged — reuse existing cue audio
+      }
+
+      slideCueItems.push({ componentId: cueId, text: cleanTitle, lessonId, slideIdx: si, newHash })
+    })
+
+    // 2. Send ALL items to backend in one call (components + slide cues together)
+    const allBatchItems = [
+      ...itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId })),
+      ...slideCueItems.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId })),
+    ]
+
     let urlMap: Record<string, string | null> = {}
-    if (itemsToGenerate.length > 0) {
-      urlMap = await generateBatchAudio(itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId })))
+    if (allBatchItems.length > 0) {
+      urlMap = await generateBatchAudio(allBatchItems)
     }
 
     const generated = Object.values(urlMap).filter(Boolean).length
     const skipped = skippedIds.size
 
-    // 3. Patch lesson with new audioUrls and hashes
-    const updatedSlides = lesson.slides.map((slide, si) => ({
-      ...slide,
-      components: slide.components.map((comp, ci) => {
+    // 3. Patch lesson with new audioUrls and hashes for components
+    const updatedSlides = lesson.slides.map((slide, si) => {
+      // Patch component audio
+      const patchedComponents = slide.components.map((comp, ci) => {
         const item = itemsToGenerate.find(i => i.slideIdx === si && i.compIdx === ci)
         if (!item) return comp
         return {
@@ -405,7 +431,20 @@ export function LessonBuilder() {
           }
         }
       })
-    }))
+
+      // Patch slide title cue audio
+      const slideCueItem = slideCueItems.find(i => i.slideIdx === si)
+      const cueId = `slide-cue-${slide.id}`
+      const newTitleAudioUrl = slideCueItem ? (urlMap[cueId] ?? slide.titleAudioUrl) : slide.titleAudioUrl
+      const newTitleTextHash = slideCueItem ? slideCueItem.newHash : slide.titleTextHash
+
+      return {
+        ...slide,
+        components: patchedComponents,
+        titleAudioUrl: newTitleAudioUrl,
+        titleTextHash: newTitleTextHash,
+      }
+    })
 
     const updatedLesson = { ...lesson, slides: updatedSlides }
     lastSavedLessonRef.current = JSON.stringify(updatedLesson)
@@ -432,7 +471,7 @@ export function LessonBuilder() {
 
     toast({
       title: '🎙️ Audio Published!',
-      description: itemsToGenerate.length === 0
+      description: allBatchItems.length === 0
         ? `All audio up to date (${skipped} unchanged)`
         : `Generated: ${generated}${skipped > 0 ? `, Skipped: ${skipped}` : ''}`,
     })
