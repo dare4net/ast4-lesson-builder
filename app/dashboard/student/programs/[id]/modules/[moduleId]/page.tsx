@@ -104,7 +104,8 @@ export default function StudentModuleDetailPage() {
 
     const launchLesson = (lesson: any) => {
         if (!lesson.lessonId && !lesson._id) return
-        router.push(`/viewer/${lesson.lessonId || lesson._id}?userId=${user?.user_id}&token=${token}`)
+        const returnUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.pathname) : ''
+        router.push(`/viewer/${lesson.lessonId || lesson._id}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}&moduleId=${moduleId}`)
     }
 
     if (loading) {

@@ -23,6 +23,8 @@ interface QuizRendererProps {
     }[]
     explanation?: string
   }[]
+  shuffleOptions?: boolean
+  randomizeAnswers?: boolean
   points?: number
   isEditing?: boolean
   scoreContext?: {
@@ -58,6 +60,8 @@ export function QuizRenderer(props: QuizRendererProps) {
   const {
     title = 'Quiz',
     questions = [],
+    shuffleOptions = true,
+    randomizeAnswers = true,
     points = 15,
     isEditing = false,
     mode = 'practice',
@@ -68,13 +72,32 @@ export function QuizRenderer(props: QuizRendererProps) {
     setComponentState
   } = props
 
+  const shouldShuffle = shuffleOptions !== false && randomizeAnswers !== false
+
+  const [processedQuestions, setProcessedQuestions] = useState(questions)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => { setMounted(true) }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+    if (!shouldShuffle || !questions || questions.length === 0) {
+      setProcessedQuestions(questions)
+      return
+    }
+    setProcessedQuestions(questions.map(q => {
+      if (!q.options || q.options.length <= 1) return q
+      return { ...q, options: [...q.options].sort(() => Math.random() - 0.5) }
+    }))
+  }, [mounted, shouldShuffle, questions])
+
   // Construct a proxy component object for the base renderer
   const component: Component = {
     id,
     type: 'quiz',
     state: componentState as any,
     status: (props.status || (savedState as any)?.status || 'uncompleted') as any,
-    props: { title, questions },
+    props: { title, questions: processedQuestions },
     mode: mode as any
   } as Component
 
@@ -93,7 +116,7 @@ export function QuizRenderer(props: QuizRendererProps) {
       <div className="duo-card space-y-4">
         <h3 className="text-xl font-bold">{title}</h3>
         <p className="text-muted-foreground">
-          {questions.length} question{questions.length !== 1 ? 's' : ''} • {points} points
+          {processedQuestions.length} question{processedQuestions.length !== 1 ? 's' : ''} • {points} points
         </p>
       </div>
     )
@@ -110,7 +133,7 @@ export function QuizRenderer(props: QuizRendererProps) {
       disabled={disabled}
       onRender={({ state, setState, handleScore, handleRetry, isLive }) => {
         const { currentQuestion, selectedAnswer, isAnswered, score, animationClass } = state
-        const question = questions[currentQuestion]
+        const question = processedQuestions[currentQuestion]
         const isDisabled = disabled || component.state === 'disabled'
 
         if (!question) return null

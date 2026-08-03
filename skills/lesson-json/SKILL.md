@@ -366,7 +366,8 @@ Multiple-choice questions.
       }
     ],
     "showExplanation": true,
-    "shuffleOptions": false,
+    "shuffleOptions": true,
+    "randomizeAnswers": true,
     "points": 10,
     "mode": "live",
     "state": "active",
@@ -382,7 +383,7 @@ Multiple-choice questions.
 |---|---|---|
 | `questions` | `Question[]` | At least 1 required |
 | `showExplanation` | `boolean` | Show explanation text after answer |
-| `shuffleOptions` | `boolean` | Randomise option order |
+| `shuffleOptions` / `randomizeAnswers` | `boolean` | Randomise option order for students (Default: `true`) |
 | `points` | `number` (0–100) | Points per correctly answered question |
 | `mode` | `"practice" \| "live"` | Default `"practice"` |
 | `state` | `"active" \| "disabled"` | |

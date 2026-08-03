@@ -276,7 +276,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
         return;
       }
 
-      if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+      if (window.history.length > 1) {
         router.back();
         return;
       }

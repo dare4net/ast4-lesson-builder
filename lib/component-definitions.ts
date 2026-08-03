@@ -276,7 +276,8 @@ export const componentDefinitions: ComponentDefinition[] = [
         },
       ],
       showExplanation: true,
-      shuffleOptions: false,
+      shuffleOptions: true,
+      randomizeAnswers: true,
       points: 10,
       mode: "practice",
       state: "active",
@@ -311,10 +312,10 @@ export const componentDefinitions: ComponentDefinition[] = [
       },
       {
         name: "shuffleOptions",
-        label: "Shuffle Options",
+        label: "Randomize Answers / Options",
         type: "boolean",
         required: false,
-        defaultValue: false,
+        defaultValue: true,
       },
       {
         name: "points",

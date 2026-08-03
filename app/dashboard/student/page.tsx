@@ -36,7 +36,8 @@ export default function StudentDashboardPage() {
     }
 
     const handleLessonRedirect = (lessonId: string) => {
-        router.push(`/viewer/${lessonId}?userId=${user?.user_id}&token=${token}`)
+        const returnUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.pathname) : ''
+        router.push(`/viewer/${lessonId}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}`)
     }
 
     // Derived statistics from real data

@@ -194,6 +194,11 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                       <QuizEditor
                         questions={props.questions || []}
                         onChange={(questions) => handleChange("questions", questions)}
+                        shuffleOptions={props.shuffleOptions !== undefined ? props.shuffleOptions : (props.randomizeAnswers !== undefined ? props.randomizeAnswers : true)}
+                        onShuffleOptionsChange={(val) => {
+                          handleChange("shuffleOptions", val)
+                          handleChange("randomizeAnswers", val)
+                        }}
                       />
                     )}
                     {component.type === "matchingPairs" && propDef.name === "pairs" && (
