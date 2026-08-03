@@ -54,19 +54,8 @@ export type ComponentType =
   | "table"
   | "image"
   | "video"
-  | "codeBlock"
-  | "quote"
 
-  // Visual & Layout Enhancers
-  | "divider"
-  | "box"
-  | "callout"
-  | "grid"
-  | "carousel"
-  | "accordion"
-  | "iconBlock"
-
-  // Interactive Components
+  // Interactive & Gamified Components
   | "quiz"
   | "dragDrop"
   | "matchingPairs"
@@ -74,23 +63,12 @@ export type ComponentType =
   | "flashcards"
   | "codeEditor"
   | "hotspot"
-
-  // Gamified Components
   | "poll"
   | "flashcardQuiz"
   | "multiSelectQuiz"
 
   // Lesson Structure Components
   | "slideTitle"
-  | "lessonIntro"
-  | "lessonSummary"
-  | "lessonComplete"
-
-  // Utility Components
-  | "audioPlayer"
-  | "languageToggle"
-  | "hint"
-  | "notePad"
 
 export interface ComponentDefinition {
   type: ComponentType

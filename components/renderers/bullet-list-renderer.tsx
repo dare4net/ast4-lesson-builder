@@ -141,56 +141,41 @@ export function BulletListRenderer({
       </div>
 
       <ListComponent className={cn(
-        "space-y-4 px-4 mx-auto max-w-2xl", // Center align container
+        "space-y-3 px-2 mx-auto max-w-2xl text-left",
         type === "ordered" ? "list-none counter-reset-item" : "list-none"
       )}>
         {items.map((item, index) => {
-          // If editing or previously completed, show all.
-          // If running: show if index <= currentIndex
           const shouldShow = isEditing || isPreviouslyCompleted || hasStarted
-
           if (!shouldShow) return null
 
-          // Active if it is the current one being typed
           const isActive = !isEditing && !isPreviouslyCompleted && index === currentIndex
-          // render if we have reached this index
           const isVisible = isEditing || isPreviouslyCompleted || index <= currentIndex
-
           if (!isVisible) return null
 
           return (
             <li
               key={index}
-              className={cn(
-                "relative text-slate-700 font-medium leading-tight text-sm md:text-base tracking-tight transition-all duration-300 pl-8",
-                "flex items-start justify-center text-center" // Center contents
-              )}
+              className="relative text-slate-800 dark:text-slate-200 font-medium leading-relaxed text-sm md:text-base flex items-start gap-3 transition-all duration-300 group"
             >
-              <div className="flex flex-col items-center w-full">
-                {/* Marker */}
-                <span className="text-emerald-500 font-black text-xs mb-1 uppercase tracking-widest bg-emerald-50/50 px-2 py-0.5 rounded-full border border-emerald-100/50">
-                  {type === "ordered" ? `Step ${index + 1}` : "•"}
-                </span>
+              {/* Marker Badge */}
+              <div className="shrink-0 flex items-center justify-center min-w-[28px] h-7 mt-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black text-xs px-2 shadow-xs">
+                {type === "ordered" ? `${index + 1}` : "•"}
+              </div>
 
-                {/* Content */}
-                <span className="block mt-1">
-                  {/* We only use AnimatedListItem if it's the active one. 
-                       Once completed (index < currentIndex), we just show static text to save resources? 
-                       Or keep it mounted. Keeping mounted is safer for layout stability. */}
-                  {(isActive || (index < currentIndex && !isPreviouslyCompleted && !isEditing)) ? (
-                    <AnimatedListItem
-                      item={item}
-                      index={index}
-                      isActive={isActive}
-                      onComplete={handleItemComplete}
-                      componentId={id!}
-                      isPreviouslyCompleted={isPreviouslyCompleted}
-                    />
-                  ) : (
-                    // Static Fallback for editing/completed/already typed
-                    <span>{item.replace(/<[^>]*>?/gm, "")}</span>
-                  )}
-                </span>
+              {/* Content */}
+              <div className="flex-1 min-w-0 pt-0.5">
+                {(isActive || (index < currentIndex && !isPreviouslyCompleted && !isEditing)) ? (
+                  <AnimatedListItem
+                    item={item}
+                    index={index}
+                    isActive={isActive}
+                    onComplete={handleItemComplete}
+                    componentId={id!}
+                    isPreviouslyCompleted={isPreviouslyCompleted}
+                  />
+                ) : (
+                  <span>{item.replace(/<[^>]*>?/gm, "")}</span>
+                )}
               </div>
             </li>
           )

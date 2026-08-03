@@ -8,15 +8,11 @@ description: How to author a complete, valid lesson JSON file that works exactly
 
 The AST Lesson Builder stores lessons as a single self-contained JSON file. This SKILL.md is the authoritative guide for generating a lesson JSON that is **100% compatible** with the builder, the viewer, and the database.
 
-> **IMPORTANT - Implemented Components Only**:
-> The following component types are fully registered and functional in the renderer:
-> - **Content**: `heading`, `paragraph`, `bulletList`, `image`, `table`
-> - **Interactive**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`
-> - **Structure**: `slideTitle` (renders as a heading)
->
-> The following types are **NOT registered** and will render a fallback placeholder — **DO NOT USE** them:
-> `video`, `codeBlock`, `quote`, `lessonIntro`, `lessonSummary`, `lessonComplete`.
-> Use `heading` + `paragraph` + `bulletList` + `image` in combination instead.
+> **IMPORTANT - Official Component Catalog**:
+> The following component types are 100% supported, registered, and functional in the builder and viewer:
+> - **Content**: `heading`, `paragraph`, `bulletList`, `image`, `table`, `video` (YouTube embed)
+> - **Interactive & Gamified**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`
+> - **Structure**: `slideTitle` (renders as heading)
 
 ---
 

@@ -18,6 +18,7 @@ const componentRenderers: ComponentRenderers = {
   ),
   image: dynamic(() => import("@/components/renderers/image-renderer").then((mod) => mod.ImageRenderer)),
   table: dynamic(() => import("@/components/renderers/table-renderer").then((mod) => mod.TableRenderer)),
+  video: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
 
   // Interactive Components
   quiz: dynamic(() => import("@/components/renderers/quiz-renderer").then((mod) => mod.QuizRenderer)),

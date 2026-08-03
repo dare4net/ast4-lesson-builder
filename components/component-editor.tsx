@@ -173,6 +173,21 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                   </div>
                 )}
 
+                {propDef.type === "video" && (
+                  <Input
+                    id={propDef.name}
+                    value={props[propDef.name] || props.url || props.src || ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      handleChange(propDef.name, val);
+                      handleChange("url", val);
+                      handleChange("src", val);
+                    }}
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold placeholder:text-slate-700"
+                  />
+                )}
+
                 {propDef.type === "componentArray" && (
                   <div className="space-y-4 pt-2">
                     {component.type === "quiz" && propDef.name === "questions" && (
