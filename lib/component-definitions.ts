@@ -921,6 +921,13 @@ export const componentDefinitions: ComponentDefinition[] = [
         ],
       },
       {
+        name: "showNumbers",
+        label: "Show Pin Numbers in Explore Mode",
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+      },
+      {
         name: "mode",
         label: "Mode",
         type: "select",
@@ -946,6 +953,203 @@ export const componentDefinitions: ComponentDefinition[] = [
   },
 
   // Gamified Components
+  {
+    type: "poll",
+    label: "Poll",
+    category: "interactive",
+    description: "Interactive opinion poll with live response tallies and animated percentage bars.",
+    icon: "📊",
+    defaultProps: {
+      question: "Which state of matter has a fixed shape and volume?",
+      options: [
+        { id: "opt1", text: "Solid" },
+        { id: "opt2", text: "Liquid" },
+        { id: "opt3", text: "Gas" },
+        { id: "opt4", text: "Plasma" },
+      ],
+      points: 5,
+    },
+    propDefinitions: [
+      {
+        name: "question",
+        label: "Poll Question",
+        type: "string",
+        required: true,
+        defaultValue: "Which state of matter has a fixed shape and volume?",
+      },
+      {
+        name: "options",
+        label: "Poll Options",
+        type: "componentArray",
+        required: true,
+        defaultValue: [
+          { id: "opt1", text: "Solid" },
+          { id: "opt2", text: "Liquid" },
+          { id: "opt3", text: "Gas" },
+          { id: "opt4", text: "Plasma" },
+        ],
+      },
+      {
+        name: "points",
+        label: "Participation Points",
+        type: "number",
+        required: false,
+        defaultValue: 5,
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
+    ],
+  },
+  {
+    type: "flashcardQuiz",
+    label: "Flashcard Quiz",
+    category: "interactive",
+    description: "Multi-question quiz where the question flips onto a card, then answer options flip in sequentially for the student to pick.",
+    icon: "🎴",
+    defaultProps: {
+      questions: [
+        {
+          id: "fq1",
+          question: "What is the capital of France?",
+          options: ["Paris", "London", "Berlin", "Madrid"],
+          correctAnswer: 0,
+        },
+        {
+          id: "fq2",
+          question: "What is 7 × 8?",
+          options: ["54", "56", "63", "64"],
+          correctAnswer: 1,
+        },
+      ],
+      points: 20,
+      mode: "practice",
+      state: "active",
+    },
+    propDefinitions: [
+      {
+        name: "questions",
+        label: "Questions",
+        type: "componentArray",
+        required: true,
+        defaultValue: [
+          {
+            id: "fq1",
+            question: "What is the capital of France?",
+            options: ["Paris", "London", "Berlin", "Madrid"],
+            correctAnswer: 0,
+          },
+        ],
+      },
+      {
+        name: "points",
+        label: "Total Points",
+        type: "number",
+        required: false,
+        defaultValue: 20,
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice", value: "practice" },
+          { label: "Live", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
+    ],
+  },
+  {
+    type: "multiSelectQuiz",
+    label: "Multi-Select Quiz",
+    category: "interactive",
+    description: "Quiz where students select ALL correct answers from colorful option cards, with partial-score feedback.",
+    icon: "☑️",
+    defaultProps: {
+      title: "Select All That Apply",
+      questions: [
+        {
+          id: "q1",
+          question: "Which of the following are mammals?",
+          options: [
+            { id: "a", text: "Dog", isCorrect: true, color: "bg-violet-500" },
+            { id: "b", text: "Eagle", isCorrect: false, color: "bg-amber-500" },
+            { id: "c", text: "Whale", isCorrect: true, color: "bg-sky-500" },
+            { id: "d", text: "Salmon", isCorrect: false, color: "bg-rose-500" },
+          ],
+        },
+      ],
+      points: 15,
+      mode: "practice",
+      state: "active",
+    },
+    propDefinitions: [
+      {
+        name: "title",
+        label: "Quiz Title",
+        type: "string",
+        required: false,
+        defaultValue: "Select All That Apply",
+      },
+      {
+        name: "questions",
+        label: "Questions",
+        type: "componentArray",
+        required: true,
+        defaultValue: [],
+      },
+      {
+        name: "points",
+        label: "Total Points",
+        type: "number",
+        required: false,
+        defaultValue: 15,
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice", value: "practice" },
+          { label: "Live", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
+    ],
+  },
 
   // Structure Components
   {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
@@ -22,6 +22,7 @@ interface LessonContentProps {
   onSlidesUpdate?: (updatedSlides: Lesson['slides']) => void;
   onProgressUpdate?: (progress: number) => void;
   savedScore?: number;
+  onEndLesson?: () => void;
 }
 
 export interface LessonContentRef {
@@ -46,6 +47,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     initialComponentStates = {},
     onSlidesUpdate,
     onProgressUpdate,
+    onEndLesson,
   }, ref) {
     const { playFeedback } = useFeedback();
     const { currentScore: score, totalScore: totalPossible } = useScoring();
@@ -316,15 +318,33 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
               Previous
             </Button>
 
-            <Button
-              variant="default"
-              className="h-10 px-5 w-full rounded-xl bg-green-600 hover:bg-green-500 text-white font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center"
-              onClick={handleAdvance}
-              disabled={!canGoNext}
-            >
-              Next
-              <ChevronRight className="h-4 w-4 ml-1.5" />
-            </Button>
+            {currentSlideIndex === lesson.slides.length - 1 && innerStepIndex >= (processedComponents.length - 1) ? (
+              <Button
+                variant="default"
+                className="h-10 px-5 w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider shadow-md shadow-rose-600/20 flex items-center justify-center gap-1.5 transition-all"
+                onClick={() => {
+                  playFeedback('uiClick');
+                  if (onEndLesson) {
+                    onEndLesson();
+                  } else if (window.history.length > 1) {
+                    window.history.back();
+                  }
+                }}
+              >
+                End Lesson
+                <LogOut className="h-3.5 w-3.5 ml-1" />
+              </Button>
+            ) : (
+              <Button
+                variant="default"
+                className="h-10 px-5 w-full rounded-xl bg-green-600 hover:bg-green-500 text-white font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center"
+                onClick={handleAdvance}
+                disabled={!canGoNext}
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-1.5" />
+              </Button>
+            )}
           </div>
         </footer>
       </div>

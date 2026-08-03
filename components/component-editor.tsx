@@ -18,6 +18,10 @@ import { MatchingPairsEditor } from "@/components/editors/matching-pairs-editor"
 import { DragDropEditor } from "@/components/editors/drag-drop-editor"
 import { FlashcardsEditor } from "@/components/editors/flashcards-editor"
 import { HotspotEditor } from "@/components/editors/hotspot-editor"
+import { TableEditor } from "@/components/editors/table-editor"
+import { PollEditor } from "@/components/editors/poll-editor"
+import { FlashcardQuizEditor } from "@/components/editors/flashcard-quiz-editor"
+import { MultiSelectQuizEditor } from "@/components/editors/multi-select-quiz-editor"
 import { BulletListEditor } from "@/components/editors/bullet-list-editor"
 import { FillInTheBlankEditor } from "@/components/editors/fill-in-the-blank-editor"
 import { CodeEditorEditor } from "@/components/editors/code-editor-editor"
@@ -224,6 +228,32 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                         onInitialCodeChange={(code) => handleChange("initialCode", code)}
                         onLanguageChange={(lang) => handleChange("language", lang)}
                         onTestCasesChange={(testCases) => handleChange("testCases", testCases)}
+                      />
+                    )}
+                    {component.type === "table" && propDef.name === "data" && (
+                      <TableEditor
+                        component={{ ...component, props }}
+                        updateComponent={(newProps) => updateComponent(newProps)}
+                      />
+                    )}
+                    {component.type === "poll" && propDef.name === "options" && (
+                      <PollEditor
+                        question={props.question || ""}
+                        options={props.options || []}
+                        onQuestionChange={(q) => handleChange("question", q)}
+                        onOptionsChange={(opts) => handleChange("options", opts)}
+                      />
+                    )}
+                    {component.type === "flashcardQuiz" && propDef.name === "questions" && (
+                      <FlashcardQuizEditor
+                        questions={props.questions || []}
+                        onQuestionsChange={(qs) => handleChange("questions", qs)}
+                      />
+                    )}
+                    {component.type === "multiSelectQuiz" && propDef.name === "questions" && (
+                      <MultiSelectQuizEditor
+                        questions={props.questions || []}
+                        onQuestionsChange={(qs) => handleChange("questions", qs)}
                       />
                     )}
                   </div>

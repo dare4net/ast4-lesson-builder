@@ -76,6 +76,9 @@ export type ComponentType =
   | "hotspot"
 
   // Gamified Components
+  | "poll"
+  | "flashcardQuiz"
+  | "multiSelectQuiz"
 
   // Lesson Structure Components
   | "slideTitle"

@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Clock, User, Award, ArrowLeft } from 'lucide-react';
+import { Clock, User, Award, ArrowLeft, LogOut } from 'lucide-react';
 import { ScoringProvider } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
@@ -17,9 +17,11 @@ import { normalizeSlides, formatSlideTitle } from '@/lib/lesson-utils';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
 import { apiClient } from '@/lib/api-client';
 
+import { useRouter } from 'next/navigation';
 import { ReadAloudProvider } from '@/context/read-aloud-context';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
+  const router = useRouter();
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
     if (initialLesson && initialInteraction?.lessonState?.slides) {
       const normalizedSlides = normalizeSlides(initialLesson.slides);
@@ -206,6 +208,33 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     setCurrentSlideIndex(0);
   };
 
+  const handleEndLesson = useCallback(() => {
+    performSave(true);
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const returnUrl = searchParams.get('returnUrl');
+      const paramModuleId = searchParams.get('moduleId');
+      const lessonModuleId = (lessonData as any)?.moduleId || (lessonData as any)?.module_id;
+      const moduleId = paramModuleId || lessonModuleId;
+
+      if (returnUrl) {
+        router.push(returnUrl);
+        return;
+      }
+
+      if (moduleId) {
+        router.push(`/studio/modules/${moduleId}`);
+        return;
+      }
+
+      if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+        router.back();
+        return;
+      }
+    }
+    resetViewer();
+  }, [performSave, router, lessonData]);
+
   const handleJumpToSlide = (index: number) => {
     setCurrentSlideIndex(index);
     lessonContentRef.current?.setCurrentSlideIndex(index);
@@ -300,12 +329,12 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       {/* Footer Section */}
       <div className="p-4 border-t border-slate-800 bg-slate-900">
         <Button
-          variant="outline"
-          className="w-full rounded-xl border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold h-10 flex items-center justify-center gap-2"
-          onClick={resetViewer}
+          variant="default"
+          className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider transition-all h-10 flex items-center justify-center gap-2 shadow-md shadow-rose-600/20"
+          onClick={handleEndLesson}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Exit Lesson
+          <LogOut className="w-3.5 h-3.5" />
+          End Lesson
         </Button>
       </div>
     </div>
@@ -378,6 +407,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                   onProgressUpdate={handleProgressUpdate}
                   onSlidesUpdate={handleSlidesUpdate}
                   onScoreUpdate={handleScoreUpdate}
+                  onEndLesson={handleEndLesson}
                 />
               </div>
             </div>

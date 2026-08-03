@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Clock, User, Award, Lock, Unlock, CheckCircle2, Circle, ArrowLeft } from 'lucide-react';
+import { Clock, User, Award, Lock, Unlock, CheckCircle2, Circle, ArrowLeft, LogOut } from 'lucide-react';
 import type { Lesson, SlideState, SlideStatus } from '@/types/lesson';
 import { TopProgressBar } from './TopProgressBar';
 import { ScoringProvider } from '@/context/scoring-context';
@@ -257,6 +257,33 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     setSlideProgress(progress);
   }, []);
 
+  const handleEndLesson = useCallback(() => {
+    saveInteraction();
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      const returnUrl = searchParams.get('returnUrl');
+      const paramModuleId = searchParams.get('moduleId');
+      const lessonModuleId = (lessonData as any)?.moduleId || (lessonData as any)?.module_id;
+      const moduleId = paramModuleId || lessonModuleId;
+
+      if (returnUrl) {
+        router.push(returnUrl);
+        return;
+      }
+
+      if (moduleId) {
+        router.push(`/studio/modules/${moduleId}`);
+        return;
+      }
+
+      if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+        router.back();
+        return;
+      }
+    }
+    router.push('/dashboard/student');
+  }, [saveInteraction, router, lessonData]);
+
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full bg-slate-900 text-white border-r border-slate-800">
       {/* Lesson Title Section */}
@@ -360,19 +387,12 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       {/* Footer Section */}
       <div className="p-4 border-t border-slate-800 bg-slate-900">
         <Button
-          variant="outline"
-          className="w-full rounded-xl border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold h-10 flex items-center justify-center gap-2"
-          onClick={() => {
-            saveInteraction();
-            if (window.history.length > 1) {
-              router.back();
-            } else {
-              router.push('/dashboard/student');
-            }
-          }}
+          variant="default"
+          className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider transition-all h-10 flex items-center justify-center gap-2 shadow-md shadow-rose-600/20"
+          onClick={handleEndLesson}
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Module
+          <LogOut className="w-3.5 h-3.5" />
+          End Lesson
         </Button>
       </div>
     </div>
@@ -467,6 +487,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                   onSlidesUpdate={handleSlidesUpdate}
                   onProgressUpdate={handleProgressUpdate}
                   onScoreUpdate={handleScoreUpdate}
+                  onEndLesson={handleEndLesson}
                 />
               ) : (
                 <div className="flex-1 flex items-center justify-center bg-slate-950 h-full">

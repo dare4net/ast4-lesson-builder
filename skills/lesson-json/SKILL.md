@@ -9,8 +9,14 @@ description: How to author a complete, valid lesson JSON file that works exactly
 The AST Lesson Builder stores lessons as a single self-contained JSON file. This SKILL.md is the authoritative guide for generating a lesson JSON that is **100% compatible** with the builder, the viewer, and the database.
 
 > **IMPORTANT - Implemented Components Only**:
-> Currently active renderers: `heading`, `paragraph`, `bulletList`, `image`, `video`, `codeBlock` (codeEditor), `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`.
-> Unimplemented / Legacy (DO NOT USE): `slideTitle`, `lessonIntro`, `quote`, `table`, `lessonSummary`, `lessonComplete`. Use combinations of `heading`, `paragraph`, `bulletList`, etc. instead.
+> The following component types are fully registered and functional in the renderer:
+> - **Content**: `heading`, `paragraph`, `bulletList`, `image`, `table`
+> - **Interactive**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`
+> - **Structure**: `slideTitle` (renders as a heading)
+>
+> The following types are **NOT registered** and will render a fallback placeholder — **DO NOT USE** them:
+> `video`, `codeBlock`, `quote`, `lessonIntro`, `lessonSummary`, `lessonComplete`.
+> Use `heading` + `paragraph` + `bulletList` + `image` in combination instead.
 
 ---
 
@@ -653,6 +659,176 @@ Clickable regions on an image.
 
 ---
 
+#### `poll`
+Opinion poll — students pick one option and see live percentage bars. **No live/practice mode distinction** — polls are always open voting.
+
+```json
+{
+  "id": "poll-<ts>",
+  "type": "poll",
+  "props": {
+    "question": "Which state of matter has a fixed shape and volume?",
+    "options": [
+      { "id": "opt1", "text": "Solid" },
+      { "id": "opt2", "text": "Liquid" },
+      { "id": "opt3", "text": "Gas" },
+      { "id": "opt4", "text": "Plasma" }
+    ],
+    "points": 5,
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted"
+}
+```
+
+| Prop | Type | Notes |
+|---|---|---|
+| `question` | `string` | Max 120 chars |
+| `options` | `PollOption[]` | 2–6 options |
+| `points` | `number` | Participation points (not scored) |
+| `state` | `"active" \| "disabled"` | |
+
+**PollOption object:**
+```json
+{ "id": "opt1", "text": "Option label" }
+```
+> **Rule**: Option text max 60 chars. Minimum 2, maximum 6 options. No `isCorrect` field — polls have no right answer.
+
+---
+
+#### `flashcardQuiz`
+Multi-question quiz using flip-card mechanics. The main question card flips to reveal the question, then 4 answer option cards flip in sequentially. Student picks one.
+
+```json
+{
+  "id": "flashcardQuiz-<ts>",
+  "type": "flashcardQuiz",
+  "props": {
+    "questions": [
+      {
+        "id": "fq1",
+        "question": "What is the capital of France?",
+        "options": ["Paris", "London", "Berlin", "Madrid"],
+        "correctAnswer": 0,
+        "explanation": "Paris is the capital and largest city of France."
+      },
+      {
+        "id": "fq2",
+        "question": "What is 7 × 8?",
+        "options": ["54", "56", "63", "64"],
+        "correctAnswer": 1
+      }
+    ],
+    "points": 20,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Notes |
+|---|---|---|
+| `questions` | `FlashcardQuestion[]` | At least 1 required |
+| `points` | `number` (0–100) | Total divided equally across questions |
+| `timeLimit` | `number` | Seconds for live mode timer. Default 15s |
+| `mode` | `"practice" \| "live"` | Live shows start screen + countdown timer |
+| `state` | `"active" \| "disabled"` | |
+
+**FlashcardQuestion object:**
+```json
+{
+  "id": "fq<N>",
+  "question": "Question text (max 120 chars)",
+  "options": ["Option A", "Option B", "Option C", "Option D"],
+  "correctAnswer": 0,
+  "explanation": "Optional explanation shown after answering"
+}
+```
+> **Rules**:
+> - `options` is an array of plain strings (not objects). Min 2, max 4 options. Max 50 chars each.
+> - `correctAnswer` is the **zero-based index** of the correct option in the `options` array.
+> - `id` must be unique per question. Use `fq<N>` or `fq<timestamp>`.
+
+---
+
+#### `multiSelectQuiz`
+Quiz where students select ALL correct answers from a 2×2 coloured card grid. Supports partial scoring.
+
+```json
+{
+  "id": "multiSelectQuiz-<ts>",
+  "type": "multiSelectQuiz",
+  "props": {
+    "title": "Select All That Apply",
+    "questions": [
+      {
+        "id": "msq1",
+        "question": "Which of the following are mammals?",
+        "options": [
+          { "id": "a", "text": "Dog", "isCorrect": true, "color": "bg-violet-500" },
+          { "id": "b", "text": "Eagle", "isCorrect": false, "color": "bg-amber-500" },
+          { "id": "c", "text": "Whale", "isCorrect": true, "color": "bg-sky-500" },
+          { "id": "d", "text": "Salmon", "isCorrect": false, "color": "bg-rose-500" }
+        ],
+        "explanation": "Dogs and whales are mammals. Eagles and salmon are not."
+      }
+    ],
+    "points": 15,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Notes |
+|---|---|---|
+| `title` | `string` | Header displayed above the component |
+| `questions` | `MultiSelectQuestion[]` | At least 1 required |
+| `points` | `number` (0–100) | Total, divided across questions; partial credit per question |
+| `timeLimit` | `number` | Seconds for live mode timer. Default 15s |
+| `mode` | `"practice" \| "live"` | Live shows start screen + countdown timer |
+| `state` | `"active" \| "disabled"` | |
+
+**MultiSelectQuestion object:**
+```json
+{
+  "id": "msq<N>",
+  "question": "Question text (max 120 chars)",
+  "options": [
+    { "id": "a", "text": "Option text (max 50 chars)", "isCorrect": true, "color": "bg-violet-500" },
+    { "id": "b", "text": "Option text", "isCorrect": false, "color": "bg-amber-500" },
+    { "id": "c", "text": "Option text", "isCorrect": false, "color": "bg-sky-500" },
+    { "id": "d", "text": "Option text", "isCorrect": false, "color": "bg-rose-500" }
+  ],
+  "explanation": "Optional explanation shown after submit"
+}
+```
+
+**Fixed colour palette** (assigned by position — always use in this order):
+
+| Pos | `color` value |
+|---|---|
+| 0 | `"bg-violet-500"` |
+| 1 | `"bg-amber-500"` |
+| 2 | `"bg-sky-500"` |
+| 3 | `"bg-rose-500"` |
+
+> **Rules**:
+> - Min 2, max 4 options per question.
+> - At least 1 option must have `isCorrect: true`.
+> - Option text max 50 chars.
+> - `color` must follow the fixed palette above (matching position index).
+> - Scoring: perfect answer (all correct, none wrong) = full points per question; partial = proportional; wrong picks reduce score.
+
+---
+
 ### 4.3 Structure Components (category: `"structure"`)
 
 ---
@@ -862,6 +1038,15 @@ Use `codeBlock` (shows reference code) + `codeEditor` (learner writes solution).
 ### Pattern F — Final assessment slide
 Multiple `quiz` components on one slide, all `mode: "live"`, `showExplanation: true`.
 
+### Pattern G — Gamified flashcard quiz
+Single `flashcardQuiz` per slide in `"live"` mode. Set `"timeLimit": 30` for sufficient reading time.
+
+### Pattern H — Select-all knowledge check
+Single `multiSelectQuiz` per slide in `"practice"` or `"live"` mode. Ensure at least 1 option has `isCorrect: true` per question and colour palette follows positional order.
+
+### Pattern I — Class opinion poll
+Single `poll` component, no `mode` field. Use for warm-ups, class surveys, or exit tickets. Set `points` for participation credit.
+
 ---
 
 ## 8. Validation Checklist
@@ -872,11 +1057,38 @@ Before submitting a lesson JSON for loading:
 - [ ] `slides` array has at least 1 slide
 - [ ] Every slide has a unique `id`
 - [ ] Every component has a unique `id`
-- [ ] Only implemented component types are used (`heading`, `paragraph`, `bulletList`, `image`, `video`, `codeBlock`, `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`) — NO `slideTitle`, `table`, `quote`, `lessonIntro`, `lessonSummary`, `lessonComplete`
+- [ ] Only implemented component types are used — no `slideTitle`, `lessonIntro`, `lessonSummary`, `lessonComplete`, `quote`
 - [ ] Each `quiz` has at least 1 question with exactly 1 `isCorrect: true` option
+- [ ] Each `multiSelectQuiz` question has at least 1 `isCorrect: true` option and uses the fixed colour palette in positional order
+- [ ] `flashcardQuiz` questions use `correctAnswer` as a zero-based index, not an ID
+- [ ] `poll` options have no `isCorrect` field — polls are unscored
 - [ ] `fillInTheBlank` has `{{blank}}` count matching `blanks.length`
 - [ ] `dragDrop` items have `correctIndex` values forming 0-based sequence with no gaps
 - [ ] `hotspot.x` and `hotspot.y` are between 0.0 and 1.0
-- [ ] Interactive components have `mode` set at **both** component root AND inside `props`
-- [ ] Live mode activities set explicit `"timeLimit"` in `props` (e.g. `20`, `30`, `60`) if the 10s default is too short
+- [ ] Interactive components (`quiz`, `dragDrop`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `hotspot`, `flashcardQuiz`, `multiSelectQuiz`) have `mode` set at **both** component root AND inside `props`
+- [ ] `poll` does NOT have a `mode` field — it is always open voting
+- [ ] Live mode activities set explicit `"timeLimit"` in `props` if the 15s default is too short
 - [ ] All IDs within lesson are globally unique (no duplicates across slides or components)
+
+---
+
+## 9. Complete Component Type Registry
+
+| Type | Category | Mode | Scored | Live Timer |
+|---|---|---|---|---|
+| `paragraph` | content | — | ✗ | ✗ |
+| `heading` | content | — | ✗ | ✗ |
+| `bulletList` | content | — | ✗ | ✗ |
+| `image` | content | — | ✗ | ✗ |
+| `table` | content | — | ✗ | ✗ |
+| `slideTitle` | content | — | ✗ | ✗ |
+| `quiz` | interactive | practice/live | ✅ | ✅ |
+| `flashcards` | interactive | practice/live | ✗ | ✗ |
+| `fillInTheBlank` | interactive | practice/live | ✅ | ✅ |
+| `matchingPairs` | interactive | practice/live | ✅ | ✅ |
+| `dragDrop` | interactive | practice/live | ✅ | ✅ |
+| `hotspot` | interactive | practice/live | ✅ | ✅ |
+| `codeEditor` | interactive | practice/live | ✅ | ✗ |
+| `poll` | interactive | — | participation only | ✗ |
+| `flashcardQuiz` | interactive | practice/live | ✅ | ✅ |
+| `multiSelectQuiz` | interactive | practice/live | ✅ | ✅ |

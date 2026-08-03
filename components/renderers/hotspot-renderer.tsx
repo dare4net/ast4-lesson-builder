@@ -24,6 +24,7 @@ interface HotspotRendererProps {
   hotspots: Hotspot[]
   isEditing?: boolean
   points?: number
+  showNumbers?: boolean
   scoreContext?: {
     score: number
     totalPossible: number
@@ -65,47 +66,23 @@ function HotspotContent({
   props: HotspotRendererProps
 }) {
   const [mounted, setMounted] = useState(false)
+  const [lastMiss, setLastMiss] = useState<{ x: number; y: number; id: number } | null>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { discoveredHotspots } = state
+  const behavior = props.behavior || ((props as any).subType === 'clickableImage' ? 'discovery' : 'quiz')
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Calculate image dimensions when it loads
-  const updateImageSize = () => {
-    // Only used for sizing? Logic seems to just use CSS positioning (%).
-    // Maybe previously it did calculations?
-    // Step 488 shows `updateImageSize` setting `imageSize` state but that state was unused in render?
-    // Wait, Step 488, line 56: `const [imageSize, setImageSize] = useState(...)`
-    // Line 112: `setImageSize(...)`.
-    // It is NEVER used in render in Step 488?
-    // Yes, Step 488 lines 193-236 don't use `imageSize`.
-    // The previous implementation calculated size but didn't use it.
-    // I can remove it.
-  }
-
-  // Effect to check validation?
-  // Previous used effect at line 84: `setComponentState` if `setComponentState` exists.
-  // ScoredRenderer handles persistence.
-  // But we need to handle "All Discovered" logic for Live Mode scoring.
-
-  // Logic from `handleHotspotClick` (Step 488 line 119):
-  // Check validation immediately.
-
   const handleHotspotClick = (hotspotId: string) => {
     if (disabledProp || discoveredHotspots.includes(hotspotId)) return
 
     const newDiscovered = [...discoveredHotspots, hotspotId]
-    const behavior = props.behavior || (props as any).subType === 'clickableImage' ? 'discovery' : 'quiz'
-
-    // Check completion
     const allDiscovered = newDiscovered.length === hotspots.length
 
-    // Scoring (Using standardized handleScore)
-    // Only award points in Quiz mode, or if Discovery mode is treated as a task
     if (allDiscovered) {
       handleScore(true)
     }
@@ -117,8 +94,37 @@ function HotspotContent({
     }))
   }
 
+  const handleStageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (disabledProp || props.isEditing || behavior === 'discovery') return
+
+    if (!imageRef.current) return
+    const rect = imageRef.current.getBoundingClientRect()
+    const clickX = ((e.clientX - rect.left) / rect.width) * 100
+    const clickY = ((e.clientY - rect.top) / rect.height) * 100
+
+    // Find any undiscovered hotspot within hit radius (12%)
+    let hitHotspot: Hotspot | null = null
+    for (const spot of hotspots) {
+      if (discoveredHotspots.includes(spot.id)) continue
+      const spotX = spot.x * 100
+      const spotY = spot.y * 100
+      const dist = Math.sqrt(Math.pow(clickX - spotX, 2) + Math.pow(clickY - spotY, 2))
+      if (dist <= 12) {
+        hitHotspot = spot
+        break
+      }
+    }
+
+    if (hitHotspot) {
+      handleHotspotClick(hitHotspot.id)
+    } else {
+      setLastMiss({ x: clickX, y: clickY, id: Date.now() })
+    }
+  }
+
   const onLocalRetry = () => {
-    handleRetry() // Centralized handler
+    handleRetry()
+    setLastMiss(null)
     setState(prev => ({
       ...prev,
       discoveredHotspots: [],
@@ -142,7 +148,7 @@ function HotspotContent({
           {hotspots.map((hotspot) => (
             <div
               key={hotspot.id}
-              className="absolute w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-xs"
+              className="absolute w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-xs font-bold"
               style={{
                 left: `${hotspot.x * 100}%`,
                 top: `${hotspot.y * 100}%`,
@@ -178,11 +184,14 @@ function HotspotContent({
             <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
           </div>
           <div className="flex items-center gap-2">
-            {(props.behavior === 'discovery' || (props as any).subType === 'clickableImage') && (
-              <span className="px-2 py-1 bg-emerald-50 text-emerald-600 rounded text-[7px] font-black border border-emerald-100 uppercase tracking-widest">
-                Explore
-              </span>
-            )}
+            <span className={cn(
+              "px-2 py-1 rounded text-[7px] font-black uppercase tracking-widest border",
+              behavior === 'discovery'
+                ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                : "bg-purple-50 text-purple-600 border-purple-100"
+            )}>
+              {behavior === 'discovery' ? 'Explore Mode' : 'Hidden Target Challenge'}
+            </span>
             {isLive && (
               <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-600 rounded text-[7px] font-black border border-blue-200 uppercase tracking-widest">
                 <CheckCircle2 className="h-2.5 w-2.5" />
@@ -196,24 +205,52 @@ function HotspotContent({
       {/* CENTER SECTION: Image Stage */}
       <div className="flex-1 flex flex-col justify-center min-h-0 py-2">
         <div className="flex items-center justify-center w-full h-full">
-          <div className="relative inline-block shrink-0 rounded-2xl border-2 border-emerald-100 bg-white overflow-hidden shadow-sm group/stage max-w-full" ref={containerRef}>
+          <div
+            className={cn(
+              "relative inline-block shrink-0 rounded-2xl border-2 border-emerald-100 bg-white overflow-hidden shadow-sm group/stage max-w-full",
+              behavior === 'quiz' && discoveredHotspots.length < hotspots.length && "cursor-crosshair"
+            )}
+            ref={containerRef}
+            onClick={handleStageClick}
+          >
             <img
               ref={imageRef}
               src={image || "/placeholder.svg?height=300&width=400"}
               alt={title}
-              className="max-h-[55vh] w-auto h-auto object-contain transition-transform duration-700 group-hover/stage:scale-[1.01] block"
+              className="max-h-[55vh] w-auto h-auto object-contain transition-transform duration-700 group-hover/stage:scale-[1.01] block select-none"
+              draggable={false}
             />
+
+            {/* Miss indicator ring */}
+            {lastMiss && (
+              <div
+                key={lastMiss.id}
+                className="absolute w-8 h-8 rounded-full border-2 border-rose-500 bg-rose-500/20 animate-ping z-20 pointer-events-none"
+                style={{
+                  left: `${lastMiss.x}%`,
+                  top: `${lastMiss.y}%`,
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            )}
 
             <TooltipProvider>
               {hotspots.map((hotspot, idx) => {
                 const isDiscovered = discoveredHotspots.includes(hotspot.id)
+                // In Quiz mode, undiscovered spots are hidden!
+                const shouldRenderSpot = behavior === 'discovery' || isDiscovered
+
+                if (!shouldRenderSpot) return null
+
+                const showNumbers = props.showNumbers ?? false
 
                 return (
-                  <Tooltip key={hotspot.id}>
+                  <Tooltip key={hotspot.id} defaultOpen={isDiscovered && behavior === 'quiz'}>
                     <TooltipTrigger asChild>
                       <button
                         className={cn(
-                          "absolute w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border-2 z-10 shadow-lg",
+                          "absolute rounded-full flex items-center justify-center transition-all duration-300 border-2 z-10 shadow-lg",
+                          showNumbers ? "w-8 h-8 font-black text-[10px]" : "w-6 h-6",
                           isDiscovered
                             ? "bg-emerald-500 border-white text-white scale-110 shadow-emerald-500/20"
                             : "bg-white border-emerald-500 text-emerald-600 hover:scale-110 shadow-black/5"
@@ -223,11 +260,21 @@ function HotspotContent({
                           top: `${hotspot.y * 100}%`,
                           transform: "translate(-50%, -50%)",
                         }}
-                        onClick={() => handleHotspotClick(hotspot.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleHotspotClick(hotspot.id)
+                        }}
                       >
-                        <span className="text-[10px] font-black">{idx + 1}</span>
-                        {!isDiscovered && (
-                          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 animate-ping" />
+                        {showNumbers ? (
+                          <span>{idx + 1}</span>
+                        ) : (
+                          <div className={cn(
+                            "rounded-full transition-all duration-300",
+                            isDiscovered ? "w-2.5 h-2.5 bg-white" : "w-2 h-2 bg-emerald-500"
+                          )} />
+                        )}
+                        {!isDiscovered && behavior === 'discovery' && (
+                          <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30 animate-ping" />
                         )}
                       </button>
                     </TooltipTrigger>
@@ -309,6 +356,7 @@ export function HotspotRenderer(props: HotspotRendererProps) {
     id = "hotspot-renderer",
     status,
     behavior = 'quiz',
+    showNumbers = false,
     ...rest
   } = props
 

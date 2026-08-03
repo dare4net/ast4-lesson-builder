@@ -17,6 +17,7 @@ const componentRenderers: ComponentRenderers = {
     import("@/components/renderers/bullet-list-renderer").then((mod) => mod.BulletListRenderer),
   ),
   image: dynamic(() => import("@/components/renderers/image-renderer").then((mod) => mod.ImageRenderer)),
+  table: dynamic(() => import("@/components/renderers/table-renderer").then((mod) => mod.TableRenderer)),
 
   // Interactive Components
   quiz: dynamic(() => import("@/components/renderers/quiz-renderer").then((mod) => mod.QuizRenderer)),
@@ -35,6 +36,13 @@ const componentRenderers: ComponentRenderers = {
   ),
   codeEditor: dynamic(() =>
     import("@/components/renderers/code-editor-renderer").then((mod) => mod.CodeEditorRenderer),
+  ),
+  poll: dynamic(() => import("@/components/renderers/poll-renderer").then((mod) => mod.PollRenderer)),
+  flashcardQuiz: dynamic(() =>
+    import("@/components/renderers/flashcard-quiz-renderer").then((mod) => mod.FlashcardQuizRenderer),
+  ),
+  multiSelectQuiz: dynamic(() =>
+    import("@/components/renderers/multi-select-quiz-renderer").then((mod) => mod.MultiSelectQuizRenderer),
   ),
 
   // Structure Components

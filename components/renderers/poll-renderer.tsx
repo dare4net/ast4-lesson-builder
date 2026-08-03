@@ -1,0 +1,295 @@
+"use client"
+
+import * as React from "react"
+import { useState, useEffect } from "react"
+import { CheckCircle2, BarChart2, Check, Lock } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import type { Component } from "@/types/lesson"
+
+interface PollOption {
+    id: string
+    text: string
+}
+
+interface PollRendererProps {
+    question: string
+    options: PollOption[]
+    points?: number
+    isEditing?: boolean
+    lessonId?: string
+    mode?: 'practice' | 'live'
+    state?: 'active' | 'disabled'
+    disabled?: boolean
+    savedState?: any
+    setComponentState?: (state: any) => void
+    id?: string
+    status?: string
+}
+
+type PollState = {
+    selectedOption: string | null
+    votes: Record<string, number>
+    totalVotes: number
+    hasVoted: boolean
+    status?: string
+}
+
+function PollContent({
+    question,
+    options = [],
+    points = 5,
+    state,
+    setState,
+    handleScore,
+    handleRetry,
+    isLive,
+    isDisabled: disabledProp,
+    props
+}: ScoredRenderProps<PollState> & {
+    question: string
+    options: PollOption[]
+    points: number
+    isDisabled: boolean
+    props: PollRendererProps
+}) {
+    const [mounted, setMounted] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const { selectedOption, votes, totalVotes, hasVoted } = state
+    const lessonId = props.lessonId || 'default'
+    const componentId = props.id || 'poll-renderer'
+
+    useEffect(() => {
+        setMounted(true)
+        // Fetch live votes on mount
+        fetch(`/api/polls?lessonId=${encodeURIComponent(lessonId)}&componentId=${encodeURIComponent(componentId)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.votes) {
+                    setState(prev => ({
+                        ...prev,
+                        votes: data.votes || {},
+                        totalVotes: data.totalVotes || 0
+                    }))
+                }
+            })
+            .catch(err => console.error('[PollRenderer] GET votes error:', err))
+    }, [lessonId, componentId])
+
+    const handleVote = async (optionId: string) => {
+        if (disabledProp || hasVoted || isSubmitting) return
+
+        setIsSubmitting(true)
+        // Optimistic state update
+        const newVotes = { ...votes, [optionId]: (votes[optionId] || 0) + 1 }
+        const newTotal = totalVotes + 1
+
+        setState(prev => ({
+            ...prev,
+            selectedOption: optionId,
+            hasVoted: true,
+            votes: newVotes,
+            totalVotes: newTotal,
+            status: 'completed'
+        }))
+
+        handleScore(true)
+
+        try {
+            const res = await fetch('/api/polls', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    lessonId,
+                    componentId,
+                    optionId
+                })
+            })
+            const data = await res.json()
+            if (data.success && data.votes) {
+                setState(prev => ({
+                    ...prev,
+                    votes: data.votes,
+                    totalVotes: data.totalVotes
+                }))
+            }
+        } catch (err) {
+            console.error('[PollRenderer] POST vote error:', err)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    if (!mounted) return null
+
+    // Editing Mode
+    if (props.isEditing) {
+        return (
+            <div className="border p-4 rounded-xl bg-white shadow-sm space-y-3">
+                <div className="flex items-center gap-2 text-indigo-600">
+                    <BarChart2 className="w-5 h-5" />
+                    <h3 className="font-bold text-sm">Poll Preview</h3>
+                </div>
+                <p className="font-bold text-slate-800 text-base">{question}</p>
+                <div className="space-y-2">
+                    {options.map((opt) => (
+                        <div key={opt.id} className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700">
+                            {opt.text}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className={cn(
+            "w-full flex-1 flex flex-col bg-white transition-all duration-300 px-6 py-4 relative rounded-2xl border border-slate-100 shadow-sm",
+            disabledProp && "opacity-75"
+        )}>
+            {/* Visual Accent */}
+            <div className="absolute top-0 left-0 w-2 h-full bg-indigo-500 rounded-l-2xl" />
+
+            {/* Header */}
+            <div className="shrink-0 space-y-2">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <span className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+                            <BarChart2 className="w-4 h-4" />
+                        </span>
+                        <span className="text-[9px] font-black text-indigo-600 uppercase tracking-widest">Class Opinion Poll</span>
+                    </div>
+                    {hasVoted && (
+                        <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[8px] font-black uppercase tracking-widest border border-emerald-100 flex items-center gap-1">
+                            <Check className="w-3 h-3" /> Voted
+                        </span>
+                    )}
+                </div>
+                <h3 className="text-lg font-black text-slate-900 leading-tight">{question}</h3>
+            </div>
+
+            {/* Options List */}
+            <div className="flex-1 space-y-3 my-4">
+                {options.map((opt) => {
+                    const optVotes = votes[opt.id] || 0
+                    const percentage = totalVotes > 0 ? Math.round((optVotes / totalVotes) * 100) : 0
+                    const isSelected = selectedOption === opt.id
+
+                    return (
+                        <button
+                            key={opt.id}
+                            disabled={disabledProp || hasVoted || isSubmitting}
+                            onClick={() => handleVote(opt.id)}
+                            className={cn(
+                                "w-full relative overflow-hidden text-left p-4 rounded-xl border-2 transition-all duration-300 group",
+                                hasVoted
+                                    ? isSelected
+                                        ? "border-indigo-600 bg-indigo-50/20"
+                                        : "border-slate-100 bg-slate-50/50"
+                                    : "border-slate-200 hover:border-indigo-400 bg-white hover:bg-indigo-50/10 active:scale-[0.99]"
+                            )}
+                        >
+                            {/* Animated Progress Bar */}
+                            {hasVoted && (
+                                <div
+                                    className={cn(
+                                        "absolute top-0 left-0 bottom-0 transition-all duration-1000 ease-out opacity-20",
+                                        isSelected ? "bg-indigo-600" : "bg-slate-400"
+                                    )}
+                                    style={{ width: `${percentage}%` }}
+                                />
+                            )}
+
+                            <div className="relative z-10 flex items-center justify-between">
+                                <span className={cn(
+                                    "font-bold text-sm",
+                                    isSelected ? "text-indigo-950 font-black" : "text-slate-700"
+                                )}>
+                                    {opt.text}
+                                </span>
+
+                                {hasVoted ? (
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-black text-slate-500">{optVotes} votes</span>
+                                        <span className={cn(
+                                            "px-2 py-0.5 rounded text-[10px] font-black",
+                                            isSelected ? "bg-indigo-600 text-white" : "bg-slate-200 text-slate-700"
+                                        )}>
+                                            {percentage}%
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div className="w-5 h-5 rounded-full border-2 border-slate-300 group-hover:border-indigo-500 transition-colors" />
+                                )}
+                            </div>
+                        </button>
+                    )
+                })}
+            </div>
+
+            {/* Footer Info */}
+            <div className="shrink-0 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] font-bold text-slate-400">
+                <span>{totalVotes} total responses</span>
+                {points > 0 && (
+                    <span className="text-indigo-600 font-black">+ {points} Participation Points</span>
+                )}
+            </div>
+        </div>
+    )
+}
+
+export function PollRenderer(props: PollRendererProps) {
+    const {
+        question = "Poll Question",
+        options = [],
+        points = 5,
+        mode = 'practice',
+        state: componentState = 'active',
+        disabled = false,
+        savedState,
+        setComponentState,
+        id = "poll-renderer",
+        status,
+
+    } = props
+
+    const component: Component = {
+        id,
+        type: 'poll',
+        state: componentState as any,
+        status: (status || (savedState as any)?.status || 'uncompleted') as any,
+        props: { question, options, points },
+        mode: mode as any
+    } as Component
+
+    const initialState: PollState = {
+        selectedOption: null,
+        votes: {},
+        totalVotes: 0,
+        hasVoted: false,
+        status: 'active'
+    }
+
+    return (
+        <ScoredRenderer<PollState>
+            component={component}
+            initialState={initialState}
+            savedState={savedState}
+            setComponentState={setComponentState}
+            points={points}
+            mode={mode}
+            disabled={disabled}
+            onRender={(renderProps) => (
+                <PollContent
+                    {...renderProps}
+                    question={question}
+                    options={options}
+                    points={points}
+                    isDisabled={disabled || component.state === 'disabled'}
+                    props={props}
+                />
+            )}
+        />
+    )
+}

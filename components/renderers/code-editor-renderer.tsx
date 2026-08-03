@@ -396,10 +396,11 @@ function CodeEditorContent({
   )
 }
 
-export function CodeEditorRenderer(props: CodeEditorRendererProps) {
+export function CodeEditorRenderer(props: CodeEditorRendererProps & { code?: string }) {
   const {
     title = "Code Editor",
-    initialCode = "",
+    initialCode: rawInitialCode,
+    code: legacyCode,
     language = "javascript",
     readOnly = false,
     testCases = [],
@@ -414,6 +415,8 @@ export function CodeEditorRenderer(props: CodeEditorRendererProps) {
     id = 'code-editor-renderer',
     status
   } = props
+
+  const initialCode = rawInitialCode ?? legacyCode ?? "// Write your code here\nconsole.log('Hello, world!');"
 
   const component: Component = {
     id,
