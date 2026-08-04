@@ -244,6 +244,7 @@ function MatchingPairsContent({
   }
 
   const handleCheck = async () => {
+    if (disabledProp || state.isChecking || state.status === 'completed') return
     // Validate
     const results = Object.entries(matches).map(([leftId, { rightId }]) =>
       validateMatch(leftId, rightId)
@@ -342,15 +343,15 @@ function MatchingPairsContent({
 
   return (
     <div className={cn(
-      "w-full flex-1 flex flex-col bg-white overflow-hidden group/matching transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/matching transition-all duration-300 px-6",
       disabledProp && "opacity-75"
     )}>
       {/* Structural Accents */}
       <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* TOP SECTION: Progress & Meta */}
-      <div className="shrink-0 space-y-4 pt-2">
-        <div className="space-y-1.5">
+      <div className="shrink-0 space-y-3 pt-2">
+        <div className="space-y-1">
           <div className="flex justify-between items-end">
             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
             <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">{Math.round((Object.keys(matches).length / pairs.length) * 100)}%</span>
@@ -364,7 +365,7 @@ function MatchingPairsContent({
         </div>
 
         <div className="relative flex items-center justify-between">
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Matching Activity</span>
             <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
           </div>
@@ -389,13 +390,13 @@ function MatchingPairsContent({
       </div>
 
       {/* CENTER SECTION: Interactive Match Grid */}
-      <div className="flex-1 flex flex-col justify-center py-4">
-        <div className="grid grid-cols-2 gap-4 relative">
+      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+        <div className="grid grid-cols-2 gap-3 relative my-auto">
           {/* Connector Lane (Hidden on mobile) */}
           <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-slate-100 hidden md:block -translate-x-1/2 rounded-full" />
 
           {/* Source Nodes */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Group A</span>
             {leftItems.map((item) => {
               const match = matches[item.id]
@@ -406,7 +407,7 @@ function MatchingPairsContent({
                 <button
                   key={`left-${item.id}`}
                   className={cn(
-                    'group/node w-full p-4 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white overflow-hidden shadow-sm',
+                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white overflow-hidden shadow-sm',
                     isSelected && 'border-emerald-500 bg-emerald-50 scale-[1.02] shadow-emerald-500/10',
                     isMatched && !isChecking && 'border-emerald-100 bg-emerald-50/50 opacity-20',
                     isChecking && isMatched && (
@@ -421,7 +422,7 @@ function MatchingPairsContent({
                   disabled={isMatched || isChecking || disabledProp}
                 >
                   <div className="relative z-10 flex items-center justify-between">
-                    <span className="font-bold text-sm tracking-tight">{item.left}</span>
+                    <span className="font-bold text-xs md:text-sm tracking-tight">{item.left}</span>
                     {isChecking && isMatched && (
                       item.id === match.rightId
                         ? <CheckCircle2 className="w-4 h-4 text-white stroke-[3] animate-in zoom-in-50" />
@@ -434,7 +435,7 @@ function MatchingPairsContent({
           </div>
 
           {/* Destination Nodes */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Group B</span>
             {rightItems.map((item) => {
               const matchEntry = Object.entries(matches).find(([_, m]) => m.rightId === item.id)
@@ -446,7 +447,7 @@ function MatchingPairsContent({
                 <button
                   key={`right-${item.id}`}
                   className={cn(
-                    'group/node w-full p-4 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white overflow-hidden shadow-sm',
+                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white overflow-hidden shadow-sm',
                     isSelected && 'border-emerald-500 bg-emerald-50 scale-[1.02] shadow-emerald-500/10',
                     isMatched && !isChecking && 'border-emerald-100 bg-emerald-50/50 opacity-20',
                     isChecking && isMatched && (
@@ -461,7 +462,7 @@ function MatchingPairsContent({
                   disabled={isMatched || isChecking || disabledProp}
                 >
                   <div className="relative z-10 flex items-center justify-between">
-                    <span className="font-bold text-sm tracking-tight">{item.right}</span>
+                    <span className="font-bold text-xs md:text-sm tracking-tight">{item.right}</span>
                     {isChecking && isMatched && (
                       matchEntry?.[0] === item.id
                         ? <CheckCircle2 className="w-4 h-4 text-white stroke-[3] animate-in zoom-in-50" />
@@ -476,8 +477,8 @@ function MatchingPairsContent({
       </div>
 
       {/* BOTTOM SECTION: Feedback & Buttons */}
-      <div className="shrink-0 space-y-4 px-4 pb-6">
-        <div className="min-h-[80px] flex flex-col justify-end">
+      <div className="shrink-0 space-y-3 pb-4 pt-1">
+        <div className="min-h-[52px] flex flex-col justify-end">
           {isChecking && (
             <div className={cn(
               'p-6 rounded-2xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',

@@ -170,16 +170,16 @@ function HotspotContent({
 
   return (
     <div className={cn(
-      "w-full flex-1 flex flex-col bg-white transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6",
       disabledProp && "opacity-75"
     )}>
       {/* Visual Accent */}
       <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* TOP SECTION: Meta */}
-      <div className="shrink-0 space-y-2 pt-2">
+      <div className="shrink-0 space-y-1.5 pt-2">
         <div className="relative flex items-center justify-between">
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Image Exploration</span>
             <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
           </div>
@@ -203,8 +203,8 @@ function HotspotContent({
       </div>
 
       {/* CENTER SECTION: Image Stage */}
-      <div className="flex-1 flex flex-col justify-center min-h-0 py-2">
-        <div className="flex items-center justify-center w-full h-full">
+      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+        <div className="flex items-center justify-center w-full h-full my-auto">
           <div
             className={cn(
               "relative inline-block shrink-0 rounded-2xl border-2 border-emerald-100 bg-white overflow-hidden shadow-sm group/stage max-w-full",
@@ -217,7 +217,7 @@ function HotspotContent({
               ref={imageRef}
               src={image || "/placeholder.svg?height=300&width=400"}
               alt={title}
-              className="max-h-[55vh] w-auto h-auto object-contain transition-transform duration-700 group-hover/stage:scale-[1.01] block select-none"
+              className="max-h-[42vh] w-auto h-auto object-contain transition-transform duration-700 group-hover/stage:scale-[1.01] block select-none"
               draggable={false}
             />
 
@@ -293,14 +293,14 @@ function HotspotContent({
       </div>
 
       {/* BOTTOM SECTION: Feedback & Buttons */}
-      <div className="shrink-0 space-y-3 pb-4">
-        <div className="min-h-[60px] flex flex-col justify-end">
+      <div className="shrink-0 space-y-2.5 pb-4 pt-1">
+        <div className="min-h-[44px] flex flex-col justify-end">
           {discoveredHotspots.length === hotspots.length ? (
-            <div className="p-4 rounded-2xl border-2 bg-emerald-50/50 border-emerald-500/20 animate-in slide-in-from-top-2 duration-500 shadow-emerald-500/5">
+            <div className="p-3 rounded-xl border-2 bg-emerald-50/50 border-emerald-500/20 animate-in slide-in-from-top-2 duration-500 shadow-emerald-500/5">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Activity Complete</span>
               </div>
-              <p className="text-sm font-black text-slate-900 mt-1 italic">You've found all hotspots!</p>
+              <p className="text-xs font-black text-slate-900 italic">You've found all hotspots!</p>
             </div>
           ) : (
             <div className="flex items-center justify-between">
@@ -321,14 +321,14 @@ function HotspotContent({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Button
-            className="h-11 rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95 shadow-sm"
+            className="h-10 rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95 shadow-sm"
             onClick={onLocalRetry}
             disabled={disabledProp || (isLive && discoveredHotspots.length === hotspots.length)}
           >
             Start Over
           </Button>
           {points > 0 && (
-            <div className="h-11 flex items-center justify-center rounded-xl bg-emerald-50/50 border-2 border-emerald-100 transition-all">
+            <div className="h-10 flex items-center justify-center rounded-xl bg-emerald-50/50 border-2 border-emerald-100 transition-all">
               <span className="text-[10px] font-black text-emerald-600/60 uppercase tracking-widest">
                 Points: <span className="text-emerald-700">{points} Points</span>
               </span>

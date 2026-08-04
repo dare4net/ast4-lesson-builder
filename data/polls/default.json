@@ -1,8 +1,8 @@
 {
   "poll-renderer": {
     "votes": {
-      "opt1": 1
+      "opt1": 2
     },
-    "totalVotes": 1
+    "totalVotes": 2
   }
 }

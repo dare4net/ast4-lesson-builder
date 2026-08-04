@@ -278,13 +278,13 @@ export function QuizRenderer(props: QuizRendererProps) {
 
         return (
           <div className={cn(
-            "w-full flex-1 flex flex-col bg-white transition-all duration-300 px-6",
+            "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6",
             animationClass
           )}>
             {/* TOP SECTION: Meta & Title */}
-            <div className="shrink-0 space-y-4 pt-2">
+            <div className="shrink-0 space-y-3 pt-2">
               <div className="relative flex items-center justify-between">
-                <div className="space-y-1">
+                <div className="space-y-0.5">
                   <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Activity</span>
                   <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
                 </div>
@@ -307,7 +307,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-1">
                 <div className="flex justify-between items-end">
                   <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Quiz Progress</span>
                   <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
@@ -322,14 +322,14 @@ export function QuizRenderer(props: QuizRendererProps) {
             </div>
 
             {/* CENTER SECTION: Interactive Content */}
-            <div className="flex-1 flex flex-col justify-center">
-              <div className="relative space-y-4 py-4">
-                <div className="space-y-2">
+            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+              <div className="relative space-y-3 my-auto">
+                <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
                     <div className="h-px w-8 bg-emerald-500 rounded-full" />
                     <span className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length}</span>
                   </div>
-                  <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-tight">{question.question}</h2>
+                  <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight">{question.question}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -343,7 +343,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                       <button
                         key={option.id}
                         className={cn(
-                          'group/opt w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
+                          'group/opt w-full p-3.5 text-left transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
                           'border-b-4 active:border-b-0 active:translate-y-[2px]',
                           isSelected && !isAnswered && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
                           showCorrect && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
@@ -355,9 +355,9 @@ export function QuizRenderer(props: QuizRendererProps) {
                         disabled={isAnswered || isDisabled}
                       >
                         <div className="flex items-center justify-between relative z-10">
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-3">
                             <span className={cn(
-                              "w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black border-2 transition-colors shrink-0",
+                              "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-colors shrink-0",
                               isSelected && !isAnswered ? "bg-[#1CB0F6] text-white border-[#1CB0F6]" : "bg-slate-50 text-slate-400 border-slate-200 group-hover/opt:border-[#1CB0F6]/50 group-hover/opt:text-[#1CB0F6]",
                               showCorrect && "bg-white/30 text-white border-white/30",
                               showIncorrect && "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30"
@@ -377,12 +377,12 @@ export function QuizRenderer(props: QuizRendererProps) {
             </div>
 
             {/* BOTTOM SECTION: Feedback & Actions */}
-            <div className="shrink-0 space-y-4 pb-6">
-              {/* Jump-Proof Feedback Slot: Reserved height when active */}
-              <div className="min-h-[80px] flex flex-col justify-end">
+            <div className="shrink-0 space-y-3 pb-4 pt-1">
+              {/* Jump-Proof Feedback Slot */}
+              <div className="min-h-[52px] flex flex-col justify-end">
                 {isAnswered && (
                   <div className={cn(
-                    'p-6 rounded-2xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
+                    'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
                     selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect
                       ? 'bg-emerald-50/50 border-emerald-500/20 shadow-emerald-500/5'
                       : 'bg-rose-50/50 border-rose-500/20 shadow-rose-500/5'

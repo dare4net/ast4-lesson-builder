@@ -137,7 +137,7 @@ function FillInTheBlankContent({
   }
 
   const handleSubmit = async () => {
-    if (disabledProp) return;
+    if (disabledProp || isSubmitted || state.status === 'completed') return;
 
     const results: Record<string, boolean> = {}
     let correctCount = 0
@@ -214,15 +214,15 @@ function FillInTheBlankContent({
 
   return (
     <div className={cn(
-      "w-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-6",
       disabledProp && "opacity-75"
     )}>
       {/* Visual Accent */}
       <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* Header */}
-      <div className="shrink-0 relative flex items-center justify-between px-4 pt-2">
-        <div className="space-y-1">
+      <div className="shrink-0 relative flex items-center justify-between px-2 pt-2">
+        <div className="space-y-0.5">
           <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Activity</span>
           <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
         </div>
@@ -246,8 +246,8 @@ function FillInTheBlankContent({
       </div>
 
       {/* CENTER SECTION: Interactive Text */}
-      <div className="flex-1 flex flex-col justify-center py-4">
-        <div className="text-lg md:text-xl font-bold text-slate-900 leading-relaxed tracking-tight">
+      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+        <div className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight my-auto">
           {parts.map((part, index) => (
             <React.Fragment key={index}>
               {part}
@@ -259,7 +259,7 @@ function FillInTheBlankContent({
                     disabled={isSubmitted || disabledProp}
                     placeholder="..."
                     className={cn(
-                      "w-32 md:w-44 h-10 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-sm shadow-inner",
+                      "w-28 md:w-36 h-9 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-xs md:text-sm shadow-inner",
                       isSubmitted && (
                         correctAnswers[blanks[index].id]
                           ? "border-emerald-500 bg-emerald-500 text-white shadow-none"
@@ -280,22 +280,22 @@ function FillInTheBlankContent({
       </div>
 
       {/* BOTTOM SECTION: Feedback & Buttons */}
-      <div className="shrink-0 space-y-4 px-4 pb-6">
-        <div className="min-h-[60px] flex flex-col justify-end">
+      <div className="shrink-0 space-y-3 px-2 pb-4 pt-1">
+        <div className="min-h-[52px] flex flex-col justify-end">
           {isSubmitted && (
             <div className={cn(
-              'p-6 rounded-2xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
+              'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
               score === totalPossible ? 'bg-emerald-50/50 border-emerald-500/20' : 'bg-rose-50/50 border-rose-500/20'
             )}>
               {score === totalPossible ? (
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Correct</span>
                   </div>
                   <p className="text-sm font-black text-slate-900 leading-tight italic">"Excellent! All answers are correct."</p>
                 </div>
               ) : (
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Score</span>
                   </div>
@@ -308,7 +308,7 @@ function FillInTheBlankContent({
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2 pt-2">
+        <div className="flex flex-col sm:flex-row gap-2 pt-1">
           {!isSubmitted ? (
             <Button
               className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 hover:bg-emerald-500"
@@ -338,7 +338,7 @@ function FillInTheBlankContent({
           )}
         </div>
 
-        <div className="flex justify-center pt-1">
+        <div className="flex justify-center pt-0.5">
           <div className="px-4 py-1.5 bg-emerald-50/50 border border-emerald-100 rounded">
             <span className="text-[7px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">
               Points: <span className="text-emerald-700">{score}</span> / {totalPossible}

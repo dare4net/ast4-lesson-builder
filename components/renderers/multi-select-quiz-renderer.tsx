@@ -137,8 +137,6 @@ function MultiSelectContent({
         }))
 
         if (allDone) {
-            const totalCorrect = newCorrect.filter(Boolean).length
-            handleScore(totalCorrect > 0)
             handlePoints(newScores.reduce((a, b) => a + b, 0))
         }
     }
@@ -228,9 +226,9 @@ function MultiSelectContent({
     const isPerfect = showResult && correctSelections.length === correctIds.length && incorrectSelections.length === 0
 
     return (
-        <div className="flex flex-col h-full w-full min-h-[460px]">
+        <div className="flex flex-col h-full w-full overflow-hidden px-2 py-1">
             {/* Segmented Progress Bar & Live Timer */}
-            <div className="shrink-0 mb-5 flex items-center justify-between">
+            <div className="shrink-0 mb-3 flex items-center justify-between">
                 <div className="flex-1 mr-4">
                     <div className="flex items-center gap-1.5">
                         {questions.map((_, i) => (
@@ -240,7 +238,7 @@ function MultiSelectContent({
                             )} />
                         ))}
                     </div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1.5">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
                         Question {currentQuestion + 1} of {questions.length}
                     </p>
                 </div>
@@ -255,22 +253,22 @@ function MultiSelectContent({
             </div>
 
             {/* Question card */}
-            <div className="shrink-0 mb-5 p-5 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100">
-                <h2 className="text-lg font-black text-slate-900 text-center leading-snug">{question.question}</h2>
-                <p className="text-[10px] font-bold text-violet-500 text-center mt-1.5 uppercase tracking-widest">
+            <div className="shrink-0 mb-3 p-4 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100">
+                <h2 className="text-base md:text-lg font-black text-slate-900 text-center leading-snug">{question.question}</h2>
+                <p className="text-[10px] font-bold text-violet-500 text-center mt-1 uppercase tracking-widest">
                     ☑ Select all correct answers
                 </p>
             </div>
 
             {/* Options 2×2 grid */}
-            <div className="flex-1 grid grid-cols-2 gap-3 mb-4">
+            <div className="flex-1 min-h-0 grid grid-cols-2 gap-3 mb-3 overflow-y-auto">
                 {question.options.map(option => (
                     <button
                         key={option.id}
                         disabled={showResult || isDisabled || isComplete}
                         onClick={() => handleToggle(option.id)}
                         className={cn(
-                            "relative h-20 px-4 py-3 rounded-2xl text-left font-semibold text-sm leading-tight transition-all duration-200 active:scale-95",
+                            "relative h-16 md:h-18 px-3.5 py-2.5 rounded-xl text-left font-semibold text-xs md:text-sm leading-tight transition-all duration-200 active:scale-95",
                             getOptionStyle(option)
                         )}
                     >

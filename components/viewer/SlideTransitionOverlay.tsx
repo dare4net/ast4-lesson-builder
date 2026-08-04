@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useReadAloud } from "@/context/read-aloud-context";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
+import { cn } from "@/lib/utils";
 import {
     getSlideTheme,
     getLessonPattern,
     type GraphicPatternStyle,
     type SlideTheme,
 } from "@/lib/slide-themes";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { ChevronRight, Sparkles, Loader2 } from "lucide-react";
 
 interface SlideTransitionOverlayProps {
     isVisible: boolean;
@@ -150,23 +151,61 @@ export function SlideTransitionOverlay({
     titleAudioUrl,
     onBegin,
 }: SlideTransitionOverlayProps) {
-    const { isEnabled, speak } = useReadAloud();
     const theme = getSlideTheme(slideIndex);
     const pattern: GraphicPatternStyle = getLessonPattern(lessonId);
 
-    // Path 1: Pre-generated audio — auto-plays via HTML Audio (same as paragraph-renderer)
+    const [canBegin, setCanBegin] = useState(false);
+    const [secondsLeft, setSecondsLeft] = useState(10);
+    // Tracks when the overlay first opened so we can filter out instant TTS errors
+    const overlayOpenedAtRef = useRef<number>(0);
+
+    // Audio completion callback — only unlocks early if at least 2s have passed.
+    // This filters out instant TTS onerror/onend that fires when browser blocks speech.
+    const handleAudioEnded = useCallback(() => {
+        if (Date.now() - overlayOpenedAtRef.current >= 2000) {
+            setCanBegin(true);
+            setSecondsLeft(0);
+        }
+    }, []);
+
+    // Pre-recorded audio — auto-plays when overlay opens
     const { stop } = useAudioPlayer({
         audioUrl: titleAudioUrl,
-        autoPlay: isEnabled && isVisible,
+        autoPlay: isVisible,
+        onEnded: handleAudioEnded,
     });
 
-    // Path 2: TTS fallback — fires when overlay appears but no pre-generated URL exists yet
-    // (i.e. lesson hasn't been published since adding this feature)
+    // Always run a 10s countdown per slide, regardless of read-aloud setting.
+    // Audio completion (handleAudioEnded) can unlock the button early.
     useEffect(() => {
-        if (!isVisible) return;
-        if (titleAudioUrl) return; // pre-generated audio handles it
-        speak(`Slide ${slideIndex + 1}. ${slideTitle}`);
-    }, [isVisible, titleAudioUrl, slideIndex, slideTitle, speak]);
+        if (!isVisible) {
+            setCanBegin(false);
+            setSecondsLeft(10);
+            return;
+        }
+
+        // Record when the overlay opened (used by handleAudioEnded guard)
+        overlayOpenedAtRef.current = Date.now();
+        setCanBegin(false);
+        setSecondsLeft(10);
+
+        // Tick down every second; unlock at 0
+        const interval = setInterval(() => {
+            setSecondsLeft((prev) => {
+                const next = prev - 1;
+                if (next <= 0) {
+                    clearInterval(interval);
+                    setCanBegin(true);
+                    return 0;
+                }
+                return next;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isVisible, slideIndex]);
+
 
     if (!isVisible) return null;
 
@@ -219,15 +258,30 @@ export function SlideTransitionOverlay({
 
                 {/* Action Button to Dismiss Overlay */}
                 <button
+                    disabled={!canBegin}
                     onClick={handleBegin}
-                    className="mt-4 px-10 py-4 rounded-2xl text-sm font-black tracking-wide uppercase flex items-center gap-2 shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+                    className={cn(
+                        "mt-4 px-10 py-4 rounded-2xl text-sm font-black tracking-wide uppercase flex items-center justify-center gap-2.5 shadow-lg transition-all min-w-[220px]",
+                        canBegin
+                            ? "cursor-pointer hover:scale-105 active:scale-95"
+                            : "opacity-70 cursor-not-allowed"
+                    )}
                     style={{
                         backgroundColor: theme.btnBgHex,
                         color: theme.btnTextHex,
                     }}
                 >
-                    <span>Begin Slide</span>
-                    <ChevronRight className="w-5 h-5" />
+                    {canBegin ? (
+                        <>
+                            <span>Begin Slide</span>
+                            <ChevronRight className="w-5 h-5" />
+                        </>
+                    ) : (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Please wait&hellip; {secondsLeft}s</span>
+                        </>
+                    )}
                 </button>
             </div>
         </div>

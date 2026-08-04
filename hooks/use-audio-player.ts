@@ -5,9 +5,10 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 interface UseAudioPlayerOptions {
     audioUrl?: string
     autoPlay?: boolean
+    onEnded?: () => void
 }
 
-export function useAudioPlayer({ audioUrl, autoPlay = false }: UseAudioPlayerOptions) {
+export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudioPlayerOptions) {
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [hasAudio, setHasAudio] = useState(false)
@@ -24,8 +25,14 @@ export function useAudioPlayer({ audioUrl, autoPlay = false }: UseAudioPlayerOpt
 
         audio.onplay = () => setIsPlaying(true)
         audio.onpause = () => setIsPlaying(false)
-        audio.onended = () => setIsPlaying(false)
-        audio.onerror = () => setIsPlaying(false)
+        audio.onended = () => {
+            setIsPlaying(false)
+            onEnded?.()
+        }
+        audio.onerror = () => {
+            setIsPlaying(false)
+            onEnded?.()
+        }
 
         if (autoPlay) {
             // Delay slightly to avoid browser blocking autoplay before user gesture

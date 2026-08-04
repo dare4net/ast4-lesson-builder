@@ -6,7 +6,7 @@ import { SoundEffects } from "@/lib/sound-effects"
 interface ReadAloudContextType {
     isEnabled: boolean
     toggleReadAloud: () => void
-    speak: (text: string) => void
+    speak: (text: string, options?: { onEnd?: () => void }) => void
     stop: () => void
     isSpeaking: boolean
 }
@@ -97,9 +97,15 @@ export function ReadAloudProvider({ children }: { children: React.ReactNode }) {
         })
     }, [])
 
-    const speak = useCallback((text: string) => {
-        if (!isEnabled) return
-        if (typeof window === "undefined" || !("speechSynthesis" in window)) return
+    const speak = useCallback((text: string, options?: { onEnd?: () => void }) => {
+        if (!isEnabled) {
+            options?.onEnd?.()
+            return
+        }
+        if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+            options?.onEnd?.()
+            return
+        }
 
         try {
             window.speechSynthesis.cancel()
@@ -110,7 +116,10 @@ export function ReadAloudProvider({ children }: { children: React.ReactNode }) {
             }
 
             const cleanText = text.replace(/<[^>]*>?/gm, "").trim()
-            if (!cleanText) return
+            if (!cleanText) {
+                options?.onEnd?.()
+                return
+            }
 
             const utterance = new SpeechSynthesisUtterance(cleanText)
             utterance.rate = 0.9 // Calm pace for Year 4 learners
@@ -121,13 +130,20 @@ export function ReadAloudProvider({ children }: { children: React.ReactNode }) {
             }
 
             utterance.onstart = () => setIsSpeaking(true)
-            utterance.onend = () => setIsSpeaking(false)
-            utterance.onerror = () => setIsSpeaking(false)
+            utterance.onend = () => {
+                setIsSpeaking(false)
+                options?.onEnd?.()
+            }
+            utterance.onerror = () => {
+                setIsSpeaking(false)
+                options?.onEnd?.()
+            }
 
             window.speechSynthesis.speak(utterance)
         } catch (err) {
             console.error("Speech synthesis error:", err)
             setIsSpeaking(false)
+            options?.onEnd?.()
         }
     }, [isEnabled])
 

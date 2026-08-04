@@ -60,6 +60,9 @@ export const ScoringService = {
                 const blankCount = component.props.blanks?.length || (component.props.text?.match(/\[blank\]/g) || []).length
                 return points * blankCount
 
+            case "dragDrop":
+                return points * (component.props.items?.length || 0)
+
             case "matchingPairs":
                 return points * (component.props.pairs?.length || 0)
 

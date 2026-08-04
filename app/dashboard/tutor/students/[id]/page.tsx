@@ -30,6 +30,8 @@ interface StudentDetail {
         totalEnrolled: number;
         averageProgress: number;
     };
+    last_activity?: string;
+    lastActivity?: string;
     lastActive?: string;
     last_active?: string;
 }
@@ -128,6 +130,28 @@ export default function StudentDetailPage() {
                                     <Zap className="w-3 h-3" />
                                     Enrolled Student
                                 </span>
+                                {(() => {
+                                    const dates = [
+                                        student.last_activity,
+                                        student.lastActivity,
+                                        student.last_active,
+                                        student.lastActive,
+                                        ...(student.registrations || []).map(r => r.last_activity || r.lastActivity)
+                                    ].filter((d): d is string => Boolean(d))
+                                    if (dates.length === 0) return null
+                                    dates.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+                                    try {
+                                        const text = formatDistanceToNow(new Date(dates[0]), { addSuffix: true })
+                                        return (
+                                            <span className="inline-flex items-center gap-1 text-slate-600 font-bold bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+                                                <Clock className="w-3 h-3 text-slate-400" />
+                                                Active {text}
+                                            </span>
+                                        )
+                                    } catch (e) {
+                                        return null
+                                    }
+                                })()}
                             </div>
                         </div>
                     </div>

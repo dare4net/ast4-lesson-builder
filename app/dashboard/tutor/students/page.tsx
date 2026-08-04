@@ -27,6 +27,8 @@ interface Student {
     avatar?: string;
     enrolledPrograms?: any[];
     totalProgress?: number;
+    last_activity?: string;
+    lastActivity?: string;
     last_active?: string;
     lastActive?: string;
     registered_at?: string;
@@ -65,7 +67,24 @@ export default function TutorStudentsPage() {
     }
 
     const getLastActiveText = (s: Student) => {
-        const dateStr = s.lastActive || s.last_active || s.registered_at || (s.enrolledPrograms?.[0]?.registered_at)
+        const dates: string[] = [
+            s.last_activity,
+            s.lastActivity,
+            s.last_active,
+            s.lastActive,
+            ...(s.enrolledPrograms || []).map(p => p.last_activity || p.lastActivity)
+        ].filter((d): d is string => Boolean(d))
+
+        if (dates.length > 0) {
+            dates.sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+            try {
+                return formatDistanceToNow(new Date(dates[0]), { addSuffix: true })
+            } catch (e) {
+                return null
+            }
+        }
+
+        const dateStr = s.registered_at || (s.enrolledPrograms?.[0]?.registered_at)
         if (!dateStr) return null
         try {
             return formatDistanceToNow(new Date(dateStr), { addSuffix: true })

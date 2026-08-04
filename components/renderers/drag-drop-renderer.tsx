@@ -142,7 +142,7 @@ function DragDropContent({
   }
 
   const handleCheck = async () => {
-    if (disabledProp) return
+    if (disabledProp || state.isSubmitted || state.status === 'completed') return
 
     const correctCount = dragItems.reduce((count, item, index) => {
       return count + (item.correctIndex === index ? 1 : 0)
@@ -220,15 +220,15 @@ function DragDropContent({
 
   return (
     <div className={cn(
-      "w-full flex-1 flex flex-col bg-white overflow-hidden group/dnd transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/dnd transition-all duration-300 px-6",
       disabledProp && "opacity-75"
     )}>
       {/* Visual Accent */}
       <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* Header */}
-      <div className="relative flex items-center justify-between pt-2">
-        <div className="space-y-1">
+      <div className="shrink-0 relative flex items-center justify-between pt-2">
+        <div className="space-y-0.5">
           <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Ordering Activity</span>
           <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
         </div>
@@ -252,13 +252,13 @@ function DragDropContent({
       </div>
 
       {/* CENTER SECTION: Interactive List */}
-      <div className="flex-1 flex flex-col justify-center py-4">
-        <div className="relative space-y-3">
+      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+        <div className="relative space-y-2.5 my-auto">
           {dragItems.map((item, index) => (
             <div
               key={item.id}
               className={cn(
-                "group/item relative p-4 rounded-xl border-2 transition-all duration-300 flex items-center gap-4 overflow-hidden shadow-sm",
+                "group/item relative p-3 rounded-xl border-2 transition-all duration-300 flex items-center gap-3 overflow-hidden shadow-sm",
                 isSubmitted && item.correctIndex === index
                   ? "bg-emerald-500 border-emerald-600 text-white shadow-lg shadow-emerald-500/20"
                   : isSubmitted && item.correctIndex !== index
@@ -271,31 +271,31 @@ function DragDropContent({
                 style={{ backgroundColor: !isSubmitted ? item.color : 'transparent' }}
               />
 
-              <div className="flex items-center gap-4 flex-1">
+              <div className="flex items-center gap-3 flex-1">
                 <div className={cn(
-                  "w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm transition-all duration-300",
+                  "w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs transition-all duration-300",
                   isSubmitted && item.correctIndex === index ? "bg-white/20 text-white" : "bg-emerald-50 text-emerald-600"
                 )}>
                   {index + 1}
                 </div>
-                <span className="font-bold text-sm tracking-tight">{item.text}</span>
+                <span className="font-bold text-xs md:text-sm tracking-tight">{item.text}</span>
               </div>
 
               {!isSubmitted && (
-                <div className="flex gap-2">
+                <div className="flex gap-1.5">
                   <Button
-                    className="h-9 w-9 rounded-lg bg-white border-2 border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-500 transition-all active:scale-90 shadow-sm p-0"
+                    className="h-8 w-8 rounded-lg bg-white border-2 border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-500 transition-all active:scale-90 shadow-sm p-0"
                     onClick={() => moveItem(index, 'up')}
                     disabled={index === 0 || disabledProp}
                   >
-                    <MoveUp className="h-4 w-4 stroke-[3]" />
+                    <MoveUp className="h-3.5 w-3.5 stroke-[3]" />
                   </Button>
                   <Button
-                    className="h-9 w-9 rounded-lg bg-white border-2 border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-500 transition-all active:scale-90 shadow-sm p-0"
+                    className="h-8 w-8 rounded-lg bg-white border-2 border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-500 transition-all active:scale-90 shadow-sm p-0"
                     onClick={() => moveItem(index, 'down')}
                     disabled={index === dragItems.length - 1 || disabledProp}
                   >
-                    <MoveDown className="h-4 w-4 stroke-[3]" />
+                    <MoveDown className="h-3.5 w-3.5 stroke-[3]" />
                   </Button>
                 </div>
               )}
@@ -315,7 +315,7 @@ function DragDropContent({
       </div>
 
       {/* BOTTOM SECTION: Feedback & Buttons */}
-      <div className="shrink-0 space-y-4 pt-2 px-4 pb-6">
+      <div className="shrink-0 space-y-3 pt-1 px-4 pb-4">
         {!isSubmitted ? (
           <Button
             className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 hover:bg-emerald-500"
@@ -325,20 +325,20 @@ function DragDropContent({
             Check Order
           </Button>
         ) : (
-          <div className="space-y-4 animate-in slide-in-from-top-2 duration-500">
+          <div className="space-y-3 animate-in slide-in-from-top-2 duration-500">
             <div className={cn(
-              "p-6 rounded-2xl border-2 transition-all duration-300 shadow-sm",
+              "p-4 rounded-xl border-2 transition-all duration-300 shadow-sm",
               isCorrect ? "bg-emerald-50/50 border-emerald-500/20 shadow-emerald-500/5" : "bg-rose-50/50 border-rose-500/20 shadow-rose-500/5"
             )}>
               {isCorrect ? (
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Correct</span>
                   </div>
                   <p className="text-sm font-black text-slate-900 italic">"Excellent! The order is correct."</p>
                 </div>
               ) : (
-                <div className="space-y-1.5">
+                <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Incorrect</span>
                   </div>
@@ -367,7 +367,7 @@ function DragDropContent({
           </div>
         )}
 
-        <div className="flex justify-center pt-1">
+        <div className="flex justify-center pt-0.5">
           <div className="px-4 py-1.5 bg-emerald-50/50 border border-emerald-100 rounded">
             <span className="text-[7px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">
               Points: <span className="text-emerald-700">{state.dragItems.reduce((acc, item, idx) => acc + (item.correctIndex === idx ? (props.points || 15) / props.items!.length : 0), 0)}</span> / {props.points || 15}

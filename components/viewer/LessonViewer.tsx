@@ -331,7 +331,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
         <Button
           variant="default"
           className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider transition-all h-10 flex items-center justify-center gap-2 shadow-md shadow-rose-600/20"
-          onClick={handleEndLesson}
+          onClick={() => {
+            if (lessonContentRef.current?.triggerEndLesson) {
+              lessonContentRef.current.triggerEndLesson();
+              setIsSidebarOpen(false);
+            } else {
+              handleEndLesson();
+            }
+          }}
         >
           <LogOut className="w-3.5 h-3.5" />
           End Lesson

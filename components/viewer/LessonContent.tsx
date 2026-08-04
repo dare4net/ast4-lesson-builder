@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
 import { useReadAloud } from '@/context/read-aloud-context';
 import { SlideTransitionOverlay } from '@/components/viewer/SlideTransitionOverlay';
+import { LessonCompletionOverlay } from '@/components/viewer/LessonCompletionOverlay';
+import { IncompleteLessonModal } from '@/components/viewer/IncompleteLessonModal';
 import { getSlideTheme } from '@/lib/slide-themes';
 
 interface LessonContentProps {
@@ -71,7 +73,24 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const [componentStates, setComponentStates] = useState<Record<string, any>>(initialComponentStates);
     const [innerStepIndex, setInnerStepIndex] = useState(0);
     const [showOverlay, setShowOverlay] = useState(false);
+    const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
+    const [showIncompleteModal, setShowIncompleteModal] = useState(false);
+    const hasShownCompletionOverlayRef = useRef(false);
     const prevSlideIndexRef = useRef<number>(-1);
+
+    const completedSlidesCount = useMemo(() => {
+      return lesson.slides.filter(s => s.status === "completed").length;
+    }, [lesson.slides]);
+
+    const allSlidesCompleted = completedSlidesCount === lesson.slides.length;
+
+    const handleEndLessonTrigger = useCallback(() => {
+      if (allSlidesCompleted) {
+        setShowCompletionOverlay(true);
+      } else {
+        setShowIncompleteModal(true);
+      }
+    }, [allSlidesCompleted]);
 
     useEffect(() => {
       setInnerStepIndex(0);
@@ -85,7 +104,8 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     useImperativeHandle(ref, () => ({
       setCurrentSlideIndex: onSlideChange,
       getAllComponentStates: () => componentStates,
-    }), [onSlideChange, componentStates]);
+      triggerEndLesson: handleEndLessonTrigger,
+    }), [onSlideChange, componentStates, handleEndLessonTrigger]);
 
     const processedComponents = useMemo(() => {
       if (!currentSlide) return [];
@@ -346,11 +366,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                 className="h-10 px-5 w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider shadow-md shadow-rose-600/20 flex items-center justify-center gap-1.5 transition-all"
                 onClick={() => {
                   playFeedback('uiClick');
-                  if (onEndLesson) {
-                    onEndLesson();
-                  } else if (window.history.length > 1) {
-                    window.history.back();
-                  }
+                  handleEndLessonTrigger();
                 }}
               >
                 End Lesson
@@ -385,6 +401,34 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             })()}
           </div>
         </footer>
+
+        {/* Lesson Completion Celebration Overlay */}
+        <LessonCompletionOverlay
+          isVisible={showCompletionOverlay}
+          lessonId={lesson.id}
+          lessonTitle={lesson.title}
+          completedSlidesCount={completedSlidesCount}
+          totalSlidesCount={lesson.slides.length}
+          score={score}
+          totalPossibleScore={totalPossible}
+          onReview={() => setShowCompletionOverlay(false)}
+          onEndLesson={() => {
+            setShowCompletionOverlay(false);
+            if (onEndLesson) onEndLesson();
+          }}
+        />
+
+        {/* Incomplete Lesson Warning Modal */}
+        <IncompleteLessonModal
+          isOpen={showIncompleteModal}
+          completedSlidesCount={completedSlidesCount}
+          totalSlidesCount={lesson.slides.length}
+          onKeepLearning={() => setShowIncompleteModal(false)}
+          onEndAnyway={() => {
+            setShowIncompleteModal(false);
+            if (onEndLesson) onEndLesson();
+          }}
+        />
       </div>
     );
   }
