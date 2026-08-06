@@ -242,7 +242,7 @@ export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProp
                     <button
                         onClick={handleEmergencyReset}
                         style={{
-                            padding: '8px 16px',
+                            padding: '8px 20px',
                             borderRadius: '12px',
                             background: '#18181b',
                             color: '#ffffff',
@@ -256,7 +256,7 @@ export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProp
                         onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
                         onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                     >
-                        Reset App Data & Reload
+                        Proceed
                     </button>
                     <style>{`@keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }`}</style>
                 </div>
