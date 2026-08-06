@@ -9,6 +9,13 @@ import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
 import type { Component } from "@/types/lesson"
+import {
+  playFlashcardFlipForward,
+  playFlashcardFlipBack,
+  playFlashcardNext,
+  playFlashcardPrev,
+  playFlashcardComplete
+} from "@/lib/sound-effects"
 
 interface Flashcard {
   id: string
@@ -64,25 +71,11 @@ function FlashcardsContent({
   const goToNextCard = () => {
     if (disabledProp) return
     if (currentCardIndex < cards.length - 1) {
-      if (isFlipped) {
-        // Should we un-flip before moving? Yes.
-        // setState merge
-      }
-
-      const nextIndex = currentCardIndex + 1
-      const isLast = nextIndex === cards.length // Actually, status update happening here?
-      // Logic: If we reach the end, do we mark complete?
-      // Usually completion is "viewed all".
-      // Let's mark complete when we successfully render the LAST card? 
-      // Or when we reach end?
-      // Original code marked complete when `currentCardIndex === cards.length - 1 && isFlipped`.
-
+      playFlashcardNext()
       setState(prev => ({
         ...prev,
-        currentCardIndex: nextIndex,
+        currentCardIndex: currentCardIndex + 1,
         isFlipped: false,
-        // If moving to last card, we aren't flipped yet, so presumably not complete per original logic?
-        // Original: `currentCardIndex === cards.length - 1 && isFlipped` triggers "You Rock".
       }))
     }
   }
@@ -90,6 +83,7 @@ function FlashcardsContent({
   const goToPreviousCard = () => {
     if (disabledProp) return
     if (currentCardIndex > 0) {
+      playFlashcardPrev()
       setState(prev => ({
         ...prev,
         currentCardIndex: currentCardIndex - 1,
@@ -100,11 +94,21 @@ function FlashcardsContent({
 
   const flipCard = () => {
     if (disabledProp) return
-    playFeedback('flashcardFlip')
 
-    // Check completion logic
     const willBeFlipped = !isFlipped
     const isCompleted = currentCardIndex === cards.length - 1 && willBeFlipped
+
+    // Directional flip sounds: deep whoosh to back, lighter snap to front
+    if (willBeFlipped) {
+      playFlashcardFlipForward()
+    } else {
+      playFlashcardFlipBack()
+    }
+
+    if (isCompleted) {
+      // Slight delay so flip sound plays first, then completion chord stacks in
+      setTimeout(() => playFlashcardComplete(), 180)
+    }
 
     setState(prev => ({
       ...prev,
@@ -114,7 +118,7 @@ function FlashcardsContent({
   }
 
   const onLocalRestart = () => {
-    playFeedback('click', { animation: false })
+    playFlashcardPrev() // Neutral rewind-style sound
     setState(prev => ({
       ...prev,
       currentCardIndex: 0,

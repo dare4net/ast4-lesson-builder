@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef } from "react"
+import * as React from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { ComponentLibrary } from "@/components/component-library"
 import { SlideEditor } from "@/components/slide-editor"
@@ -27,11 +28,15 @@ import { apiClient } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
 import { generateBatchAudio, hashText, normalizeTextForSpeech } from '@/lib/audio-generator'
 
+import { LessonVerificationOverlay } from "@/components/builder/lesson-verification-overlay"
+import { validateLesson } from "@/lib/validation/master-validator"
+
 export function LessonBuilder() {
   // Initialize with default lesson or from localStorage
   // Initialize with defaultLesson to ensure server/client match during hydration
   const [lesson, setLesson] = useState<Lesson>(defaultLesson)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isVerifyingLesson, setIsVerifyingLesson] = useState(false)
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [previewMode, setPreviewMode] = useState(false)
@@ -42,8 +47,12 @@ export function LessonBuilder() {
   const [saveModalOpen, setSaveModalOpen] = useState(false)
   const [loadModalOpen, setLoadModalOpen] = useState(false)
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null)
-  const [isLibraryCollapsed, setIsLibraryCollapsed] = useState(false)
+  const [isLibraryCollapsed, setIsLibraryCollapsed] = useState(true)
   const [hasUnpublishedChanges, setHasUnpublishedChanges] = useState(false)
+
+  // Master validation report for validation enforcement
+  const masterReport = React.useMemo(() => validateLesson(lesson), [lesson])
+  const hasValidationErrors = !masterReport.isValid || masterReport.errors.length > 0
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false)
 
   const { toast } = useToast()
@@ -51,7 +60,7 @@ export function LessonBuilder() {
   const { playFeedback } = useFeedback()
 
   const searchParams = useSearchParams()
-  const lessonIdFromUrl = searchParams.get('lessonId')
+  const lessonIdFromUrl = searchParams?.get('lessonId') || null
   const [isSaving, setIsSaving] = useState(false)
 
   const lastSavedLessonRef = useRef<string>("")
@@ -463,7 +472,7 @@ export function LessonBuilder() {
           author: updatedLesson.author,
           level: updatedLesson.level,
           duration: updatedLesson.duration,
-        })
+        } as any)
       } catch (e) {
         console.error('[publish] DB save failed:', e)
       }
@@ -623,6 +632,7 @@ export function LessonBuilder() {
   const handleSelectComponent = useCallback(async (componentId: string) => {
     setEditingComponentId(componentId);
     setIsInspectorOpen(true);
+    setIsLibraryCollapsed(false);
     await playFeedback('click', { animation: false });
   }, [playFeedback]);
 
@@ -630,6 +640,7 @@ export function LessonBuilder() {
   const handleCloseInspector = useCallback(() => {
     setEditingComponentId(null);
     setIsInspectorOpen(false);
+    setIsLibraryCollapsed(true);
   }, []);
 
   const editingComponent = editingComponentId
@@ -640,7 +651,10 @@ export function LessonBuilder() {
     <NavigationLockProvider>
       <ScoringProvider lesson={lesson}>
         <CustomDndProvider>
-          <div className="flex flex-col h-screen max-h-screen overflow-hidden bg-[#0F172A] text-slate-200">
+          <div
+            onContextMenu={(e) => e.preventDefault()}
+            className="flex flex-col h-screen max-h-screen overflow-hidden bg-[#0F172A] text-slate-200 select-none"
+          >
             <LessonControls
               lesson={lesson}
               updateLessonMetadata={updateLessonMetadata}
@@ -654,6 +668,7 @@ export function LessonBuilder() {
               onPublishAndGenerateAudio={handlePublishAndGenerateAudio}
               isGeneratingAudio={isGeneratingAudio}
               hasUnpublishedChanges={hasUnpublishedChanges}
+              hasValidationErrors={hasValidationErrors}
               className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
             />
             <div className="flex flex-1 min-h-0 overflow-hidden relative">
@@ -790,6 +805,12 @@ export function LessonBuilder() {
               )}
             </div>
           </div>
+
+          {/* Top-to-Bottom Verification Overlay on Load */}
+          <LessonVerificationOverlay
+            isVisible={isVerifyingLesson}
+            lessonTitle={lesson.title}
+          />
         </CustomDndProvider>
       </ScoringProvider>
     </NavigationLockProvider>

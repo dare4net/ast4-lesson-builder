@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react"
-import { Play } from "lucide-react"
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { Play, Clock, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { SoundEffects } from "@/lib/sound-effects"
 
 interface LiveStartScreenProps {
     onStart: () => void
@@ -50,34 +53,37 @@ export function LiveTimer({
 }) {
     const [secondsRemaining, setSecondsRemaining] = useState(duration)
 
-    // Sync state with prop if it changes significantly (e.g. init)
+    const onTimeoutRef = useRef(onTimeout)
+    useEffect(() => {
+        onTimeoutRef.current = onTimeout
+    }, [onTimeout])
+
     useEffect(() => {
         setSecondsRemaining(duration)
     }, [duration])
 
-    // Timer countdown effect
     useEffect(() => {
-        if (isCompleted || secondsRemaining <= 0) return
+        if (isCompleted) return
 
         const interval = setInterval(() => {
-            setSecondsRemaining(prev => {
-                if (prev <= 1) {
-                    clearInterval(interval)
-                    return 0
-                }
-                return prev - 1
-            })
+            setSecondsRemaining(prev => (prev <= 1 ? 0 : prev - 1))
         }, 1000)
 
         return () => clearInterval(interval)
-    }, [isCompleted, secondsRemaining])
+    }, [isCompleted])
 
-    // Separate effect to handle timeout callback
+    // Play tick sound on every tick when active (and extra tick when urgent)
     useEffect(() => {
-        if (secondsRemaining === 0 && !isCompleted && onTimeout) {
-            onTimeout()
+        if (!isCompleted && secondsRemaining > 0 && secondsRemaining < duration) {
+            SoundEffects.play('timerTick')
         }
-    }, [secondsRemaining, isCompleted, onTimeout])
+    }, [secondsRemaining, isCompleted, duration])
+
+    useEffect(() => {
+        if (secondsRemaining === 0 && !isCompleted) {
+            onTimeoutRef.current?.()
+        }
+    }, [secondsRemaining, isCompleted])
 
     const fmt = (s: number) => {
         const min = Math.floor(s / 60)
@@ -85,31 +91,31 @@ export function LiveTimer({
         return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`
     }
 
+    const isUrgent = !isCompleted && secondsRemaining <= 5 && secondsRemaining > 0
+
     return (
         <div className={cn(
-            "flex items-center gap-2 px-2 py-1 rounded-md transition-colors",
+            "inline-flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-sm transition-all duration-300 select-none",
             isCompleted
-                ? "bg-emerald-100/50 text-emerald-700"
-                : secondsRemaining <= 5
-                    ? "bg-red-100/80 text-red-700 animate-pulse"
-                    : "bg-rose-100/50 text-rose-700"
+                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600"
+                : isUrgent
+                    ? "bg-rose-500/15 border-rose-500/50 text-rose-600 animate-pulse shadow-rose-500/20"
+                    : "bg-slate-900 border-slate-700 text-emerald-400 shadow-slate-900/40"
         )}>
             {isCompleted ? (
-                <span className="relative flex h-2 w-2">
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
+                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+            ) : isUrgent ? (
+                <AlertCircle className="h-4 w-4 text-rose-500 animate-spin shrink-0" />
             ) : (
-                <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                </span>
+                <Clock className="h-4 w-4 text-emerald-400 shrink-0" />
             )}
 
             <span className={cn(
-                "text-[10px] font-mono font-bold tracking-widest",
-                !isCompleted && secondsRemaining <= 5 && "scale-110"
+                "font-mono font-black text-sm md:text-base tracking-widest leading-none",
+                isCompleted && "text-xs font-bold text-emerald-600 tracking-wider",
+                isUrgent && "text-rose-600 text-base"
             )}>
-                {isCompleted ? "CHALLENGE COMPLETE" : `LIVE ${fmt(secondsRemaining)}`}
+                {isCompleted ? "COMPLETED" : fmt(secondsRemaining)}
             </span>
         </div>
     )

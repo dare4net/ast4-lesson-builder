@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X } from "lucide-react"
+import { X, Check, Undo2, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
@@ -38,17 +38,31 @@ interface ComponentEditorProps {
 
 export function ComponentEditor({ component, updateComponent, onClose, isMobile = false, lessonId }: ComponentEditorProps) {
   const [props, setProps] = useState<Record<string, any>>(component.props)
+  const [hasDraftChanges, setHasDraftChanges] = useState(false)
 
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
 
   useEffect(() => {
     setProps(component.props)
+    setHasDraftChanges(false)
   }, [component])
 
   const handleChange = (name: string, value: any) => {
     const updatedProps = { ...props, [name]: value }
     setProps(updatedProps)
-    updateComponent(updatedProps)
+    setHasDraftChanges(true)
+  }
+
+  const handleSaveChanges = () => {
+    updateComponent(props)
+    setHasDraftChanges(false)
+    onClose()
+  }
+
+  const handleCancelChanges = () => {
+    setProps(component.props)
+    setHasDraftChanges(false)
+    onClose()
   }
 
   if (!componentDef) {
@@ -253,7 +267,10 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                     {component.type === "table" && propDef.name === "data" && (
                       <TableEditor
                         component={{ ...component, props }}
-                        updateComponent={(newProps) => updateComponent(newProps)}
+                        updateComponent={(newProps) => {
+                          setProps(newProps);
+                          setHasDraftChanges(true);
+                        }}
                       />
                     )}
                     {component.type === "poll" && propDef.name === "options" && (
@@ -290,7 +307,7 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
   return (
     <div className="flex flex-col h-full bg-[#0F172A]">
       {/* Header - Fixed */}
-      <div className="flex-shrink-0 flex justify-between items-center p-5 border-b border-slate-800 bg-slate-900/60 backdrop-blur-xl">
+      <div className="flex-shrink-0 flex justify-between items-center p-4 border-b border-slate-800 bg-slate-900/60 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 animate-pulse" />
           <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">{componentDef.label}</h3>
@@ -304,6 +321,35 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
           <X className="h-4 w-4" />
         </Button>
       </div>
+
+      {/* Draft Save / Cancel Action Bar */}
+      {hasDraftChanges && (
+        <div className="flex-shrink-0 p-3 px-4 bg-emerald-950/40 border-b border-emerald-800/50 flex items-center justify-between animate-in slide-in-from-top-1 duration-200">
+          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold">
+            <Sparkles className="w-4 h-4 text-emerald-400 animate-pulse" />
+            <span>Unpublished Draft Edits</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleCancelChanges}
+              className="h-7 px-3 text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg flex items-center gap-1"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+              <span>Cancel</span>
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSaveChanges}
+              className="h-7 px-3 text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 rounded-lg shadow-md shadow-emerald-500/20 flex items-center gap-1"
+            >
+              <Check className="w-3.5 h-3.5" />
+              <span>Save Changes</span>
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Content Tabs */}
       <div className="flex-1 flex flex-col min-h-0">

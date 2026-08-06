@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { AlertTriangle, ArrowRight, Play, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SoundEffects } from "@/lib/sound-effects";
 import {
     Dialog,
     DialogContent,
@@ -26,6 +27,13 @@ export function IncompleteLessonModal({
     onKeepLearning,
     onEndAnyway,
 }: IncompleteLessonModalProps) {
+    // Play rejection sound when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            SoundEffects.play('incorrect')
+        }
+    }, [isOpen])
+
     if (!isOpen) return null;
 
     const remaining = Math.max(0, totalSlidesCount - completedSlidesCount);

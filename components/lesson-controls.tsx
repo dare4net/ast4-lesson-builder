@@ -46,6 +46,7 @@ interface LessonControlsProps {
   onPublishAndGenerateAudio?: () => Promise<void>
   isGeneratingAudio?: boolean
   hasUnpublishedChanges?: boolean
+  hasValidationErrors?: boolean
 }
 
 export function LessonControls({
@@ -63,6 +64,7 @@ export function LessonControls({
   onPublishAndGenerateAudio,
   isGeneratingAudio = false,
   hasUnpublishedChanges = false,
+  hasValidationErrors = false,
 }: LessonControlsProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportOpen, setIsImportOpen] = useState(false)
@@ -324,21 +326,34 @@ export function LessonControls({
             <Button
               size="sm"
               onClick={onPublishAndGenerateAudio}
-              disabled={!hasUnpublishedChanges || isGeneratingAudio}
+              disabled={!hasUnpublishedChanges || isGeneratingAudio || hasValidationErrors}
               className={cn(
                 "rounded-full px-5 font-bold shadow-md transition-all",
-                !hasUnpublishedChanges
-                  ? "bg-slate-800/80 text-slate-500 border border-slate-800 cursor-not-allowed"
-                  : isGeneratingAudio
-                    ? "bg-slate-800 text-slate-400 border border-slate-700"
-                    : "bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/30"
+                hasValidationErrors
+                  ? "bg-rose-950/60 text-rose-400 border border-rose-800/80 cursor-not-allowed"
+                  : !hasUnpublishedChanges
+                    ? "bg-slate-800/80 text-slate-500 border border-slate-800 cursor-not-allowed"
+                    : isGeneratingAudio
+                      ? "bg-slate-800 text-slate-400 border border-slate-700"
+                      : "bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/30"
               )}
-              title={hasUnpublishedChanges ? "Generate audio & save lesson changes" : "All changes and audio are up to date"}
+              title={
+                hasValidationErrors
+                  ? "Cannot publish: Fix verification errors in your lesson first"
+                  : hasUnpublishedChanges
+                    ? "Generate audio & save lesson changes"
+                    : "All changes and audio are up to date"
+              }
             >
               {isGeneratingAudio ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin text-emerald-400" />
                   Generating Audio...
+                </>
+              ) : hasValidationErrors ? (
+                <>
+                  <span className="text-rose-400 mr-1.5">⚠</span>
+                  Fix Errors to Publish
                 </>
               ) : hasUnpublishedChanges ? (
                 <>

@@ -5,6 +5,7 @@ import { Sparkles, Trophy, CheckCircle2, RotateCcw, LogOut, Award, Target, BookO
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSlideTheme, getLessonPattern } from "@/lib/slide-themes";
+import { SoundEffects } from "@/lib/sound-effects";
 
 interface LessonCompletionOverlayProps {
     isVisible: boolean;
@@ -75,6 +76,13 @@ export function LessonCompletionOverlay({
         ? Math.min(100, Math.round((score / totalPossibleScore) * 100))
         : 100;
     const animatedAccuracy = useCountUp(accuracyPct, isVisible, 1000);
+
+    // Play lesson-finished fanfare when overlay appears
+    useEffect(() => {
+        if (isVisible) {
+            SoundEffects.play('finishedLesson')
+        }
+    }, [isVisible])
 
     // Canvas Confetti Particles Animation
     useEffect(() => {

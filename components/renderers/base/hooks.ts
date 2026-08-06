@@ -25,16 +25,17 @@ export function useInteractiveState<S>({
     const lastOutgoingState = useRef<S>(savedState ?? initialState)
 
     // Sync from parent (savedState) -> local state
+    // We intentionally do NOT include `state` in the dep array here.
+    // Including it caused a loop: savedState changes → setState → state changes → effect re-runs.
+    // The `lastIncomingState` ref is sufficient to deduplicate incoming updates.
     useEffect(() => {
         if (savedState !== undefined && !isEqual(savedState, lastIncomingState.current)) {
-            // Update local state only if it differs from what we just received
-            if (!isEqual(savedState, state)) {
-                setState(savedState)
-            }
+            setState(savedState)
             lastIncomingState.current = savedState
             lastOutgoingState.current = savedState
         }
-    }, [savedState, state])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [savedState])
 
     // Sync from local state -> parent (setComponentState)
     useEffect(() => {

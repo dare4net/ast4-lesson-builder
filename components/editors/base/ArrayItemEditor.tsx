@@ -186,11 +186,9 @@ export function ArrayItemEditor<T extends { id: string }>({
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </div>
-                            <ScrollArea className="max-h-[500px]">
-                                <div className="p-6">
-                                    {renderItem(item, index)}
-                                </div>
-                            </ScrollArea>
+                            <div className="p-6">
+                                {renderItem(item, index)}
+                            </div>
                         </div>
                     </TabsContent>
                 ))}

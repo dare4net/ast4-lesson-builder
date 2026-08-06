@@ -60,6 +60,7 @@ interface ComponentRendererProps {
   isLastSlideChild?: boolean;
   onCheckSlideCompletion?: () => void;
   isEditing?: boolean;
+  onClick?: () => void;
 }
 
 const gamifiedTypes: ComponentType[] = [

@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useRef, useCallback, useEffect, useState } from "react"
-import { useDrop, useDrag, DropTargetMonitor, ConnectDragSource, ConnectDropTarget } from "react-dnd"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Trash2, GripVertical, Settings, LayoutGrid } from "lucide-react"
-import type { Slide, Component } from "@/types/lesson"
-import { ComponentRenderer } from "@/components/component-renderer"
-import { ComponentEditor } from "@/components/component-editor"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { cn } from "@/lib/utils"
-import type { XYCoord } from 'react-dnd'
-import dynamic from "next/dynamic"
-import { useFeedback } from "@/lib/feedback-context"
-import { SlideEditModal } from "./slide-edit-modal"
-
-// Import DraggableComponent dynamically to avoid SSR issues
-const DraggableComponent = dynamic(
-  () => import("@/components/client-only-dnd").then(mod => mod.DraggableComponent),
-  { ssr: false }
-)
+import * as React from "react";
+import { useState, useCallback, useEffect } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Trash2,
+  Settings,
+  LayoutGrid,
+  ListTree,
+  CheckCircle2,
+  AlertTriangle,
+  XCircle
+} from "lucide-react";
+import type { Slide, Component } from "@/types/lesson";
+import { ComponentRenderer } from "@/components/component-renderer";
+import { cn } from "@/lib/utils";
+import { useFeedback } from "@/lib/feedback-context";
+import { SlideEditModal } from "./slide-edit-modal";
+import { ComponentTreeModal } from "@/components/builder/component-tree-modal";
+import { validateSingleComponent } from "@/lib/validation/registry";
+import { ComponentValidationResult } from "@/lib/validation/types";
+import { VerificationModal } from "@/components/builder/verification-modal";
 
 interface SlideEditorProps {
   slide: Slide;
@@ -34,14 +34,106 @@ interface SlideEditorProps {
   className?: string;
 }
 
-interface DragItem {
-  index: number;
-  id: string;
-  type: string;
-}
+// Lightweight Stage Component Card (No DnD handles on stage canvas!)
+function StageComponentCard({
+  component,
+  isSelected,
+  onSelect,
+  onDelete
+}: {
+  component: Component;
+  isSelected: boolean;
+  onSelect: () => void;
+  onDelete: () => void;
+}) {
+  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
 
-// Helper function to generate stable IDs
-const generateStableId = (prefix: string, index: number) => `${prefix}-${index}`;
+  // Validation audit
+  const validationResult: ComponentValidationResult = validateSingleComponent(component as any);
+  const errors = validationResult.errors || [];
+  const warnings = validationResult.warnings || [];
+  const isValid = validationResult.isValid;
+
+  return (
+    <>
+      <div
+        id={component.id}
+        onClick={onSelect}
+        className={cn(
+          "relative group border rounded-2xl p-6 transition-all duration-200 bg-white/70 backdrop-blur-sm shadow-sm cursor-pointer",
+          isSelected
+            ? "ring-4 ring-emerald-500 ring-offset-4 ring-offset-white scale-[1.01] shadow-2xl z-10 border-emerald-400"
+            : "hover:scale-[1.005] hover:border-emerald-300 border-slate-200",
+          !isValid && "border-rose-400 bg-rose-50/10"
+        )}
+      >
+        {/* Header Badges & 1-Click Delete */}
+        <div className="absolute right-4 top-4 flex items-center gap-2 z-20">
+          {/* Status Badge */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsVerificationModalOpen(true);
+            }}
+            className={cn(
+              "h-7 px-2.5 rounded-lg font-medium text-[11px] flex items-center gap-1.5 transition-all border shadow-xs",
+              isValid
+                ? warnings.length === 0
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                  : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                : "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100"
+            )}
+            title="View Verification Senate Details"
+          >
+            {isValid ? (
+              warnings.length === 0 ? (
+                <>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Valid</span>
+                </>
+              ) : (
+                <>
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                  <span>{warnings.length} Warn</span>
+                </>
+              )
+            ) : (
+              <>
+                <XCircle className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
+                <span>{errors.length} Error{errors.length > 1 ? "s" : ""}</span>
+              </>
+            )}
+          </Button>
+
+          {/* 1-Click Delete Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+            className="h-7 w-7 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all"
+            title="Delete Component"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
+
+        <ComponentRenderer component={component} isEditing={true} onClick={onSelect} />
+      </div>
+
+      <VerificationModal
+        isOpen={isVerificationModalOpen}
+        onClose={() => setIsVerificationModalOpen(false)}
+        title={`Component Audit: ${component.type} (${component.id})`}
+        result={validationResult}
+      />
+    </>
+  );
+}
 
 export function SlideEditor({
   slide,
@@ -54,6 +146,7 @@ export function SlideEditor({
 }: SlideEditorProps) {
   const [mounted, setMounted] = useState(false);
   const [isSlideEditOpen, setIsSlideEditOpen] = useState(false);
+  const [isTreeModalOpen, setIsTreeModalOpen] = useState(false);
   const { playFeedback } = useFeedback();
 
   useEffect(() => {
@@ -62,12 +155,12 @@ export function SlideEditor({
 
   const handleTitleChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     await updateSlide({ ...slide, title: e.target.value });
-    await playFeedback('click', { animation: false });
+    await playFeedback("click", { animation: false });
   }, [slide, updateSlide, playFeedback]);
 
   const handleDeleteClick = useCallback(async () => {
     await deleteSlide(slideIndex);
-    await playFeedback('click');
+    await playFeedback("click");
   }, [deleteSlide, slideIndex, playFeedback]);
 
   const moveComponent = useCallback(
@@ -77,7 +170,7 @@ export function SlideEditor({
       newComponents.splice(dragIndex, 1);
       newComponents.splice(hoverIndex, 0, dragComponent);
       await updateSlide({ ...slide, components: newComponents });
-      await playFeedback('click');
+      await playFeedback("click");
     },
     [slide, updateSlide, playFeedback]
   );
@@ -86,32 +179,32 @@ export function SlideEditor({
     async (id: string) => {
       const newComponents = slide.components.filter(c => c.id !== id);
       await updateSlide({ ...slide, components: newComponents });
-      await playFeedback('click');
+      await playFeedback("click");
     },
     [slide, updateSlide, playFeedback]
   );
 
   const handleSlideEdit = useCallback(async () => {
     setIsSlideEditOpen(true);
-    await playFeedback('click', { animation: false });
+    await playFeedback("click", { animation: false });
   }, [playFeedback]);
 
   const handleSlideEditSave = useCallback(async (updatedSlide: Slide) => {
     await updateSlide(updatedSlide);
     setIsSlideEditOpen(false);
-    await playFeedback('click');
+    await playFeedback("click");
   }, [updateSlide, playFeedback]);
 
   if (!mounted) {
-    return null; // Return null on server-side and first render
+    return null;
   }
 
   return (
     <div className={cn("flex flex-1 overflow-hidden bg-white shadow-2xl relative", className)}>
       <ScrollArea className="flex-1">
-        <div className="p-12 space-y-8 max-w-4xl mx-auto">
+        <div className="p-10 space-y-8 max-w-4xl mx-auto">
           {/* Header Section */}
-          <div className="flex items-center gap-6 border-b border-slate-100 pb-8 group/header">
+          <div className="flex items-center gap-6 border-b border-slate-100 pb-6 group/header">
             <div className="flex-1 space-y-1">
               <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Slide Title</span>
               <Input
@@ -122,45 +215,50 @@ export function SlideEditor({
               />
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsTreeModalOpen(true)}
+                className="h-9 px-3 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-200 text-slate-700 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-2xs"
+                title="Open Component Re-ordering Modal"
+              >
+                <ListTree className="w-4 h-4 text-emerald-600" />
+                <span>Re-order Components</span>
+              </Button>
+
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleSlideEdit}
-                className="h-10 w-10 rounded-full text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 transition-all border border-transparent hover:border-emerald-100"
+                className="h-9 w-9 rounded-xl text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 border border-transparent hover:border-emerald-100 transition-all"
+                title="Slide Settings"
               >
-                <Settings className="h-5 w-5" />
+                <Settings className="h-4 w-4" />
               </Button>
+
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 rounded-full text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-all border border-transparent hover:border-rose-100"
+                className="h-9 w-9 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all"
                 onClick={handleDeleteClick}
+                title="Delete Slide"
               >
-                <Trash2 className="h-5 w-5" />
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          {/* Components Area */}
+          {/* Components Stage Area */}
           <div className="space-y-6">
-            {slide.components.map((component, index) => (
-              <div
+            {slide.components.map((component) => (
+              <StageComponentCard
                 key={component.id}
-                className={cn(
-                  "transition-all duration-300 transform",
-                  selectedComponentId === component.id ? "ring-4 ring-emerald-500 ring-offset-4 ring-offset-white rounded-2xl scale-[1.01] shadow-2xl z-10" : "hover:scale-[1.005]"
-                )}
-              >
-                <DraggableComponent
-                  component={component}
-                  index={index}
-                  moveComponent={moveComponent}
-                  onDelete={() => deleteComponent(component.id)}
-                  onClick={() => onSelectComponent(component.id)}
-                  id={component.id}
-                />
-              </div>
+                component={component}
+                isSelected={selectedComponentId === component.id}
+                onSelect={() => onSelectComponent(component.id)}
+                onDelete={() => deleteComponent(component.id)}
+              />
             ))}
           </div>
 
@@ -176,6 +274,18 @@ export function SlideEditor({
           )}
         </div>
       </ScrollArea>
+
+      {/* Component Tree Reordering Modal */}
+      <ComponentTreeModal
+        isOpen={isTreeModalOpen}
+        onClose={() => setIsTreeModalOpen(false)}
+        slideTitle={slide.title || "Current Slide"}
+        components={slide.components}
+        selectedComponentId={selectedComponentId}
+        onSelectComponent={onSelectComponent}
+        moveComponent={moveComponent}
+        onDeleteComponent={deleteComponent}
+      />
 
       <SlideEditModal
         slide={slide}
