@@ -42,33 +42,51 @@ class APIClient {
     setToken(token: string) {
         this.token = token;
         if (typeof window !== 'undefined') {
-            localStorage.setItem('ast_token', token);
-            document.cookie = `ast_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+            try {
+                localStorage.setItem('ast_token', token);
+                document.cookie = `ast_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+            } catch (e) {
+                console.warn('[api-client] Could not write token to storage:', e);
+            }
         }
     }
 
     getToken(): string | null {
         if (!this.token && typeof window !== 'undefined') {
-            this.token = localStorage.getItem('ast_token');
+            try {
+                const item = localStorage.getItem('ast_token');
+                this.token = item === 'undefined' || item === 'null' ? null : item;
+            } catch (e) {
+                console.warn('[api-client] Could not read token from storage:', e);
+                this.token = null;
+            }
         }
         return this.token;
     }
 
     setUser(user: any) {
         if (typeof window !== 'undefined') {
-            localStorage.setItem('ast_user', JSON.stringify(user));
+            try {
+                localStorage.setItem('ast_user', JSON.stringify(user));
+            } catch (e) {
+                console.warn('[api-client] Could not save user to storage:', e);
+            }
         }
     }
 
     getUser(): any | null {
         if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('ast_user');
-            if (stored) {
-                try {
+            try {
+                const stored = localStorage.getItem('ast_user');
+                if (stored && stored !== 'undefined' && stored !== 'null') {
                     return JSON.parse(stored);
-                } catch {
-                    return null;
                 }
+            } catch (e) {
+                console.warn('[api-client] Corrupted user data in storage, removing key:', e);
+                try {
+                    localStorage.removeItem('ast_user');
+                } catch { }
+                return null;
             }
         }
         return null;
@@ -77,9 +95,13 @@ class APIClient {
     clearToken() {
         this.token = null;
         if (typeof window !== 'undefined') {
-            localStorage.removeItem('ast_token');
-            localStorage.removeItem('ast_user');
-            document.cookie = 'ast_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            try {
+                localStorage.removeItem('ast_token');
+                localStorage.removeItem('ast_user');
+                document.cookie = 'ast_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            } catch (e) {
+                console.warn('[api-client] Error clearing storage:', e);
+            }
         }
     }
 

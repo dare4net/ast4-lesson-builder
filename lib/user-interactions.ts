@@ -111,34 +111,43 @@ export async function saveUserInteraction(
 if (typeof window !== 'undefined') {
   window.addEventListener('online', async () => {
     console.log('[user-interactions] Back online! Checking for unsynced local progress...');
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith('ast_interaction_')) {
-        const parts = key.split('_');
-        if (parts.length >= 4) {
-          const userId = parts[2];
-          const lessonId = parts.slice(3).join('_');
-          const dataStr = localStorage.getItem(key);
-          if (dataStr && userId && lessonId) {
-            try {
-              const data = JSON.parse(dataStr);
-              await fetch('/api/interactions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  userId,
-                  lessonId,
-                  componentsState: data.componentsState,
-                  lessonState: data.lessonState
-                })
-              });
-              console.log(`[user-interactions] Successfully synced offline progress for lesson ${lessonId}`);
-            } catch (e) {
-              console.error(`[user-interactions] Failed to sync ${key}:`, e);
+    try {
+      const keys: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k) keys.push(k);
+      }
+
+      for (const key of keys) {
+        if (key.startsWith('ast_interaction_')) {
+          const parts = key.split('_');
+          if (parts.length >= 4) {
+            const userId = parts[2];
+            const lessonId = parts.slice(3).join('_');
+            const dataStr = localStorage.getItem(key);
+            if (dataStr && userId && lessonId) {
+              try {
+                const data = JSON.parse(dataStr);
+                await fetch('/api/interactions', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    userId,
+                    lessonId,
+                    componentsState: data.componentsState,
+                    lessonState: data.lessonState
+                  })
+                });
+                console.log(`[user-interactions] Successfully synced offline progress for lesson ${lessonId}`);
+              } catch (e) {
+                console.error(`[user-interactions] Failed to sync ${key}:`, e);
+              }
             }
           }
         }
       }
+    } catch (err) {
+      console.warn('[user-interactions] Error reading offline keys during online sync:', err);
     }
   });
 }

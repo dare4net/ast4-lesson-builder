@@ -11,12 +11,14 @@ const FULL_NAME = "AFTER-SCHOOL.TECH"
 // Eye animation last element lands at ~3.2s, so typewriter starts after that
 const TYPEWRITER_START_MS = 2000
 
-export function SplashScreen({ onFinished }: SplashScreenProps) {
+export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProps) {
     const [typedChars, setTypedChars] = useState(0)
     const [typingDone, setTypingDone] = useState(false)
+    const [animComplete, setAnimComplete] = useState(false)
+    const [showRecoveryButton, setShowRecoveryButton] = useState(false)
 
+    // Phase 1: Handle standard splash animation sequence (~6.6 seconds total)
     useEffect(() => {
-        // Phase 1: wait for eye animation to finish
         const startTyping = setTimeout(() => {
             let i = 0
             const typer = setInterval(() => {
@@ -25,15 +27,60 @@ export function SplashScreen({ onFinished }: SplashScreenProps) {
                 if (i >= FULL_NAME.length) {
                     clearInterval(typer)
                     setTypingDone(true)
-                    // Phase 3: wait 3s then navigate
-                    setTimeout(() => onFinished(), 3000)
+                    // Phase 3: Hold for 3s after typing completes
+                    setTimeout(() => {
+                        setAnimComplete(true)
+                    }, 3000)
                 }
             }, 90)
             return () => clearInterval(typer)
         }, TYPEWRITER_START_MS)
 
         return () => clearTimeout(startTyping)
-    }, [onFinished])
+    }, [])
+
+    // Phase 2: Watchdog timers taking into account full ~6.6s animation duration
+    // 8.5s (2s past normal end): Show emergency recovery button if still loading
+    // 11.5s (5s past normal end): Hard fallback curtain raise
+    useEffect(() => {
+        const recoveryTimer = setTimeout(() => {
+            if (isLoading) {
+                console.warn('[SplashScreen] App initialization taking longer than 8.5s. Displaying recovery action.');
+                setShowRecoveryButton(true)
+            }
+        }, 8500)
+
+        const hardWatchdogTimer = setTimeout(() => {
+            if (isLoading) {
+                console.warn('[SplashScreen] Watchdog fallback triggered after 11.5s. Force raising curtain.');
+                onFinished()
+            }
+        }, 11500)
+
+        return () => {
+            clearTimeout(recoveryTimer)
+            clearTimeout(hardWatchdogTimer)
+        }
+    }, [isLoading, onFinished])
+
+    // Phase 3: When animation completes naturally AND app is done loading, finish splash
+    useEffect(() => {
+        if (animComplete && !isLoading) {
+            onFinished()
+        }
+    }, [animComplete, isLoading, onFinished])
+
+    const handleEmergencyReset = () => {
+        if (typeof window !== 'undefined') {
+            if ((window as any).__emergencyPWAReset) {
+                (window as any).__emergencyPWAReset()
+            } else {
+                localStorage.clear()
+                sessionStorage.clear()
+                window.location.reload()
+            }
+        }
+    }
 
     return (
         <div style={{
@@ -178,6 +225,42 @@ export function SplashScreen({ onFinished }: SplashScreenProps) {
                 )}
                 <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
             </div>
+
+            {/* Self-healing Recovery Button (shows if app initialization stalls >8.5s) */}
+            {showRecoveryButton && (
+                <div style={{
+                    marginTop: 24,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 8,
+                    animation: 'fadeIn 0.3s ease forwards'
+                }}>
+                    <p style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>
+                        Taking longer than expected?
+                    </p>
+                    <button
+                        onClick={handleEmergencyReset}
+                        style={{
+                            padding: '8px 16px',
+                            borderRadius: '12px',
+                            background: '#18181b',
+                            color: '#ffffff',
+                            fontSize: 12,
+                            fontWeight: 800,
+                            border: 'none',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                            transition: 'transform 0.15s ease',
+                        }}
+                        onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+                        onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                    >
+                        Reset App Data & Reload
+                    </button>
+                    <style>{`@keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }`}</style>
+                </div>
+            )}
         </div>
     )
 }

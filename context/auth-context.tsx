@@ -34,27 +34,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Initialize auth from localStorage on mount
     useEffect(() => {
         const initAuth = () => {
-            const storedToken = apiClient.getToken();
-            const storedUser = apiClient.getUser();
+            try {
+                const storedToken = apiClient.getToken();
+                const storedUser = apiClient.getUser();
 
-            if (storedToken) {
-                try {
-                    const decoded = jwtDecode<User>(storedToken);
-                    // Merge decoded token claims with stored full profile details (email, full_name)
-                    const fullUser: User = {
-                        ...decoded,
-                        ...(storedUser || {}),
-                        email: storedUser?.email || decoded.email,
-                        full_name: storedUser?.full_name || storedUser?.fullName || decoded.full_name || decoded.fullName,
-                    };
-                    setUser(fullUser);
-                    setToken(storedToken);
-                } catch (error) {
-                    console.error('Invalid token:', error);
-                    apiClient.clearToken();
+                if (storedToken) {
+                    try {
+                        const decoded = jwtDecode<User>(storedToken);
+                        // Merge decoded token claims with stored full profile details (email, full_name)
+                        const fullUser: User = {
+                            ...decoded,
+                            ...(storedUser || {}),
+                            email: storedUser?.email || decoded.email,
+                            full_name: storedUser?.full_name || storedUser?.fullName || decoded.full_name || decoded.fullName,
+                        };
+                        setUser(fullUser);
+                        setToken(storedToken);
+                    } catch (error) {
+                        console.error('[auth-context] Invalid or expired token format:', error);
+                        apiClient.clearToken();
+                        setUser(null);
+                        setToken(null);
+                    }
                 }
+            } catch (err) {
+                console.error('[auth-context] Critical startup init error:', err);
+                apiClient.clearToken();
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
 
         initAuth();

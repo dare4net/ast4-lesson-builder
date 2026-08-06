@@ -12,40 +12,49 @@ This SKILL provides the definitive guidelines for taking any subject topic and g
 ## 1. Non-Negotiable Lesson Quality Rules
 
 1. **Intertwined Component Structure (NO Text-Then-Single-Interactive Pattern)**:
-   - **Rule**: Content and interactive components MUST BE INTERtwined on every slide. Do NOT place all text at the top and a single activity at the bottom.
+   - **Rule**: Content, visual anchors (`image`, `hotspot`, `video`), and interactive components MUST BE INTERTWINED on every slide. Do NOT place all text at the top and a single activity at the bottom.
    - **Slide Pattern**:
      - `heading`
      - `paragraph` (introducing Sub-concept A)
+     - **Visual Anchor** (`image` diagram / photo OR interactive `hotspot` discovery diagram)
      - Interactive component (e.g. `flashcards` or `matchingPairs`) reinforcing Sub-concept A immediately
      - `paragraph` / `bulletList` / `table` (introducing Sub-concept B or nuance)
      - Interactive component (e.g. `fillInTheBlank` or `quiz`) testing Sub-concept B
      - `quote` / `bulletList` summary tip
 
-2. **Copious Component Variety (Use Multiple Interactive Components per Slide)**:
+2. **Visual-First Pedagogy & Judicious Visual Component Use (`image`, `hotspot`, `video`)**:
+   - **Rule**: Science, geography, history, biology, physics, and technical topics MUST be visually anchored. Never rely purely on walls of text when a visual diagram, image, interactive hotspot map, or video embed can illustrate the physical or spatial reality.
+   - **Component Roles**:
+     - **`image`**: Use for high-impact visual diagrams, real-world photographs, state comparisons (e.g. ice vs water vs steam), and structural illustrations. Always include descriptive `alt` and educational `caption` props.
+     - **`hotspot`**: Use for interactive spatial/diagram exploration. In `behavior: "discovery"`, students click key regions on an image (e.g. sun vs wooden desk vs shadow vs water bottle) to learn about them. In `behavior: "quiz"`, students are tested on identifying visual targets.
+     - **`video`**: Use for processes in motion, dynamic experiments, or short video demonstrations.
+   - **Integration Frequency**: At least one visual element (`image`, `hotspot`, or `video`) MUST be included on any slide introducing a new physical, spatial, or structural concept.
+
+3. **Copious Component Variety (Use Multiple Interactive Components per Slide)**:
    - Utilize as many registered interactive components on each slide as judiciously helpful. A single slide can contain 2 or 3 interactive components interspaced between explanations to maximize engagement and active learning.
 
-3. **Complete, Self-Contained Teaching per Slide**:
+4. **Complete, Self-Contained Teaching per Slide**:
    - Every slide must teach its target topic **thoroughly and completely**. Do not leave a concept half-explained or rely on a future slide to finish explaining a rule (except when building progressive concepts on top of foundational ones).
 
-4. **Strictly Educational Theme**:
+5. **Strictly Educational Theme**:
    - Use clean, encouraging, academic framing focused on language discovery, sentence building, and mastery. Avoid military or confusing sci-fi terminology.
 
-5. **100% Valid Component Catalog Only**:
+6. **100% Valid Component Catalog Only**:
    - Only use components registered in `skills/lesson-json/SKILL.md`:
-     - **Content**: `heading`, `paragraph`, `bulletList`, `image`, `table`, `video`, `codeBlock`, `quote`
-     - **Interactive / Gamified**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`
+     - **Content & Visual**: `heading`, `paragraph`, `bulletList`, `image`, `table`, `video`, `codeBlock`, `quote`
+     - **Interactive & Gamified**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`
 
-6. **Plain Text Only inside Tables**:
+7. **Plain Text Only inside Tables**:
    - **Crucial Rule**: `table` component cell data MUST BE PLAIN TEXT strings only. **NEVER use HTML tags** (such as `<strong>`, `<em>`, `<span>`, `<br>`) inside table data arrays.
 
-7. **Dynamic & Realistic Live-Mode Time Limits (NEVER Hardcode Default 10s)**:
+8. **Dynamic & Realistic Live-Mode Time Limits (NEVER Hardcode Default 10s)**:
    - **Rule**: When `mode: "live"`, the system engine defaults to 10 seconds per activity if `timeLimit` is omitted or uncalculated. **10 seconds is almost NEVER enough time** for multi-question, fill-in-the-blank, drag-and-drop, or matching activities!
    - `timeLimit` MUST ALWAYS be calculated dynamically based on:
      1. **Component type cognitive friction** (typing text vs clicking vs visual matching vs drag-and-drop).
      2. **Number of items / questions / blanks / pairs** inside the component.
      3. **Length and reading complexity of prompt text and options**.
 
-8. **Final Topic Lesson Rule (Comprehensive 100% Live Assessment)**:
+9. **Final Topic Lesson Rule (Comprehensive 100% Live Assessment)**:
    - **Mandatory Requirement**: The final lesson of EVERY curriculum topic/module MUST be a **Comprehensive Assessment Lesson** that tests every single concept taught across all prior lessons in the topic.
    - **Slide Structure**: Every single slide in this lesson is a dedicated assessment challenge.
    - **100% Live Mode**: All interactive components on every slide (except brief informational headers/prompts) MUST be set to `mode: "live"` with explicit dynamic `timeLimit` parameters.

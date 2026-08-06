@@ -56,31 +56,46 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Audio & Sound files: Cache-First (Offline Cloudinary TTS & SFX playback)
-  if (event.request.url.includes('/sounds/') || event.request.url.includes('/audio/') || event.request.url.includes('res.cloudinary.com')) {
+  const url = new URL(event.request.url);
+
+  // 1. Bypass Service Worker for non-GET requests, API calls, dynamic protocols, and browser extensions
+  if (
+    event.request.method !== 'GET' ||
+    !url.protocol.startsWith('http') ||
+    url.pathname.startsWith('/api/') ||
+    url.searchParams.has('nocache')
+  ) {
+    return; // Allow standard browser handling
+  }
+
+  // 2. Audio & Sound files: Cache-First (Offline Cloudinary TTS & SFX playback)
+  if (url.pathname.includes('/sounds/') || url.pathname.includes('/audio/') || url.hostname.includes('res.cloudinary.com')) {
     event.respondWith(
-      caches.match(event.request).then((response) => {
-        if (response) return response;
-        return fetch(event.request.clone()).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            const targetCache = event.request.url.includes('/sounds/') ? SOUND_CACHE_NAME : CACHE_NAME;
-            caches.open(targetCache).then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-          }
-          return networkResponse;
-        });
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) return cachedResponse;
+        return fetch(event.request.clone())
+          .then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              const responseToCache = networkResponse.clone();
+              const targetCache = url.pathname.includes('/sounds/') ? SOUND_CACHE_NAME : CACHE_NAME;
+              caches.open(targetCache).then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+            }
+            return networkResponse;
+          })
+          .catch(() => {
+            return new Response('Audio asset unavailable offline', { status: 404, statusText: 'Not Found' });
+          });
       })
     );
     return;
   }
 
-  // Network-First for HTML and JS/CSS updates (PWA content)
+  // 3. Network-First with Cache Fallback for HTML/JS/CSS assets
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        // If network returns a valid response, update the cache copy
         if (networkResponse && networkResponse.status === 200 && event.request.method === 'GET') {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -89,11 +104,32 @@ self.addEventListener('fetch', (event) => {
         }
         return networkResponse;
       })
-      .catch(() => {
-        // If network fails (offline), fall back to cached version
-        return caches.match(event.request);
+      .catch(async () => {
+        const cachedMatch = await caches.match(event.request);
+        if (cachedMatch) {
+          return cachedMatch;
+        }
+        // Never return undefined to respondWith() - return fallback Response to prevent browser fetch TypeError
+        return new Response('Page or resource unavailable offline', {
+          status: 503,
+          statusText: 'Service Unavailable',
+          headers: { 'Content-Type': 'text/plain' }
+        });
       })
   );
+});
+
+// Listener for self-healing / emergency reset message from client
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'CLEAR_CACHE') {
+    caches.keys().then((cacheNames) => {
+      return Promise.all(cacheNames.map((name) => caches.delete(name)));
+    }).then(() => {
+      if (event.ports && event.ports[0]) {
+        event.ports[0].postMessage({ success: true });
+      }
+    });
+  }
 });
 
 self.addEventListener('activate', (event) => {

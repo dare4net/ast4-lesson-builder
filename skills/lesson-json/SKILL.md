@@ -232,16 +232,16 @@ Data in rows and columns.
 ---
 
 #### `image`
-Display an image with optional caption.
+Display an image with an optional educational caption. Essential for visually anchoring scientific concepts, real-world examples, comparison diagrams, and structural schematics.
 
 ```json
 {
   "id": "image-<ts>",
   "type": "image",
   "props": {
-    "src": "https://example.com/my-image.png",
-    "alt": "Description of image",
-    "caption": "Optional caption text",
+    "src": "/placeholder.svg?height=300&width=600",
+    "alt": "Ice cube (Solid), Glass of water (Liquid), Steam from kettle (Gas)",
+    "caption": "Water in its three famous states: Solid ice, Liquid water, and Gas steam!",
     "width": "100%"
   },
   "state": "active",
@@ -249,17 +249,19 @@ Display an image with optional caption.
 }
 ```
 
-| Prop | Type | Default |
-|---|---|---|
-| `src` | `string` (URL) | `/placeholder.svg?height=300&width=400` |
-| `alt` | `string` | `"Image description"` |
-| `caption` | `string` | `""` |
-| `width` | `string` | `"100%"` |
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `src` | `string` (URL) | `/placeholder.svg?height=300&width=400` | Image asset path or URL |
+| `alt` | `string` | `"Image description"` | Accessible description for screen readers |
+| `caption` | `string` | `""` | Educational takeaway caption rendered directly below the image |
+| `width` | `string` | `"100%"` | Display width CSS string |
+
+> **Pedagogical Guideline**: Use `image` whenever introducing physical objects, microscopic particle structures, data charts, or real-world comparison photos.
 
 ---
 
 #### `video`
-Embed a video.
+Embed an instructional video or dynamic process demonstration.
 
 ```json
 {
@@ -268,7 +270,7 @@ Embed a video.
   "props": {
     "src": "https://example.com/video.mp4",
     "poster": "https://example.com/thumbnail.jpg",
-    "caption": "",
+    "caption": "Observe how water molecules move faster as heat energy is added.",
     "controls": true,
     "autoplay": false,
     "loop": false
@@ -278,14 +280,14 @@ Embed a video.
 }
 ```
 
-| Prop | Type | Default |
-|---|---|---|
-| `src` | `string` | `/placeholder.mp4` |
-| `poster` | `string` | `/placeholder.jpg` |
-| `caption` | `string` | `""` |
-| `controls` | `boolean` | `true` |
-| `autoplay` | `boolean` | `false` |
-| `loop` | `boolean` | `false` |
+| Prop | Type | Default | Notes |
+|---|---|---|---|
+| `src` | `string` | `/placeholder.mp4` | Video file URL or embed link |
+| `poster` | `string` | `/placeholder.jpg` | Thumbnail preview image |
+| `caption` | `string` | `""` | Instructional video summary |
+| `controls` | `boolean` | `true` | Show playback controls |
+| `autoplay` | `boolean` | `false` | Auto-start video |
+| `loop` | `boolean` | `false` | Loop playback |
 
 ---
 
@@ -614,18 +616,44 @@ Interactive coding sandbox with test cases.
 ---
 
 #### `hotspot`
-Clickable regions on an image.
+Interactive visual diagram with clickable target regions. Essential for visual exploration, diagram labeling, spatial identification (e.g. cell parts, ecosystem maps, states of matter scenes, circuit components).
 
 ```json
 {
   "id": "hotspot-<ts>",
   "type": "hotspot",
   "props": {
-    "title": "Identify the parts of a cell",
-    "image": "https://example.com/cell-diagram.png",
+    "title": "Interactive Scene: Click items to investigate if they are Matter!",
+    "image": "/placeholder.svg?height=400&width=600",
     "hotspots": [
-      { "id": "1", "x": 0.3, "y": 0.4, "label": "Nucleus", "content": "Controls cell activity" },
-      { "id": "2", "x": 0.6, "y": 0.7, "label": "Mitochondria", "content": "Produces energy" }
+      {
+        "id": "hs1",
+        "x": 0.2,
+        "y": 0.3,
+        "label": "Sunlight ☀️",
+        "content": "NOT MATTER! Light is energy. It has no mass and doesn't take up physical space."
+      },
+      {
+        "id": "hs2",
+        "x": 0.5,
+        "y": 0.5,
+        "label": "Wooden Desk 🪵",
+        "content": "MATTER! Wood has mass and takes up volume in the room."
+      },
+      {
+        "id": "hs3",
+        "x": 0.8,
+        "y": 0.3,
+        "label": "Shadow on Wall 👥",
+        "content": "NOT MATTER! A shadow is just the absence of light. You can't weigh a shadow!"
+      },
+      {
+        "id": "hs4",
+        "x": 0.3,
+        "y": 0.7,
+        "label": "Water Bottle 💧",
+        "content": "MATTER! Liquid water has mass and takes up volume."
+      }
     ],
     "behavior": "discovery",
     "mode": "practice",
@@ -639,24 +667,26 @@ Clickable regions on an image.
 
 | Prop | Type | Allowed Values | Notes |
 |---|---|---|---|
-| `title` | `string` | | Instruction prompt |
-| `image` | `string` | URL | Background image |
-| `hotspots` | `Hotspot[]` | | Minimum 1 |
-| `behavior` | `string` | `"discovery"` `"quiz"` | `discovery` = info only; `quiz` = find all to complete |
+| `title` | `string` | | Instruction prompt shown above the image |
+| `image` | `string` | URL | Background diagram / photo asset URL |
+| `hotspots` | `Hotspot[]` | | Array of interactive target markers (minimum 1) |
+| `behavior` | `string` | `"discovery"` `"quiz"` | `discovery` = click to inspect popups; `quiz` = click target hotspots to complete challenge |
 | `mode` | `"practice" \| "live"` | | |
 | `state` | `"active" \| "disabled"` | | |
+| `timeLimit` | `number` | | Seconds for live mode countdown timer |
 
 **Hotspot object:**
 ```json
 {
-  "id": "1",
-  "x": 0.35,
-  "y": 0.28,
-  "label": "Hotspot Label",
-  "content": "Tooltip explanation text"
+  "id": "hs1",
+  "x": 0.2,
+  "y": 0.3,
+  "label": "Sunlight ☀️",
+  "content": "Explanation popup content"
 }
 ```
-> **Rule**: `x` and `y` are decimal fractions (0.0–1.0) representing position as percentage of image width/height. Top-left is `(0, 0)`, bottom-right is `(1, 1)`.
+> **Coordinates Rule**: `x` and `y` are decimal fractions (`0.0`–`1.0`) representing relative percentage coordinates across image width and height. Top-left is `(0.0, 0.0)`, bottom-right is `(1.0, 1.0)`.
+> **Pedagogical Recommendation**: Use `behavior: "discovery"` on introductory slides to let students explore visual diagrams at their own pace, and `behavior: "quiz"` on assessment slides.
 
 ---
 
