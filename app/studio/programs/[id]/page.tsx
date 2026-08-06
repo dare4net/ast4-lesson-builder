@@ -66,6 +66,14 @@ function ProgramDetailContent() {
         return res;
     };
 
+    const [navigatingUrl, setNavigatingUrl] = useState<string | null>(null);
+
+    const handleNavigate = (url: string) => {
+        if (navigatingUrl) return;
+        setNavigatingUrl(url);
+        router.push(url);
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-[#F7F8FA] flex items-center justify-center">
@@ -106,11 +114,11 @@ function ProgramDetailContent() {
 
                 {/* Breadcrumb */}
                 <div className="relative z-10 px-4 sm:px-6 pt-6 flex items-center gap-2 text-xs font-bold text-white/50">
-                    <button onClick={() => router.push('/dashboard/tutor')} className="flex items-center gap-1 hover:text-white transition-colors">
+                    <button onClick={() => handleNavigate('/dashboard/tutor')} className="flex items-center gap-1 hover:text-white transition-colors">
                         <LayoutDashboard className="w-3.5 h-3.5" /><span className="hidden sm:inline">Dashboard</span>
                     </button>
                     <span>/</span>
-                    <button onClick={() => router.push('/studio/programs')} className="flex items-center gap-1 hover:text-white transition-colors group">
+                    <button onClick={() => handleNavigate('/studio/programs')} className="flex items-center gap-1 hover:text-white transition-colors group">
                         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />Programs
                     </button>
                 </div>
@@ -141,11 +149,13 @@ function ProgramDetailContent() {
                             <Trash2 className="w-3.5 h-3.5" />
                         </button>
                         <button
-                            onClick={() => router.push(`/studio/programs/${programId}/modules/new`)}
-                            className="h-9 px-3 sm:px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-1.5 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                            onClick={() => handleNavigate(`/studio/programs/${programId}/modules/new`)}
+                            disabled={!!navigatingUrl}
+                            className="h-9 px-3 sm:px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-1.5 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px disabled:opacity-60"
                             style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
                         >
-                            <Plus className="w-4 h-4" /><span className="hidden xs:inline">New Module</span>
+                            {navigatingUrl === `/studio/programs/${programId}/modules/new` ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                            <span className="hidden xs:inline">New Module</span>
                         </button>
                     </div>
                 </div>
@@ -183,11 +193,12 @@ function ProgramDetailContent() {
                         <p className="text-base font-black text-slate-700 mb-1">No Modules Yet</p>
                         <p className="text-xs text-slate-400 font-medium mb-5 max-w-xs">Break your curriculum into modules to organise lessons and activities.</p>
                         <button
-                            onClick={() => router.push(`/studio/programs/${programId}/modules/new`)}
-                            className="h-10 px-5 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                            onClick={() => handleNavigate(`/studio/programs/${programId}/modules/new`)}
+                            disabled={!!navigatingUrl}
+                            className="h-10 px-5 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px disabled:opacity-60"
                             style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
                         >
-                            <Plus className="w-4 h-4" />Create First Module
+                            {navigatingUrl === `/studio/programs/${programId}/modules/new` ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}Create First Module
                         </button>
                     </div>
                 ) : (
@@ -197,7 +208,7 @@ function ProgramDetailContent() {
                                 <ModuleCard
                                     module={module}
                                     parentProgramImage={program.image_url || program.cover_image}
-                                    onClick={() => router.push(`/studio/modules/${module._id}`)}
+                                    onClick={() => handleNavigate(`/studio/modules/${module._id}`)}
                                     onDelete={(e: React.MouseEvent) => { e.stopPropagation(); setSelectedModuleForDelete(module); }}
                                 />
                             </motion.div>

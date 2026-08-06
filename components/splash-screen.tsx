@@ -17,6 +17,14 @@ export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProp
     const [animComplete, setAnimComplete] = useState(false)
     const [showRecoveryButton, setShowRecoveryButton] = useState(false)
 
+    // Phase 0: Ping backend endpoint on splash mount to warm up server cold-starts
+    useEffect(() => {
+        const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api').replace(/\/api\/?$/, '')
+        fetch(backendUrl, { method: 'GET', cache: 'no-store' }).catch(() => {
+            // Silently swallow errors - this is an asynchronous warmup ping
+        })
+    }, [])
+
     // Phase 1: Handle standard splash animation sequence (~6.6 seconds total)
     useEffect(() => {
         const startTyping = setTimeout(() => {

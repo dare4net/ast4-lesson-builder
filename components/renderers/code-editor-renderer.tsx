@@ -129,12 +129,12 @@ function CodeEditorContent({
         )
 
         const result = userFunction({})
-        setState(prev => ({ ...prev, output: result || "No output" }))
+        setState(prev => ({ ...prev, output: result || "No output", status: 'completed' }))
       } else {
-        setState(prev => ({ ...prev, output: `Running ${language} code is not supported in this demo.` }))
+        setState(prev => ({ ...prev, output: `Running ${language} code is not supported in this demo.`, status: 'completed' }))
       }
     } catch (error) {
-      setState(prev => ({ ...prev, output: `Error: ${error instanceof Error ? error.message : 'An unknown error occurred'}` }))
+      setState(prev => ({ ...prev, output: `Error: ${error instanceof Error ? error.message : 'An unknown error occurred'}`, status: 'completed' }))
     }
 
     setIsRunning(false)

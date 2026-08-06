@@ -2,12 +2,12 @@
 
 import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut, Loader2 } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
 import type { Lesson } from '@/types/lesson';
-import { getComponentCategory, formatSlideTitle } from '@/lib/lesson-utils';
+import { getComponentCategory, formatSlideTitle, isInteractiveComponent } from '@/lib/lesson-utils';
 import isEqual from 'lodash.isequal';
 import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
@@ -125,26 +125,56 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const { isLocked } = useNavigationLock();
     const { isEnabled, toggleReadAloud } = useReadAloud();
 
-    const canGoNext = !isLocked && (innerStepIndex < (processedComponents.length - 1) || currentSlideIndex < (lesson.slides.length - 1));
+    const isCurrentComponentCompleted = useMemo(() => {
+      if (!activeComponent) return true;
+      if (isInteractiveComponent(activeComponent.type)) {
+        const isLiveMode =
+          activeComponent.mode === 'live' ||
+          (activeComponent.props as any)?.mode === 'live' ||
+          Boolean((activeComponent.props as any)?.timeLimit && Number((activeComponent.props as any).timeLimit) > 0);
+
+        if (isLiveMode) {
+          // Live mode components allow skipping before the timer starts.
+          // Once the timer starts, the component registers a navigation lock (isLocked = true) which disables Next.
+          return true;
+        }
+
+        const stateStatus = componentStates[activeComponent.id]?.status;
+        return stateStatus === "completed" || activeComponent.status === "completed";
+      }
+      return true;
+    }, [activeComponent, componentStates]);
+
+    const canGoNext =
+      !isLocked &&
+      isCurrentComponentCompleted &&
+      (innerStepIndex < (processedComponents.length - 1) || currentSlideIndex < (lesson.slides.length - 1));
     const canGoPrev = !isLocked && (innerStepIndex > 0 || currentSlideIndex > 0);
 
+    const [isNavigating, setIsNavigating] = useState(false);
+
     const handleAdvance = () => {
+      if (isNavigating) return;
+      setIsNavigating(true);
       playFeedback('uiClick');
       if (innerStepIndex < processedComponents.length - 1) {
         setInnerStepIndex(prev => prev + 1);
       } else if (currentSlideIndex < lesson.slides.length - 1) {
         onSlideChange(currentSlideIndex + 1);
-        // overlay is triggered via the useEffect watching currentSlideIndex
       }
+      setTimeout(() => setIsNavigating(false), 500);
     };
 
     const handleRecall = () => {
+      if (isNavigating) return;
+      setIsNavigating(true);
       playFeedback('uiClick');
       if (innerStepIndex > 0) {
         setInnerStepIndex(prev => prev - 1);
       } else if (currentSlideIndex > 0) {
         onSlideChange(currentSlideIndex - 1);
       }
+      setTimeout(() => setIsNavigating(false), 500);
     };
 
     useEffect(() => {
@@ -354,9 +384,9 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
               variant="outline"
               className="h-10 px-5 w-full rounded-xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs flex items-center justify-center"
               onClick={handleRecall}
-              disabled={!canGoPrev}
+              disabled={!canGoPrev || isNavigating}
             >
-              <ChevronLeft className="h-4 w-4 mr-1.5" />
+              {isNavigating ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <ChevronLeft className="h-4 w-4 mr-1.5" />}
               Previous
             </Button>
 
@@ -368,9 +398,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                   playFeedback('uiClick');
                   handleEndLessonTrigger();
                 }}
+                disabled={isNavigating || !isCurrentComponentCompleted}
               >
+                {isNavigating ? <Loader2 className="h-3.5 w-3.5 animate-spin ml-1" /> : <LogOut className="h-3.5 w-3.5 ml-1" />}
                 End Lesson
-                <LogOut className="h-3.5 w-3.5 ml-1" />
               </Button>
             ) : (() => {
               // Detect if we are on the last component of the current slide (not the last slide)
@@ -392,10 +423,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                     color: nextSlideTheme.btnTextHex,
                   } : undefined}
                   onClick={handleAdvance}
-                  disabled={!canGoNext}
+                  disabled={!canGoNext || isNavigating}
                 >
                   {isLastComponentOfSlide ? "Next Slide" : "Next"}
-                  <ChevronRight className="h-4 w-4 ml-1.5" />
+                  {isNavigating ? <Loader2 className="h-4 w-4 ml-1.5 animate-spin" /> : <ChevronRight className="h-4 w-4 ml-1.5" />}
                 </Button>
               );
             })()}

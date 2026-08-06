@@ -123,6 +123,14 @@ export default function StudentCourseDetailPage() {
 
     const progressPct = getProgressValue()
 
+    const [openingModuleId, setOpeningModuleId] = useState<string | null>(null)
+
+    const handleOpenModule = (moduleId: string) => {
+        if (openingModuleId) return
+        setOpeningModuleId(moduleId)
+        router.push(`/dashboard/student/programs/${id}/modules/${moduleId}`)
+    }
+
     return (
         <div className="space-y-8">
             {/* Header Navigation */}
@@ -198,7 +206,7 @@ export default function StudentCourseDetailPage() {
                                 transition={{ delay: idx * 0.05 }}
                             >
                                 <Card
-                                    onClick={() => router.push(`/dashboard/student/programs/${id}/modules/${mod._id}`)}
+                                    onClick={() => handleOpenModule(mod._id)}
                                     className="p-6 rounded-3xl bg-white border-2 border-slate-200 shadow-sm hover:border-[#1CB0F6] transition-all cursor-pointer group flex flex-col justify-between h-full space-y-5"
                                 >
                                     <div className="space-y-4">
@@ -225,9 +233,18 @@ export default function StudentCourseDetailPage() {
                                         <span className="text-slate-400 font-bold">
                                             {lessonCount} {lessonCount === 1 ? 'Lesson' : 'Lessons'}
                                         </span>
-                                        <button className="h-9 px-4 rounded-xl bg-slate-50 group-hover:bg-[#1CB0F6] group-hover:text-white border-2 border-slate-200 group-hover:border-[#1899D6] text-slate-700 text-xs font-extrabold flex items-center gap-1.5 transition-all">
-                                            <span>Open Module</span>
-                                            <ChevronRight className="w-4 h-4" />
+                                        <button
+                                            disabled={openingModuleId === mod._id}
+                                            className="h-9 px-4 rounded-xl bg-slate-50 group-hover:bg-[#1CB0F6] group-hover:text-white border-2 border-slate-200 group-hover:border-[#1899D6] text-slate-700 text-xs font-extrabold flex items-center gap-1.5 transition-all"
+                                        >
+                                            {openingModuleId === mod._id ? (
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                            ) : (
+                                                <>
+                                                    <span>Open Module</span>
+                                                    <ChevronRight className="w-4 h-4" />
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </Card>

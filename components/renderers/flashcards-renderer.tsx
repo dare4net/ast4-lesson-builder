@@ -71,11 +71,15 @@ function FlashcardsContent({
   const goToNextCard = () => {
     if (disabledProp) return
     if (currentCardIndex < cards.length - 1) {
+      const nextIndex = currentCardIndex + 1
+      const isLastCard = nextIndex === cards.length - 1
       playFlashcardNext()
+      if (isLastCard) setTimeout(() => playFlashcardComplete(), 180)
       setState(prev => ({
         ...prev,
-        currentCardIndex: currentCardIndex + 1,
+        currentCardIndex: nextIndex,
         isFlipped: false,
+        status: isLastCard ? 'completed' : prev.status
       }))
     }
   }
@@ -94,26 +98,15 @@ function FlashcardsContent({
 
   const flipCard = () => {
     if (disabledProp) return
-
     const willBeFlipped = !isFlipped
-    const isCompleted = currentCardIndex === cards.length - 1 && willBeFlipped
-
-    // Directional flip sounds: deep whoosh to back, lighter snap to front
     if (willBeFlipped) {
       playFlashcardFlipForward()
     } else {
       playFlashcardFlipBack()
     }
-
-    if (isCompleted) {
-      // Slight delay so flip sound plays first, then completion chord stacks in
-      setTimeout(() => playFlashcardComplete(), 180)
-    }
-
     setState(prev => ({
       ...prev,
       isFlipped: willBeFlipped,
-      status: isLive || isCompleted ? 'completed' : prev.status
     }))
   }
 
@@ -173,7 +166,6 @@ function FlashcardsContent({
       {/* Inner responsive container */}
       <div className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-6 h-full">
 
-
         {/* Header */}
         <div className="shrink-0 relative flex items-center justify-between pt-3 pb-3">
           <div className="space-y-0.5">
@@ -213,83 +205,103 @@ function FlashcardsContent({
               </div>
             </div>
 
-            {/* Flashcard — fills remaining height */}
-            <div className="flex-1 min-h-0" style={{ perspective: '2000px' }}>
-              <div
-                className={cn(
-                  "relative w-full h-full transition-transform duration-700",
-                  !disabledProp && "cursor-pointer"
+            {/* ── Stacked Card Stage ── */}
+            <div className="flex-1 min-h-0" style={{ paddingBottom: '18px' }}>
+              <div className="relative w-full h-full" style={{ perspective: '2000px' }}>
+
+                {/* Ghost layer 2 — deepest, peeks furthest below */}
+                {currentCardIndex < cards.length - 2 && (
+                  <div
+                    className="absolute inset-0 rounded-[2.5rem] bg-slate-200 border border-slate-300"
+                    style={{ zIndex: 1, transform: 'translateY(16px) scaleX(0.92)', transformOrigin: 'bottom center' }}
+                  />
                 )}
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
-                }}
-                onClick={flipCard}
-              >
-                {/* Front of card */}
+
+                {/* Ghost layer 1 — middle, peeks slightly below */}
+                {currentCardIndex < cards.length - 1 && (
+                  <div
+                    className="absolute inset-0 rounded-[2.5rem] bg-slate-100 border border-slate-200 shadow-sm"
+                    style={{ zIndex: 2, transform: 'translateY(8px) scaleX(0.96)', transformOrigin: 'bottom center' }}
+                  />
+                )}
+
+                {/* Active card */}
                 <div
-                  className="absolute inset-0 w-full h-full flex items-center justify-center p-8 border-2 bg-white rounded-[2.5rem] shadow-xl shadow-black/5"
+                  className={cn(
+                    "absolute inset-0 w-full h-full transition-transform duration-700",
+                    !disabledProp && "cursor-pointer"
+                  )}
                   style={{
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    transform: 'rotateY(0deg)'
+                    transformStyle: 'preserve-3d',
+                    transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                    zIndex: 3
                   }}
+                  onClick={flipCard}
                 >
-                  <div className="text-center space-y-3">
-                    <div className="text-2xl font-black text-slate-900 tracking-tight leading-tight px-4">{currentCard.front}</div>
-                    {!disabledProp && (
-                      <div className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em]">tap to flip</div>
-                    )}
+                  {/* Front of card */}
+                  <div
+                    className="absolute inset-0 w-full h-full flex items-center justify-center p-8 border-2 bg-white rounded-[2.5rem] shadow-xl shadow-black/5"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(0deg)'
+                    }}
+                  >
+                    <div className="text-center space-y-3">
+                      <div className="text-2xl font-black text-slate-900 tracking-tight leading-tight px-4">{currentCard.front}</div>
+                      {!disabledProp && (
+                        <div className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em]">tap card to flip</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Back of card */}
+                  <div
+                    className="absolute inset-0 w-full h-full flex items-center justify-center p-8 border-2 border-emerald-600 rounded-[2.5rem] bg-gradient-to-br from-emerald-500 to-teal-600 shadow-xl shadow-emerald-500/20"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)'
+                    }}
+                  >
+                    <div className="text-center space-y-3">
+                      <div className="text-2xl font-black text-white tracking-tight leading-tight px-4">{currentCard.back}</div>
+                      {!disabledProp && (
+                        <div className="text-[9px] font-bold text-white/50 uppercase tracking-[0.15em]">Got it!</div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Back of card */}
-                <div
-                  className="absolute inset-0 w-full h-full flex items-center justify-center p-8 border-2 border-emerald-600 rounded-[2.5rem] bg-gradient-to-br from-emerald-500 to-teal-600 shadow-xl shadow-emerald-500/20"
-                  style={{
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    transform: 'rotateY(180deg)'
-                  }}
-                >
-                  <div className="text-center space-y-3">
-                    <div className="text-2xl font-black text-white tracking-tight leading-tight px-4">{currentCard.back}</div>
-                    {!disabledProp && (
-                      <div className="text-[9px] font-bold text-white/50 uppercase tracking-[0.15em]">Got it!</div>
-                    )}
-                  </div>
-                </div>
               </div>
             </div>
 
-            {currentCardIndex === cards.length - 1 && isFlipped && (
-              <div className="p-4 rounded-2xl border-2 bg-[#58CC02]/10 border-[#58CC02]/30 animate-in slide-in-from-top-2 duration-500">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black text-[#58CC02] uppercase tracking-widest">All Cards Done!</span>
-                </div>
-                <p className="text-sm font-black text-slate-900 mt-1 italic">Amazing! You reviewed every card! Keep it up!</p>
-              </div>
-            )}
+
           </div>
         </div>
 
-        {/* BOTTOM SECTION: Navigation */}
-        <div className="shrink-0 flex items-center justify-between gap-4 pb-4 pt-2">
-          {/* Counter + dots */}
-          <div className="flex flex-col items-start gap-1.5">
-            <div className="px-3 py-1.5 bg-slate-50 border-2 border-slate-100 rounded-xl">
+        {/* BOTTOM SECTION: Nav Controls */}
+        <div className="shrink-0 space-y-3 pb-4 pt-2">
+          {/* Card counter + dots bar */}
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
               <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
-                {currentCardIndex + 1} / {cards.length}
+                Card {currentCardIndex + 1} of {cards.length}
               </span>
+              {state.status === 'completed' && (
+                <span className="text-[9px] font-black text-[#58CC02] bg-[#58CC02]/10 border border-[#58CC02]/30 px-2 py-0.5 rounded-full uppercase tracking-wider animate-in fade-in duration-500">
+                  ✓ Done
+                </span>
+              )}
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {cards.map((_, i) => (
                 <div
                   key={i}
                   className={cn(
                     "rounded-full transition-all duration-300",
                     i === currentCardIndex
-                      ? "w-4 h-2 bg-[#58CC02]"
+                      ? "w-5 h-2 bg-[#58CC02]"
                       : i < currentCardIndex
                         ? "w-2 h-2 bg-[#58CC02]/40"
                         : "w-2 h-2 bg-slate-200"
@@ -299,29 +311,55 @@ function FlashcardsContent({
             </div>
           </div>
 
-          {/* Navigation buttons */}
-          <div className="flex items-center gap-2">
-            <Button
-              className="w-11 h-11 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 p-0 disabled:opacity-50 disabled:bg-slate-300"
-              onClick={goToPreviousCard}
-              disabled={currentCardIndex === 0 || disabledProp}
+          {/* Full-width text control buttons — Previous & Next animate in when available */}
+          <div className="flex gap-2.5 w-full items-stretch">
+            {/* Previous — slides in from left when not on first card */}
+            <div
+              className={cn(
+                "flex-1 overflow-hidden transition-all duration-300 ease-in-out",
+                currentCardIndex > 0
+                  ? "max-w-[40%] opacity-100 translate-x-0"
+                  : "max-w-0 opacity-0 -translate-x-4 pointer-events-none"
+              )}
             >
-              <ChevronLeft className="h-5 w-5 stroke-[3]" />
-            </Button>
+              <Button
+                className="h-11 w-full rounded-xl bg-slate-100 border-2 border-slate-200 text-slate-700 hover:bg-slate-200 transition-all font-black text-[10px] uppercase tracking-wider active:scale-95 disabled:opacity-40 disabled:bg-slate-100 flex items-center justify-center gap-1"
+                onClick={goToPreviousCard}
+                disabled={currentCardIndex === 0 || disabledProp}
+              >
+                <ChevronLeft className="h-4 w-4 stroke-[3]" />
+                <span>Prev</span>
+              </Button>
+            </div>
+
+            {/* Flip — always visible, expands to fill */}
             <Button
-              className="w-11 h-11 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 p-0 disabled:opacity-50"
+              className="h-11 flex-1 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-md shadow-emerald-500/20 font-black text-[10px] uppercase tracking-wider active:scale-95 disabled:opacity-50 flex items-center justify-center gap-1.5"
               onClick={flipCard}
               disabled={disabledProp}
             >
-              <RotateCw className="h-4 w-4 stroke-[3]" />
+              <RotateCw className="h-3.5 w-3.5 stroke-[3]" />
+              <span>Flip Card</span>
             </Button>
-            <Button
-              className="w-11 h-11 rounded-xl bg-emerald-600 border-2 border-emerald-700 text-white hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 p-0 disabled:opacity-50 disabled:bg-slate-300"
-              onClick={goToNextCard}
-              disabled={currentCardIndex === cards.length - 1 || disabledProp}
+
+            {/* Next — slides in from right when not on last card */}
+            <div
+              className={cn(
+                "flex-1 overflow-hidden transition-all duration-300 ease-in-out",
+                currentCardIndex < cards.length - 1
+                  ? "max-w-[40%] opacity-100 translate-x-0"
+                  : "max-w-0 opacity-0 translate-x-4 pointer-events-none"
+              )}
             >
-              <ChevronRight className="h-5 w-5 stroke-[3]" />
-            </Button>
+              <Button
+                className="h-11 w-full rounded-xl bg-slate-100 border-2 border-slate-200 text-slate-700 hover:bg-slate-200 transition-all font-black text-[10px] uppercase tracking-wider active:scale-95 disabled:opacity-40 disabled:bg-slate-100 flex items-center justify-center gap-1"
+                onClick={goToNextCard}
+                disabled={currentCardIndex === cards.length - 1 || disabledProp}
+              >
+                <span>Next</span>
+                <ChevronRight className="h-4 w-4 stroke-[3]" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -378,4 +416,3 @@ export function FlashcardsRenderer(props: FlashcardsRendererProps) {
     />
   )
 }
-

@@ -65,6 +65,14 @@ function StudioContent() {
     const publishedCount = programs.filter(p => p.is_published !== false).length;
     const draftCount = programs.filter(p => p.is_published === false).length;
 
+    const [navigatingUrl, setNavigatingUrl] = useState<string | null>(null);
+
+    const handleNavigate = (url: string) => {
+        if (navigatingUrl) return;
+        setNavigatingUrl(url);
+        router.push(url);
+    };
+
     return (
         <div className="min-h-screen bg-[#F7F8FA] relative overflow-x-hidden">
             {/* ── ENTRANCE SPLASH SCREEN (LOADS & LEAVES) ── */}
@@ -113,10 +121,11 @@ function StudioContent() {
 
                 <div className="flex items-center gap-1.5 shrink-0">
                     <button
-                        onClick={() => router.push('/dashboard/tutor')}
-                        className="h-9 px-3 rounded-xl text-xs font-bold text-slate-600 border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center gap-1.5 transition-colors"
+                        onClick={() => handleNavigate('/dashboard/tutor')}
+                        disabled={!!navigatingUrl}
+                        className="h-9 px-3 rounded-xl text-xs font-bold text-slate-600 border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center gap-1.5 transition-colors disabled:opacity-60"
                     >
-                        <LayoutDashboard className="w-3.5 h-3.5" />
+                        {navigatingUrl === '/dashboard/tutor' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LayoutDashboard className="w-3.5 h-3.5" />}
                         <span className="hidden sm:inline">Dashboard</span>
                     </button>
                     <button
@@ -126,11 +135,12 @@ function StudioContent() {
                         <LogOut className="w-3.5 h-3.5" />
                     </button>
                     <button
-                        onClick={() => router.push('/studio/programs/new')}
-                        className="h-9 px-3 sm:px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-1.5 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                        onClick={() => handleNavigate('/studio/programs/new')}
+                        disabled={!!navigatingUrl}
+                        className="h-9 px-3 sm:px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-1.5 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px disabled:opacity-60"
                         style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
                     >
-                        <Plus className="w-4 h-4" />
+                        {navigatingUrl === '/studio/programs/new' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
                         <span className="hidden sm:inline">New Program</span>
                     </button>
                 </div>
@@ -212,11 +222,12 @@ function StudioContent() {
                             {searchQuery ? 'No programs match your search.' : 'Create your first program to start building interactive courses.'}
                         </p>
                         <button
-                            onClick={() => router.push('/studio/programs/new')}
-                            className="h-10 px-5 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                            onClick={() => handleNavigate('/studio/programs/new')}
+                            disabled={!!navigatingUrl}
+                            className="h-10 px-5 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px disabled:opacity-60"
                             style={{ backgroundColor: '#58CC02', borderColor: '#3B8C00' }}
                         >
-                            <Plus className="w-4 h-4" />Create Program
+                            {navigatingUrl === '/studio/programs/new' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}Create Program
                         </button>
                     </div>
                 ) : (
@@ -225,7 +236,7 @@ function StudioContent() {
                             <motion.div key={program._id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}>
                                 <ProjectFolder
                                     program={program}
-                                    onClick={() => router.push(`/studio/programs/${program._id}`)}
+                                    onClick={() => handleNavigate(`/studio/programs/${program._id}`)}
                                 />
                             </motion.div>
                         ))}

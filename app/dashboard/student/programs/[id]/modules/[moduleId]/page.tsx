@@ -102,10 +102,14 @@ export default function StudentModuleDetailPage() {
     const completedLessonsCount = lessons.filter(l => l.completed).length
     const progressPct = lessons.length > 0 ? Math.round((completedLessonsCount / lessons.length) * 100) : 0
 
+    const [launchingId, setLaunchingId] = useState<string | null>(null)
+
     const launchLesson = (lesson: any) => {
-        if (!lesson.lessonId && !lesson._id) return
+        const id = lesson.lessonId || lesson._id
+        if (!id || launchingId) return
+        setLaunchingId(id)
         const returnUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.pathname) : ''
-        router.push(`/viewer/${lesson.lessonId || lesson._id}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}&moduleId=${moduleId}`)
+        router.push(`/viewer/${id}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}&moduleId=${moduleId}`)
     }
 
     if (loading) {
@@ -255,12 +259,18 @@ export default function StudentModuleDetailPage() {
                                                 Details
                                             </button>
                                             <button
-                                                disabled={!lesson.lessonId && !lesson._id}
+                                                disabled={(!lesson.lessonId && !lesson._id) || launchingId === (lesson.lessonId || lesson._id)}
                                                 onClick={() => launchLesson(lesson)}
-                                                className="flex-1 h-11 bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:border-b-0 active:translate-y-[2px]"
+                                                className="flex-1 h-11 bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:border-b-0 active:translate-y-[2px] disabled:opacity-60"
                                             >
-                                                <Play className="w-4 h-4 fill-white" />
-                                                <span>{isCompleted ? "Review Lesson" : isStarted ? "Continue" : "Start Lesson"}</span>
+                                                {launchingId === (lesson.lessonId || lesson._id) ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                                ) : (
+                                                    <>
+                                                        <Play className="w-4 h-4 fill-white" />
+                                                        <span>{isCompleted ? "Review Lesson" : isStarted ? "Continue" : "Start Lesson"}</span>
+                                                    </>
+                                                )}
                                             </button>
                                         </div>
                                     </Card>

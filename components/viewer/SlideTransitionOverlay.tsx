@@ -207,11 +207,16 @@ export function SlideTransitionOverlay({
     }, [isVisible, slideIndex]);
 
 
+    const [isStarting, setIsStarting] = useState(false);
+
     if (!isVisible) return null;
 
     const handleBegin = () => {
+        if (isStarting) return;
+        setIsStarting(true);
         stop(); // stop the cue audio when the student proceeds
         onBegin();
+        setTimeout(() => setIsStarting(false), 500);
     };
 
     return (
@@ -258,11 +263,11 @@ export function SlideTransitionOverlay({
 
                 {/* Action Button to Dismiss Overlay */}
                 <button
-                    disabled={!canBegin}
+                    disabled={!canBegin || isStarting}
                     onClick={handleBegin}
                     className={cn(
                         "mt-4 px-10 py-4 rounded-2xl text-sm font-black tracking-wide uppercase flex items-center justify-center gap-2.5 shadow-lg transition-all min-w-[220px]",
-                        canBegin
+                        canBegin && !isStarting
                             ? "cursor-pointer hover:scale-105 active:scale-95"
                             : "opacity-70 cursor-not-allowed"
                     )}
@@ -271,10 +276,15 @@ export function SlideTransitionOverlay({
                         color: theme.btnTextHex,
                     }}
                 >
-                    {canBegin ? (
+                    {canBegin && !isStarting ? (
                         <>
                             <span>Begin Slide</span>
                             <ChevronRight className="w-5 h-5" />
+                        </>
+                    ) : isStarting ? (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Starting&hellip;</span>
                         </>
                     ) : (
                         <>

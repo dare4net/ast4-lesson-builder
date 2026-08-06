@@ -85,8 +85,12 @@ export default function CatalogPage() {
         }
     }
 
+    const [navigatingId, setNavigatingId] = useState<string | null>(null)
+
     const handleGoToCourse = (programId: string, e?: React.MouseEvent) => {
         if (e) e.stopPropagation()
+        if (navigatingId) return
+        setNavigatingId(programId)
         router.push(`/dashboard/student/programs/${programId}`)
     }
 
@@ -172,11 +176,18 @@ export default function CatalogPage() {
                 <div className="pt-4 border-t border-slate-100 flex flex-col gap-2">
                     {enrolled ? (
                         <Button
+                            disabled={navigatingId === program._id}
                             onClick={(e) => handleGoToCourse(program._id, e)}
                             className="w-full bg-[#1CB0F6] hover:bg-[#1899D6] border-b-4 border-[#1482B8] text-white font-extrabold text-xs h-10 rounded-xl flex items-center justify-center gap-2"
                         >
-                            <span>Go to Course</span>
-                            <ArrowRight className="w-4 h-4" />
+                            {navigatingId === program._id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <>
+                                    <span>Go to Course</span>
+                                    <ArrowRight className="w-4 h-4" />
+                                </>
+                            )}
                         </Button>
                     ) : (
                         <Button
@@ -304,11 +315,18 @@ export default function CatalogPage() {
 
                                             {enrolled ? (
                                                 <Button
+                                                    disabled={navigatingId === prog._id}
                                                     onClick={(e) => handleGoToCourse(prog._id, e)}
                                                     className="bg-[#1CB0F6] hover:bg-[#1899D6] border-b-2 border-[#1482B8] text-white font-extrabold text-xs h-8 px-4 rounded-xl flex items-center gap-1.5 shrink-0"
                                                 >
-                                                    <span>Go to Course</span>
-                                                    <ArrowRight className="w-3.5 h-3.5" />
+                                                    {navigatingId === prog._id ? (
+                                                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                                    ) : (
+                                                        <>
+                                                            <span>Go to Course</span>
+                                                            <ArrowRight className="w-3.5 h-3.5" />
+                                                        </>
+                                                    )}
                                                 </Button>
                                             ) : (
                                                 <Button
