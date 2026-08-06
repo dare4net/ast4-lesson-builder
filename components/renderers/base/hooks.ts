@@ -86,7 +86,7 @@ export function useScoring({
 
     const handleRetry = useCallback(() => {
         if (isLive) return // No retry in live mode
-        playFeedback('neutral')
+        playFeedback('uiClick')
     }, [isLive, playFeedback])
 
     return {

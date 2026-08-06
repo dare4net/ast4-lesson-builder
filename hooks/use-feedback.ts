@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { SoundEffects, SoundEffect } from '../lib/sound-effects';
 
-type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak'| 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson';
+type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson';
 
 interface FeedbackOptions {
   animation?: boolean;
@@ -12,9 +12,6 @@ export function useFeedback() {
   // Preload sounds when the hook is first used
   useEffect(() => {
     SoundEffects.preloadAll();
-    return () => {
-      SoundEffects.unloadAll();
-    };
   }, []);
 
   const playFeedback = useCallback(async (type: FeedbackType, options: FeedbackOptions = {}) => {

@@ -4,7 +4,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { CheckCircle2, BarChart2, Check, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
 import type { Component } from "@/types/lesson"
 
 interface PollOption {
@@ -15,7 +15,6 @@ interface PollOption {
 interface PollRendererProps {
     question: string
     options: PollOption[]
-    points?: number
     isEditing?: boolean
     lessonId?: string
     mode?: 'practice' | 'live'
@@ -38,50 +37,27 @@ type PollState = {
 function PollContent({
     question,
     options = [],
-    points = 5,
     state,
     setState,
-    handleScore,
-    handleRetry,
-    isLive,
     isDisabled: disabledProp,
     props
-}: ScoredRenderProps<PollState> & {
+}: InteractiveRenderProps<PollState> & {
     question: string
     options: PollOption[]
-    points: number
     isDisabled: boolean
     props: PollRendererProps
 }) {
     const [mounted, setMounted] = useState(false)
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const { selectedOption, votes, totalVotes, hasVoted } = state
-    const lessonId = props.lessonId || 'default'
-    const componentId = props.id || 'poll-renderer'
 
     useEffect(() => {
         setMounted(true)
-        // Fetch live votes on mount
-        fetch(`/api/polls?lessonId=${encodeURIComponent(lessonId)}&componentId=${encodeURIComponent(componentId)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && data.votes) {
-                    setState(prev => ({
-                        ...prev,
-                        votes: data.votes || {},
-                        totalVotes: data.totalVotes || 0
-                    }))
-                }
-            })
-            .catch(err => console.error('[PollRenderer] GET votes error:', err))
-    }, [lessonId, componentId])
+    }, [])
 
-    const handleVote = async (optionId: string) => {
-        if (disabledProp || hasVoted || isSubmitting) return
+    const handleVote = (optionId: string) => {
+        if (disabledProp || hasVoted) return
 
-        setIsSubmitting(true)
-        // Optimistic state update
         const newVotes = { ...votes, [optionId]: (votes[optionId] || 0) + 1 }
         const newTotal = totalVotes + 1
 
@@ -93,32 +69,6 @@ function PollContent({
             totalVotes: newTotal,
             status: 'completed'
         }))
-
-        handleScore(true)
-
-        try {
-            const res = await fetch('/api/polls', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    lessonId,
-                    componentId,
-                    optionId
-                })
-            })
-            const data = await res.json()
-            if (data.success && data.votes) {
-                setState(prev => ({
-                    ...prev,
-                    votes: data.votes,
-                    totalVotes: data.totalVotes
-                }))
-            }
-        } catch (err) {
-            console.error('[PollRenderer] POST vote error:', err)
-        } finally {
-            setIsSubmitting(false)
-        }
     }
 
     if (!mounted) return null
@@ -179,7 +129,7 @@ function PollContent({
                     return (
                         <button
                             key={opt.id}
-                            disabled={disabledProp || hasVoted || isSubmitting}
+                            disabled={disabledProp || hasVoted}
                             onClick={() => handleVote(opt.id)}
                             className={cn(
                                 "w-full relative overflow-hidden text-left p-4 rounded-xl border-2 transition-all duration-300 group",
@@ -231,9 +181,6 @@ function PollContent({
             {/* Footer Info */}
             <div className="shrink-0 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] font-bold text-slate-400">
                 <span>{totalVotes} total responses</span>
-                {points > 0 && (
-                    <span className="text-indigo-600 font-black">+ {points} Participation Points</span>
-                )}
             </div>
         </div>
     )
@@ -243,7 +190,6 @@ export function PollRenderer(props: PollRendererProps) {
     const {
         question = "Poll Question",
         options = [],
-        points = 5,
         mode = 'practice',
         state: componentState = 'active',
         disabled = false,
@@ -251,7 +197,6 @@ export function PollRenderer(props: PollRendererProps) {
         setComponentState,
         id = "poll-renderer",
         status,
-
     } = props
 
     const component: Component = {
@@ -259,7 +204,7 @@ export function PollRenderer(props: PollRendererProps) {
         type: 'poll',
         state: componentState as any,
         status: (status || (savedState as any)?.status || 'uncompleted') as any,
-        props: { question, options, points },
+        props: { question, options },
         mode: mode as any
     } as Component
 
@@ -272,20 +217,17 @@ export function PollRenderer(props: PollRendererProps) {
     }
 
     return (
-        <ScoredRenderer<PollState>
+        <InteractiveRenderer<PollState>
             component={component}
             initialState={initialState}
             savedState={savedState}
             setComponentState={setComponentState}
-            points={points}
-            mode={mode}
             disabled={disabled}
             onRender={(renderProps) => (
                 <PollContent
                     {...renderProps}
                     question={question}
                     options={options}
-                    points={points}
                     isDisabled={disabled || component.state === 'disabled'}
                     props={props}
                 />

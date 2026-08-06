@@ -142,67 +142,67 @@ class SoundEffectManager {
       correct: new Howl({
         src: ['/sounds/correct.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       incorrect: new Howl({
         src: ['/sounds/incorrect.wav'],
         html5: false,
-        preload: false
+        preload: true
       }),
       complete: new Howl({
         src: ['/sounds/complete.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       click: new Howl({
         src: ['/sounds/click.wav'],
         html5: false,
-        preload: false
+        preload: true
       }),
       levelUp: new Howl({
         src: ['/sounds/level-up.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       streak: new Howl({
         src: ['/sounds/streak.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       flashcardFlip: new Howl({
         src: ['/sounds/flashcard-flip.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       uiClick: new Howl({
         src: ['/sounds/ui-click.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       dngClick: new Howl({
         src: ['/sounds/dng-click.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       dngSuccess: new Howl({
         src: ['/sounds/dng-success.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       quizSuccess: new Howl({
         src: ['/sounds/quiz-success.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       finishedLesson: new Howl({
         src: ['/sounds/finished-lesson.mp3'],
         html5: false,
-        preload: false
+        preload: true
       }),
       timerTick: new Howl({
         src: ['/sounds/ui-click.mp3'], // Dummy Howl for type completeness; synthesized Web Audio is used in play()
         html5: false,
-        preload: false
+        preload: true
       }),
     };
 
@@ -232,15 +232,23 @@ class SoundEffectManager {
       return
     }
 
-    if (this.status[effect]?.error) return;
     const sound = this.sounds[effect];
     if (!sound) return;
 
     try {
+      // Resume Howler AudioContext if browser suspended it
+      if (typeof window !== 'undefined' && (window as any).Howler?.ctx?.state === 'suspended') {
+        await (window as any).Howler.ctx.resume()
+      }
+
+      if (sound.state() === 'unloaded') {
+        sound.load()
+      }
+
       const effectVolume = this.soundVolumes[effect] || 0.5;
       const finalVolume = this.volume * effectVolume;
       sound.volume(finalVolume);
-      await sound.play();
+      sound.play();
     } catch (error) {
       console.error(`Error playing sound effect ${effect}:`, error);
     }
@@ -295,13 +303,17 @@ class SoundEffectManager {
         // Load sounds that are cached
         await Promise.all(
           Object.entries(this.sounds).map(async ([key, sound]) => {
-            const soundUrl = (sound as any)._src || sound._sounds?.[0]?._src; // Get the sound URL
-            const cached = await cache.match(soundUrl);
-            if (cached) {
-              console.log(`Loading cached sound: ${key}`);
-              sound.load();
+            const soundUrl = (sound as any)._src || (sound as any)._sounds?.[0]?._src; // Get the sound URL
+            if (soundUrl) {
+              const cached = await cache.match(soundUrl);
+              if (cached) {
+                console.log(`Loading cached sound: ${key}`);
+                sound.load();
+              } else {
+                console.log(`Sound not cached, loading from network: ${key}`);
+                sound.load();
+              }
             } else {
-              console.log(`Sound not cached, loading from network: ${key}`);
               sound.load();
             }
           })
