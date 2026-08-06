@@ -1,0 +1,71 @@
+# AST Platform Roadmap
+> Last updated: 2026-08-06 · Pick this up whenever ready.
+
+---
+
+## 🔧 Remaining UX / Technical Upgrades
+
+| Area | What's Missing | Why It Matters |
+|---|---|---|
+| **Offline / PWA** | Service worker + manifest | Students lose progress on flaky connections |
+| **Accessibility** | `aria-live` on score updates, keyboard nav on drag-drop & matching pairs | Compliance + usability |
+| **Error boundaries** | No fallback UI if a renderer crashes mid-lesson | One broken component kills the whole lesson |
+| **Read Aloud (TTS)** | Toggle exists but check all components announce content correctly | Inclusion |
+| **Lesson analytics** | Time-per-slide, retry count, per-question accuracy not tracked | Tutors need this data |
+| **Streak / XP persistence** | Score resets per session, not cross-session | Core retention mechanic |
+| **Studio student preview** | Tutors can build but can't quickly preview as a student | Quality of life |
+| **Image/video upload in Studio** | Currently requires external URLs | Reduces content creation friction |
+
+---
+
+## 🧩 Missing Component Renderers
+
+### 🎮 Gamified
+| Component | Description |
+|---|---|
+| **Word Scramble** | Letters given scrambled, student arranges them — great for vocabulary |
+| **Typing Racer** | Type the shown sentence fast & accurately — engagement spike |
+| **Memory Grid** | Tap pairs of matching cards (classic memory game variant) |
+| **Badge Reveal** | Already in category map — just needs a renderer |
+| **Progress Bar** | Already in category map — just needs a renderer |
+| **Spin the Wheel** | Random question selector — energises revision sessions |
+
+### ⚡ Interactive
+| Component | Description |
+|---|---|
+| **Sequencing / Timeline** | Drag items into correct chronological or logical order |
+| **Annotate Image** | Drag labels onto a diagram — science, maps, anatomy |
+| **True / False** | Faster, simpler quiz variant for rapid-fire review |
+| **Short Answer** | Text box + keyword auto-check or tutor-marked |
+| **Word Cloud Vote** | Collaborative — students submit words, live cloud builds |
+| **Categorise (Sorting Hat)** | Drop items into 2–4 labelled buckets |
+
+### 📝 Content
+| Component | Description |
+|---|---|
+| **Callout Box** | Already in category map — check renderer exists |
+| **Accordion** | Collapsible FAQ-style sections |
+| **Tabs Panel** | Side-by-side comparison content |
+| **Embed** | iframe for YouTube, Google Slides, Figma, Desmos, etc. |
+| **Math Formula** | KaTeX/MathJax block for STEM subjects |
+| **Timeline Display** | Visual chronological display (non-interactive) |
+| **Quote / Pull Quote** | Featured quote with styling — literature, social studies |
+
+### 📹 Media
+| Component | Description |
+|---|---|
+| **Audio Player** | Already in category map — confirm renderer works |
+| **Interactive PDF** | Embedded PDF with annotations |
+
+---
+
+## 🚀 Recommended Build Order
+
+1. **Error boundary** around [ComponentRenderer](file:///c:/Users/chatz/Downloads/AST/ast4-lesson-builder/components/component-renderer.tsx#9-10) — critical stability, 30 min job
+2. **True/False** — highest engagement-to-implementation ratio, ~1 day
+3. **Badge Reveal renderer** — already categorised, just needs UI
+4. **Callout box renderer** — educational gold for highlighting key facts
+5. **Sequencing / Order** — great for science, history, coding steps
+6. **Short Answer** with keyword check — open-ended viable
+7. **Lesson analytics** — time-per-slide, retries, accuracy → tutor dashboard
+8. **Streak / XP persistence** — cross-session via backend

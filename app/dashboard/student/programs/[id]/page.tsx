@@ -25,6 +25,7 @@ export default function StudentCourseDetailPage() {
     const [program, setProgram] = useState<any | null>(null)
     const [loading, setLoading] = useState(true)
     const [unregistering, setUnregistering] = useState(false)
+    const [openingModuleId, setOpeningModuleId] = useState<string | null>(null)
 
     useEffect(() => {
         if (id && token) fetchCourseDetails()
@@ -123,7 +124,6 @@ export default function StudentCourseDetailPage() {
 
     const progressPct = getProgressValue()
 
-    const [openingModuleId, setOpeningModuleId] = useState<string | null>(null)
 
     const handleOpenModule = (moduleId: string) => {
         if (openingModuleId) return
