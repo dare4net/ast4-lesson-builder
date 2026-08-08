@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Sparkles, Trophy, CheckCircle2, RotateCcw, LogOut, Award, Target, BookOpen, Loader2 } from "lucide-react";
+import { Sparkles, Trophy, CheckCircle2, RotateCcw, LogOut, Award, Target, BookOpen, Loader2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSlideTheme, getLessonPattern } from "@/lib/slide-themes";
@@ -17,6 +17,8 @@ interface LessonCompletionOverlayProps {
     totalPossibleScore: number;
     onReview: () => void;
     onEndLesson: () => void | Promise<void>;
+    nextLesson?: { id: string; title: string } | null;
+    onNextLesson?: () => void | Promise<void>;
 }
 
 /** Helper hook for smooth number count-up animation */
@@ -62,23 +64,37 @@ export function LessonCompletionOverlay({
     totalPossibleScore,
     onReview,
     onEndLesson,
+    nextLesson,
+    onNextLesson,
 }: LessonCompletionOverlayProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [isExiting, setIsExiting] = useState(false);
+    const [isNavigatingNext, setIsNavigatingNext] = useState(false);
 
     useEffect(() => {
         if (!isVisible) {
             setIsExiting(false);
+            setIsNavigatingNext(false);
         }
     }, [isVisible]);
 
     const handleEndLesson = async () => {
-        if (isExiting) return;
+        if (isExiting || isNavigatingNext) return;
         setIsExiting(true);
         try {
             await onEndLesson();
         } catch {
             setIsExiting(false);
+        }
+    };
+
+    const handleNextLesson = async () => {
+        if (isExiting || isNavigatingNext || !onNextLesson) return;
+        setIsNavigatingNext(true);
+        try {
+            await onNextLesson();
+        } catch {
+            setIsNavigatingNext(false);
         }
     };
 
@@ -366,6 +382,30 @@ export function LessonCompletionOverlay({
                             )}
                         </Button>
                     </motion.div>
+
+                    {/* Next Lesson Section — only shown when a next lesson exists */}
+                    {nextLesson && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.75 }}
+                            className="w-full pt-4 border-t-2 border-slate-100"
+                        >
+                            <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 text-left">Up Next</p>
+                            <Button
+                                onClick={handleNextLesson}
+                                disabled={isExiting || isNavigatingNext}
+                                className="w-full h-12 rounded-2xl bg-[#1CB0F6] hover:bg-[#0E86C0] text-white font-black text-xs uppercase tracking-wider border-b-4 border-[#0E86C0] active:border-b-0 transition-all flex items-center justify-between px-5 disabled:opacity-80"
+                            >
+                                <span className="truncate text-left flex-1">{nextLesson.title}</span>
+                                {isNavigatingNext ? (
+                                    <Loader2 className="w-4 h-4 animate-spin shrink-0 ml-3" />
+                                ) : (
+                                    <ChevronRight className="w-5 h-5 shrink-0 ml-3" />
+                                )}
+                            </Button>
+                        </motion.div>
+                    )}
                 </motion.div>
             </div>
         </AnimatePresence>

@@ -25,6 +25,7 @@ interface LessonTimelineItemProps {
     index: number;
     isLast: boolean;
     onEdit: () => void;
+    onEditSettings?: () => void;
     onDelete: () => void;
 }
 
@@ -34,7 +35,7 @@ const LEVEL_STYLE: Record<string, { bg: string; text: string; border: string }> 
     Advanced: { bg: '#F5EEFF', text: '#CE82FF', border: '#DFC4FF' },
 };
 
-export function LessonTimelineItem({ lesson, index, isLast, onEdit, onDelete }: LessonTimelineItemProps) {
+export function LessonTimelineItem({ lesson, index, isLast, onEdit, onEditSettings, onDelete }: LessonTimelineItemProps) {
     const levelStyle = lesson.level ? (LEVEL_STYLE[lesson.level] ?? LEVEL_STYLE['Intermediate']) : null;
 
     return (
@@ -119,7 +120,7 @@ export function LessonTimelineItem({ lesson, index, isLast, onEdit, onDelete }: 
                                     <Edit2 className="w-3.5 h-3.5 text-[#1CB0F6]" />
                                     Open Studio
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="font-bold cursor-pointer gap-2 text-slate-500">
+                                <DropdownMenuItem onClick={onEditSettings} className="font-bold cursor-pointer gap-2 text-slate-700 hover:text-[#1CB0F6]">
                                     <Settings className="w-3.5 h-3.5 text-slate-400" />
                                     Edit Settings
                                 </DropdownMenuItem>

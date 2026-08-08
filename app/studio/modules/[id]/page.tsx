@@ -8,6 +8,7 @@ import ProtectedRoute from '@/components/auth/protected-route';
 import { LessonCreationModal } from '@/components/studio/lesson-creation-modal';
 import { LessonTimelineItem } from '@/components/studio/lesson-timeline-item';
 import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
+import { EditLessonSettingsModal } from '@/components/studio/edit-lesson-settings-modal';
 
 interface Lesson { _id: string; title: string; description: string; order: number; duration?: number; level?: string; }
 interface Module { _id: string; name: string; title?: string; description: string; program_id: string; image_url?: string; cover_image?: string; is_published?: boolean; }
@@ -23,6 +24,7 @@ function ModuleDetailContent() {
     const [error, setError] = useState('');
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedLessonForSettings, setSelectedLessonForSettings] = useState<Lesson | null>(null);
 
     useEffect(() => { if (moduleId) fetchModuleData(); }, [moduleId]);
 
@@ -206,6 +208,7 @@ function ModuleDetailContent() {
                                         index={index}
                                         isLast={index === lessons.length - 1}
                                         onEdit={() => handleEditLesson(lesson._id)}
+                                        onEditSettings={() => setSelectedLessonForSettings(lesson)}
                                         onDelete={() => handleDeleteLesson(lesson._id)}
                                     />
                                 ))}
@@ -246,6 +249,14 @@ function ModuleDetailContent() {
 
             <LessonCreationModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} moduleId={moduleId} programId={module.program_id} />
             {module && <EditModuleDialog isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} module={module} onSave={handleSaveModule} />}
+            <EditLessonSettingsModal
+                isOpen={!!selectedLessonForSettings}
+                onClose={() => setSelectedLessonForSettings(null)}
+                lesson={selectedLessonForSettings}
+                moduleTitle={module?.title || module?.name}
+                lessonNumber={selectedLessonForSettings ? lessons.findIndex(l => l._id === selectedLessonForSettings._id) + 1 : 1}
+                onSaveSuccess={fetchModuleData}
+            />
         </div>
     );
 }

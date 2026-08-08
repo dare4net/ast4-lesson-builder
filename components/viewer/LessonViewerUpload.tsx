@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { syncEngine } from '@/lib/sync-engine';
 import { SyncStatusHUD } from './SyncStatusHUD';
 import { ReadAloudProvider } from '@/context/read-aloud-context';
+import { useLessonPreloader } from '@/hooks/use-lesson-preloader';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
@@ -37,6 +38,13 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [resolvedInteraction, setResolvedInteraction] = useState<any>(null);
   const [currentScore, setCurrentScore] = useState(0);
   const [totalPossibleScore, setTotalPossibleScore] = useState(0);
+  const [nextLesson, setNextLesson] = useState<{ id: string; title: string } | null>(null);
+
+  // Preload all lesson media assets (images, audio, TTS) whenever any lesson is opened
+  useLessonPreloader({
+    lessonData,
+    enabled: isHydrated && !!lessonData,
+  });
   const lessonContentRef = useRef<any>(null);
 
   const currentSlideIndexRef = useRef(currentSlideIndex);
@@ -48,6 +56,31 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   useEffect(() => { currentScoreRef.current = currentScore; }, [currentScore]);
   useEffect(() => { totalPossibleScoreRef.current = totalPossibleScore; }, [totalPossibleScore]);
   useEffect(() => { lessonDataRef.current = lessonData; }, [lessonData]);
+
+  // Fetch sibling lessons for the module so we can surface "Next Lesson" on completion
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const searchParams = new URLSearchParams(window.location.search);
+    const moduleId = searchParams.get('moduleId');
+    const currentLessonId = initialLesson?.id; // ast UUID string — matches lessonId in the API response
+    if (!moduleId || !currentLessonId) return;
+
+    import('@/lib/api-client').then(({ apiClient }) => {
+      apiClient.lessons.getModuleLessons(moduleId)
+        .then((lessons: any[]) => {
+          if (!Array.isArray(lessons)) return;
+          // Already sorted by order: 1 on the backend — find current and pick the next
+          const currentIdx = lessons.findIndex((l) => l.lessonId === currentLessonId);
+          if (currentIdx !== -1 && currentIdx < lessons.length - 1) {
+            const next = lessons[currentIdx + 1];
+            const nextId = next.lessonId as string; // viewer UUID
+            const nextTitle = (next.title || next.name || `Lesson ${currentIdx + 2}`) as string;
+            setNextLesson({ id: nextId, title: nextTitle });
+          }
+        })
+        .catch(() => {/* silently ignore */ });
+    });
+  }, [initialLesson?.id]);
 
   const isSlideAccessible = useCallback((index: number) => {
     if (!lessonData?.slides[index]) return false;
@@ -284,6 +317,22 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     router.push('/dashboard/student');
   }, [saveInteraction, router, lessonData]);
 
+  const handleNextLesson = useCallback((nextLessonId: string) => {
+    saveInteraction();
+    const searchParams = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams();
+    // Preserve auth params + moduleId so next lesson can also find ITS next lesson
+    const userId = searchParams.get('userId');
+    const token = searchParams.get('token');
+    const moduleId = searchParams.get('moduleId');
+    const returnUrl = searchParams.get('returnUrl');
+    if (userId) params.set('userId', userId);
+    if (token) params.set('token', token);
+    if (moduleId) params.set('moduleId', moduleId);
+    if (returnUrl) params.set('returnUrl', returnUrl);
+    router.push(`/viewer/${nextLessonId}?${params.toString()}`);
+  }, [saveInteraction, router]);
+
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full bg-slate-900 text-white border-r border-slate-800">
       {/* Lesson Title Section */}
@@ -499,6 +548,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                   onProgressUpdate={handleProgressUpdate}
                   onScoreUpdate={handleScoreUpdate}
                   onEndLesson={handleEndLesson}
+                  nextLesson={nextLesson}
+                  onNextLesson={handleNextLesson}
                 />
               ) : (
                 <div className="flex-1 flex items-center justify-center bg-slate-950 h-full">

@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
 import { useReadAloud } from '@/context/read-aloud-context';
 import { SlideTransitionOverlay } from '@/components/viewer/SlideTransitionOverlay';
+import { LessonIntroCueOverlay } from '@/components/viewer/LessonIntroCueOverlay';
 import { LessonCompletionOverlay } from '@/components/viewer/LessonCompletionOverlay';
 import { IncompleteLessonModal } from '@/components/viewer/IncompleteLessonModal';
 import { getSlideTheme } from '@/lib/slide-themes';
@@ -27,6 +28,8 @@ interface LessonContentProps {
   onProgressUpdate?: (progress: number) => void;
   savedScore?: number;
   onEndLesson?: () => void;
+  nextLesson?: { id: string; title: string } | null;
+  onNextLesson?: (nextLessonId: string) => void;
 }
 
 export interface LessonContentRef {
@@ -52,6 +55,8 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     onSlidesUpdate,
     onProgressUpdate,
     onEndLesson,
+    nextLesson,
+    onNextLesson,
   }, ref) {
     const { playFeedback } = useFeedback();
     const { currentScore: score, totalScore: totalPossible } = useScoring();
@@ -67,6 +72,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     const [componentStates, setComponentStates] = useState<Record<string, any>>(initialComponentStates);
     const [innerStepIndex, setInnerStepIndex] = useState(0);
+    const [showIntroCue, setShowIntroCue] = useState(true);
     const [showOverlay, setShowOverlay] = useState(false);
     const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
     const [showIncompleteModal, setShowIncompleteModal] = useState(false);
@@ -372,6 +378,15 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           </div>
         </main>
 
+        {/* Overall Lesson Starting Cue Overlay */}
+        <LessonIntroCueOverlay
+          isVisible={showIntroCue}
+          lessonData={lesson}
+          moduleTitle={(lesson as any).moduleTitle || "Course Module"}
+          lessonNumber={(lesson as any).lessonNumber || 1}
+          onBegin={() => setShowIntroCue(false)}
+        />
+
         {/* Slide Transition Overlay */}
         <SlideTransitionOverlay
           isVisible={showOverlay}
@@ -453,6 +468,11 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           onEndLesson={() => {
             if (onEndLesson) onEndLesson();
           }}
+          nextLesson={nextLesson}
+          onNextLesson={onNextLesson ? () => {
+            const id = nextLesson?.id;
+            if (id) onNextLesson(id);
+          } : undefined}
         />
 
         {/* Incomplete Lesson Warning Modal */}

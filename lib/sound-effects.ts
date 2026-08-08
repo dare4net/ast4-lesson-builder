@@ -298,7 +298,7 @@ class SoundEffectManager {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         // Check cache first
-        const cache = await caches.open('ast-builder-sounds-v1');
+        const cache = await caches.open('ast-builder-sounds-v2');
 
         // Load sounds that are cached
         await Promise.all(
