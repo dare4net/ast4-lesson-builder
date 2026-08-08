@@ -374,7 +374,7 @@ export function FillInTheBlankRenderer(props: FillInTheBlankRendererProps) {
     type: 'fillInTheBlank',
     state: componentState as any,
     status: (status || (savedState as any)?.status || 'uncompleted') as any,
-    props: { title, text, blanks },
+    props: { title, text, blanks, points },
     mode: mode as any
   } as Component
 

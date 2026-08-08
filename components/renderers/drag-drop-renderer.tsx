@@ -401,7 +401,7 @@ export function DragDropRenderer(props: DragDropRendererProps) {
     type: 'dragDrop',
     state: componentState as any,
     status: (props.status || (savedState as any)?.status || 'uncompleted') as any,
-    props: { title, items },
+    props: { title, items, points },
     mode: mode as any
   } as Component
 

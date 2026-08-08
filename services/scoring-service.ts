@@ -7,6 +7,8 @@ const SCORED_COMPONENT_TYPES: ComponentType[] = [
     "fillInTheBlank",
     "codeEditor",
     "hotspot",
+    "flashcardQuiz",
+    "multiSelectQuiz",
     // "clickableImage" maps to hotspot
 ]
 
@@ -69,6 +71,8 @@ export const ScoringService = {
             case "quiz":
                 return points * (component.props.questions?.length || 0)
 
+            case "flashcardQuiz":
+            case "multiSelectQuiz":
             default:
                 return points
         }

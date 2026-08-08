@@ -97,7 +97,7 @@ export function QuizRenderer(props: QuizRendererProps) {
     type: 'quiz',
     state: componentState as any,
     status: (props.status || (savedState as any)?.status || 'uncompleted') as any,
-    props: { title, questions: processedQuestions },
+    props: { title, questions: processedQuestions, points },
     mode: mode as any
   } as Component
 

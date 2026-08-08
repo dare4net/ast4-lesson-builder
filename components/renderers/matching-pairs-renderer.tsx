@@ -129,6 +129,9 @@ function MatchingPairsContent({
       const correctCount = results.filter(Boolean).length
       const allCorrect = correctCount === pairs.length && Object.keys(matches).length === pairs.length
 
+      const earnedPoints = correctCount * (props.points || 15)
+      handlePoints(earnedPoints)
+
       // State Update
       setState(prev => ({
         ...prev,
@@ -575,7 +578,7 @@ export function MatchingPairsRenderer(props: MatchingPairsRendererProps) {
     type: 'matchingPairs',
     state: componentState as any,
     status: (status || (savedState as any)?.status || 'uncompleted') as any,
-    props: { title, pairs },
+    props: { title, pairs, points },
     mode: mode as any
   } as Component
 

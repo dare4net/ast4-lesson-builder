@@ -376,6 +376,7 @@ export function HotspotRenderer(props: HotspotRendererProps) {
       title,
       image,
       hotspots,
+      points,
       behavior: effectiveBehavior
     },
     mode: mode as any
