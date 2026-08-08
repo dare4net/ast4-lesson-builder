@@ -35,14 +35,10 @@ export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudio
         }
 
         if (autoPlay) {
-            // Delay slightly to avoid browser blocking autoplay before user gesture
-            const t = setTimeout(() => {
-                audio.play().catch(() => {
-                    // Autoplay blocked — user must click the button
-                })
-            }, 400)
+            audio.play().catch(() => {
+                // Autoplay blocked — user can click the Start button
+            })
             return () => {
-                clearTimeout(t)
                 audio.pause()
                 audio.src = ''
             }

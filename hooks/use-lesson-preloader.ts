@@ -39,9 +39,8 @@ export function extractLessonMediaUrls(lesson: any): { images: string[]; audios:
         return { images: [], audios: [] };
     }
 
-    if (isValidAssetUrl(lesson.introAudioUrl)) {
-        audiosSet.add(lesson.introAudioUrl);
-    }
+    // Note: introAudioUrl is excluded from background preloading batch
+    // so HTML5 Audio streams it immediately over HTTP when the intro overlay mounts.
 
     lesson.slides.forEach((slide: any) => {
         if (isValidAssetUrl(slide.titleAudioUrl)) {

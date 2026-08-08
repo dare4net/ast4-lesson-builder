@@ -201,17 +201,17 @@ export function SlideEditor({
 
   return (
     <div className={cn("flex flex-1 overflow-hidden bg-white shadow-2xl relative", className)}>
-      <ScrollArea className="flex-1">
-        <div className="p-10 space-y-8 max-w-4xl mx-auto">
+      <ScrollArea className="flex-1 max-w-full overflow-x-hidden">
+        <div className="p-3 sm:p-10 space-y-4 sm:space-y-8 max-w-4xl mx-auto w-full overflow-hidden">
           {/* Header Section */}
-          <div className="flex items-center gap-6 border-b border-slate-100 pb-6 group/header">
-            <div className="flex-1 space-y-1">
-              <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Slide Title</span>
+          <div className="flex items-center gap-2 sm:gap-6 border-b border-slate-100 pb-4 sm:pb-6 group/header min-w-0">
+            <div className="flex-1 space-y-0.5 sm:space-y-1 min-w-0">
+              <span className="text-[9px] sm:text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Slide Title</span>
               <Input
                 placeholder="Enter slide title..."
                 value={slide.title || ""}
                 onChange={handleTitleChange}
-                className="text-3xl font-bold bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-300 text-slate-900 tracking-tight"
+                className="text-lg sm:text-3xl font-bold bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-300 text-slate-900 tracking-tight min-w-0 w-full truncate"
               />
             </div>
 
@@ -224,7 +224,7 @@ export function SlideEditor({
                 title="Open Component Re-ordering Modal"
               >
                 <ListTree className="w-4 h-4 text-emerald-600" />
-                <span>Re-order Components</span>
+                <span className="hidden sm:inline">Re-order Components</span>
               </Button>
 
               <Button
