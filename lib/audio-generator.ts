@@ -56,6 +56,7 @@ export interface AudioBatchItem {
     componentId: string
     text: string
     lessonId: string
+    voice?: string
 }
 
 export interface AudioBatchResult {
@@ -68,7 +69,8 @@ export interface AudioBatchResult {
  * Returns a map of componentId → audioUrl.
  */
 export async function generateBatchAudio(
-    items: AudioBatchItem[]
+    items: AudioBatchItem[],
+    voice?: string
 ): Promise<Record<string, string | null>> {
     if (items.length === 0) return {}
 
@@ -80,7 +82,7 @@ export async function generateBatchAudio(
             const res = await fetch('/api/audio/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items }),
+                body: JSON.stringify({ items, voice }),
             })
 
             if (!res.ok) {

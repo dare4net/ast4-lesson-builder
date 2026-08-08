@@ -21,8 +21,10 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Volume2 } from 'lucide-react';
 import type { Lesson } from '@/types/lesson';
+import { VoiceSelector } from '@/components/ui/voice-selector';
+import { getVoiceById } from '@/lib/voices';
 
 interface SaveLessonModalProps {
     open: boolean;
@@ -40,7 +42,7 @@ export function SaveLessonModal({
     currentLessonId,
 }: SaveLessonModalProps) {
     const searchParams = useSearchParams();
-    const moduleIdFromUrl = searchParams.get('moduleId');
+    const moduleIdFromUrl = searchParams?.get('moduleId') || '';
 
     const [programs, setPrograms] = useState<any[]>([]);
     const [modules, setModules] = useState<any[]>([]);
@@ -48,6 +50,7 @@ export function SaveLessonModal({
     const [selectedModuleId, setSelectedModuleId] = useState(moduleIdFromUrl || '');
     const [lessonTitle, setLessonTitle] = useState(lesson.title || '');
     const [lessonDescription, setLessonDescription] = useState('');
+    const [lessonVoice, setLessonVoice] = useState(lesson.voice || 'inherit');
     const [loading, setLoading] = useState(false);
     const [fetchingPrograms, setFetchingPrograms] = useState(false);
     const [fetchingModules, setFetchingModules] = useState(false);
@@ -108,6 +111,7 @@ export function SaveLessonModal({
                 title: lessonTitle,
                 description: lessonDescription,
                 slides: lesson.slides,
+                voice: lessonVoice,
                 settings: lesson.settings || {},
             };
 
@@ -223,6 +227,19 @@ export function SaveLessonModal({
                             onChange={(e) => setLessonDescription(e.target.value)}
                             placeholder="Brief description..."
                             rows={3}
+                            disabled={loading}
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-500">
+                            <Volume2 className="w-3.5 h-3.5 text-indigo-500" />
+                            Lesson Voice Narration
+                        </Label>
+                        <VoiceSelector
+                            value={lessonVoice}
+                            onChange={setLessonVoice}
+                            inheritLabel="Inherit from Module"
                             disabled={loading}
                         />
                     </div>

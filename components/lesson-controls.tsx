@@ -23,13 +23,13 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useRouter } from "next/navigation"
-import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard, Mic } from "lucide-react"
+import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard, Mic, Volume2 } from "lucide-react"
 import type { Lesson } from "@/types/lesson"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
-import { FeedbackSettings } from "@/components/ui/feedback-settings"
+import { VoiceSelector } from "@/components/ui/voice-selector"
 
 interface LessonControlsProps {
   lesson: Lesson
@@ -216,16 +216,16 @@ export function LessonControls({
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogContent className="max-w-2xl bg-[#0F172A] border-slate-800 text-slate-200">
             <DialogHeader>
-              <DialogTitle className="text-emerald-400">Lesson Configuration</DialogTitle>
+              <DialogTitle className="text-emerald-400">Lesson Settings</DialogTitle>
               <DialogDescription className="text-slate-400">
-                Studio-grade settings for your educational content
+                Customize lesson metadata, description, and voice narration
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title" className="text-slate-400">Project Title</Label>
+                  <Label htmlFor="title" className="text-slate-400">Lesson Title</Label>
                   <Input
                     id="title"
                     value={lesson.title || ""}
@@ -234,7 +234,16 @@ export function LessonControls({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-slate-400">Description</Label>
+                  <Label htmlFor="author" className="text-slate-400">Instructor / Author</Label>
+                  <Input
+                    id="author"
+                    value={lesson.author || ""}
+                    onChange={(e) => updateLessonMetadata({ author: e.target.value })}
+                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-slate-400">Lesson Description</Label>
                   <Textarea
                     id="description"
                     value={lesson.description || ""}
@@ -242,10 +251,17 @@ export function LessonControls({
                     className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 min-h-[100px]"
                   />
                 </div>
-              </div>
-
-              <div className="border-t border-slate-800 pt-6">
-                <FeedbackSettings />
+                <div className="space-y-2">
+                  <Label className="text-slate-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                    Lesson Voice Narration
+                  </Label>
+                  <VoiceSelector
+                    value={lesson.voice || "inherit"}
+                    onChange={(voiceId) => updateLessonMetadata({ voice: voiceId })}
+                    inheritLabel="Inherit from Module"
+                  />
+                </div>
               </div>
             </div>
 
@@ -435,9 +451,9 @@ export function LessonControls({
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
         <DialogContent className="max-w-2xl bg-[#0F172A] border-slate-800 text-slate-200">
           <DialogHeader>
-            <DialogTitle className="text-emerald-400">Studio Configuration</DialogTitle>
+            <DialogTitle className="text-emerald-400">Lesson Settings</DialogTitle>
             <DialogDescription className="text-slate-400">
-              Fine-tune your lesson metadata and interaction policies
+              Customize lesson title, instructor details, description, and voice narration
             </DialogDescription>
           </DialogHeader>
 
@@ -445,7 +461,7 @@ export function LessonControls({
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="d-title" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Project Title</Label>
+                  <Label htmlFor="d-title" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Lesson Title</Label>
                   <Input
                     id="d-title"
                     value={lesson.title || ""}
@@ -454,7 +470,7 @@ export function LessonControls({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="d-author" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Lead Designer</Label>
+                  <Label htmlFor="d-author" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Instructor / Author</Label>
                   <Input
                     id="d-author"
                     value={lesson.author || ""}
@@ -464,7 +480,7 @@ export function LessonControls({
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="d-description" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Project Summary</Label>
+                <Label htmlFor="d-description" className="text-slate-400 text-xs uppercase font-bold tracking-wider">Lesson Description</Label>
                 <Textarea
                   id="d-description"
                   value={lesson.description || ""}
@@ -474,12 +490,16 @@ export function LessonControls({
               </div>
             </div>
 
-            <div className="border-t border-slate-800 pt-8">
-              <h3 className="text-emerald-400 text-xs uppercase font-bold tracking-wider mb-6 flex items-center gap-2">
-                <Play className="h-3 w-3" />
-                Runtime Feedback Policies
-              </h3>
-              <FeedbackSettings />
+            <div className="space-y-2">
+              <Label className="text-slate-400 text-xs uppercase font-bold tracking-wider flex items-center gap-1.5">
+                <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                Lesson Voice Narration
+              </Label>
+              <VoiceSelector
+                value={lesson.voice || "inherit"}
+                onChange={(voiceId) => updateLessonMetadata({ voice: voiceId })}
+                inheritLabel="Inherit from Module"
+              />
             </div>
           </div>
 

@@ -13,8 +13,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X } from "lucide-react"
+import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2 } from "lucide-react"
 import { generateArtisticThumbnail } from "@/lib/thumbnail-generator"
+import { VoiceSelector } from "@/components/ui/voice-selector"
 
 interface EditProgramDialogProps {
     isOpen: boolean
@@ -27,8 +28,9 @@ interface EditProgramDialogProps {
         image_url?: string
         cover_image?: string
         is_published?: boolean
+        default_voice?: string
     }
-    onSave: (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean }) => Promise<void>
+    onSave: (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean; default_voice?: string }) => Promise<void>
 }
 
 export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProgramDialogProps) {
@@ -38,6 +40,7 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
     const [description, setDescription] = useState(program.description || "")
     const [imageUrl, setImageUrl] = useState(program.image_url || program.cover_image || "")
     const [isPublished, setIsPublished] = useState(program.is_published ?? true)
+    const [defaultVoice, setDefaultVoice] = useState(program.default_voice || "en-GB-SoniaNeural")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -75,7 +78,8 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                 name: name.trim(),
                 description: description.trim(),
                 image_url: finalImage,
-                is_published: isPublished
+                is_published: isPublished,
+                default_voice: defaultVoice,
             })
             onClose()
         } catch (error) {
@@ -131,6 +135,18 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                                     placeholder="What will students learn in this program?"
                                     rows={4}
                                     className="text-xs font-medium border-2 border-slate-200 focus-visible:ring-0 focus-visible:border-[#1CB0F6] rounded-xl bg-slate-50/50 resize-none"
+                                />
+                            </div>
+
+                            {/* Program Default TTS Voice */}
+                            <div className="space-y-1.5">
+                                <label className="text-[11px] font-black uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
+                                    <Volume2 className="w-3.5 h-3.5 text-[#1CB0F6]" />
+                                    Default Program Voice
+                                </label>
+                                <VoiceSelector
+                                    value={defaultVoice}
+                                    onChange={setDefaultVoice}
                                 />
                             </div>
 

@@ -19,14 +19,18 @@ import { Loader2, Sparkles } from "lucide-react"
 import { apiClient } from "@/lib/api-client"
 import { useToast } from "@/components/ui/use-toast"
 
+import { VoiceSelector } from "@/components/ui/voice-selector"
+import { getVoiceById } from "@/lib/voices"
+
 interface LessonCreationModalProps {
     isOpen: boolean
     onClose: () => void
     moduleId: string
-    programId: string // Ensure we have this context if needed, though module links to program
+    programId?: string
+    moduleVoice?: string
 }
 
-export function LessonCreationModal({ isOpen, onClose, moduleId }: LessonCreationModalProps) {
+export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: LessonCreationModalProps) {
     const router = useRouter()
     const { toast } = useToast()
     const [loading, setLoading] = useState(false)
@@ -34,7 +38,8 @@ export function LessonCreationModal({ isOpen, onClose, moduleId }: LessonCreatio
         title: "",
         description: "",
         duration: 30, // Default 30 mins
-        level: "Beginner"
+        level: "Beginner",
+        voice: "inherit",
     })
 
     const handleChange = (field: string, value: any) => {
@@ -57,6 +62,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId }: LessonCreatio
                 title: formData.title,
                 description: formData.description,
                 slides: [],
+                voice: formData.voice,
                 settings: {
                     duration: formData.duration,
                     level: formData.level
@@ -127,6 +133,18 @@ export function LessonCreationModal({ isOpen, onClose, moduleId }: LessonCreatio
                             value={formData.description}
                             onChange={(e) => handleChange("description", e.target.value)}
                             className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-white min-h-[100px] placeholder:text-slate-600 resize-none"
+                        />
+                    </div>
+
+                    {/* Lesson Voice Selector */}
+                    <div className="space-y-2">
+                        <Label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Narration Voice
+                        </Label>
+                        <VoiceSelector
+                            value={formData.voice}
+                            onChange={(v) => handleChange("voice", v)}
+                            inheritLabel={`Inherit from Module (${getVoiceById(moduleVoice).name})`}
                         />
                     </div>
 

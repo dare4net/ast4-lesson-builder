@@ -88,14 +88,15 @@ export function LessonBuilder() {
           }
 
           const normalizedLesson: Lesson = {
-            id: fetchedLesson.content.id || lessonIdFromUrl,
-            title: fetchedLesson.title,
-            description: fetchedLesson.content.description,
+            id: fetchedLesson.content?.id || lessonIdFromUrl,
+            title: fetchedLesson.title || fetchedLesson.content?.title || "",
+            description: fetchedLesson.description || fetchedLesson.content?.description || "",
+            voice: fetchedLesson.voice || fetchedLesson.content?.voice || "inherit",
             slides: slides,
-            settings: fetchedLesson.content.settings || {},
-            author: fetchedLesson.content.author,
-            level: fetchedLesson.content.level,
-            duration: fetchedLesson.content.duration,
+            settings: fetchedLesson.settings || fetchedLesson.content?.settings || {},
+            author: fetchedLesson.author || fetchedLesson.content?.author || "",
+            level: fetchedLesson.level || fetchedLesson.content?.level,
+            duration: fetchedLesson.duration || fetchedLesson.content?.duration,
             createdAt: fetchedLesson.createdAt,
             updatedAt: fetchedLesson.updatedAt,
           }
@@ -331,6 +332,7 @@ export function LessonBuilder() {
         title: lesson.title,
         description: lesson.description,
         slides: lesson.slides,
+        voice: lesson.voice,
         settings: lesson.settings || {},
         author: lesson.author,
         level: lesson.level,
@@ -378,12 +380,13 @@ export function LessonBuilder() {
         const cleanText = normalizeTextForSpeech(rawText)
         if (!cleanText) return
 
-        const newHash = hashText(cleanText)
+        const resolvedVoiceForHash = (lesson.voice && lesson.voice !== 'inherit') ? lesson.voice : 'default'
+        const newHash = hashText(`${cleanText}::${resolvedVoiceForHash}`)
         const enableCache = process.env.NEXT_PUBLIC_ENABLE_AUDIO_CACHE === 'true'
 
         if (enableCache && comp.props?.textHash === newHash && comp.props?.audioUrl) {
           skippedIds.add(comp.id)
-          return // Cache enabled and unchanged — reuse existing audio
+          return // Cache enabled and unchanged (same text + same voice) — reuse existing audio
         }
 
         itemsToGenerate.push({ componentId: comp.id, text: cleanText, lessonId, slideIdx: si, compIdx: ci, newHash })
@@ -399,27 +402,29 @@ export function LessonBuilder() {
       const cleanTitle = normalizeTextForSpeech(rawTitle)
       if (!cleanTitle) return
 
-      const newHash = hashText(cleanTitle)
+      const resolvedVoiceForHash = (lesson.voice && lesson.voice !== 'inherit') ? lesson.voice : 'default'
+      const newHash = hashText(`${cleanTitle}::${resolvedVoiceForHash}`)
       const enableCache = process.env.NEXT_PUBLIC_ENABLE_AUDIO_CACHE === 'true'
       const cueId = `slide-cue-${slide.id}`
 
       if (enableCache && slide.titleTextHash === newHash && slide.titleAudioUrl) {
         skippedIds.add(cueId)
-        return // Title unchanged — reuse existing cue audio
+        return // Title unchanged (same text + same voice) — reuse existing cue audio
       }
 
       slideCueItems.push({ componentId: cueId, text: cleanTitle, lessonId, slideIdx: si, newHash })
     })
 
     // 2. Send ALL items to backend in one call (components + slide cues together)
+    const resolvedVoice = (lesson.voice && lesson.voice !== "inherit") ? lesson.voice : undefined
     const allBatchItems = [
-      ...itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId })),
-      ...slideCueItems.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId })),
+      ...itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId, voice: resolvedVoice })),
+      ...slideCueItems.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId, voice: resolvedVoice })),
     ]
 
     let urlMap: Record<string, string | null> = {}
     if (allBatchItems.length > 0) {
-      urlMap = await generateBatchAudio(allBatchItems)
+      urlMap = await generateBatchAudio(allBatchItems, resolvedVoice)
     }
 
     const generated = Object.values(urlMap).filter(Boolean).length
@@ -468,6 +473,7 @@ export function LessonBuilder() {
           title: updatedLesson.title,
           description: updatedLesson.description,
           slides: updatedLesson.slides,
+          voice: updatedLesson.voice,
           settings: updatedLesson.settings || {},
           author: updatedLesson.author,
           level: updatedLesson.level,

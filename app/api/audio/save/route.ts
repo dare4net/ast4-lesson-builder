@@ -12,39 +12,44 @@ interface AudioItem {
     componentId: string
     text: string
     lessonId: string
+    voice?: string
 }
 
 interface BatchAudioRequest {
     items: AudioItem[]
+    voice?: string
 }
 
 /**
  * POST /api/audio/save
- * Accepts a batch of {componentId, text, lessonId} items.
+ * Accepts a batch of {componentId, text, lessonId, voice} items.
  * Normalizes text (strips emojis, bracketed text, HTML, lowercases).
- * Generates MP3 audio for each using Edge Neural TTS (en-GB-SoniaNeural).
+ * Generates MP3 audio for each using specified Edge Neural TTS voice (default: en-GB-SoniaNeural).
  * Uploads audio to Cloudinary with overwrite: true (discarding old audio).
  * Returns { results: { componentId, audioUrl }[] }
  */
 export async function POST(req: NextRequest) {
     try {
         const body: BatchAudioRequest = await req.json()
-        const { items } = body
+        const { items, voice: batchVoice } = body
 
         if (!Array.isArray(items) || items.length === 0) {
             return NextResponse.json({ error: 'No items provided' }, { status: 400 })
         }
 
-        const tts = new EdgeTTS({
-            voice: 'en-GB-SoniaNeural', // Clear, friendly British English voice perfect for Year 4
-            lang: 'en-GB',
-            outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
-        })
-
         const results = await Promise.all(
-            items.map(({ componentId, text, lessonId }) =>
-                generateAudio(tts, componentId, text, lessonId)
-            )
+            items.map(({ componentId, text, lessonId, voice: itemVoice }) => {
+                const selectedVoice = itemVoice || batchVoice || 'en-GB-SoniaNeural';
+                const lang = selectedVoice.slice(0, 5);
+
+                const tts = new EdgeTTS({
+                    voice: selectedVoice,
+                    lang: lang,
+                    outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
+                });
+
+                return generateAudio(tts, componentId, text, lessonId);
+            })
         )
 
         const failedItem = results.find(r => r.error)

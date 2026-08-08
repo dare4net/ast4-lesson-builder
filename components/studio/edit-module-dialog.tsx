@@ -13,12 +13,15 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X } from "lucide-react"
+import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2 } from "lucide-react"
 import { generateArtisticThumbnail } from "@/lib/thumbnail-generator"
+import { VoiceSelector } from "@/components/ui/voice-selector"
+import { getVoiceById } from "@/lib/voices"
 
 interface EditModuleDialogProps {
     isOpen: boolean
     onClose: () => void
+    programVoice?: string
     module: {
         _id: string
         name?: string
@@ -27,17 +30,19 @@ interface EditModuleDialogProps {
         image_url?: string
         cover_image?: string
         is_published?: boolean
+        default_voice?: string
     }
-    onSave: (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean }) => Promise<void>
+    onSave: (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean; default_voice?: string }) => Promise<void>
 }
 
-export function EditModuleDialog({ isOpen, onClose, module, onSave }: EditModuleDialogProps) {
+export function EditModuleDialog({ isOpen, onClose, programVoice, module, onSave }: EditModuleDialogProps) {
     const originalName = module.name || module.title || ""
     const [styleIndex, setStyleIndex] = useState(0)
     const [name, setName] = useState(originalName)
     const [description, setDescription] = useState(module.description || "")
     const [imageUrl, setImageUrl] = useState(module.image_url || module.cover_image || "")
     const [isPublished, setIsPublished] = useState(module.is_published ?? true)
+    const [defaultVoice, setDefaultVoice] = useState(module.default_voice || "inherit")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -75,7 +80,8 @@ export function EditModuleDialog({ isOpen, onClose, module, onSave }: EditModule
                 name: name.trim(),
                 description: description.trim(),
                 image_url: finalImage,
-                is_published: isPublished
+                is_published: isPublished,
+                default_voice: defaultVoice,
             })
             onClose()
         } catch (error) {
@@ -131,6 +137,19 @@ export function EditModuleDialog({ isOpen, onClose, module, onSave }: EditModule
                                     placeholder="Briefly describe what this module covers..."
                                     rows={4}
                                     className="text-xs font-medium border-2 border-slate-200 focus-visible:ring-0 focus-visible:border-[#58CC02] rounded-xl bg-slate-50/50 resize-none"
+                                />
+                            </div>
+
+                            {/* Module TTS Voice */}
+                            <div className="space-y-1.5">
+                                <label className="text-[11px] font-black uppercase text-slate-700 tracking-wider flex items-center gap-1.5">
+                                    <Volume2 className="w-3.5 h-3.5 text-[#58CC02]" />
+                                    Module Narration Voice
+                                </label>
+                                <VoiceSelector
+                                    value={defaultVoice}
+                                    onChange={setDefaultVoice}
+                                    inheritLabel={`Inherit from Program (${getVoiceById(programVoice).name})`}
                                 />
                             </div>
 

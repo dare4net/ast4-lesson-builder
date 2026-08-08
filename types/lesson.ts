@@ -7,6 +7,7 @@ export interface Lesson {
   duration: number
   slides: Slide[]
   settings?: Record<string, any>
+  voice?: string
   createdAt: string
   updatedAt: string
 }
