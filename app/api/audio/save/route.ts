@@ -71,7 +71,9 @@ async function generateAudio(
     lessonId: string
 ): Promise<{ componentId: string; audioUrl: string | null; error?: string }> {
     try {
-        const tmpDir = path.join(process.cwd(), 'public', 'audio', lessonId)
+        // Use /tmp — the only writable directory on Vercel serverless functions.
+        // public/audio is read-only after deployment.
+        const tmpDir = path.join('/tmp', 'ast-audio', lessonId)
         fs.mkdirSync(tmpDir, { recursive: true })
 
         const fileName = `${componentId}.mp3`
@@ -89,6 +91,9 @@ async function generateAudio(
 
         // 2. Upload to Cloudinary (replaces old audio under same public_id: ast_lessons/{lessonId}/{componentId})
         const cloudinaryUrl = await uploadAudioToCloudinary(filePath, lessonId, componentId)
+
+        // 3. Clean up temp file to avoid /tmp bloat across warm invocations
+        try { fs.unlinkSync(filePath) } catch (_) { /* ignore */ }
 
         return { componentId, audioUrl: cloudinaryUrl }
     } catch (err: any) {
