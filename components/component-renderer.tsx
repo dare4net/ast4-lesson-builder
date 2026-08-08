@@ -19,6 +19,8 @@ const componentRenderers: ComponentRenderers = {
   image: dynamic(() => import("@/components/renderers/image-renderer").then((mod) => mod.ImageRenderer)),
   table: dynamic(() => import("@/components/renderers/table-renderer").then((mod) => mod.TableRenderer)),
   video: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
+  codeBlock: dynamic(() => import("@/components/renderers/code-block-renderer").then((mod) => mod.CodeBlockRenderer)),
+  quote: dynamic(() => import("@/components/renderers/quote-renderer").then((mod) => mod.QuoteRenderer)),
 
   // Interactive Components
   quiz: dynamic(() => import("@/components/renderers/quiz-renderer").then((mod) => mod.QuizRenderer)),
@@ -51,6 +53,10 @@ const componentRenderers: ComponentRenderers = {
 
   // Fallback renderer for unimplemented components
   fallback: dynamic(() => import("@/components/renderers/fallback-renderer").then((mod) => mod.FallbackRenderer)),
+}
+
+export function isSupportedRenderer(type: string): boolean {
+  return !!type && type in componentRenderers && type !== 'fallback';
 }
 
 interface ComponentRendererProps {

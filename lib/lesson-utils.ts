@@ -35,6 +35,7 @@ const COMPONENT_CATEGORY_MAP: Record<string, ComponentType_Category> = {
     codeEditor: "interactive",
     clickableImage: "interactive",
     hotspot: "interactive",
+    flashcardQuiz: "interactive",
 
     // Gamified Components
     flashcards: "gamified",

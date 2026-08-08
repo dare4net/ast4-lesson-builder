@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { getComponentCategory, normalizeSlides, formatSlideTitle } from '@/lib/lesson-utils';
+import { getComponentCategory, isInteractiveComponent, normalizeSlides, formatSlideTitle } from '@/lib/lesson-utils';
 import { FileUploader } from './FileUploader';
 import { LessonContent } from './LessonContent';
 import { Card } from '@/components/ui/card';
@@ -98,7 +98,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       const processedSlides = initializedSlides.map((slide, index) => {
         if (slide.status === "completed") return slide;
         const hasInteractiveComponents = slide.components.some(
-          comp => getComponentCategory(comp.type) === "interactive"
+          (comp: any) => isInteractiveComponent(comp.type)
         );
         if (!hasInteractiveComponents) {
           const updatedSlide = { ...slide, status: "completed" as const };
@@ -456,17 +456,28 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           {/* Main Content Area */}
           <div className="flex-1 flex flex-col relative h-full bg-white dark:bg-slate-950 overflow-hidden">
             {/* Internal Progress Bar */}
-            <TopProgressBar
-              progress={slideProgress}
-              isCompleted={currentSlide?.status === "completed"}
-              onMenuClick={() => {
-                if (window.innerWidth >= 768) {
-                  setIsSidebarOpen(prev => !prev);
-                } else {
-                  setIsMobileSheetOpen(prev => !prev);
-                }
-              }}
-            />
+            {(() => {
+              const completedSlidesCount = lessonData?.slides.filter(s => s.status === 'completed').length || 0;
+              const totalSlidesCount = lessonData?.slides.length || 0;
+              const overallProgress = totalSlidesCount > 0 ? (completedSlidesCount / totalSlidesCount) * 100 : 0;
+              const isAllCompleted = totalSlidesCount > 0 && completedSlidesCount === totalSlidesCount;
+
+              return (
+                <TopProgressBar
+                  progress={overallProgress}
+                  completedSlides={completedSlidesCount}
+                  totalSlides={totalSlidesCount}
+                  isCompleted={isAllCompleted}
+                  onMenuClick={() => {
+                    if (window.innerWidth >= 768) {
+                      setIsSidebarOpen(prev => !prev);
+                    } else {
+                      setIsMobileSheetOpen(prev => !prev);
+                    }
+                  }}
+                />
+              );
+            })()}
 
             {/* Mobile Menu Sheet — small screens only */}
             <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>

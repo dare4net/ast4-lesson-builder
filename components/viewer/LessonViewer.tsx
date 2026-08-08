@@ -398,11 +398,22 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
-              <TopProgressBar
-                progress={slideProgress}
-                isCompleted={lessonData?.slides[currentSlideIndex]?.status === "completed"}
-                onMenuClick={() => setIsSidebarOpen(true)}
-              />
+              {(() => {
+                const completedSlidesCount = lessonData?.slides.filter(s => s.status === 'completed').length || 0;
+                const totalSlidesCount = lessonData?.slides.length || 0;
+                const overallProgress = totalSlidesCount > 0 ? (completedSlidesCount / totalSlidesCount) * 100 : 0;
+                const isAllCompleted = totalSlidesCount > 0 && completedSlidesCount === totalSlidesCount;
+
+                return (
+                  <TopProgressBar
+                    progress={overallProgress}
+                    completedSlides={completedSlidesCount}
+                    totalSlides={totalSlidesCount}
+                    isCompleted={isAllCompleted}
+                    onMenuClick={() => setIsSidebarOpen(true)}
+                  />
+                );
+              })()}
 
               <div className="flex-1 relative overflow-hidden">
                 <LessonContent

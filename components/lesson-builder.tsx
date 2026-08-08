@@ -683,6 +683,7 @@ export function LessonBuilder() {
                       addSlide={handleAddSlide}
                       deleteSlide={handleDeleteSlide}
                       reorderSlides={reorderSlides}
+                      slideResults={masterReport.slideResults}
                     />
                   </ScrollArea>
                 </div>

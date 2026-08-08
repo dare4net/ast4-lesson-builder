@@ -57,11 +57,6 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const { currentScore: score, totalScore: totalPossible } = useScoring();
 
     const currentSlide = useMemo(() => lesson.slides[currentSlideIndex], [lesson.slides, currentSlideIndex]);
-    const progress = useMemo(() => {
-      const completedCount = lesson.slides.filter(s => s.status === "completed").length;
-      return (completedCount / lesson.slides.length) * 100;
-    }, [lesson.slides]);
-
     const onSlidesUpdateRef = useLatestRef(onSlidesUpdate);
     const onProgressUpdateRef = useLatestRef(onProgressUpdate);
     const onScoreUpdateRef = useLatestRef(onScoreUpdate);
@@ -77,6 +72,18 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const [showIncompleteModal, setShowIncompleteModal] = useState(false);
     const hasShownCompletionOverlayRef = useRef(false);
     const prevSlideIndexRef = useRef<number>(-1);
+
+    const currentSlideProgress = useMemo(() => {
+      if (!currentSlide) return 100;
+      const interactiveComponents = currentSlide.components.filter(
+        (comp: any) => isInteractiveComponent(comp.type)
+      );
+      if (interactiveComponents.length === 0) return 100;
+      const completedCount = interactiveComponents.filter(
+        (comp: any) => componentStates[comp.id]?.status === "completed"
+      ).length;
+      return (completedCount / interactiveComponents.length) * 100;
+    }, [currentSlide, componentStates]);
 
     const completedSlidesCount = useMemo(() => {
       return lesson.slides.filter(s => s.status === "completed").length;
@@ -111,7 +118,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       if (!currentSlide) return [];
       return currentSlide.components.map(component => {
         if (currentSlide.state === "disabled" &&
-          (getComponentCategory(component.type) === "interactive")) {
+          isInteractiveComponent(component.type)) {
           return {
             ...component,
             state: "disabled" as const
@@ -181,13 +188,13 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       if (!currentSlide) return;
 
       const interactiveComponents = currentSlide.components.filter(
-        comp => getComponentCategory(comp.type) === "interactive"
+        (comp: any) => isInteractiveComponent(comp.type)
       );
 
       let slideProgress = 100;
       if (interactiveComponents.length > 0) {
         const completedCount = interactiveComponents.filter(
-          comp => componentStates[comp.id]?.status === "completed"
+          (comp: any) => componentStates[comp.id]?.status === "completed"
         ).length;
         slideProgress = (completedCount / interactiveComponents.length) * 100;
       }
@@ -203,7 +210,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       if (!slide || slide.status === "completed") return;
 
       const interactiveComponents = (slide.components || []).filter(
-        comp => getComponentCategory(comp.type) === "interactive"
+        (comp: any) => isInteractiveComponent(comp.type)
       );
 
       if (interactiveComponents.length === 0) {
@@ -294,13 +301,13 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           {/* Progress Bar */}
           <div className="flex-1 flex flex-col gap-1 max-w-sm">
             <div className="flex justify-between items-center px-0.5">
-              <span className="text-xs font-medium text-slate-300">Lesson Progress</span>
-              <span className="text-xs font-bold text-white tabular-nums">{Math.round(progress)}%</span>
+              <span className="text-xs font-semibold text-slate-300">Slide Tasks Progress</span>
+              <span className="text-xs font-bold text-emerald-400 tabular-nums">{Math.round(currentSlideProgress)}%</span>
             </div>
-            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800 p-0.5">
               <div
-                className="h-full bg-green-500 transition-all duration-700 ease-out"
-                style={{ width: `${progress}%` }}
+                className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+                style={{ width: `${currentSlideProgress}%` }}
               />
             </div>
           </div>
