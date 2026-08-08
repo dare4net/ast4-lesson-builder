@@ -451,7 +451,6 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           totalPossibleScore={totalPossible}
           onReview={() => setShowCompletionOverlay(false)}
           onEndLesson={() => {
-            setShowCompletionOverlay(false);
             if (onEndLesson) onEndLesson();
           }}
         />

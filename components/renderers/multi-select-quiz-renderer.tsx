@@ -253,38 +253,38 @@ function MultiSelectContent({
             </div>
 
             {/* Question card */}
-            <div className="shrink-0 mb-3 p-4 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100">
-                <h2 className="text-base md:text-lg font-black text-slate-900 text-center leading-snug">{question.question}</h2>
-                <p className="text-[10px] font-bold text-violet-500 text-center mt-1 uppercase tracking-widest">
+            <div className="shrink-0 mb-2 p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100">
+                <h2 className="text-sm md:text-base font-black text-slate-900 text-center leading-snug">{question.question}</h2>
+                <p className="text-[9px] font-bold text-violet-500 text-center mt-0.5 uppercase tracking-widest">
                     ☑ Select all correct answers
                 </p>
             </div>
 
             {/* Options 2×2 grid */}
-            <div className="flex-1 min-h-0 grid grid-cols-2 gap-3 mb-3 overflow-y-auto">
+            <div className="flex-1 min-h-0 grid grid-cols-2 gap-2 mb-2 overflow-hidden">
                 {question.options.map(option => (
                     <button
                         key={option.id}
                         disabled={showResult || isDisabled || isComplete}
                         onClick={() => handleToggle(option.id)}
                         className={cn(
-                            "relative h-16 md:h-18 px-3.5 py-2.5 rounded-xl text-left font-semibold text-xs md:text-sm leading-tight transition-all duration-200 active:scale-95",
+                            "relative h-12 md:h-13 px-3 py-2 rounded-xl text-left font-semibold text-xs leading-tight transition-all duration-200 active:scale-95 flex items-center justify-between",
                             getOptionStyle(option)
                         )}
                     >
-                        <span className="pr-7">{option.text}</span>
-                        <div className="absolute top-3 right-3">{getCheckIndicator(option)}</div>
+                        <span className="pr-5 line-clamp-2">{option.text}</span>
+                        <div className="shrink-0">{getCheckIndicator(option)}</div>
                     </button>
                 ))}
             </div>
 
             {/* Submit button */}
             {!showResult && (
-                <div className="shrink-0 flex justify-center mb-3">
+                <div className="shrink-0 flex justify-center mb-2">
                     <Button
                         onClick={handleSubmit}
                         disabled={selectedOptions.length === 0 || isDisabled || isComplete}
-                        className="h-11 px-10 bg-slate-900 hover:bg-slate-800 text-white font-black text-[11px] uppercase tracking-widest rounded-xl shadow-md transition-all"
+                        className="h-9 px-8 bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-md transition-all"
                     >
                         Submit Answer
                     </Button>
@@ -294,11 +294,11 @@ function MultiSelectContent({
             {/* Result feedback */}
             {showResult && (
                 <div className={cn(
-                    "shrink-0 p-4 rounded-2xl border animate-in fade-in slide-in-from-bottom-2 duration-400 mb-3",
+                    "shrink-0 p-2.5 rounded-xl border animate-in fade-in slide-in-from-bottom-2 duration-400 mb-2",
                     isPerfect ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
                 )}>
                     <p className={cn(
-                        "font-black text-sm text-center",
+                        "font-black text-xs text-center",
                         isPerfect ? "text-emerald-700" : "text-amber-700"
                     )}>
                         {isPerfect
@@ -306,17 +306,17 @@ function MultiSelectContent({
                             : `You got ${correctSelections.length} out of ${correctIds.length} correct answers.`}
                     </p>
                     {question.explanation && (
-                        <p className="text-xs font-medium text-slate-500 text-center mt-1">{question.explanation}</p>
+                        <p className="text-[10px] font-medium text-slate-500 text-center mt-0.5">{question.explanation}</p>
                     )}
                 </div>
             )}
 
             {/* Next question */}
-            <div className="shrink-0 flex justify-center pb-1">
+            <div className="shrink-0 flex justify-center pb-0.5">
                 <Button
                     onClick={handleNext}
                     disabled={currentQuestion >= questions.length - 1 || !showResult}
-                    className="h-10 px-8 bg-violet-500 hover:bg-violet-600 disabled:bg-slate-100 disabled:text-slate-400 text-white font-black text-[11px] uppercase tracking-widest rounded-xl transition-all gap-2 shadow-md shadow-violet-500/20"
+                    className="h-9 px-6 bg-violet-500 hover:bg-violet-600 disabled:bg-slate-100 disabled:text-slate-400 text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all gap-1.5 shadow-md shadow-violet-500/20"
                 >
                     Next Question <ChevronRight className="w-3.5 h-3.5" />
                 </Button>

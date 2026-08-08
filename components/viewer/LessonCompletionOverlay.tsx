@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Sparkles, Trophy, CheckCircle2, RotateCcw, LogOut, Award, Target, BookOpen } from "lucide-react";
+import { Sparkles, Trophy, CheckCircle2, RotateCcw, LogOut, Award, Target, BookOpen, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSlideTheme, getLessonPattern } from "@/lib/slide-themes";
@@ -16,7 +16,7 @@ interface LessonCompletionOverlayProps {
     score: number;
     totalPossibleScore: number;
     onReview: () => void;
-    onEndLesson: () => void;
+    onEndLesson: () => void | Promise<void>;
 }
 
 /** Helper hook for smooth number count-up animation */
@@ -64,6 +64,23 @@ export function LessonCompletionOverlay({
     onEndLesson,
 }: LessonCompletionOverlayProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const [isExiting, setIsExiting] = useState(false);
+
+    useEffect(() => {
+        if (!isVisible) {
+            setIsExiting(false);
+        }
+    }, [isVisible]);
+
+    const handleEndLesson = async () => {
+        if (isExiting) return;
+        setIsExiting(true);
+        try {
+            await onEndLesson();
+        } catch {
+            setIsExiting(false);
+        }
+    };
 
     // Theme setup
     const theme = getSlideTheme(0);
@@ -324,18 +341,29 @@ export function LessonCompletionOverlay({
                         <Button
                             variant="outline"
                             onClick={onReview}
-                            className="w-full sm:flex-1 h-11 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-extrabold text-xs flex items-center justify-center gap-2 bg-white transition-all order-2 sm:order-1"
+                            disabled={isExiting}
+                            className="w-full sm:flex-1 h-11 rounded-2xl border-2 border-slate-200 hover:border-slate-300 text-slate-700 font-extrabold text-xs flex items-center justify-center gap-2 bg-white transition-all order-2 sm:order-1 disabled:opacity-50"
                         >
                             <RotateCcw className="w-4 h-4 text-slate-400" />
                             <span>Review Lesson</span>
                         </Button>
 
                         <Button
-                            onClick={onEndLesson}
-                            className="w-full sm:flex-1 h-11 rounded-2xl bg-[#58CC02] hover:bg-[#46A302] text-white font-black text-xs uppercase tracking-wider border-b-4 border-[#3B8C00] active:border-b-0 transition-all flex items-center justify-center gap-2 order-1 sm:order-2"
+                            onClick={handleEndLesson}
+                            disabled={isExiting}
+                            className="w-full sm:flex-1 h-11 rounded-2xl bg-[#58CC02] hover:bg-[#46A302] text-white font-black text-xs uppercase tracking-wider border-b-4 border-[#3B8C00] active:border-b-0 transition-all flex items-center justify-center gap-2 order-1 sm:order-2 disabled:opacity-80"
                         >
-                            <span>Complete & Exit</span>
-                            <LogOut className="w-4 h-4" />
+                            {isExiting ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    <span>Exiting...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span>Complete & Exit</span>
+                                    <LogOut className="w-4 h-4" />
+                                </>
+                            )}
                         </Button>
                     </motion.div>
                 </motion.div>

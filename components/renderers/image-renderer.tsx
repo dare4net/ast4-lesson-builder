@@ -22,10 +22,10 @@ export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = f
   }
 
   return (
-    <figure className="my-12 group/image space-y-8 animate-in fade-in duration-700">
+    <figure className="my-2 group/image space-y-3 animate-in fade-in duration-700 w-full h-full flex flex-col items-center justify-center overflow-hidden p-2">
       <div
         className={cn(
-          "w-full transition-all duration-500",
+          "w-full max-h-[55vh] flex justify-center items-center overflow-hidden transition-all duration-500",
           !isAcknowledged && "blur-md grayscale opacity-30",
           isAcknowledged && "animate-in fade-in slide-in-from-bottom-2 duration-500"
         )}
@@ -34,12 +34,12 @@ export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = f
         <img
           src={src || "/placeholder.svg"}
           alt={alt}
-          className="w-full h-auto object-cover transition-transform duration-700 group-hover/image:scale-[1.02]"
+          className="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-2xl shadow-md transition-transform duration-700 group-hover/image:scale-[1.01]"
         />
       </div>
 
       {!isAcknowledged && !isEditing && (
-        <div className="flex justify-center flex-col items-center gap-4">
+        <div className="flex justify-center flex-col items-center gap-2 shrink-0">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Tap to reveal the image</p>
           <button
             onClick={handleAcknowledge}
@@ -51,9 +51,9 @@ export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = f
       )}
 
       {isAcknowledged && caption && (
-        <figcaption className="text-center mt-6 animate-in fade-in slide-in-from-top-2 duration-700">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-2">Image Caption</span>
-          <span className="text-slate-900 text-base font-black italic tracking-tight">
+        <figcaption className="text-center mt-2 animate-in fade-in slide-in-from-top-2 duration-700 shrink-0">
+          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-1">Image Caption</span>
+          <span className="text-slate-900 text-sm font-black italic tracking-tight">
             {caption}
           </span>
         </figcaption>

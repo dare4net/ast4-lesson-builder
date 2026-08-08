@@ -237,11 +237,11 @@ function FlashcardQuizContent({
             </div>
 
             {/* Main content area */}
-            <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-4 overflow-y-auto py-2">
+            <div className="flex-1 min-h-0 flex flex-col items-center justify-between gap-2 overflow-hidden py-1">
                 {/* Main question card */}
                 <div
                     className={cn(
-                        "relative w-64 h-36 md:w-72 md:h-40 cursor-pointer select-none shrink-0 my-auto",
+                        "relative w-full max-w-xs h-28 md:h-32 cursor-pointer select-none shrink-0 my-auto",
                         (isMainFlipped || isComplete) && "cursor-default"
                     )}
                     onClick={handleMainCardClick}
@@ -254,25 +254,25 @@ function FlashcardQuizContent({
                         )}
                     >
                         {/* Front — mystery ? */}
-                        <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-2xl border-2 border-slate-200 shadow-lg flex flex-col items-center justify-center gap-1">
-                            <span className="text-5xl text-slate-300 font-black leading-none">?</span>
-                            <span className="text-[11px] font-bold text-slate-400">Click to flip</span>
+                        <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-2xl border-2 border-slate-200 shadow-md flex flex-col items-center justify-center gap-0.5">
+                            <span className="text-4xl text-slate-300 font-black leading-none">?</span>
+                            <span className="text-[10px] font-bold text-slate-400">Click to flip</span>
                         </div>
                         {/* Back — question text */}
-                        <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl flex items-center justify-center p-4">
-                            <p className="text-white text-base md:text-lg font-bold text-center leading-snug">{question.question}</p>
+                        <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg flex items-center justify-center p-3">
+                            <p className="text-white text-sm md:text-base font-bold text-center leading-snug">{question.question}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Options 2×2 grid */}
-                <div className="grid grid-cols-2 gap-2.5 w-full max-w-sm shrink-0">
+                <div className="grid grid-cols-2 gap-2 w-full max-w-xs shrink-0">
                     {question.options.map((option, index) => (
                         <div
                             key={index}
                             className={cn(
-                                "relative h-16 md:h-18 cursor-pointer select-none transition-all duration-200",
-                                allOptionsFlipped && selectedOption === null && !isComplete && "hover:scale-[1.03]",
+                                "relative h-12 md:h-13 cursor-pointer select-none transition-all duration-200",
+                                allOptionsFlipped && selectedOption === null && !isComplete && "hover:scale-[1.02]",
                                 selectedOption === index
                                     ? isCorrect
                                         ? "ring-4 ring-emerald-400 rounded-xl"
@@ -289,19 +289,19 @@ function FlashcardQuizContent({
                                 )}
                             >
                                 {/* Front — mystery ? */}
-                                <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-xl border-2 border-slate-200 shadow-md flex items-center justify-center">
-                                    <span className="text-2xl text-slate-300 font-black">?</span>
+                                <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] bg-white rounded-xl border-2 border-slate-200 shadow-sm flex items-center justify-center">
+                                    <span className="text-xl text-slate-300 font-black">?</span>
                                 </div>
                                 {/* Back — option text */}
-                                <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-md flex items-center justify-center p-2.5">
-                                    <p className="text-white font-semibold text-center text-xs md:text-sm leading-tight">{option}</p>
+                                <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-sm flex items-center justify-center p-2">
+                                    <p className="text-white font-semibold text-center text-xs leading-tight">{option}</p>
                                 </div>
                             </div>
 
                             {/* ✓ / ✗ badge on selected option */}
                             {showResult && selectedOption === index && (
                                 <div className={cn(
-                                    "absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px] font-black shadow-md z-10",
+                                    "absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center text-white text-[9px] font-black shadow-md z-10",
                                     isCorrect ? "bg-emerald-500" : "bg-rose-500"
                                 )}>
                                     {isCorrect ? "✓" : "✗"}
@@ -314,17 +314,17 @@ function FlashcardQuizContent({
                 {/* Result banner */}
                 {showResult && (
                     <div className={cn(
-                        "w-full max-w-sm rounded-xl px-3.5 py-2.5 text-center animate-in fade-in slide-in-from-bottom-2 duration-400 shrink-0",
+                        "w-full max-w-xs rounded-xl px-3 py-1.5 text-center animate-in fade-in slide-in-from-bottom-2 duration-400 shrink-0",
                         isCorrect ? "bg-emerald-50 border border-emerald-200 text-emerald-800" : "bg-rose-50 border border-rose-200 text-rose-800"
                     )}>
-                        <p className="font-black text-xs md:text-sm">{isCorrect ? "Correct! 🎉" : "Incorrect!"}</p>
+                        <p className="font-black text-xs">{isCorrect ? "Correct! 🎉" : "Incorrect!"}</p>
                         {!isCorrect && (
-                            <p className="text-[11px] font-medium mt-0.5">
-                                The correct answer is: <span className="font-black">{question.options[question.correctAnswer]}</span>
+                            <p className="text-[10px] font-medium mt-0.5">
+                                Correct: <span className="font-black">{question.options[question.correctAnswer]}</span>
                             </p>
                         )}
                         {question.explanation && (
-                            <p className="text-[11px] font-medium text-slate-500 mt-1">{question.explanation}</p>
+                            <p className="text-[10px] font-medium text-slate-500 mt-0.5">{question.explanation}</p>
                         )}
                     </div>
                 )}
@@ -332,10 +332,10 @@ function FlashcardQuizContent({
 
             {/* Next button */}
             {showResult && currentQuestion < questions.length - 1 && (
-                <div className="shrink-0 flex justify-center py-2">
+                <div className="shrink-0 flex justify-center py-1">
                     <Button
                         onClick={handleNext}
-                        className="px-8 h-10 bg-indigo-500 hover:bg-indigo-600 text-white font-black text-[11px] uppercase tracking-widest rounded-xl transition-all shadow-md shadow-indigo-500/20"
+                        className="px-6 h-9 bg-indigo-500 hover:bg-indigo-600 text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all shadow-md shadow-indigo-500/20"
                     >
                         Next Question →
                     </Button>
