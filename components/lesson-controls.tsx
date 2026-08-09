@@ -153,15 +153,15 @@ export function LessonControls({
     }
   }
 
-  // Mobile remains largely the same but with updated colors
+  // Mobile UI
   if (isMobile) {
     return (
-      <header className={cn("border-b border-slate-800 bg-[#0F172A] p-3 flex items-center justify-between", className)}>
-        <div className="flex items-center gap-3">
+      <header className={cn("border-b border-slate-800 bg-[#0F172A] p-2.5 sm:p-3 flex items-center justify-between gap-2", className)}>
+        <div className="flex items-center gap-2 min-w-0">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-slate-300">
-                <Menu className="h-6 w-6" />
+              <Button variant="ghost" size="icon" className="text-slate-300 h-9 w-9 shrink-0">
+                <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[300px] bg-[#0F172A] border-slate-800 text-slate-200">
@@ -170,6 +170,28 @@ export function LessonControls({
                 <SheetDescription className="text-slate-400">Lesson Studio Menu</SheetDescription>
               </SheetHeader>
               <div className="py-6 space-y-3">
+                {onPublishAndGenerateAudio && (
+                  <Button
+                    variant="outline"
+                    disabled={!hasUnpublishedChanges || isGeneratingAudio || hasValidationErrors}
+                    className="w-full justify-start border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-bold"
+                    onClick={() => { setIsMobileMenuOpen(false); onPublishAndGenerateAudio(); }}
+                  >
+                    <Mic className="h-4 w-4 mr-3 text-emerald-400" />
+                    {isGeneratingAudio ? "Generating Audio..." : "Publish Lesson & Audio"}
+                  </Button>
+                )}
+                {onSaveToDatabase && (
+                  <Button
+                    variant="outline"
+                    disabled={isSaving || !hasUnpublishedChanges}
+                    className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-200"
+                    onClick={() => { setIsMobileMenuOpen(false); onSaveToDatabase(); }}
+                  >
+                    <Save className="h-4 w-4 mr-3 text-blue-400" />
+                    {isSaving ? "Saving..." : "Save Lesson"}
+                  </Button>
+                )}
                 <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-200" onClick={() => router.push('/studio')}>
                   <LayoutDashboard className="h-4 w-4 mr-3 text-emerald-400" />
                   Creator Studio
@@ -178,7 +200,7 @@ export function LessonControls({
                   <Plus className="h-4 w-4 mr-3 text-emerald-500" />
                   New Lesson
                 </Button>
-                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={() => setIsSettingsOpen(true)}>
+                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={() => { setIsMobileMenuOpen(false); setIsSettingsOpen(true); }}>
                   <Settings className="h-4 w-4 mr-3 text-emerald-500" />
                   Studio Settings
                 </Button>
@@ -194,24 +216,71 @@ export function LessonControls({
               </div>
             </SheetContent>
           </Sheet>
-          <h1 className="font-bold text-base truncate max-w-[150px] text-slate-200">{lesson.title || "Untitled"}</h1>
+          <h1 className="font-bold text-sm truncate max-w-[120px] text-slate-200">{lesson.title || "Untitled"}</h1>
         </div>
 
-        <Button
-          variant={previewMode ? "default" : "secondary"}
-          size="sm"
-          onClick={() => setPreviewMode(!previewMode)}
-          className={cn(
-            "rounded-full px-4",
-            previewMode ? "bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20" : "bg-slate-800 text-slate-200"
-          )}
-        >
-          {previewMode ? (
-            <><Pencil className="h-4 w-4 mr-2" />Edit</>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Quick Publish / Save button in Mobile Header */}
+          {onPublishAndGenerateAudio ? (
+            <Button
+              size="sm"
+              onClick={onPublishAndGenerateAudio}
+              disabled={!hasUnpublishedChanges || isGeneratingAudio || hasValidationErrors}
+              className={cn(
+                "rounded-full px-3 h-8 text-[11px] font-bold shadow-md transition-all flex items-center gap-1",
+                hasValidationErrors
+                  ? "bg-rose-950/60 text-rose-400 border border-rose-800/80"
+                  : !hasUnpublishedChanges
+                    ? "bg-slate-800/80 text-slate-500 border border-slate-800"
+                    : isGeneratingAudio
+                      ? "bg-slate-800 text-slate-400"
+                      : "bg-emerald-600 hover:bg-emerald-500 text-white"
+              )}
+            >
+              {isGeneratingAudio ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-400" />
+              ) : (
+                <Mic className="h-3.5 w-3.5" />
+              )}
+              <span>{isGeneratingAudio ? "Audio..." : "Publish"}</span>
+            </Button>
           ) : (
-            <><Play className="h-4 w-4 mr-2" />Preview</>
+            onSaveToDatabase && (
+              <Button
+                variant={isSaving ? "secondary" : "default"}
+                size="sm"
+                onClick={onSaveToDatabase}
+                disabled={isSaving || !hasUnpublishedChanges}
+                className={cn(
+                  "rounded-full px-3 h-8 text-[11px] font-bold shadow-md transition-all flex items-center gap-1",
+                  !hasUnpublishedChanges
+                    ? "bg-slate-800/80 text-slate-500 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-500 text-white"
+                )}
+              >
+                <Save className="h-3.5 w-3.5" />
+                <span>{isSaving ? "Saving" : "Save"}</span>
+              </Button>
+            )
           )}
-        </Button>
+
+          {/* Mobile Preview Toggle */}
+          <Button
+            variant={previewMode ? "default" : "secondary"}
+            size="sm"
+            onClick={() => setPreviewMode(!previewMode)}
+            className={cn(
+              "rounded-full px-3 h-8 text-[11px] font-bold transition-all flex items-center gap-1",
+              previewMode ? "bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 text-[#0F172A]" : "bg-slate-800 text-slate-200"
+            )}
+          >
+            {previewMode ? (
+              <><Pencil className="h-3.5 w-3.5" />Edit</>
+            ) : (
+              <><Play className="h-3.5 w-3.5" />Preview</>
+            )}
+          </Button>
+        </div>
 
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogContent className="max-w-2xl bg-[#0F172A] border-slate-800 text-slate-200">

@@ -224,6 +224,7 @@ export const pollValidator: ComponentValidator = {
     type: 'poll',
     validate: (component) => {
         const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
         const { question, options } = component.props || {};
 
         if (!question || typeof question !== 'string' || question.trim() === '') {

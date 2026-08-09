@@ -1,0 +1,668 @@
+{
+    "id": "lesson-fables-personification-02",
+    "title": "Personification — Giving Life to Fable Creatures & Nature",
+    "description": "Learn what Personification is and how writers use it to give human actions, emotions, and speech to animals, objects, and forces of nature — and discover why this technique is what makes fable characters and settings feel so vividly alive.",
+    "author": "AST English Curriculum Team",
+    "level": "Year 4 (Intermediate)",
+    "duration": 30,
+    "createdAt": "2026-08-09T06:39:00.000Z",
+    "updatedAt": "2026-08-09T06:39:00.000Z",
+    "settings": {
+        "theme": "dark-cinematic",
+        "subject": "English Language",
+        "module": "Fables & Figurative Language"
+    },
+    "slides": [
+        {
+            "id": "slide-p-01",
+            "title": "What is Personification?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-p-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Bringing the World to Life: Personification",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "<strong>Personification</strong> is a figurative language technique where a writer gives <em>human qualities</em> — such as actions, emotions, or speech — to animals, objects, or forces of nature that cannot actually think or feel.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-p-1",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=300&width=640",
+                        "alt": "A smiling golden sun with arms stretching over a green meadow, while a cloud weeps rain tears",
+                        "caption": "When the sun smiles and a cloud cries, we are giving them human emotions — that is Personification!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Think of it this way: the sun cannot actually smile, the wind cannot actually whisper, and a tree cannot actually wave hello. But when a writer says they can, the world suddenly feels <strong>alive and magical</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-p-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Personification Quick Discovery Cards",
+                        "mode": "practice",
+                        "cards": [
+                            {
+                                "id": "fc-p-1",
+                                "front": "The hungry river swallowed the fallen leaves.",
+                                "back": "PERSONIFICATION! 'Hungry' and 'swallowed' are human actions given to a river. Rivers cannot feel hunger or eat."
+                            },
+                            {
+                                "id": "fc-p-2",
+                                "front": "The wind screamed through the narrow mountain pass.",
+                                "back": "PERSONIFICATION! 'Screamed' is a human action. Wind makes sound but cannot scream with emotion."
+                            },
+                            {
+                                "id": "fc-p-3",
+                                "front": "The oak tree bowed its ancient head in greeting.",
+                                "back": "PERSONIFICATION! 'Bowed' and 'greeting' are human social actions given to a tree. Trees bend in wind but cannot bow in respect."
+                            },
+                            {
+                                "id": "fc-p-4",
+                                "front": "The river is approximately 400 metres wide.",
+                                "back": "NOT personification. This is a plain, literal statement of fact — no human qualities are given to the river."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-p-1",
+                    "type": "quiz",
+                    "props": {
+                        "mode": "practice",
+                        "points": 10,
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "randomizeAnswers": true,
+                        "questions": [
+                            {
+                                "id": "q-p-1",
+                                "question": "Which of the following is the most accurate definition of Personification?",
+                                "options": [
+                                    {
+                                        "id": "qp1-a",
+                                        "text": "Comparing two things using the words 'like' or 'as'",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "qp1-b",
+                                        "text": "Giving human qualities (actions, emotions, speech) to non-human things",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "qp1-c",
+                                        "text": "Saying one thing is exactly the same as another thing",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "qp1-d",
+                                        "text": "Repeating the same first letter in a sentence",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Personification = giving human behaviour, emotions, or speech to animals, objects, or nature. Not comparisons (that is Similes) or direct equivalences (that is Metaphors)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-p-02",
+            "title": "Three Types of Personification",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-p-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The 3 Ways Writers Personify the World",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Writers give non-human things human qualities in three specific ways. Click each zone in the illustration below to discover them all!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-p-1",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Click each zone to discover the 3 types of Personification",
+                        "image": "/placeholder.svg?height=380&width=640",
+                        "behavior": "discovery",
+                        "mode": "practice",
+                        "hotspots": [
+                            {
+                                "id": "hs-p-action",
+                                "x": 0.2,
+                                "y": 0.4,
+                                "label": "Human ACTIONS 🏃",
+                                "content": "Type 1 — Human Actions: Giving a non-human thing something only humans or animals DO. Examples: 'The clouds raced across the sky.' / 'The mountain watched the travellers.' / 'The river danced over the pebbles.'"
+                            },
+                            {
+                                "id": "hs-p-emotion",
+                                "x": 0.5,
+                                "y": 0.65,
+                                "label": "Human EMOTIONS ❤️",
+                                "content": "Type 2 — Human Emotions: Giving a non-human thing a feeling only humans experience. Examples: 'The angry storm refused to calm.' / 'The shy moon hid behind the clouds.' / 'The joyful flowers nodded in the breeze.'"
+                            },
+                            {
+                                "id": "hs-p-speech",
+                                "x": 0.8,
+                                "y": 0.35,
+                                "label": "Human SPEECH 💬",
+                                "content": "Type 3 — Human Speech or Communication: Giving a non-human thing the ability to speak, sing, whisper, or warn. Examples: 'The old oak tree whispered its secrets.' / 'The thunder bellowed its warning across the valley.' / 'The brook sang a gentle lullaby.'"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "table-p-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Type of Personification",
+                                "Human Quality Given",
+                                "Example Sentence"
+                            ],
+                            [
+                                "Human Actions",
+                                "Physical movement or behaviour",
+                                "The leaves danced in the autumn wind."
+                            ],
+                            [
+                                "Human Emotions",
+                                "Feelings or personality traits",
+                                "The shy moon hid behind the grey clouds."
+                            ],
+                            [
+                                "Human Speech",
+                                "Speaking, singing, whispering",
+                                "The brook sang a gentle lullaby to the forest."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-p-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Identify ALL Personification Examples",
+                        "mode": "practice",
+                        "points": 15,
+                        "questions": [
+                            {
+                                "id": "msq-p-1",
+                                "question": "Which of these sentences use Personification? Select ALL that apply.",
+                                "options": [
+                                    {
+                                        "id": "ms-p-1",
+                                        "text": "The furious waves attacked the helpless boat.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "ms-p-2",
+                                        "text": "The lake is 3 kilometres from the village.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "ms-p-3",
+                                        "text": "The lonely lighthouse called out into the dark sea.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "ms-p-4",
+                                        "text": "The jealous storm cloud swallowed the afternoon sun.",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Three sentences use personification: waves 'attacking' (action), lighthouse 'calling out' (speech), storm cloud 'swallowing jealously' (action + emotion). The distance fact is purely literal."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-p-03",
+            "title": "Personification in Classic Fables",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-p-3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Spotting Personification in Famous Fables",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Ancient fable writers were masters of personification. Read these extracts from classic fables and investigate the human qualities given to animals and nature.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-p-1",
+                    "type": "quote",
+                    "props": {
+                        "text": "The North Wind boasted loudly of his great power, tearing across mountains and plains with fury, until he met the warm Sun who smiled gently and said nothing.",
+                        "author": "Adapted from Aesop — The North Wind and the Sun"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-p-2",
+                    "type": "quiz",
+                    "props": {
+                        "mode": "practice",
+                        "points": 10,
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "randomizeAnswers": true,
+                        "questions": [
+                            {
+                                "id": "q-p-2",
+                                "question": "In the fable extract above, what human quality is given to the North Wind?",
+                                "options": [
+                                    {
+                                        "id": "qp2-a",
+                                        "text": "It speaks and boasts with a proud personality",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "qp2-b",
+                                        "text": "It is described as being very cold",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "qp2-c",
+                                        "text": "It is compared to a lion using the word 'like'",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "qp2-d",
+                                        "text": "It travels at a very fast speed",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "The North Wind 'boasts loudly' — boasting is a human emotional behaviour (pride/arrogance). This is personification via human emotion and speech."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "image-p-2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=260&width=640",
+                        "alt": "The North Wind shown as an angry face blowing storm clouds versus the warm Sun shown as a smiling face with golden rays",
+                        "caption": "Both the Wind and the Sun are given human faces, emotions, and voices — powerful personification that makes the moral of the fable land harder.",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-p-2",
+                    "type": "quote",
+                    "props": {
+                        "text": "The Tortoise laughed quietly to himself as the Hare slept, and the finish line waited patiently, as if holding its breath.",
+                        "author": "Adapted from Aesop — The Tortoise and the Hare"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-p-3",
+                    "type": "quiz",
+                    "props": {
+                        "mode": "practice",
+                        "points": 10,
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "randomizeAnswers": true,
+                        "questions": [
+                            {
+                                "id": "q-p-3",
+                                "question": "In the second fable extract, which NON-HUMAN object is personified?",
+                                "options": [
+                                    {
+                                        "id": "qp3-a",
+                                        "text": "The Tortoise",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "qp3-b",
+                                        "text": "The Hare",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "qp3-c",
+                                        "text": "The finish line",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "qp3-d",
+                                        "text": "The race track",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "The finish line is 'waiting patiently' and 'holding its breath' — both human actions. A physical finish line cannot breathe or show patience. This is personification."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-p-04",
+            "title": "Personification vs. Literal Language",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-p-4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Personification vs. Literal Language — Spot the Difference",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A key mastery skill is knowing when language is <strong>personified (figurative)</strong> and when it is <strong>literal (plain fact)</strong>. A literal description gives factual information about a thing but does NOT give it a human quality.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-p-2",
+                    "type": "table",
+                    "props": {
+                        "rows": 5,
+                        "columns": 2,
+                        "data": [
+                            [
+                                "Literal Language",
+                                "Personification"
+                            ],
+                            [
+                                "The wind is blowing at 40 km/h.",
+                                "The wind roared furiously through the empty streets."
+                            ],
+                            [
+                                "The sun produced a lot of heat today.",
+                                "The generous sun wrapped the field in a warm golden blanket."
+                            ],
+                            [
+                                "The tree's leaves fell to the ground.",
+                                "The tired old tree let its leaves fall with a sigh."
+                            ],
+                            [
+                                "The river runs down the valley.",
+                                "The restless river hurried impatiently toward the sea."
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Notice the pattern: <strong>Literal</strong> = plain description of what something does. <strong>Personification</strong> = a human emotion, action, or speech added to it. Now prove you can match them!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-p-1",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match the Personification to its Human Quality",
+                        "mode": "practice",
+                        "points": 20,
+                        "pairs": [
+                            {
+                                "id": "mp-1",
+                                "left": "The moon smiled at the sleeping village.",
+                                "right": "Human emotion (happiness / warmth)"
+                            },
+                            {
+                                "id": "mp-2",
+                                "left": "The thunder bellowed a fierce warning.",
+                                "right": "Human speech (loud voice / commanding)"
+                            },
+                            {
+                                "id": "mp-3",
+                                "left": "The snowflakes danced through the night sky.",
+                                "right": "Human action (dancing / movement)"
+                            },
+                            {
+                                "id": "mp-4",
+                                "left": "The old gate groaned as it slowly opened.",
+                                "right": "Human pain / physical expression"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-p-05",
+            "title": "Writing Your Own Personification",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-p-5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Now YOU Are the Fable Writer!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-p-7",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The true sign of mastering Personification is being able to <strong>write it yourself</strong>. Below are sentence frames from a fable about a storm at sea. Fill in the missing personification words to complete each sentence.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-p-3",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=260&width=640",
+                        "alt": "A dramatic stormy ocean with enormous waves crashing under a dark sky filled with lightning",
+                        "caption": "Imagine you are writing a fable set in this storm. What human actions, emotions, and speech would you give to the ocean, the waves, and the lightning?",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-p-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "mode": "practice",
+                        "points": 20,
+                        "caseSensitive": false,
+                        "text": "The ocean {{blank}} with rage as the storm arrived. The lightning {{blank}} its bright warning across the sky. The waves {{blank}} furiously at the walls of the little harbour.",
+                        "blanks": [
+                            {
+                                "id": "blank-p-1",
+                                "answer": "roared",
+                                "alternatives": [
+                                    "screamed",
+                                    "bellowed",
+                                    "cried",
+                                    "howled"
+                                ]
+                            },
+                            {
+                                "id": "blank-p-2",
+                                "answer": "flashed",
+                                "alternatives": [
+                                    "shouted",
+                                    "announced",
+                                    "screamed",
+                                    "signalled"
+                                ]
+                            },
+                            {
+                                "id": "blank-p-3",
+                                "answer": "pounded",
+                                "alternatives": [
+                                    "hammered",
+                                    "beat",
+                                    "crashed",
+                                    "slapped",
+                                    "struck"
+                                ]
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "paragraph-p-8",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Excellent work! You just wrote personification like a real fable author. Here is a summary of the three personification tools you have now mastered:",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-p-1",
+                    "type": "bulletList",
+                    "props": {
+                        "items": [
+                            "🏃 Human ACTIONS — Give movement or behaviour to nature (e.g. 'The waves pounded the shore.')",
+                            "❤️ Human EMOTIONS — Give feelings or personality to objects (e.g. 'The shy moon hid.')",
+                            "💬 Human SPEECH — Give voice or communication to nature (e.g. 'The thunder bellowed a warning.')"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-p-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which type of personification did you find most interesting to use?",
+                        "options": [
+                            {
+                                "id": "pl-1",
+                                "text": "Giving nature human ACTIONS 🏃 (roared, danced, pounded)"
+                            },
+                            {
+                                "id": "pl-2",
+                                "text": "Giving nature human EMOTIONS ❤️ (angry, shy, joyful)"
+                            },
+                            {
+                                "id": "pl-3",
+                                "text": "Giving nature human SPEECH 💬 (whispered, bellowed, sang)"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

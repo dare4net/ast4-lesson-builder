@@ -52,6 +52,8 @@ type MultiSelectQuizState = {
 
 // ─── Inner content ────────────────────────────────────────────────────────────
 
+const OPTION_COLORS = ["bg-violet-500", "bg-amber-500", "bg-sky-500", "bg-rose-500"]
+
 function MultiSelectContent({
     state,
     setState,
@@ -75,11 +77,20 @@ function MultiSelectContent({
     const { registerLock, unregisterLock } = useNavigationLock()
     const [hasStarted, setHasStarted] = useState(false)
 
+    // Normalize options: inject OPTION_COLORS for any option missing a color (e.g. JSON-authored lessons)
+    const normalizedQuestions = questions.map((q) => ({
+        ...q,
+        options: q.options.map((opt, i) => ({
+            ...opt,
+            color: opt.color || OPTION_COLORS[i % OPTION_COLORS.length],
+        })),
+    }))
+
     const { currentQuestion, questionsAnswered, questionsCorrect } = state
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
     const [showResult, setShowResult] = useState(false)
 
-    const question = questions[currentQuestion]
+    const question = normalizedQuestions[currentQuestion]
     const pointsPerQ = questions.length > 0 ? points / questions.length : 0
     const isComplete = state.isComplete || state.status === 'completed'
 
@@ -226,7 +237,7 @@ function MultiSelectContent({
     const isPerfect = showResult && correctSelections.length === correctIds.length && incorrectSelections.length === 0
 
     return (
-        <div className="flex flex-col h-full w-full overflow-hidden px-2 py-1">
+        <div className="flex flex-col h-full w-full overflow-hidden px-4 py-2">
             {/* Segmented Progress Bar & Live Timer */}
             <div className="shrink-0 mb-3 flex items-center justify-between">
                 <div className="flex-1 mr-4">
@@ -252,74 +263,78 @@ function MultiSelectContent({
                 )}
             </div>
 
-            {/* Question card */}
-            <div className="shrink-0 mb-2 p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100">
-                <h2 className="text-sm md:text-base font-black text-slate-900 text-center leading-snug">{question.question}</h2>
-                <p className="text-[9px] font-bold text-violet-500 text-center mt-0.5 uppercase tracking-widest">
-                    ☑ Select all correct answers
-                </p>
-            </div>
-
-            {/* Options 2×2 grid */}
-            <div className="flex-1 min-h-0 grid grid-cols-2 gap-2 mb-2 overflow-hidden">
-                {question.options.map(option => (
-                    <button
-                        key={option.id}
-                        disabled={showResult || isDisabled || isComplete}
-                        onClick={() => handleToggle(option.id)}
-                        className={cn(
-                            "relative h-12 md:h-13 px-3 py-2 rounded-xl text-left font-semibold text-xs leading-tight transition-all duration-200 active:scale-95 flex items-center justify-between",
-                            getOptionStyle(option)
-                        )}
-                    >
-                        <span className="pr-5 line-clamp-2">{option.text}</span>
-                        <div className="shrink-0">{getCheckIndicator(option)}</div>
-                    </button>
-                ))}
-            </div>
-
-            {/* Submit button */}
-            {!showResult && (
-                <div className="shrink-0 flex justify-center mb-2">
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={selectedOptions.length === 0 || isDisabled || isComplete}
-                        className="h-9 px-8 bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-md transition-all"
-                    >
-                        Submit Answer
-                    </Button>
-                </div>
-            )}
-
-            {/* Result feedback */}
-            {showResult && (
-                <div className={cn(
-                    "shrink-0 p-2.5 rounded-xl border animate-in fade-in slide-in-from-bottom-2 duration-400 mb-2",
-                    isPerfect ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
-                )}>
-                    <p className={cn(
-                        "font-black text-xs text-center",
-                        isPerfect ? "text-emerald-700" : "text-amber-700"
-                    )}>
-                        {isPerfect
-                            ? "🎉 Perfect! You got every correct answer!"
-                            : `You got ${correctSelections.length} out of ${correctIds.length} correct answers.`}
+            {/* Main content wrapper */}
+            <div className="flex-1 min-h-0 flex flex-col justify-between items-center gap-3 overflow-y-auto py-2 w-full max-w-2xl mx-auto">
+                {/* Question card - Flexibly expands vertically */}
+                <div className="w-full flex-1 min-h-[110px] sm:min-h-[130px] p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100/80 shadow-sm text-center flex flex-col items-center justify-center space-y-1 shrink-0">
+                    <h2 className="text-sm sm:text-base md:text-xl font-black text-slate-900 leading-snug">{question.question}</h2>
+                    <p className="text-[10px] sm:text-xs font-bold text-violet-600 uppercase tracking-widest">
+                        ☑ Select all correct answers
                     </p>
-                    {question.explanation && (
-                        <p className="text-[10px] font-medium text-slate-500 text-center mt-0.5">{question.explanation}</p>
-                    )}
                 </div>
-            )}
 
-            {/* Next question */}
-            <div className="shrink-0 flex justify-center pb-0.5">
-                <Button
-                    onClick={handleNext}
-                    disabled={currentQuestion >= questions.length - 1 || !showResult}
-                    className="h-9 px-6 bg-violet-500 hover:bg-violet-600 disabled:bg-slate-100 disabled:text-slate-400 text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all gap-1.5 shadow-md shadow-violet-500/20"
-                >
-                    Next Question <ChevronRight className="w-3.5 h-3.5" />
-                </Button>
+                {/* Options 2-column grid - Flexibly expands vertically */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full flex-1 min-h-[130px] sm:min-h-[150px]">
+                    {question.options.map(option => (
+                        <button
+                            key={option.id}
+                            disabled={showResult || isDisabled || isComplete}
+                            onClick={() => handleToggle(option.id)}
+                            className={cn(
+                                "relative h-full min-h-[60px] sm:min-h-[70px] p-3.5 sm:p-4 rounded-2xl text-left font-semibold text-xs sm:text-sm leading-snug transition-all duration-200 active:scale-[0.98] flex items-center justify-between shadow-sm",
+                                getOptionStyle(option)
+                            )}
+                        >
+                            <span className="pr-3 text-xs sm:text-sm font-semibold leading-snug line-clamp-3 sm:line-clamp-4 break-words">{option.text}</span>
+                            <div className="shrink-0">{getCheckIndicator(option)}</div>
+                        </button>
+                    ))}
+                </div>
+
+                {/* Submit button */}
+                {!showResult && (
+                    <div className="shrink-0 flex justify-center pt-1">
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={selectedOptions.length === 0 || isDisabled || isComplete}
+                            className="h-10 px-8 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-md transition-all"
+                        >
+                            Submit Answer
+                        </Button>
+                    </div>
+                )}
+
+                {/* Result feedback */}
+                {showResult && (
+                    <div className={cn(
+                        "w-full shrink-0 p-3 rounded-2xl border animate-in fade-in slide-in-from-bottom-2 duration-400 text-center shadow-sm space-y-0.5",
+                        isPerfect ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
+                    )}>
+                        <p className={cn(
+                            "font-black text-xs sm:text-sm",
+                            isPerfect ? "text-emerald-700" : "text-amber-700"
+                        )}>
+                            {isPerfect
+                                ? "🎉 Perfect! You got every correct answer!"
+                                : `You got ${correctSelections.length} out of ${correctIds.length} correct answers.`}
+                        </p>
+                        {question.explanation && (
+                            <p className="text-xs font-medium text-slate-500 mt-1">{question.explanation}</p>
+                        )}
+                    </div>
+                )}
+
+                {/* Next question */}
+                {showResult && currentQuestion < questions.length - 1 && (
+                    <div className="shrink-0 flex justify-center pt-1">
+                        <Button
+                            onClick={handleNext}
+                            className="h-10 px-8 bg-violet-500 hover:bg-violet-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all gap-2 shadow-md shadow-violet-500/20"
+                        >
+                            Next Question <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     )

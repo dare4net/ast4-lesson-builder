@@ -1,0 +1,456 @@
+{
+    "id": "lesson-fables-intro-01",
+    "title": "Welcome to the World of Fables & Figurative Language",
+    "description": "Discover what fables are, where they come from, and why they have lasted thousands of years — then get your first introduction to the four figurative language superpowers that power them: Personification, Similes, Metaphors, and Morals.",
+    "author": "AST English Curriculum Team",
+    "level": "Year 4 (Intermediate)",
+    "duration": 20,
+    "createdAt": "2026-08-09T06:05:00.000Z",
+    "updatedAt": "2026-08-09T06:05:00.000Z",
+    "settings": {
+        "theme": "dark-cinematic",
+        "subject": "English Language",
+        "module": "Fables & Figurative Language"
+    },
+    "slides": [
+        {
+            "id": "slide-intro-01",
+            "title": "What is a Fable?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-intro-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Step Into the World of Fables!",
+                        "level": 1,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-intro-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "For thousands of years, master storytellers have used clever animal characters and enchanted worlds to share timeless life lessons called <strong>MORALS</strong>.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-intro-1",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=320&width=640",
+                        "alt": "A wise old Owl holding a glowing storybook under a starlit forest canopy",
+                        "caption": "Fables bring animals to life to teach us valuable lessons about courage, honesty, and wisdom!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-intro-2",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In a fable, animals talk, think, and feel just like human beings. Before we unlock their secret powers, pick your fable companion!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-intro-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which fable animal companion would you choose for your adventure?",
+                        "options": [
+                            {
+                                "id": "opt-owl",
+                                "text": "Wise Old Owl 🦉 (Knowledge & Guidance)"
+                            },
+                            {
+                                "id": "opt-fox",
+                                "text": "Sly Red Fox 🦊 (Quick Wit & Strategy)"
+                            },
+                            {
+                                "id": "opt-tortoise",
+                                "text": "Determined Tortoise 🐢 (Patience & Focus)"
+                            },
+                            {
+                                "id": "opt-lion",
+                                "text": "Brave Lion 🦁 (Courage & Leadership)"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-intro-02",
+            "title": "The 4 Storytelling Superpowers",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-intro-2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Meet Your 4 Storytelling Superpowers",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-intro-3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Great fable writers don't just tell stories—they paint vivid pictures in your mind using <strong>Figurative Language</strong>! Explore the enchanted scene below to discover the 4 superpowers you will master.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-intro-1",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Interactive Fable Forest: Click the target markers to discover your 4 Superpowers!",
+                        "image": "/placeholder.svg?height=400&width=640",
+                        "behavior": "discovery",
+                        "mode": "practice",
+                        "hotspots": [
+                            {
+                                "id": "hs-personification",
+                                "x": 0.22,
+                                "y": 0.35,
+                                "label": "Talking Tree 🌳",
+                                "content": "Superpower 1: PERSONIFICATION! Giving human feelings, actions, and speech to animals and nature (e.g. 'The old oak tree whispered secrets to the wind')."
+                            },
+                            {
+                                "id": "hs-simile",
+                                "x": 0.55,
+                                "y": 0.65,
+                                "label": "Speedy Cheetah 🐆",
+                                "content": "Superpower 2: SIMILES! Comparing two different things using 'LIKE' or 'AS' (e.g. 'The cheetah ran as fast as lightning')."
+                            },
+                            {
+                                "id": "hs-metaphor",
+                                "x": 0.82,
+                                "y": 0.25,
+                                "label": "Blazing Sun ☀️",
+                                "content": "Superpower 3: METAPHORS! Saying one thing IS another thing to create deep imagery (e.g. 'The sun was a golden shield in the sky')."
+                            },
+                            {
+                                "id": "hs-moral",
+                                "x": 0.45,
+                                "y": 0.82,
+                                "label": "Ancient Scroll 📜",
+                                "content": "Superpower 4: FABLE MORALS! Uncovering the core wisdom lesson hidden at the conclusion of the story (e.g. 'Slow and steady wins the race')."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "paragraph-intro-4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Flip the discovery cards below to review how each superpower transforms basic writing into magical storytelling!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-intro-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Superpower Preview Cards",
+                        "mode": "practice",
+                        "cards": [
+                            {
+                                "id": "card-p",
+                                "front": "Superpower 1: Personification",
+                                "back": "Giving human qualities to animals, objects, or nature. Example: 'The friendly sun smiled down on the forest.'"
+                            },
+                            {
+                                "id": "card-s",
+                                "front": "Superpower 2: Similes",
+                                "back": "Comparing two things using the words 'LIKE' or 'AS'. Example: 'He was as brave as a lion.'"
+                            },
+                            {
+                                "id": "card-m",
+                                "front": "Superpower 3: Metaphors",
+                                "back": "Directly calling one thing another thing without using 'like' or 'as'. Example: 'Her heart was a fortress of courage.'"
+                            },
+                            {
+                                "id": "card-l",
+                                "front": "Superpower 4: Fable Morals",
+                                "back": "The valuable life lesson woven into a story. Example: 'Kindness is never wasted.'"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-intro-03",
+            "title": "Can You Spot the Magic?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-intro-3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Test Your Storyteller Instincts!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-intro-5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Read this fable opening: <em>'Night fell over the quiet valley. The moonlight danced across the silver river while a wise old Owl giggled at the Fox's joke.'</em>",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-intro-2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=280&width=600",
+                        "alt": "Moonlight dancing across a quiet forest river under a starry night sky",
+                        "caption": "Can you spot the human actions given to nature and animals in this scene?",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-intro-1",
+                    "type": "quiz",
+                    "props": {
+                        "mode": "practice",
+                        "points": 10,
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "randomizeAnswers": true,
+                        "questions": [
+                            {
+                                "id": "q-warmup-1",
+                                "question": "In the phrase 'The moonlight danced across the river', what human action is given to the moonlight?",
+                                "options": [
+                                    {
+                                        "id": "opt-1a",
+                                        "text": "Dancing across the river",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1b",
+                                        "text": "Swimming in the water",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1c",
+                                        "text": "Sleeping on a cloud",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1d",
+                                        "text": "Eating dinner",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Dancing is a human action! When we say moonlight 'danced', we are giving nature a human action—that is Personification!"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "paragraph-intro-6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Now try this multi-select challenge: Which of these descriptions are human qualities applied to non-human things?",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-intro-1",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "title": "Select ALL Personification Examples",
+                        "mode": "practice",
+                        "points": 15,
+                        "questions": [
+                            {
+                                "id": "msq-warmup-1",
+                                "question": "Which of these lines contain Personification (giving human traits to non-human things)?",
+                                "options": [
+                                    {
+                                        "id": "ms-1",
+                                        "text": "The wind whispered through the trees",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "ms-2",
+                                        "text": "The angry sky thundered in rage",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "ms-3",
+                                        "text": "The river is 10 meters wide",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "ms-4",
+                                        "text": "The playful sun warmed the meadow",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Whispering, feeling angry, and being playful are all human traits given to nature!"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-intro-04",
+            "title": "Your Fable Quest Roadmap",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-intro-4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Your Quest to Become a Fable Master",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-intro-7",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You are now ready to begin your journey! Over the next 5 lessons, you will master each storytelling superpower step-by-step.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "table-roadmap-1",
+                    "type": "table",
+                    "props": {
+                        "rows": 7,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Lesson",
+                                "Topic Focus",
+                                "Superpower Unlocked"
+                            ],
+                            [
+                                "Lesson 1",
+                                "Welcome to Fables & Figurative Language",
+                                "Introductory Discovery"
+                            ],
+                            [
+                                "Lesson 2",
+                                "Personification in Fables",
+                                "Giving Life to Animals & Nature"
+                            ],
+                            [
+                                "Lesson 3",
+                                "Similes in Fables",
+                                "Comparing with Like and As"
+                            ],
+                            [
+                                "Lesson 4",
+                                "Metaphors in Fables",
+                                "Creating Deep Direct Imagery"
+                            ],
+                            [
+                                "Lesson 5",
+                                "Fable Morals & Narrative Structure",
+                                "Unlocking Story Lessons"
+                            ],
+                            [
+                                "Lesson 6",
+                                "Topic Mastery Assessment",
+                                "100% Live Mode Challenge"
+                            ]
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-intro-8",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Up next in <strong>Lesson 2</strong>: We will bring animals to life and master Personification!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-intro-start",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which storytelling superpower are you most excited to master in Lesson 2?",
+                        "options": [
+                            {
+                                "id": "p-1",
+                                "text": "Bringing Animals to Life with Personification 🦉"
+                            },
+                            {
+                                "id": "p-2",
+                                "text": "Making Nature Talk & Feel 🌳"
+                            },
+                            {
+                                "id": "p-3",
+                                "text": "Writing Legendary Fable Quotes 📜"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

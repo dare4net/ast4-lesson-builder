@@ -11,8 +11,8 @@ import { EditProgramDialog } from '@/components/studio/edit-program-dialog';
 import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
 import { DeleteConfirmDialog } from '@/components/studio/delete-confirm-dialog';
 
-interface Module { _id: string; name: string; description: string; lessons: any[]; order: number; is_published?: boolean; image_url?: string; cover_image?: string; }
-interface Program { _id: string; name: string; description: string; modules: string[]; is_published?: boolean; image_url?: string; cover_image?: string; enrolled_students?: string[]; enrolled_count?: number; }
+interface Module { _id: string; name: string; description: string; lessons: any[]; order: number; is_published?: boolean; image_url?: string; cover_image?: string; default_voice?: string; }
+interface Program { _id: string; name: string; description: string; modules: string[]; is_published?: boolean; image_url?: string; cover_image?: string; enrolled_students?: string[]; enrolled_count?: number; default_voice?: string; }
 
 function ProgramDetailContent() {
     const router = useRouter();
@@ -42,12 +42,12 @@ function ProgramDetailContent() {
         finally { setLoading(false); }
     };
 
-    const handleSaveProgram = async (id: string, data: { name: string; description: string; is_published: boolean }) => {
+    const handleSaveProgram = async (id: string, data: { name: string; description: string; is_published: boolean; default_voice?: string }) => {
         await apiClient.studio.updateProgram(id, data);
         fetchProgramData();
     };
 
-    const handleSaveModule = async (id: string, data: { name: string; description: string; is_published: boolean }) => {
+    const handleSaveModule = async (id: string, data: { name: string; description: string; is_published: boolean; default_voice?: string }) => {
         await apiClient.studio.updateModule(id, data);
         fetchProgramData();
     };
@@ -218,7 +218,7 @@ function ProgramDetailContent() {
             </main>
 
             {isEditProgramOpen && <EditProgramDialog isOpen={isEditProgramOpen} onClose={() => setIsEditProgramOpen(false)} program={program} onSave={handleSaveProgram} />}
-            {selectedModuleForEdit && <EditModuleDialog isOpen={!!selectedModuleForEdit} onClose={() => setSelectedModuleForEdit(null)} module={selectedModuleForEdit} onSave={handleSaveModule} />}
+            {selectedModuleForEdit && <EditModuleDialog isOpen={!!selectedModuleForEdit} onClose={() => setSelectedModuleForEdit(null)} programVoice={program?.default_voice} module={selectedModuleForEdit} onSave={handleSaveModule} />}
             {isDeleteProgramOpen && <DeleteConfirmDialog isOpen={isDeleteProgramOpen} onClose={() => setIsDeleteProgramOpen(false)} title={program.name} itemName={program.name} itemType="program" enrolledStudents={program.enrolled_students} enrolledCount={program.enrolled_count} onConfirm={handleConfirmDeleteProgram} />}
             {selectedModuleForDelete && <DeleteConfirmDialog isOpen={!!selectedModuleForDelete} onClose={() => setSelectedModuleForDelete(null)} title={selectedModuleForDelete.name} itemName={selectedModuleForDelete.name} itemType="module" onConfirm={handleConfirmDeleteModule} />}
         </div>

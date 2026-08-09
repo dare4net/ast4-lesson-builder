@@ -11,6 +11,8 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {
       content: "Enter your text here...",
       align: "left",
+      audioUrl: "",
+      autoPlayAudio: false,
     },
     propDefinitions: [
       {
@@ -32,6 +34,20 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Right", value: "right" },
           { label: "Justify", value: "justify" },
         ],
+      },
+      {
+        name: "audioUrl",
+        label: "Audio Track URL",
+        type: "audio",
+        required: false,
+        defaultValue: "",
+      },
+      {
+        name: "autoPlayAudio",
+        label: "Auto-Play Audio",
+        type: "boolean",
+        required: false,
+        defaultValue: false,
       },
     ],
   },
@@ -92,6 +108,8 @@ export const componentDefinitions: ComponentDefinition[] = [
     defaultProps: {
       items: ["Item 1", "Item 2", "Item 3"],
       type: "unordered",
+      audioUrl: "",
+      autoPlayAudio: false,
     },
     propDefinitions: [
       {
@@ -111,6 +129,20 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Unordered (Bullets)", value: "unordered" },
           { label: "Ordered (Numbers)", value: "ordered" },
         ],
+      },
+      {
+        name: "audioUrl",
+        label: "Audio Track URL",
+        type: "audio",
+        required: false,
+        defaultValue: "",
+      },
+      {
+        name: "autoPlayAudio",
+        label: "Auto-Play Audio",
+        type: "boolean",
+        required: false,
+        defaultValue: false,
       },
     ],
   },
@@ -213,6 +245,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       caption: "",
       aspectRatio: "16:9",
       autoPlay: false,
+      poster: "",
     },
     propDefinitions: [
       {
@@ -250,6 +283,14 @@ export const componentDefinitions: ComponentDefinition[] = [
         type: "boolean",
         required: false,
         defaultValue: false,
+      },
+      {
+        name: "poster",
+        label: "Poster Frame Image URL",
+        type: "image",
+        required: false,
+        defaultValue: "",
+        description: "Custom video preview thumbnail image",
       },
     ],
   },
@@ -623,6 +664,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 5,
+        max: 300,
+      },
     ],
   },
   {
@@ -639,7 +689,8 @@ export const componentDefinitions: ComponentDefinition[] = [
         { id: "3", front: "What is the capital of Australia?", back: "Canberra" },
       ],
       mode: "practice",
-      state: "active"
+      state: "active",
+      timeLimit: 15,
     },
     propDefinitions: [
       {
@@ -681,6 +732,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Active", value: "active" },
           { label: "Disabled", value: "disabled" },
         ],
+      },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 15,
+        min: 5,
+        max: 300,
       },
     ],
   },
@@ -785,6 +845,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 30,
+        min: 5,
+        max: 300,
+      },
     ],
   },
   {
@@ -800,6 +869,8 @@ export const componentDefinitions: ComponentDefinition[] = [
         { id: "1", x: 0.3, y: 0.4, label: "Point 1", content: "This is the first point of interest" },
         { id: "2", x: 0.7, y: 0.6, label: "Point 2", content: "This is the second point of interest" },
       ],
+      points: 10,
+      timeLimit: 15,
       mode: "practice",
       state: "active",
       behavior: "quiz", // "discovery" | "quiz"
@@ -848,6 +919,24 @@ export const componentDefinitions: ComponentDefinition[] = [
         defaultValue: false,
       },
       {
+        name: "points",
+        label: "Points",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 0,
+        max: 100,
+      },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 15,
+        min: 5,
+        max: 300,
+      },
+      {
         name: "mode",
         label: "Mode",
         type: "select",
@@ -888,6 +977,9 @@ export const componentDefinitions: ComponentDefinition[] = [
         { id: "opt4", text: "Plasma" },
       ],
       points: 5,
+      mode: "practice",
+      state: "active",
+      timeLimit: 10,
     },
     propDefinitions: [
       {
@@ -917,6 +1009,17 @@ export const componentDefinitions: ComponentDefinition[] = [
         defaultValue: 5,
       },
       {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
         name: "state",
         label: "State",
         type: "select",
@@ -927,6 +1030,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 5,
+        max: 300,
+      },
     ],
   },
   {
@@ -936,6 +1048,7 @@ export const componentDefinitions: ComponentDefinition[] = [
     description: "Multi-question quiz where the question flips onto a card, then answer options flip in sequentially for the student to pick.",
     icon: "🎴",
     defaultProps: {
+      title: "Flashcard Quiz",
       questions: [
         {
           id: "fq1",
@@ -953,8 +1066,16 @@ export const componentDefinitions: ComponentDefinition[] = [
       points: 20,
       mode: "practice",
       state: "active",
+      timeLimit: 15,
     },
     propDefinitions: [
+      {
+        name: "title",
+        label: "Title",
+        type: "string",
+        required: false,
+        defaultValue: "Flashcard Quiz",
+      },
       {
         name: "questions",
         label: "Questions",
@@ -998,6 +1119,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 15,
+        min: 5,
+        max: 300,
+      },
     ],
   },
   {
@@ -1023,6 +1153,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       points: 15,
       mode: "practice",
       state: "active",
+      timeLimit: 15,
     },
     propDefinitions: [
       {
@@ -1067,6 +1198,15 @@ export const componentDefinitions: ComponentDefinition[] = [
           { label: "Active", value: "active" },
           { label: "Disabled", value: "disabled" },
         ],
+      },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 15,
+        min: 5,
+        max: 300,
       },
     ],
   },

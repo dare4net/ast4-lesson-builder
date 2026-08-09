@@ -10,8 +10,8 @@ import { LessonTimelineItem } from '@/components/studio/lesson-timeline-item';
 import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
 import { EditLessonSettingsModal } from '@/components/studio/edit-lesson-settings-modal';
 
-interface Lesson { _id: string; title: string; description: string; order: number; duration?: number; level?: string; }
-interface Module { _id: string; name: string; title?: string; description: string; program_id: string; image_url?: string; cover_image?: string; is_published?: boolean; }
+interface Lesson { _id: string; title: string; description: string; order: number; duration?: number; level?: string; voice?: string; }
+interface Module { _id: string; name: string; title?: string; description: string; program_id: string; image_url?: string; cover_image?: string; is_published?: boolean; default_voice?: string; }
 
 function ModuleDetailContent() {
     const router = useRouter();
@@ -59,7 +59,7 @@ function ModuleDetailContent() {
         } catch { alert('Failed to delete lesson'); }
     };
 
-    const handleSaveModule = async (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean }) => {
+    const handleSaveModule = async (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean; default_voice?: string }) => {
         try { await apiClient.studio.updateModule(id, data); await fetchModuleData(); }
         catch { alert('Failed to update module'); }
     };
@@ -254,6 +254,7 @@ function ModuleDetailContent() {
                 onClose={() => setSelectedLessonForSettings(null)}
                 lesson={selectedLessonForSettings}
                 moduleTitle={module?.title || module?.name}
+                moduleVoice={module?.default_voice}
                 lessonNumber={selectedLessonForSettings ? lessons.findIndex(l => l._id === selectedLessonForSettings._id) + 1 : 1}
                 onSaveSuccess={fetchModuleData}
             />
