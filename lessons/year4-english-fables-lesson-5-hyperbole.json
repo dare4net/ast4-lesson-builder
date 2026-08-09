@@ -1,0 +1,196 @@
+{
+    "id": "year4-english-fables-lesson-5-hyperbole",
+    "title": "Hyperbole & Onomatopoeia: Exaggeration & Sound Effects",
+    "description": "Discover how fable authors use hyperbole for dramatic exaggeration and onomatopoeia for vivid sound effects to heighten conflict and character reactions.",
+    "duration": 30,
+    "level": "Year 4",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Exaggeration & Sounds in Stories",
+            "subtitle": "Hyperbole and Onomatopoeia Defined",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "hyperbole-intro-text",
+                    "type": "text",
+                    "content": "### What are Hyperbole & Onomatopoeia?\n\n- **Hyperbole** is intentional, extreme exaggeration used for emphasis or humor. It is not meant to be taken literally (e.g. *'I've told you a million times!'*).\n- **Onomatopoeia** refers to words that imitate the natural sound of an action or object (e.g. *SNAP! CRUNCH! SWOOSH!*).\n\nIn fables, combining hyperbole with onomatopoeia makes dramatic moments, beast fights, and boasts feel exciting and full of energy!"
+                },
+                {
+                    "id": "hyperbole-onomatopoeia-table",
+                    "type": "table",
+                    "title": "Figurative Language Breakdown",
+                    "rows": 4,
+                    "columns": 3,
+                    "data": [
+                        [
+                            "Device",
+                            "Definition",
+                            "Fable Example"
+                        ],
+                        [
+                            "Hyperbole",
+                            "Extreme exaggeration for effect",
+                            "The Ant's burden weighed **a million tons**."
+                        ],
+                        [
+                            "Onomatopoeia",
+                            "A word that mimics its sound",
+                            "The branch went **CRACK!** under the Bear."
+                        ],
+                        [
+                            "Combined",
+                            "Exaggerated sound in action",
+                            "The thunderous **BOOM!** shook the whole universe."
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Spotting Exaggeration & Sound Effects",
+            "subtitle": "Bringing Fable Characters to Life",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "device-explanation-text",
+                    "type": "text",
+                    "content": "### Why Authors Use These Devices\n\n- **Hyperbole** shows how strongly a character feels. A boastful hare claiming he can run *'faster than light'* highlights his arrogance.\n- **Onomatopoeia** immerses the reader into the scene by letting them hear what the characters hear."
+                },
+                {
+                    "id": "hyperbole-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "title": "Complete the Exaggerated Fable Sentences",
+                    "text": "1. The thirsty Crow felt as if he hadn't drunk water in a million {{blank}}.\n2. The sly Fox let out a loud {{blank}} as he snatched the cheese.\n3. The Bear slept so deeply that his snore sounded like a roaring {{blank}}.",
+                    "blanks": [
+                        {
+                            "id": "blank-1",
+                            "answer": "years",
+                            "alternatives": [
+                                "days",
+                                "centuries"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-2",
+                            "answer": "SNAP",
+                            "alternatives": [
+                                "CHOMP",
+                                "GULP"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-3",
+                            "answer": "volcano",
+                            "alternatives": [
+                                "engine",
+                                "storm"
+                            ],
+                            "caseSensitive": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Sound & Exaggeration Discovery",
+            "subtitle": "Explore Devices in The Lion and The Gnat",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "hyperbole-hotspot-1",
+                    "type": "hotspot",
+                    "title": "Tap the Hotspots to Uncover Hyperbole & Onomatopoeia",
+                    "image": "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?q=80&w=1000&auto=format&fit=crop",
+                    "behavior": "discovery",
+                    "hotspots": [
+                        {
+                            "id": "spot-1",
+                            "x": 0.35,
+                            "y": 0.45,
+                            "label": "The Gnat's Buzzing",
+                            "content": "Onomatopoeia: 'BZZZZ! The gnat zoomed right into the Lion's ear.' (Imitates the flying sound)."
+                        },
+                        {
+                            "id": "spot-2",
+                            "x": 0.60,
+                            "y": 0.30,
+                            "label": "The Lion's Roar",
+                            "content": "Hyperbole: 'The Lion roared so loudly that the earth split in half.' (Extreme exaggeration of volume)."
+                        },
+                        {
+                            "id": "spot-3",
+                            "x": 0.50,
+                            "y": 0.70,
+                            "label": "The Mighty Strike",
+                            "content": "Onomatopoeia + Hyperbole: 'CLAW! The Lion swiped a thousand times in a single second.' (Exaggerated speed with sound effect)."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Device Identification Practice",
+            "subtitle": "Test Your Knowledge of Hyperbole & Onomatopoeia",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "hyperbole-quiz-1",
+                    "type": "quiz",
+                    "title": "Figurative Language Quiz",
+                    "questions": [
+                        {
+                            "id": "q1",
+                            "question": "Which of the following is an example of hyperbole?",
+                            "options": [
+                                "The mouse nibbled the cheese softly.",
+                                "The tortoise walked slowly across the path.",
+                                "I am so hungry I could eat an entire mountain of apples!",
+                                "The owl hooted in the oak tree."
+                            ],
+                            "correctAnswer": 2,
+                            "explanation": "'Eat an entire mountain of apples' is an obvious, dramatic exaggeration for effect."
+                        },
+                        {
+                            "id": "q2",
+                            "question": "Which word is an example of onomatopoeia?",
+                            "options": [
+                                "Clever",
+                                "SPLASH!",
+                                "Quickly",
+                                "Fable"
+                            ],
+                            "correctAnswer": 1,
+                            "explanation": "'SPLASH!' mimics the actual sound made when something hits water."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Sound & Exaggeration Reflection",
+            "subtitle": "Create Your Own Story Moment",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "hyperbole-reflection-poll",
+                    "type": "poll",
+                    "title": "Creative Sound Poll",
+                    "question": "Which sound effect best fits a sneaky fox opening a wooden trap?",
+                    "options": [
+                        "CREAK!",
+                        "CLANG!",
+                        "SWOOSH!",
+                        "THUD!"
+                    ]
+                }
+            ]
+        }
+    ]
+}

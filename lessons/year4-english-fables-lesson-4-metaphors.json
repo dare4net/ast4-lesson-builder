@@ -1,0 +1,196 @@
+{
+    "id": "year4-english-fables-lesson-4-metaphors",
+    "title": "Metaphors in Fables: Direct Imagery & Symbolism",
+    "description": "Understand how metaphors state that one thing IS another to create powerful symbolic descriptions of characters, emotions, and moral choices in fables.",
+    "duration": 30,
+    "level": "Year 4",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction to Metaphors",
+            "subtitle": "Direct Comparisons Without 'Like' or 'As'",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "metaphor-intro-text",
+                    "type": "text",
+                    "content": "### What is a Metaphor?\n\nA **metaphor** is a figure of speech that describes an object, action, or character by stating that it **IS** something else, rather than just being *like* it.\n\nWhile similes say something is *like* a lion ('He fought like a lion'), metaphors state it directly ('He **was** a lion in battle'). In fables, metaphors give animal characters deep symbolic meanings!"
+                },
+                {
+                    "id": "metaphor-vs-simile-table",
+                    "type": "table",
+                    "title": "Comparing Similes and Metaphors",
+                    "rows": 4,
+                    "columns": 3,
+                    "data": [
+                        [
+                            "Feature",
+                            "Simile (Uses Like/As)",
+                            "Metaphor (Direct Is/Was)"
+                        ],
+                        [
+                            "Character Trait",
+                            "The Fox was **as sly as a snake**.",
+                            "The Fox **was a snake** in disguise."
+                        ],
+                        [
+                            "Wisdom",
+                            "The Owl spoke **like a wise judge**.",
+                            "The Owl **was the anchor** of the forest."
+                        ],
+                        [
+                            "Speed",
+                            "The Ant moved **like a tiny soldier**.",
+                            "The Ant **was an engine** of determination."
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Spotting Metaphors in Stories",
+            "subtitle": "Transforming Description into Symbolism",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "metaphor-explanation-text",
+                    "type": "text",
+                    "content": "### Why Fable Writers Use Metaphors\n\nMetaphors paint stronger, more dramatic images in the reader's mind because they declare a complete transformation.\n\nWhen a fable states *'His heart was stone'*, we immediately know the character has no pity or kindness without needing long explanations."
+                },
+                {
+                    "id": "metaphor-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "title": "Complete the Fable Metaphors",
+                    "text": "1. The greedy Wolf's stomach was a bottomless {{blank}}.\n2. In times of trouble, the old Oak Tree was the forest's {{blank}}.\n3. The Fox's brain was a clockwork {{blank}} of clever tricks.",
+                    "blanks": [
+                        {
+                            "id": "blank-1",
+                            "answer": "pit",
+                            "alternatives": [
+                                "cave",
+                                "well"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-2",
+                            "answer": "shield",
+                            "alternatives": [
+                                "fortress",
+                                "shelter"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-3",
+                            "answer": "machine",
+                            "alternatives": [
+                                "engine",
+                                "maze"
+                            ],
+                            "caseSensitive": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Metaphor Discovery Scene",
+            "subtitle": "Explore Metaphors in The Boy Who Cried Wolf",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "metaphor-hotspot-1",
+                    "type": "hotspot",
+                    "title": "Tap the Hotspots to Uncover Metaphors in the Fable",
+                    "image": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop",
+                    "behavior": "discovery",
+                    "hotspots": [
+                        {
+                            "id": "spot-1",
+                            "x": 0.30,
+                            "y": 0.40,
+                            "label": "The Boy's Lies",
+                            "content": "Metaphor: 'His falsehoods were a spiderweb of deceit.' (Declares his lies are a web trapping everyone)."
+                        },
+                        {
+                            "id": "spot-2",
+                            "x": 0.65,
+                            "y": 0.50,
+                            "label": "The Villagers' Anger",
+                            "content": "Metaphor: 'The villagers' patience was glass, shattered by another false alarm.' (Directly states their patience broke like glass)."
+                        },
+                        {
+                            "id": "spot-3",
+                            "x": 0.50,
+                            "y": 0.75,
+                            "label": "The Quiet Meadow",
+                            "content": "Metaphor: 'The night was a heavy velvet blanket of silence.' (Describes the thick darkness directly)."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Metaphors Knowledge Challenge",
+            "subtitle": "Test Your Understanding of Metaphors",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "metaphor-quiz-1",
+                    "type": "quiz",
+                    "title": "Metaphor & Simile Distinction Quiz",
+                    "questions": [
+                        {
+                            "id": "q1",
+                            "question": "Which sentence contains a metaphor?",
+                            "options": [
+                                "The peacock walked like a king.",
+                                "The peacock was a walking rainbow of feathers.",
+                                "The peacock was as proud as a queen.",
+                                "The peacock squawked loudly."
+                            ],
+                            "correctAnswer": 1,
+                            "explanation": "'Was a walking rainbow' directly states the peacock IS a rainbow, making it a metaphor."
+                        },
+                        {
+                            "id": "q2",
+                            "question": "What is the key difference between a simile and a metaphor?",
+                            "options": [
+                                "Similes are only used in non-fiction books.",
+                                "Metaphors use 'like' or 'as', while similes do not.",
+                                "Similes use 'like' or 'as' to compare; metaphors state that one thing IS another.",
+                                "There is no difference between them."
+                            ],
+                            "correctAnswer": 2,
+                            "explanation": "Similes compare using 'like' or 'as', whereas metaphors make a direct statement of equivalence."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Creative Metaphor Reflection",
+            "subtitle": "Forming Your Own Metaphors",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "metaphor-reflection-poll",
+                    "type": "poll",
+                    "title": "Fable Imagery Poll",
+                    "question": "Which metaphor best captures an ancient, wise owl giving advice?",
+                    "options": [
+                        "The owl was a living encyclopedia of forest history.",
+                        "The owl was a lighthouse guiding lost animals in the dark.",
+                        "The owl was a silent clock ticking through the night.",
+                        "The owl was a golden crown resting on the branch."
+                    ]
+                }
+            ]
+        }
+    ]
+}

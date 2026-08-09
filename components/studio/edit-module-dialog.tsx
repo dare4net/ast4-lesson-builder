@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -45,6 +45,16 @@ export function EditModuleDialog({ isOpen, onClose, programVoice, module, onSave
     const [defaultVoice, setDefaultVoice] = useState(module.default_voice || "inherit")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        if (isOpen && module) {
+            setName(module.name || module.title || "")
+            setDescription(module.description || "")
+            setImageUrl(module.image_url || module.cover_image || "")
+            setIsPublished(module.is_published ?? true)
+            setDefaultVoice(module.default_voice || "inherit")
+        }
+    }, [isOpen, module])
 
     const handleAutoGenerate = async () => {
         if (!name.trim()) return

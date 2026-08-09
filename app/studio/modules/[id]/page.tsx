@@ -247,7 +247,7 @@ function ModuleDetailContent() {
                 </div>
             </main>
 
-            <LessonCreationModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} moduleId={moduleId} programId={module.program_id} />
+            <LessonCreationModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} moduleId={moduleId} programId={module.program_id} moduleVoice={module.default_voice} />
             {module && <EditModuleDialog isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} module={module} onSave={handleSaveModule} />}
             <EditLessonSettingsModal
                 isOpen={!!selectedLessonForSettings}

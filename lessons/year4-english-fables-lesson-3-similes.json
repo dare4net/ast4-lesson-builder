@@ -1,0 +1,196 @@
+{
+    "id": "year4-english-fables-lesson-3-similes",
+    "title": "Similes in Fables: Comparing Characters & Actions",
+    "description": "Explore how authors use similes in fables by comparing two different things using 'like' or 'as' to create vivid character descriptions and actions.",
+    "duration": 30,
+    "level": "Year 4",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Welcome to Similes",
+            "subtitle": "Making Comparisons Come Alive",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "intro-text-1",
+                    "type": "text",
+                    "content": "### What is a Simile?\n\nA **simile** is a figure of speech that compares two different things using the words **'like'** or **'as'**.\n\nIn fables, writers use similes to help readers quickly picture a character's traits, movement, or emotions by comparing them to something familiar, such as animals, weather, or objects!"
+                },
+                {
+                    "id": "simile-examples-table",
+                    "type": "table",
+                    "title": "Common Simile Patterns in Stories",
+                    "rows": 4,
+                    "columns": 3,
+                    "data": [
+                        [
+                            "Pattern",
+                            "Example Sentence",
+                            "What It Explains"
+                        ],
+                        [
+                            "As + Adjective + As",
+                            "The Hare was **as swift as the wind**.",
+                            "Describes extreme speed"
+                        ],
+                        [
+                            "Verb + Like + Noun",
+                            "The Tortoise plodded **like a heavy stone**.",
+                            "Describes slow, steady movement"
+                        ],
+                        [
+                            "As + Adjective + As",
+                            "The Fox was **as sly as a desert viper**.",
+                            "Describes clever, sneaky behaviour"
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Identifying Similes in Fables",
+            "subtitle": "Spotting 'Like' and 'As' in Action",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "spotting-similes-text",
+                    "type": "text",
+                    "content": "### How to Spot a Simile\n\nNot every sentence with 'like' or 'as' is a simile! A true simile must compare **two fundamentally different things**.\n\n- **Simile**: *'His eyes shone like bright stars.'* (Compares eyes to stars)\n- **Not a Simile**: *'He looks like his brother.'* (Compares two similar humans)"
+                },
+                {
+                    "id": "simile-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "title": "Complete the Fable Similes",
+                    "text": "1. The Lion roared as loud as {{blank}}.\n2. The Mouse scurried through the grass like {{blank}}.\n3. The Ant worked as hard as {{blank}}.",
+                    "blanks": [
+                        {
+                            "id": "blank-1",
+                            "answer": "thunder",
+                            "alternatives": [
+                                "a storm",
+                                "thunderclap"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-2",
+                            "answer": "a shadow",
+                            "alternatives": [
+                                "lightning",
+                                "a whisper"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-3",
+                            "answer": "a machine",
+                            "alternatives": [
+                                "a clockwork toy",
+                                "an engine"
+                            ],
+                            "caseSensitive": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Simile Discovery Stage",
+            "subtitle": "Explore Similes in The Hare and The Tortoise",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "simile-hotspot-1",
+                    "type": "hotspot",
+                    "title": "Click or Tap the Hotspots to Uncover Similes",
+                    "image": "https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1000&auto=format&fit=crop",
+                    "behavior": "discovery",
+                    "hotspots": [
+                        {
+                            "id": "spot-1",
+                            "x": 0.25,
+                            "y": 0.35,
+                            "label": "The Hare's Speed",
+                            "content": "Simile: 'The Hare shot forward like an arrow from a bow.' (Compares sudden release of speed to an arrow)."
+                        },
+                        {
+                            "id": "spot-2",
+                            "x": 0.70,
+                            "y": 0.65,
+                            "label": "The Tortoise's Pace",
+                            "content": "Simile: 'The Tortoise marched as steady as a beating drum.' (Compares rhythm and persistence to a drum beat)."
+                        },
+                        {
+                            "id": "spot-3",
+                            "x": 0.45,
+                            "y": 0.80,
+                            "label": "The Crowded Path",
+                            "content": "Simile: 'The forest audience cheered like a roaring ocean wave.' (Compares crowd noise to crashing waves)."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Similes Practice Quiz",
+            "subtitle": "Test Your Understanding of Similes",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "simile-quiz-1",
+                    "type": "quiz",
+                    "title": "Simile Knowledge Check",
+                    "questions": [
+                        {
+                            "id": "q1",
+                            "question": "Which of the following is a valid simile?",
+                            "options": [
+                                "The fox slept under the oak tree.",
+                                "The fox ran as fast as lightning across the meadow.",
+                                "The fox ate his dinner hungrily.",
+                                "The fox said hello to the owl."
+                            ],
+                            "correctAnswer": 1,
+                            "explanation": "'As fast as lightning' compares the speed of the fox to lightning using 'as'."
+                        },
+                        {
+                            "id": "q2",
+                            "question": "Why do fable authors use similes?",
+                            "options": [
+                                "To make sentences longer and harder to read.",
+                                "To give animals human dialogue.",
+                                "To create vivid mental pictures by comparing characters to familiar things.",
+                                "To list historical dates."
+                            ],
+                            "correctAnswer": 2,
+                            "explanation": "Similes spark the reader's imagination by linking character traits to memorable images."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Reflect & Compare",
+            "subtitle": "Your Turn to Create a Simile",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "simile-reflection-poll",
+                    "type": "poll",
+                    "title": "Fable Creative Reflection",
+                    "question": "Which simile best describes a brave little mouse facing a lion?",
+                    "options": [
+                        "As fierce as a miniature dragon",
+                        "Like a tiny spark in the dark",
+                        "As steady as a mountain rock",
+                        "Like a quiet shadow"
+                    ]
+                }
+            ]
+        }
+    ]
+}

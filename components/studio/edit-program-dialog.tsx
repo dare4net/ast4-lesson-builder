@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -43,6 +43,16 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
     const [defaultVoice, setDefaultVoice] = useState(program.default_voice || "en-GB-SoniaNeural")
     const [isSubmitting, setIsSubmitting] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        if (isOpen && program) {
+            setName(program.name || program.program_name || "")
+            setDescription(program.description || "")
+            setImageUrl(program.image_url || program.cover_image || "")
+            setIsPublished(program.is_published ?? true)
+            setDefaultVoice(program.default_voice || "en-GB-SoniaNeural")
+        }
+    }, [isOpen, program])
 
     const handleAutoGenerate = async () => {
         if (!name.trim()) return

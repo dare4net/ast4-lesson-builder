@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { CheckCircle2, Lock } from "lucide-react"
+import { CheckCircle2, Lock, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import type { Component } from "@/types/lesson"
@@ -67,6 +67,7 @@ function HotspotContent({
 }) {
   const [mounted, setMounted] = useState(false)
   const [lastMiss, setLastMiss] = useState<{ x: number; y: number; id: number } | null>(null)
+  const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null)
   const imageRef = useRef<HTMLImageElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -78,6 +79,7 @@ function HotspotContent({
   }, [])
 
   const handleHotspotClick = (hotspotId: string) => {
+    setActiveHotspotId(prev => prev === hotspotId ? null : hotspotId)
     if (disabledProp || discoveredHotspots.includes(hotspotId)) return
 
     const newDiscovered = [...discoveredHotspots, hotspotId]
@@ -245,7 +247,7 @@ function HotspotContent({
                 const showNumbers = props.showNumbers ?? false
 
                 return (
-                  <Tooltip key={hotspot.id} defaultOpen={isDiscovered && behavior === 'quiz'}>
+                  <Tooltip key={hotspot.id} open={activeHotspotId === hotspot.id}>
                     <TooltipTrigger asChild>
                       <button
                         className={cn(
@@ -294,6 +296,8 @@ function HotspotContent({
 
       {/* BOTTOM SECTION: Feedback & Buttons */}
       <div className="shrink-0 space-y-2.5 pb-4 pt-1">
+
+
         <div className="min-h-[44px] flex flex-col justify-end">
           {discoveredHotspots.length === hotspots.length ? (
             <div className="p-3 rounded-xl border-2 bg-emerald-50/50 border-emerald-500/20 animate-in slide-in-from-top-2 duration-500 shadow-emerald-500/5">
