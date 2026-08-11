@@ -428,3 +428,38 @@ export const spinTheWheelValidator: ComponentValidator = {
         return res;
     }
 };
+
+// ShortAnswer Validator
+export const shortAnswerValidator: ComponentValidator = {
+    type: 'shortAnswer',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { question } = component.props || {};
+        if (!question || typeof question !== 'string' || question.trim() === '') {
+            addError(res, 'MISSING_SHORT_ANSWER_QUESTION', 'props.question', 'Short answer component requires a question prompt.');
+        }
+        return res;
+    }
+};
+
+// WordCloud Validator
+export const wordCloudValidator: ComponentValidator = {
+    type: 'wordCloud',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        return res;
+    }
+};
+
+// ScaleSlider Validator
+export const scaleSliderValidator: ComponentValidator = {
+    type: 'scaleSlider',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        return res;
+    }
+};

@@ -32,7 +32,10 @@ import {
     timelineValidator,
     wordScrambleValidator,
     memoryGridValidator,
-    spinTheWheelValidator
+    spinTheWheelValidator,
+    shortAnswerValidator,
+    wordCloudValidator,
+    scaleSliderValidator
 } from './components/interactive';
 
 const registry: Record<string, ComponentValidator> = {
@@ -63,7 +66,10 @@ const registry: Record<string, ComponentValidator> = {
     timeline: timelineValidator,
     wordScramble: wordScrambleValidator,
     memoryGrid: memoryGridValidator,
-    spinTheWheel: spinTheWheelValidator
+    spinTheWheel: spinTheWheelValidator,
+    shortAnswer: shortAnswerValidator,
+    wordCloud: wordCloudValidator,
+    scaleSlider: scaleSliderValidator
 };
 
 import { isSupportedRenderer } from '@/components/component-renderer';

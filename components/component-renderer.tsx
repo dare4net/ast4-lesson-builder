@@ -41,6 +41,9 @@ const componentRenderers: ComponentRenderers = {
   hotspot: dynamic(() => import("@/components/renderers/hotspot-renderer").then((mod) => mod.HotspotRenderer)),
 
   // New Interactive Components
+  shortAnswer: dynamic(() =>
+    import("@/components/renderers/short-answer-renderer").then((mod) => mod.ShortAnswerRenderer),
+  ),
   fillInTheBlank: dynamic(() =>
     import("@/components/renderers/fill-in-the-blank-renderer").then((mod) => mod.FillInTheBlankRenderer),
   ),
@@ -53,6 +56,12 @@ const componentRenderers: ComponentRenderers = {
   ),
   multiSelectQuiz: dynamic(() =>
     import("@/components/renderers/multi-select-quiz-renderer").then((mod) => mod.MultiSelectQuizRenderer),
+  ),
+  wordCloud: dynamic(() =>
+    import("@/components/renderers/word-cloud-renderer").then((mod) => mod.WordCloudRenderer),
+  ),
+  scaleSlider: dynamic(() =>
+    import("@/components/renderers/scale-slider-renderer").then((mod) => mod.ScaleSliderRenderer),
   ),
 
   // Gamified Components
@@ -89,6 +98,7 @@ interface ComponentRendererProps {
 const gamifiedTypes: ComponentType[] = [
   'quiz',
   'trueFalse',
+  'shortAnswer',
   'annotateImage',
   'categorise',
   'timeline',

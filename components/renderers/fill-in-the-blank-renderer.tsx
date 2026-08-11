@@ -24,6 +24,7 @@ interface FillInTheBlankRendererProps {
   text: string
   blanks: Blank[]
   caseSensitive?: boolean
+  markingMode?: "self-mark" | "tutor-mark"
   points?: number
   isEditing?: boolean
   scoreContext?: {
@@ -139,6 +140,18 @@ function FillInTheBlankContent({
   const handleSubmit = async () => {
     if (disabledProp || isSubmitted || state.status === 'completed') return;
 
+    if (props.markingMode === 'tutor-mark' && isLive) {
+      await playFeedback('complete');
+      setState(prev => ({
+        ...prev,
+        isSubmitted: true,
+        isPendingMarking: true,
+        score: 0,
+        status: 'completed'
+      }))
+      return;
+    }
+
     const results: Record<string, boolean> = {}
     let correctCount = 0
 
@@ -167,6 +180,7 @@ function FillInTheBlankContent({
     setState(prev => ({
       ...prev,
       isSubmitted: true,
+      isPendingMarking: false,
       correctAnswers: results,
       score: earnedPoints,
       status: 'completed'

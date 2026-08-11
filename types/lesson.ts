@@ -72,6 +72,7 @@ export type ComponentType =
   | "categorise"
   | "timeline"
   | "scaleSlider"
+  | "wordCloud"
   | "dragDrop"
   | "matchingPairs"
   | "fillInTheBlank"
