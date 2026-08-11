@@ -18,6 +18,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Loader2, Sparkles } from "lucide-react"
 import { apiClient } from "@/lib/api-client"
 import { generateBatchAudio, normalizeTextForSpeech } from "@/lib/audio-generator"
+import { useToast } from "@/hooks/use-toast"
+import { VoiceSelector } from "@/components/ui/voice-selector"
+import { getVoiceById } from "@/lib/voices"
 
 interface LessonCreationModalProps {
     isOpen: boolean
@@ -98,7 +101,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
                     if (audioMap["intro"]) {
                         await apiClient.studio.updateLesson(lessonId, {
                             introAudioUrl: audioMap["intro"]
-                        })
+                        } as any)
                     }
                 } catch (audioErr) {
                     console.warn("[LessonCreationModal] Auto audio generation warning:", audioErr)
