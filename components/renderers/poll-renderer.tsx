@@ -24,6 +24,10 @@ interface PollRendererProps {
     setComponentState?: (state: any) => void
     id?: string
     status?: string
+    // Injected by component-renderer from pollStore
+    initialVotes?: Record<string, number>
+    initialTotalVotes?: number
+    onVote?: (optionId: string) => Promise<void>
 }
 
 type PollState = {
@@ -55,20 +59,45 @@ function PollContent({
         setMounted(true)
     }, [])
 
-    const handleVote = (optionId: string) => {
+    // Merge server-fetched votes into local state once they arrive
+    useEffect(() => {
+        if (!props.initialVotes || hasVoted) return
+        // Seed display votes from the server snapshot (don't mark as voted)
+        setState(prev => ({
+            ...prev,
+            votes: props.initialVotes!,
+            totalVotes: props.initialTotalVotes || 0,
+        }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.initialVotes, props.initialTotalVotes])
+
+    const handleVote = async (optionId: string) => {
         if (disabledProp || hasVoted) return
 
-        const newVotes = { ...votes, [optionId]: (votes[optionId] || 0) + 1 }
-        const newTotal = totalVotes + 1
+        // Optimistically update local state immediately
+        const optimisticVotes = { ...votes, [optionId]: (votes[optionId] || 0) + 1 }
+        const optimisticTotal = totalVotes + 1
 
         setState(prev => ({
             ...prev,
             selectedOption: optionId,
             hasVoted: true,
-            votes: newVotes,
-            totalVotes: newTotal,
+            votes: optimisticVotes,
+            totalVotes: optimisticTotal,
             status: 'completed'
         }))
+
+        // POST vote to server — response updates counts to server-authoritative values
+        if (props.onVote) {
+            try {
+                await props.onVote(optionId)
+                // On success the parent pollStore updates pollData, but since this
+                // component already marked hasVoted=true, the server counts will be
+                // reflected next time via initialVotes (next lesson session).
+            } catch {
+                // Vote was optimistically counted locally — acceptable fallback
+            }
+        }
     }
 
     if (!mounted) return null
@@ -137,7 +166,7 @@ function PollContent({
                                     ? isSelected
                                         ? "border-indigo-600 bg-indigo-50/20"
                                         : "border-slate-100 bg-slate-50/50"
-                                    : "border-slate-200 hover:border-indigo-400 bg-white hover:bg-indigo-50/10 active:scale-[0.99]"
+                                    : "border-slate-200 hover:border-indigo-400 bg-white hover:bg-indigo-50/10 active:scale-[0.99] cursor-pointer"
                             )}
                         >
                             {/* Animated Progress Bar */}
@@ -181,6 +210,7 @@ function PollContent({
             {/* Footer Info */}
             <div className="shrink-0 flex items-center justify-between border-t border-slate-100 pt-3 text-[10px] font-bold text-slate-400">
                 <span>{totalVotes} total responses</span>
+                {!hasVoted && <span className="text-indigo-400">Cast your vote above</span>}
             </div>
         </div>
     )
@@ -209,11 +239,11 @@ export function PollRenderer(props: PollRendererProps) {
     } as Component
 
     const initialState: PollState = {
-        selectedOption: null,
-        votes: {},
-        totalVotes: 0,
-        hasVoted: false,
-        status: 'active'
+        selectedOption: savedState?.selectedOption ?? null,
+        votes: savedState?.votes ?? {},
+        totalVotes: savedState?.totalVotes ?? 0,
+        hasVoted: savedState?.hasVoted ?? false,
+        status: savedState?.status ?? 'active'
     }
 
     return (

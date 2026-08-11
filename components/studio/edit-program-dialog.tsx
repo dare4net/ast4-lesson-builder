@@ -84,6 +84,26 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                 finalImage = await generateArtisticThumbnail(name.trim(), "PROGRAM CURRICULUM")
             }
 
+            // Route thumbnail through Cloudinary (converts Base64 -> Cloudinary URL & deletes old image if replaced)
+            try {
+                const res = await fetch('/api/thumbnail/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        imageDataUrl: finalImage,
+                        type: 'program',
+                        id: program._id,
+                        previousUrl: program.image_url || program.cover_image
+                    })
+                })
+                const uploadData = await res.json()
+                if (uploadData?.url) {
+                    finalImage = uploadData.url
+                }
+            } catch (uploadErr) {
+                console.error("Failed to process Cloudinary thumbnail upload:", uploadErr)
+            }
+
             await onSave(program._id, {
                 name: name.trim(),
                 description: description.trim(),

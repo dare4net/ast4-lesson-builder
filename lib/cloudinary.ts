@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary'
 // Configure Cloudinary with environment variables (or fallbacks)
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'rwjtoqiy',
-    api_key: process.env.CLOUDINARY_API_KEY || 'S1MeiLS39dDREEfHz4xTGhNTzQU',
+    api_key: process.env.CLOUDINARY_API_KEY || '431677943928628',
     api_secret: process.env.CLOUDINARY_API_SECRET || 'S1MeiLS39dDREEfHz4xTGhNTzQU',
     secure: true,
 })
@@ -124,4 +124,72 @@ export async function uploadImageBufferToCloudinary(
     })
 }
 
+/**
+ * Extracts Cloudinary public_id from a Cloudinary URL.
+ * e.g., https://res.cloudinary.com/rwjtoqiy/image/upload/v12345/ast_thumbnails/program_123.jpg -> ast_thumbnails/program_123
+ */
+export function getCloudinaryPublicId(url: string): string | null {
+    if (!url || typeof url !== 'string' || !url.includes('res.cloudinary.com')) return null
+    try {
+        const parts = url.split('/upload/')
+        if (parts.length < 2) return null
+        let publicIdWithExt = parts[1]
+        // strip version if present (e.g. v12345678/)
+        publicIdWithExt = publicIdWithExt.replace(/^v\d+\//, '')
+        // strip file extension
+        const lastDot = publicIdWithExt.lastIndexOf('.')
+        return lastDot !== -1 ? publicIdWithExt.substring(0, lastDot) : publicIdWithExt
+    } catch {
+        return null
+    }
+}
+
+/**
+ * Deletes an image from Cloudinary by URL or public ID.
+ */
+export async function deleteImageFromCloudinaryUrl(url: string): Promise<boolean> {
+    const publicId = getCloudinaryPublicId(url)
+    if (!publicId) return false
+    try {
+        console.log(`[Cloudinary] Deleting old image: ${publicId}`)
+        await cloudinary.uploader.destroy(publicId, {
+            resource_type: 'image',
+            invalidate: true,
+        })
+        return true
+    } catch (err) {
+        console.error(`[Cloudinary] Failed to delete image ${publicId}:`, err)
+        return false
+    }
+}
+
+/**
+ * Uploads a base64 thumbnail string (data:image/...) to Cloudinary.
+ * Uses deterministic public_id under folder `ast_thumbnails/${type}_${id}`.
+ * Setting `overwrite: true` and `invalidate: true` ensures old thumbnail is replaced immediately.
+ */
+export async function uploadThumbnailToCloudinary(
+    imageDataUrl: string,
+    type: 'program' | 'module',
+    id: string
+): Promise<string> {
+    if (!imageDataUrl || !imageDataUrl.startsWith('data:image/')) {
+        return imageDataUrl
+    }
+    const publicId = `ast_thumbnails/${type}_${id}`
+    const result = await cloudinary.uploader.upload(imageDataUrl, {
+        public_id: publicId,
+        resource_type: 'image',
+        overwrite: true,
+        invalidate: true,
+    })
+
+    if (!result || !result.secure_url) {
+        throw new Error(`Cloudinary thumbnail upload failed for ${type} ${id}`)
+    }
+
+    return result.secure_url
+}
+
 export default cloudinary
+

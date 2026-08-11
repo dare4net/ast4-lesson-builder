@@ -314,3 +314,117 @@ export const multiSelectQuizValidator: ComponentValidator = {
         return res;
     }
 };
+
+// TrueFalse Validator
+export const trueFalseValidator: ComponentValidator = {
+    type: 'trueFalse',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { statement, isTrue } = component.props || {};
+        if (typeof statement !== 'string' || statement.trim() === '') {
+            addError(res, 'MISSING_STATEMENT', 'props.statement', 'True or false question statement cannot be empty.');
+        }
+        if (typeof isTrue !== 'boolean') {
+            addError(res, 'INVALID_CORRECT_ANSWER', 'props.isTrue', 'Correct answer (isTrue) must be a boolean.');
+        }
+        return res;
+    }
+};
+
+// AnnotateImage Validator
+export const annotateImageValidator: ComponentValidator = {
+    type: 'annotateImage',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { image, labels } = component.props || {};
+        if (typeof image !== 'string' || image.trim() === '') {
+            addError(res, 'MISSING_ANNOTATE_IMAGE', 'props.image', 'Annotate image URL is required.');
+        }
+        if (!Array.isArray(labels) || labels.length === 0) {
+            addError(res, 'NO_ANNOTATE_LABELS', 'props.labels', 'Annotate image requires at least 1 label tag target.');
+        }
+        return res;
+    }
+};
+
+// Categorise Validator
+export const categoriseValidator: ComponentValidator = {
+    type: 'categorise',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { categories, items } = component.props || {};
+        if (!Array.isArray(categories) || categories.length < 2) {
+            addError(res, 'INSUFFICIENT_CATEGORIES', 'props.categories', 'Categorise component requires at least 2 categories.');
+        }
+        if (!Array.isArray(items) || items.length < 2) {
+            addError(res, 'INSUFFICIENT_ITEMS', 'props.items', 'Categorise component requires at least 2 items to sort.');
+        }
+        return res;
+    }
+};
+
+// Timeline Validator
+export const timelineValidator: ComponentValidator = {
+    type: 'timeline',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { events } = component.props || {};
+        if (!Array.isArray(events) || events.length === 0) {
+            addError(res, 'NO_TIMELINE_EVENTS', 'props.events', 'Timeline requires at least 1 event entry.');
+        }
+        return res;
+    }
+};
+
+// WordScramble Validator
+export const wordScrambleValidator: ComponentValidator = {
+    type: 'wordScramble',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { word } = component.props || {};
+        if (typeof word !== 'string' || word.trim().length < 2) {
+            addError(res, 'INVALID_SCRAMBLE_WORD', 'props.word', 'Word scramble target word must be at least 2 characters long.');
+        }
+        return res;
+    }
+};
+
+// MemoryGrid Validator
+export const memoryGridValidator: ComponentValidator = {
+    type: 'memoryGrid',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { pairs } = component.props || {};
+        if (!Array.isArray(pairs) || pairs.length < 2) {
+            addError(res, 'INSUFFICIENT_MEMORY_PAIRS', 'props.pairs', 'Memory grid requires at least 2 matching pairs.');
+        }
+        return res;
+    }
+};
+
+// SpinTheWheel Validator
+export const spinTheWheelValidator: ComponentValidator = {
+    type: 'spinTheWheel',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+
+        const { items } = component.props || {};
+        if (!Array.isArray(items) || items.length < 2) {
+            addError(res, 'INSUFFICIENT_WHEEL_SLICES', 'props.items', 'Spin the wheel requires at least 2 wheel slices.');
+        }
+        return res;
+    }
+};

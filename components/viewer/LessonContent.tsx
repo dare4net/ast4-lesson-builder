@@ -17,6 +17,7 @@ import { LessonIntroCueOverlay } from '@/components/viewer/LessonIntroCueOverlay
 import { LessonCompletionOverlay } from '@/components/viewer/LessonCompletionOverlay';
 import { IncompleteLessonModal } from '@/components/viewer/IncompleteLessonModal';
 import { getSlideTheme } from '@/lib/slide-themes';
+import { usePollStore } from '@/hooks/use-poll-store';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -60,6 +61,8 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
   }, ref) {
     const { playFeedback } = useFeedback();
     const { currentScore: score, totalScore: totalPossible } = useScoring();
+    // Pre-fetch all poll vote data once during lesson load (intro cue phase)
+    const pollStore = usePollStore(lesson);
 
     const currentSlide = useMemo(() => lesson.slides[currentSlideIndex], [lesson.slides, currentSlideIndex]);
     const onSlidesUpdateRef = useLatestRef(onSlidesUpdate);
@@ -372,6 +375,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                   savedState={componentStates[activeComponent.id]}
                   setComponentState={(state: any) => handleComponentStateChange(activeComponent.id, state)}
                   onCheckSlideCompletion={performCompletionCheck}
+                  pollStore={pollStore}
                 />
               </div>
             )}

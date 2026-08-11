@@ -59,9 +59,19 @@ export type ComponentType =
   | "table"
   | "image"
   | "video"
+  | "callout"
+  | "accordion"
+  | "tabsPanel"
+  | "embed"
 
   // Interactive & Gamified Components
   | "quiz"
+  | "trueFalse"
+  | "shortAnswer"
+  | "annotateImage"
+  | "categorise"
+  | "timeline"
+  | "scaleSlider"
   | "dragDrop"
   | "matchingPairs"
   | "fillInTheBlank"
@@ -71,6 +81,13 @@ export type ComponentType =
   | "poll"
   | "flashcardQuiz"
   | "multiSelectQuiz"
+  | "wordScramble"
+  | "spinTheWheel"
+  | "memoryGrid"
+  | "wordCloud"
+
+  // Media
+  | "audioPlayer"
 
   // Lesson Structure Components
   | "slideTitle"

@@ -2,6 +2,10 @@ import { Lesson, Component, ComponentType } from "@/types/lesson"
 
 const SCORED_COMPONENT_TYPES: ComponentType[] = [
     "quiz",
+    "trueFalse",
+    "annotateImage",
+    "categorise",
+    "timeline",
     "dragDrop",
     "matchingPairs",
     "fillInTheBlank",
@@ -9,6 +13,9 @@ const SCORED_COMPONENT_TYPES: ComponentType[] = [
     "hotspot",
     "flashcardQuiz",
     "multiSelectQuiz",
+    "wordScramble",
+    "memoryGrid",
+    "spinTheWheel",
     // "clickableImage" maps to hotspot
 ]
 
@@ -44,15 +51,6 @@ export const ScoringService = {
      * (e.g. some might calculate points based on item count, but usually 'points' prop is total)
      */
     getComponentMaxPoints(component: Component): number {
-        // Standardize: 'points' prop is the total points for the component
-        // FillInTheBlank uses points * blanks.length logic? 
-        // Let's verify FillInTheBlank props.
-        // In FillInTheBlankRenderer: `const earnedPoints = correctCount * points`
-        // So `points` prop is PER BLANK.
-        // MatchingPairs: `const earnedPoints = correctCount * (props.points || 15)` (PER MATCH)
-
-        // This means `getComponentMaxPoints` needs type-specific logic.
-
         const points = component.props.points || 0
 
         if (points === 0) return 0
@@ -71,6 +69,10 @@ export const ScoringService = {
             case "quiz":
                 return points * (component.props.questions?.length || 0)
 
+            case "trueFalse":
+            case "annotateImage":
+            case "categorise":
+            case "timeline":
             case "flashcardQuiz":
             case "multiSelectQuiz":
             default:

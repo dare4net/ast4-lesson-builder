@@ -86,6 +86,26 @@ export function EditModuleDialog({ isOpen, onClose, programVoice, module, onSave
                 finalImage = await generateArtisticThumbnail(name.trim(), "MODULE CURRICULUM")
             }
 
+            // Route thumbnail through Cloudinary (converts Base64 -> Cloudinary URL & deletes old image if replaced)
+            try {
+                const res = await fetch('/api/thumbnail/upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        imageDataUrl: finalImage,
+                        type: 'module',
+                        id: module._id,
+                        previousUrl: module.image_url || module.cover_image
+                    })
+                })
+                const uploadData = await res.json()
+                if (uploadData?.url) {
+                    finalImage = uploadData.url
+                }
+            } catch (uploadErr) {
+                console.error("Failed to process Cloudinary thumbnail upload:", uploadErr)
+            }
+
             await onSave(module._id, {
                 name: name.trim(),
                 description: description.trim(),

@@ -194,3 +194,37 @@ export const quoteValidator: ComponentValidator = {
         return res;
     }
 };
+
+// Callout Validator
+export const calloutValidator: ComponentValidator = {
+    type: 'callout',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        const { content } = component.props || {};
+
+        if (typeof content !== 'string' || content.trim() === '') {
+            addError(res, 'MISSING_CALLOUT_CONTENT', 'props.content', 'Callout box content cannot be empty.');
+        }
+        return res;
+    }
+};
+
+// Accordion Validator
+export const accordionValidator: ComponentValidator = {
+    type: 'accordion',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        const { items } = component.props || {};
+
+        if (!Array.isArray(items) || items.length === 0) {
+            addError(res, 'EMPTY_ACCORDION_ITEMS', 'props.items', 'Accordion must contain at least one panel item.');
+        } else {
+            items.forEach((item, idx) => {
+                if (!item || typeof item.title !== 'string' || item.title.trim() === '') {
+                    addWarning(res, 'EMPTY_ACCORDION_TITLE', `props.items[${idx}].title`, `Accordion item ${idx + 1} has an empty title.`);
+                }
+            });
+        }
+        return res;
+    }
+};

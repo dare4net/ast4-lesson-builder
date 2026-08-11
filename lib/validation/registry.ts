@@ -10,7 +10,9 @@ import {
     imageValidator,
     videoValidator,
     codeBlockValidator,
-    quoteValidator
+    quoteValidator,
+    calloutValidator,
+    accordionValidator
 } from './components/content';
 
 import {
@@ -23,7 +25,14 @@ import {
     codeEditorValidator,
     pollValidator,
     flashcardQuizValidator,
-    multiSelectQuizValidator
+    multiSelectQuizValidator,
+    trueFalseValidator,
+    annotateImageValidator,
+    categoriseValidator,
+    timelineValidator,
+    wordScrambleValidator,
+    memoryGridValidator,
+    spinTheWheelValidator
 } from './components/interactive';
 
 const registry: Record<string, ComponentValidator> = {
@@ -36,6 +45,8 @@ const registry: Record<string, ComponentValidator> = {
     video: videoValidator,
     codeBlock: codeBlockValidator,
     quote: quoteValidator,
+    callout: calloutValidator,
+    accordion: accordionValidator,
     quiz: quizValidator,
     flashcards: flashcardsValidator,
     dragDrop: dragDropValidator,
@@ -45,7 +56,14 @@ const registry: Record<string, ComponentValidator> = {
     codeEditor: codeEditorValidator,
     poll: pollValidator,
     flashcardQuiz: flashcardQuizValidator,
-    multiSelectQuiz: multiSelectQuizValidator
+    multiSelectQuiz: multiSelectQuizValidator,
+    trueFalse: trueFalseValidator,
+    annotateImage: annotateImageValidator,
+    categorise: categoriseValidator,
+    timeline: timelineValidator,
+    wordScramble: wordScrambleValidator,
+    memoryGrid: memoryGridValidator,
+    spinTheWheel: spinTheWheelValidator
 };
 
 import { isSupportedRenderer } from '@/components/component-renderer';

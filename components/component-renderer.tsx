@@ -5,6 +5,7 @@ import * as React from 'react'
 import { createElement } from "react"
 import { cn } from "@/lib/utils"
 import type { Component, ComponentType } from "@/types/lesson"
+import type { PollVotesMap } from "@/hooks/use-poll-store"
 
 type ComponentRenderers = Record<string, React.ComponentType<any>>;
 
@@ -21,9 +22,15 @@ const componentRenderers: ComponentRenderers = {
   video: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
   codeBlock: dynamic(() => import("@/components/renderers/code-block-renderer").then((mod) => mod.CodeBlockRenderer)),
   quote: dynamic(() => import("@/components/renderers/quote-renderer").then((mod) => mod.QuoteRenderer)),
+  callout: dynamic(() => import("@/components/renderers/callout-renderer").then((mod) => mod.CalloutRenderer)),
+  accordion: dynamic(() => import("@/components/renderers/accordion-renderer").then((mod) => mod.AccordionRenderer)),
 
   // Interactive Components
   quiz: dynamic(() => import("@/components/renderers/quiz-renderer").then((mod) => mod.QuizRenderer)),
+  trueFalse: dynamic(() => import("@/components/renderers/true-false-renderer").then((mod) => mod.TrueFalseRenderer)),
+  annotateImage: dynamic(() => import("@/components/renderers/annotate-image-renderer").then((mod) => mod.AnnotateImageRenderer)),
+  categorise: dynamic(() => import("@/components/renderers/categorise-renderer").then((mod) => mod.CategoriseRenderer)),
+  timeline: dynamic(() => import("@/components/renderers/timeline-renderer").then((mod) => mod.TimelineRenderer)),
   matchingPairs: dynamic(() =>
     import("@/components/renderers/matching-pairs-renderer").then((mod) => mod.MatchingPairsRenderer),
   ),
@@ -48,6 +55,11 @@ const componentRenderers: ComponentRenderers = {
     import("@/components/renderers/multi-select-quiz-renderer").then((mod) => mod.MultiSelectQuizRenderer),
   ),
 
+  // Gamified Components
+  wordScramble: dynamic(() => import("@/components/renderers/word-scramble-renderer").then((mod) => mod.WordScrambleRenderer)),
+  memoryGrid: dynamic(() => import("@/components/renderers/memory-grid-renderer").then((mod) => mod.MemoryGridRenderer)),
+  spinTheWheel: dynamic(() => import("@/components/renderers/spin-the-wheel-renderer").then((mod) => mod.SpinTheWheelRenderer)),
+
   // Structure Components
   slideTitle: dynamic(() => import("@/components/renderers/heading-renderer").then((mod) => mod.HeadingRenderer)),
 
@@ -67,26 +79,43 @@ interface ComponentRendererProps {
   onCheckSlideCompletion?: () => void;
   isEditing?: boolean;
   onClick?: () => void;
+  pollStore?: {
+    pollData: PollVotesMap;
+    isLoaded: boolean;
+    submitVote: (componentId: string, optionId: string) => Promise<void>;
+  };
 }
 
 const gamifiedTypes: ComponentType[] = [
   'quiz',
+  'trueFalse',
+  'annotateImage',
+  'categorise',
+  'timeline',
   'dragDrop',
   'matchingPairs',
   'fillInTheBlank',
   'codeEditor',
-  // badgeReveal, miniGame, progressBar were removed
+  'wordScramble',
+  'memoryGrid',
+  'spinTheWheel',
 ];
 
 const interactiveTypes: ComponentType[] = [
   'quiz',
+  'trueFalse',
+  'annotateImage',
+  'categorise',
+  'timeline',
   'dragDrop',
   'matchingPairs',
   'fillInTheBlank',
   'flashcards',
   'codeEditor',
   'hotspot',
-  // poll, clickableImage were removed
+  'wordScramble',
+  'memoryGrid',
+  'spinTheWheel',
 ];
 
 // Status-safe wrapper for component discovery and live timing
@@ -212,7 +241,8 @@ const ComponentRendererBase = function ComponentRenderer({
   setComponentState,
   isLastSlideChild,
   onCheckSlideCompletion,
-  isEditing = false
+  isEditing = false,
+  pollStore
 }: ComponentRendererProps) {
   const Renderer: React.ComponentType<any> = componentRenderers[component.type] || componentRenderers.fallback;
   const isDisabled = component.state === "disabled";
@@ -260,11 +290,19 @@ const ComponentRendererBase = function ComponentRenderer({
 
   return renderComponent({
     ...component.props,
+    id: component.id,
+    lessonId: (component as any).lessonId,
     savedState,
     setComponentState: isDisabled ? undefined : setComponentState,
     status: component.status,
     disabled: isDisabled,
-    isEditing
+    isEditing,
+    // Pass poll-specific store for real-time vote integration
+    ...(component.type === 'poll' && pollStore ? {
+      initialVotes: pollStore.pollData[component.id]?.votes || {},
+      initialTotalVotes: pollStore.pollData[component.id]?.totalVotes || 0,
+      onVote: (optionId: string) => pollStore.submitVote(component.id, optionId),
+    } : {})
   });
 }
 
