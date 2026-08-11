@@ -17,10 +17,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Sparkles } from "lucide-react"
 import { apiClient } from "@/lib/api-client"
-import { useToast } from "@/components/ui/use-toast"
-
-import { VoiceSelector } from "@/components/ui/voice-selector"
-import { getVoiceById } from "@/lib/voices"
+import { generateBatchAudio, normalizeTextForSpeech } from "@/lib/audio-generator"
 
 interface LessonCreationModalProps {
     isOpen: boolean
@@ -34,6 +31,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
     const router = useRouter()
     const { toast } = useToast()
     const [loading, setLoading] = useState(false)
+    const [loadingMessage, setLoadingMessage] = useState("")
     const [formData, setFormData] = useState({
         title: "",
         description: "",
@@ -57,6 +55,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
         }
 
         setLoading(true)
+        setLoadingMessage("Initializing lesson...")
         try {
             const newLesson = {
                 title: formData.title,
@@ -71,6 +70,40 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
 
             // Create via API
             const result = await apiClient.studio.createLesson(moduleId, newLesson)
+            const lessonId = result?.lesson?._id || result?._id;
+
+            if (lessonId) {
+                // Auto-generate introduction audio cue
+                setLoadingMessage("Synthesizing intro audio...")
+                try {
+                    const cleanTitle = formData.title.trim()
+                    const cleanDesc = formData.description.trim()
+                    const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`
+                    const speechText = normalizeTextForSpeech(welcomeText)
+
+                    const resolvedVoice = (formData.voice && formData.voice !== "inherit") ? formData.voice : (moduleVoice || "en-GB-SoniaNeural")
+
+                    const audioMap = await generateBatchAudio(
+                        [
+                            {
+                                componentId: "intro",
+                                text: speechText,
+                                lessonId: lessonId,
+                                voice: resolvedVoice,
+                            },
+                        ],
+                        resolvedVoice
+                    )
+
+                    if (audioMap["intro"]) {
+                        await apiClient.studio.updateLesson(lessonId, {
+                            introAudioUrl: audioMap["intro"]
+                        })
+                    }
+                } catch (audioErr) {
+                    console.warn("[LessonCreationModal] Auto audio generation warning:", audioErr)
+                }
+            }
 
             toast({
                 title: "Lesson Created",
@@ -78,7 +111,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
             })
 
             // Redirect to Editor
-            router.push(`/editor?lessonId=${result.lesson._id}`)
+            router.push(`/editor?lessonId=${lessonId}`)
 
         } catch (error) {
             console.error("Creation failed:", error)
@@ -89,6 +122,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
             })
         } finally {
             setLoading(false)
+            setLoadingMessage("")
         }
     }
 
@@ -191,7 +225,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
                         {loading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Creating...
+                                {loadingMessage || "Creating..."}
                             </>
                         ) : (
                             "Enter Studio"
