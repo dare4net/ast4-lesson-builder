@@ -94,4 +94,34 @@ export async function uploadImageToCloudinary(
     }
 }
 
+/**
+ * Uploads an image Buffer directly to Cloudinary via stream.
+ * Prevents file-system write errors on serverless/deployed platforms.
+ */
+export async function uploadImageBufferToCloudinary(
+    buffer: Buffer,
+    lessonId: string,
+    componentId: string
+): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const publicId = `ast_images/${lessonId}/${componentId}`
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                public_id: publicId,
+                resource_type: 'image',
+                overwrite: true,
+                invalidate: true,
+            },
+            (error, result) => {
+                if (error || !result?.secure_url) {
+                    console.error(`[Cloudinary] Buffer upload failed for ${componentId}:`, error)
+                    return reject(new Error(error?.message || `Cloudinary image upload failed for ${componentId}`))
+                }
+                resolve(result.secure_url)
+            }
+        )
+        uploadStream.end(buffer)
+    })
+}
+
 export default cloudinary

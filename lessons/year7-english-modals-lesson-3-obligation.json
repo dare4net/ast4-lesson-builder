@@ -1,0 +1,305 @@
+{
+    "id": "year7-english-modals-lesson-3-obligation",
+    "title": "Expressing Obligation, Necessity & Permission",
+    "description": "Distinguish between strict mandates, advisory recommendations, and formal permission using modal verbs like must, have to, should, ought to, can, and may.",
+    "duration": 30,
+    "level": "Year 7",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Mandates vs. Advice",
+            "subtitle": "Understanding Rules and Recommendations",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "obligation-intro-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Strict Obligation vs. Advisory Advice",
+                        "level": 2,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "obligation-intro-paragraph",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Modal verbs indicate how compulsory an action is. A **strict mandate** leaves no choice, whereas an **advisory recommendation** offers strong guidance while allowing individual choice.",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "obligation-summary-table",
+                    "type": "table",
+                    "props": {
+                        "rows": 4,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Category",
+                                "Modal Verbs Used",
+                                "Example Sentence"
+                            ],
+                            [
+                                "Strict Mandate (No Choice)",
+                                "Must / Have to",
+                                "Drivers **must** stop at red traffic lights."
+                            ],
+                            [
+                                "Strong Recommendation",
+                                "Should / Ought to",
+                                "You **should** drink water during long workouts."
+                            ],
+                            [
+                                "Prohibition (Forbidden)",
+                                "Must not / Cannot",
+                                "You **must not** enter without a permit."
+                            ]
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Permission & Ability: May vs. Can",
+            "subtitle": "Navigating Formal Rules and Personal Capacity",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "permission-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Formal Permission vs. Physical Ability",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "permission-paragraph",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In formal English, **may** grants or requests official permission ('May I ask a question?'), while **can** describes physical capability ('She can run ten miles'). Using 'may' projects courtesy and respect.",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "obligation-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Complete Sentences with Mandate, Advice, or Permission Modals",
+                        "text": "1. Safety rule: All factory workers {{blank}} wear protective helmets.\n2. Politeness request: {{blank}} I borrow your dictionary for a moment?\n3. Study tip: You {{blank}} revise your notes every evening.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "must",
+                                "alternatives": [
+                                    "have to",
+                                    "shall"
+                                ],
+                                "caseSensitive": false
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "May",
+                                "alternatives": [
+                                    "Can",
+                                    "Could"
+                                ],
+                                "caseSensitive": false
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "should",
+                                "alternatives": [
+                                    "ought to"
+                                ],
+                                "caseSensitive": false
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "School Policy Inspection",
+            "subtitle": "Analyze Modals in an Official Code of Conduct",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "hotspot-policy-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Explore Policy Statements & Modal Functions",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "obligation-hotspot-discovery",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Tap the Hotspots to Identify Mandates, Prohibitions, and Permissions",
+                        "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+                        "behavior": "discovery",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.25,
+                                "y": 0.40,
+                                "label": "Strict Requirement ⚠️",
+                                "content": "Rule: 'Students MUST wear full school uniform at all times.' (Non-negotiable mandate)."
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.60,
+                                "y": 0.50,
+                                "label": "Prohibition 🚫",
+                                "content": "Rule: 'Mobile phones MUST NOT be used during lesson time.' (Absolute prohibition)."
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.45,
+                                "y": 0.75,
+                                "label": "Granted Permission ✅",
+                                "content": "Rule: 'Sixth-form students MAY leave campus during lunch hour.' (Formal granted permission)."
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Matching & Categorizing Obligation Modals",
+            "subtitle": "Consolidate Modal Functions",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "matching-obligation-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Match Each Modal Phrase to Its Legal & Social Function",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "obligation-matching-pairs",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Modal Phrases to Their Correct Category",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Must / Have to",
+                                "right": "Strict Legal or Official Requirement"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Must not / Cannot",
+                                "right": "Strict Prohibition / Forbidden Action"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Should / Ought to",
+                                "right": "Recommended Advice or Duty"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "May / Can",
+                                "right": "Formal or Informal Permission"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Obligation Concept Review Quiz",
+            "subtitle": "Test Your Understanding of Rules and Permission",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "obligation-quiz-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which modal verb expresses a non-negotiable requirement?",
+                                "options": [
+                                    {
+                                        "id": "o1",
+                                        "text": "should",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o2",
+                                        "text": "must",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "o3",
+                                        "text": "might",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o4",
+                                        "text": "could",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Must' communicates an absolute, mandatory obligation."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "Which sentence expresses formal permission rather than physical capability?",
+                                "options": [
+                                    {
+                                        "id": "o1",
+                                        "text": "He can swim across the river.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o2",
+                                        "text": "You may open your exam papers now.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "o3",
+                                        "text": "She can speak Spanish fluently.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o4",
+                                        "text": "They can lift heavy boxes.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'May' is used to grant formal permission."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}

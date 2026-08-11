@@ -1,0 +1,306 @@
+{
+    "id": "year7-english-modals-lesson-1-intro",
+    "title": "Introduction to Modal Verbs: The Power of Auxiliary Verbs",
+    "description": "Discover how modal auxiliary verbs like must, should, can, and might alter sentence meaning by expressing varying levels of certainty, obligation, and permission.",
+    "duration": 30,
+    "level": "Year 7",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "The Magic of Modality",
+            "subtitle": "How One Word Changes Everything",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "intro-text-1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Welcome to the World of Modal Verbs!",
+                        "level": 2,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "intro-paragraph-1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Imagine telling a friend: 'You **must** clean your room' versus 'You **might** clean your room'. Notice how swapping just one small word completely transforms the tone, expectation, and urgency of your sentence! These helper words are called **modal auxiliary verbs**.",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "warmup-poll-1",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which sentence sounds the most forceful to you?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "You MUST submit the assignment by 5 PM."
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "You SHOULD submit the assignment by 5 PM."
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "You COULD submit the assignment by 5 PM."
+                            }
+                        ],
+                        "points": 5
+                    }
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "What Are Modal Auxiliary Verbs?",
+            "subtitle": "Special Helper Verbs with Unique Rules",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "modal-rules-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Three Key Characteristics of Modals",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "modal-rules-list",
+                    "type": "bulletList",
+                    "props": {
+                        "items": [
+                            "They always partner with a main base verb (e.g., must GO, can SWIM, should READ).",
+                            "They never change form (no adding -ed, -ing, or -s).",
+                            "They express attitudes such as certainty, obligation, permission, and ability."
+                        ],
+                        "type": "unordered"
+                    }
+                },
+                {
+                    "id": "modal-flashcards-1",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Core Modal Verbs & Their Roles",
+                        "cards": [
+                            {
+                                "id": "c1",
+                                "front": "Must / Shall",
+                                "back": "High certainty or mandatory obligation (e.g., 'You must stop.')"
+                            },
+                            {
+                                "id": "c2",
+                                "front": "Should / Ought to",
+                                "back": "Advice, expectation, or recommendation (e.g., 'You should rest.')"
+                            },
+                            {
+                                "id": "c3",
+                                "front": "Might / Could",
+                                "back": "Possibility or speculation (e.g., 'It might rain.')"
+                            },
+                            {
+                                "id": "c4",
+                                "front": "Can / May",
+                                "back": "Ability or formal permission (e.g., 'May I enter?')"
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Modality Scene Inspection",
+            "subtitle": "Discover Modal Messages in Everyday Life",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "hotspot-intro-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Explore Modal Statements in Action",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "modal-hotspot-discovery",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Tap the Hotspots to Inspect How Modal Verbs Set Rules and Expectations",
+                        "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+                        "behavior": "discovery",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.25,
+                                "y": 0.40,
+                                "label": "Library Rule 📚",
+                                "content": "Statement: 'Silence MUST be maintained in the reading room.' (Modal 'must' makes silence non-negotiable)."
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.60,
+                                "y": 0.50,
+                                "label": "Weather Advice ⛅",
+                                "content": "Statement: 'Temperatures MIGHT drop later this evening.' (Modal 'might' expresses a possibility, not a guarantee)."
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.45,
+                                "y": 0.75,
+                                "label": "Study Tip 💡",
+                                "content": "Statement: 'Students SHOULD take short breaks every 30 minutes.' (Modal 'should' offers helpful advice)."
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Modal Comparison Table",
+            "subtitle": "Comparing Modal Degrees at a Glance",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "table-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Overview of Common Modal Verbs",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "modals-overview-table",
+                    "type": "table",
+                    "props": {
+                        "rows": 5,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Modal Verb",
+                                "Primary Meaning",
+                                "Example in Context"
+                            ],
+                            [
+                                "Must",
+                                "Certainty or Strict Requirement",
+                                "You must wear safety glasses."
+                            ],
+                            [
+                                "Should",
+                                "Advice or Strong Recommendation",
+                                "You should review your notes before class."
+                            ],
+                            [
+                                "Might",
+                                "Possibility or Uncertainty",
+                                "We might visit the museum on Tuesday."
+                            ],
+                            [
+                                "Can",
+                                "Ability or General Permission",
+                                "She can speak three languages fluently."
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "id": "warmup-quiz-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which word in the following sentence is a modal verb? 'Students must submit their work on time.'",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Students",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "must",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "submit",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt4",
+                                        "text": "time",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Must' is the modal auxiliary verb that modifies the main verb 'submit'."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Looking Ahead",
+            "subtitle": "What You Will Master in Upcoming Lessons",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "closing-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Ready for Deep Modality Mastery?",
+                        "level": 2,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "closing-paragraph",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Now that you've glimpsed the power of modal auxiliary verbs, get ready to dive deep into ordering degrees of certainty, mastering commands versus recommendations, and using modal verbs to write compelling persuasive speeches!",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "readiness-poll",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which aspect of modal verbs are you most excited to master next?",
+                        "options": [
+                            {
+                                "id": "o1",
+                                "text": "Ranking certainty from 0% to 100%"
+                            },
+                            {
+                                "id": "o2",
+                                "text": "Writing authoritative rules and commands"
+                            },
+                            {
+                                "id": "o3",
+                                "text": "Using modals in persuasive debates and speeches"
+                            }
+                        ],
+                        "points": 5
+                    }
+                }
+            ]
+        }
+    ]
+}

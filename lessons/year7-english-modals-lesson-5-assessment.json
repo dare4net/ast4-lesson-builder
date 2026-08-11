@@ -1,0 +1,356 @@
+{
+    "id": "year7-english-modals-lesson-5-assessment",
+    "title": "Modal Verbs: Comprehensive Live Assessment & Showcase",
+    "description": "Synthesize and demonstrate mastery of modal verbs across certainty levels, obligation rules, permission guidelines, and persuasive rhetoric in a live assessment.",
+    "duration": 30,
+    "level": "Year 7",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Live Assessment Warm-Up",
+            "subtitle": "Module Mastery Review & Instructions",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "assessment-intro-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Welcome to the Final Live Assessment!",
+                        "level": 2,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "assessment-intro-paragraph",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "In this final lesson, you will demonstrate complete mastery of modal auxiliary verbs across certainty, obligation, permission, and persuasive rhetoric under timed Live Mode conditions. Read each prompt carefully before time expires!",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "module-concepts-table",
+                    "type": "table",
+                    "props": {
+                        "rows": 5,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Concept Area",
+                                "Core Focus",
+                                "Example Modal Verbs"
+                            ],
+                            [
+                                "Certainty & Probability",
+                                "Ranking likelihood (100% to 10%)",
+                                "Will, Must, Should, Might, Could"
+                            ],
+                            [
+                                "Obligation & Rules",
+                                "Strict mandates vs advice",
+                                "Must, Have to, Should, Ought to"
+                            ],
+                            [
+                                "Permission & Capability",
+                                "Formal requests vs physical skill",
+                                "May, Can, Could"
+                            ],
+                            [
+                                "Persuasive Rhetoric",
+                                "Urgent calls to action & concessions",
+                                "Must, Will, Should, May"
+                            ]
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Live Challenge 1: Certainty & Possibility",
+            "subtitle": "Identify Modal Strengths and Complete Sentences",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "challenge1-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Timed Sentence Completion",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "challenge1-fill-blank",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Fill in the Missing Modals (Timed: 60s)",
+                        "text": "1. 100% Guarantee: The solar eclipse {{blank}} occur on August 12.\n2. Strong Evidence: His shoes are covered in mud; he {{blank}} have walked through the field.\n3. Low Possibility: Take an umbrella, as it {{blank}} rain later today.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "will",
+                                "alternatives": [
+                                    "shall"
+                                ],
+                                "caseSensitive": false
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "must",
+                                "alternatives": [
+                                    "should"
+                                ],
+                                "caseSensitive": false
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "might",
+                                "alternatives": [
+                                    "could",
+                                    "may"
+                                ],
+                                "caseSensitive": false
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "timeLimit": 60,
+                        "mode": "live"
+                    },
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Live Challenge 2: Diagram Target Identification",
+            "subtitle": "Identify Modal Rule Categories Under Time Limit",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "challenge2-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Visual Hotspot Target Inspection",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "challenge2-hotspot-quiz",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Tap the Hotspot Regions to Identify Rules & Permissions (Timed: 45s)",
+                        "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+                        "behavior": "quiz",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.25,
+                                "y": 0.40,
+                                "label": "Strict Requirement",
+                                "content": "Rule: 'Visitors MUST present photo ID upon entry.'",
+                                "isTarget": true
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.60,
+                                "y": 0.50,
+                                "label": "Prohibition",
+                                "content": "Rule: 'Smoking MUST NOT occur within 50 meters of the building.'",
+                                "isTarget": true
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.45,
+                                "y": 0.75,
+                                "label": "Formal Permission",
+                                "content": "Rule: 'Members MAY reserve conference rooms in advance.'",
+                                "isTarget": true
+                            }
+                        ],
+                        "points": 25,
+                        "timeLimit": 45,
+                        "mode": "live"
+                    },
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Live Challenge 3: Matching & Ranking",
+            "subtitle": "Connect Functions & Order Rhetorical Strength",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "challenge3-matching-pairs",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Each Modal Verb to Its Primary Function (Timed: 50s)",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Must",
+                                "right": "Mandatory Obligation / High Deduction"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Might",
+                                "right": "Tentative Low Possibility"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "May",
+                                "right": "Formal Permission Request"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Should",
+                                "right": "Recommended Advice"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live"
+                    },
+                    "mode": "live"
+                },
+                {
+                    "id": "challenge3-drag-drop",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Rank sentences from HIGHEST certainty (1st) to LOWEST certainty (4th) (Timed: 50s)",
+                        "items": [
+                            {
+                                "id": "d1",
+                                "text": "The experiment WILL succeed.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "d2",
+                                "text": "The experiment MUST succeed.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "d3",
+                                "text": "The experiment SHOULD succeed.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "d4",
+                                "text": "The experiment MIGHT succeed.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "timeLimit": 50,
+                        "mode": "live"
+                    },
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Final Knowledge Evaluation & Showcase",
+            "subtitle": "Complete the Live Assessment",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "final-assessment-quiz",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which modal verb creates the strongest call to action in a persuasive campaign speech?",
+                                "options": [
+                                    {
+                                        "id": "o1",
+                                        "text": "should",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o2",
+                                        "text": "must",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "o3",
+                                        "text": "could",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o4",
+                                        "text": "might",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Must' establishes an urgent, non-negotiable imperative."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "What is the key grammatical difference between 'may' and 'can' in formal writing?",
+                                "options": [
+                                    {
+                                        "id": "o1",
+                                        "text": "'May' asks for formal permission; 'can' states physical ability.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "o2",
+                                        "text": "'Can' is for past events; 'may' is for future events.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o3",
+                                        "text": "'May' is a main verb; 'can' is an adjective.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o4",
+                                        "text": "There is no difference between them.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'May' expresses formal permission, whereas 'can' expresses capability."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 25,
+                        "timeLimit": 30,
+                        "mode": "live"
+                    },
+                    "mode": "live"
+                },
+                {
+                    "id": "assessment-completion-poll",
+                    "type": "poll",
+                    "props": {
+                        "question": "How confident do you feel applying modal verbs in your writing now?",
+                        "options": [
+                            {
+                                "id": "op1",
+                                "text": "100% Confident (I MUST write a persuasive speech now!)"
+                            },
+                            {
+                                "id": "op2",
+                                "text": "Very Confident (I SHOULD review a few examples)"
+                            },
+                            {
+                                "id": "op3",
+                                "text": "Getting There (I MIGHT need one more practice session)"
+                            }
+                        ],
+                        "points": 5
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -47,29 +47,25 @@ export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProp
         return () => clearTimeout(startTyping)
     }, [])
 
-    // Phase 2: Watchdog timers taking into account full ~6.6s animation duration
-    // 8.5s (2s past normal end): Show emergency recovery button if still loading
-    // 11.5s (5s past normal end): Hard fallback curtain raise
+    // Phase 2: Watchdog timers taking into account full ~5.2s animation duration
+    // 6.5s: Show emergency recovery & proceed button if splash is still visible
+    // 9.5s: Hard fallback curtain raise
     useEffect(() => {
         const recoveryTimer = setTimeout(() => {
-            if (isLoading) {
-                console.warn('[SplashScreen] App initialization taking longer than 8.5s. Displaying recovery action.');
-                setShowRecoveryButton(true)
-            }
-        }, 8500)
+            console.warn('[SplashScreen] Splash screen still visible after 6.5s. Displaying recovery & proceed action.');
+            setShowRecoveryButton(true)
+        }, 6500)
 
         const hardWatchdogTimer = setTimeout(() => {
-            if (isLoading) {
-                console.warn('[SplashScreen] Watchdog fallback triggered after 11.5s. Force raising curtain.');
-                onFinished()
-            }
-        }, 11500)
+            console.warn('[SplashScreen] Watchdog fallback triggered after 9.5s. Force raising curtain.');
+            onFinished()
+        }, 9500)
 
         return () => {
             clearTimeout(recoveryTimer)
             clearTimeout(hardWatchdogTimer)
         }
-    }, [isLoading, onFinished])
+    }, [onFinished])
 
     // Phase 3: When animation completes naturally AND app is done loading, finish splash
     useEffect(() => {
@@ -234,38 +230,58 @@ export function SplashScreen({ onFinished, isLoading = false }: SplashScreenProp
                 <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
             </div>
 
-            {/* Self-healing Recovery Button (shows if app initialization stalls >8.5s) */}
+            {/* Self-healing Recovery UI (shows if splash screen remains visible >6.5s) */}
             {showRecoveryButton && (
                 <div style={{
                     marginTop: 24,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: 8,
+                    gap: 10,
                     animation: 'fadeIn 0.3s ease forwards'
                 }}>
                     <p style={{ fontSize: 12, color: '#64748b', fontWeight: 600 }}>
                         Taking longer than expected?
                     </p>
-                    <button
-                        onClick={handleEmergencyReset}
-                        style={{
-                            padding: '8px 20px',
-                            borderRadius: '12px',
-                            background: '#18181b',
-                            color: '#ffffff',
-                            fontSize: 12,
-                            fontWeight: 800,
-                            border: 'none',
-                            cursor: 'pointer',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                            transition: 'transform 0.15s ease',
-                        }}
-                        onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
-                        onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                    >
-                        Proceed
-                    </button>
+                    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                        <button
+                            onClick={onFinished}
+                            style={{
+                                padding: '8px 20px',
+                                borderRadius: '12px',
+                                background: '#18181b',
+                                color: '#ffffff',
+                                fontSize: 12,
+                                fontWeight: 800,
+                                border: 'none',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                transition: 'transform 0.15s ease',
+                            }}
+                            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+                            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                        >
+                            Proceed
+                        </button>
+                        <button
+                            onClick={handleEmergencyReset}
+                            style={{
+                                padding: '8px 16px',
+                                borderRadius: '12px',
+                                background: '#f1f5f9',
+                                color: '#475569',
+                                fontSize: 12,
+                                fontWeight: 700,
+                                border: '1px solid #cbd5e1',
+                                cursor: 'pointer',
+                                transition: 'transform 0.15s ease',
+                            }}
+                            onMouseDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+                            onMouseUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                        >
+                            Reset Session
+                        </button>
+                    </div>
                     <style>{`@keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }`}</style>
                 </div>
             )}

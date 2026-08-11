@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, unlink } from 'fs/promises'
-import { mkdirSync } from 'fs'
-import path from 'path'
-import { uploadImageToCloudinary } from '@/lib/cloudinary'
+import { uploadImageBufferToCloudinary } from '@/lib/cloudinary'
 
 /**
  * POST /api/image/upload
  * Accepts a multipart FormData file with fields: file, lessonId, componentId
- * Uploads to Cloudinary under ast_images/{lessonId}/{componentId}.
+ * Streams buffer directly to Cloudinary under ast_images/{lessonId}/{componentId}.
+ * Completely avoids local disk write errors on serverless/deployed platforms.
  * Returns { url: string }
  */
 export async function POST(req: NextRequest) {
@@ -21,20 +19,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing file, lessonId, or componentId' }, { status: 400 })
         }
 
-        // Write file to a temp path so Cloudinary SDK can read it
-        const tmpDir = path.join(process.cwd(), 'public', 'tmp_images')
-        mkdirSync(tmpDir, { recursive: true })
-        const ext = file.name.split('.').pop() || 'png'
-        const tmpPath = path.join(tmpDir, `${componentId}.${ext}`)
-
+        // Upload buffer directly to Cloudinary via stream — zero local disk IO
         const buffer = Buffer.from(await file.arrayBuffer())
-        await writeFile(tmpPath, buffer)
-
-        // Upload to Cloudinary (overwrites old image under same public_id)
-        const cloudinaryUrl = await uploadImageToCloudinary(tmpPath, lessonId, componentId)
-
-        // Clean up temp file
-        unlink(tmpPath).catch(() => { })
+        const cloudinaryUrl = await uploadImageBufferToCloudinary(buffer, lessonId, componentId)
 
         return NextResponse.json({ url: cloudinaryUrl })
     } catch (err: any) {

@@ -1,0 +1,203 @@
+{
+    "id": "year4-english-fables-lesson-7-assessment",
+    "title": "Module Assessment & Fable Showcase",
+    "description": "Synthesize and demonstrate mastery of fable elements and figurative language including personification, similes, metaphors, hyperbole, and moral extraction.",
+    "duration": 30,
+    "level": "Year 4",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Fables & Figurative Language Mastery",
+            "subtitle": "Reviewing Our Learning Journey",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "mastery-intro-text",
+                    "type": "text",
+                    "content": "### Welcome to the Module Assessment!\n\nThroughout this module, you have learned the key components of traditional fables and analyzed powerful literary techniques used by authors to bring animal characters to life and convey timeless morals.\n\nNow, test your knowledge across personification, similes, metaphors, hyperbole, onomatopoeia, and moral analysis!"
+                },
+                {
+                    "id": "literary-devices-review-table",
+                    "type": "table",
+                    "title": "Module Concepts Summary Table",
+                    "rows": 6,
+                    "columns": 3,
+                    "data": [
+                        [
+                            "Literary Device",
+                            "Core Function",
+                            "Example Sentence"
+                        ],
+                        [
+                            "Personification",
+                            "Gives human traits to animals or objects",
+                            "The wind sang a gentle lullaby."
+                        ],
+                        [
+                            "Simile",
+                            "Compares two things using 'like' or 'as'",
+                            "He ran as fast as a cheetah."
+                        ],
+                        [
+                            "Metaphor",
+                            "States that one thing IS another",
+                            "Her heart was a fortress of strength."
+                        ],
+                        [
+                            "Hyperbole",
+                            "Intentional, extreme exaggeration",
+                            "I've waited in line for a thousand years!"
+                        ],
+                        [
+                            "Onomatopoeia",
+                            "A word that mimics a natural sound",
+                            "CRASH! The vase shattered on the floor."
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Comprehensive Device Check",
+            "subtitle": "Testing Your Identification Skills",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "assessment-guide-text",
+                    "type": "text",
+                    "content": "### Identifying Devices in Context\n\nRead each sentence carefully. Ask yourself whether the sentence is making a comparison, exaggerating a trait, imitating a sound, or giving human actions to non-human entities."
+                },
+                {
+                    "id": "assessment-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "title": "Identify the Device Used",
+                    "text": "1. 'The owl whispered wisdom to the forest.' uses {{blank}}.\n2. 'The mouse was as quiet as a falling feather.' uses a {{blank}}.\n3. 'The fox's tail was a flame in the dark.' uses a {{blank}}.",
+                    "blanks": [
+                        {
+                            "id": "blank-1",
+                            "answer": "personification",
+                            "alternatives": [
+                                "personification device"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-2",
+                            "answer": "simile",
+                            "alternatives": [
+                                "simile comparison"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-3",
+                            "answer": "metaphor",
+                            "alternatives": [
+                                "metaphor comparison"
+                            ],
+                            "caseSensitive": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Fable Synthesis Stage",
+            "subtitle": "Analyze The Town Mouse and The Country Mouse",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "synthesis-hotspot-1",
+                    "type": "hotspot",
+                    "title": "Tap the Hotspots to Analyze Fable Elements",
+                    "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
+                    "behavior": "discovery",
+                    "hotspots": [
+                        {
+                            "id": "spot-1",
+                            "x": 0.30,
+                            "y": 0.40,
+                            "label": "Country Life (Simile)",
+                            "content": "Description: 'The country mouse lived as simple as a sparrow.' (Compares humble lifestyle using 'as')."
+                        },
+                        {
+                            "id": "spot-2",
+                            "x": 0.70,
+                            "y": 0.50,
+                            "label": "Town Feast (Hyperbole)",
+                            "content": "Description: 'The town feast contained a million delicious delicacies!' (Exaggerates the luxury)."
+                        },
+                        {
+                            "id": "spot-3",
+                            "x": 0.50,
+                            "y": 0.80,
+                            "label": "The Moral",
+                            "content": "Moral: 'A humble life in peace and safety is far better than luxury accompanied by fear.'"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Final Module Assessment Quiz",
+            "subtitle": "Prove Your Fables & Figurative Language Mastery",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "assessment-quiz-1",
+                    "type": "quiz",
+                    "title": "Final Fable Mastery Quiz",
+                    "questions": [
+                        {
+                            "id": "q1",
+                            "question": "Which sentence contains BOTH personification and onomatopoeia?",
+                            "options": [
+                                "The bird flew high into the blue sky.",
+                                "SQUEAK! The wooden floorboards groaned under the bear's heavy footsteps.",
+                                "The tortoise was slower than a snail on a cold morning.",
+                                "The fox was a sneaky bandit."
+                            ],
+                            "correctAnswer": 1,
+                            "explanation": "'SQUEAK!' is onomatopoeia and floorboards 'groaned' is personification."
+                        },
+                        {
+                            "id": "q2",
+                            "question": "What is the primary purpose of a fable?",
+                            "options": [
+                                "To list real historical facts about ancient Greece.",
+                                "To entertain readers while teaching a clear moral or life lesson.",
+                                "To teach science facts about animal diets.",
+                                "To explain how to draw wild animals."
+                            ],
+                            "correctAnswer": 1,
+                            "explanation": "Fables combine engaging animal stories with practical moral instruction."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Module Completion & Reflection",
+            "subtitle": "Celebrate Your Achievement!",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "assessment-reflection-poll",
+                    "type": "poll",
+                    "title": "Module Completion Reflection",
+                    "question": "Which figurative language device was your favorite to explore in this module?",
+                    "options": [
+                        "Personification (Giving animals human traits)",
+                        "Similes & Metaphors (Creating vivid comparisons)",
+                        "Hyperbole & Onomatopoeia (Exaggerations & Sound Effects)",
+                        "Moral Analysis (Extracting life wisdom)"
+                    ]
+                }
+            ]
+        }
+    ]
+}

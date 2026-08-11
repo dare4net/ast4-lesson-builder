@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
 import { SplashScreen } from '@/components/splash-screen';
@@ -11,14 +11,20 @@ export default function Home() {
   const router = useRouter();
   const { user, isAuthenticated, loading } = useAuth();
   const [showSplash, setShowSplash] = useState(true);
-  const [showIdentitySelection, setShowIdentitySelection] = useState(false);
+
+  // Trigger route redirect as soon as splash finishes if authenticated
+  useEffect(() => {
+    if (!showSplash && isAuthenticated) {
+      const targetPath = user?.role === 'tutor' ? '/dashboard/tutor' : '/dashboard/student';
+      router.replace(targetPath);
+    }
+  }, [showSplash, isAuthenticated, user, router]);
 
   const handleSplashFinished = () => {
+    setShowSplash(false);
     if (isAuthenticated) {
-      router.push(user?.role === 'tutor' ? '/dashboard/tutor' : '/dashboard/student');
-    } else {
-      setShowSplash(false);
-      setShowIdentitySelection(true);
+      const targetPath = user?.role === 'tutor' ? '/dashboard/tutor' : '/dashboard/student';
+      router.replace(targetPath);
     }
   };
 
@@ -30,9 +36,6 @@ export default function Home() {
     );
   }
 
-  if (showIdentitySelection) {
-    return <IdentitySelection />;
-  }
-
-  return null;
+  // Always render IdentitySelection as the solid page background/view so the screen is NEVER blank white
+  return <IdentitySelection />;
 }

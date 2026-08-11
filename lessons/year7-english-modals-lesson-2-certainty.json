@@ -1,0 +1,344 @@
+{
+    "id": "year7-english-modals-lesson-2-certainty",
+    "title": "Expressing Certainty & Possibility with Modal Verbs",
+    "description": "Master modal verbs of certainty and possibility by ranking probability from 100% to 10%, analyzing subtle shifts in certainty, and completing contextual sentence challenges.",
+    "duration": 30,
+    "level": "Year 7",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "The Spectrum of Probability",
+            "subtitle": "From Absolute Certainty to Remote Possibility",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "certainty-intro-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Understanding Modal Certainty",
+                        "level": 2,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "certainty-intro-paragraph",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Modal verbs act as a 'volume dial' for certainty in English. When you select a modal verb, you communicate exactly how confident you are about an event happening—ranging from absolute certainty (**100%**) down to low possibility (**10%**).",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "probability-spectrum-table",
+                    "type": "table",
+                    "props": {
+                        "rows": 5,
+                        "columns": 3,
+                        "data": [
+                            [
+                                "Certainty Level",
+                                "Modal Verbs Used",
+                                "Example Sentence"
+                            ],
+                            [
+                                "100% Certainty",
+                                "Will / Must",
+                                "The sun **will** rise tomorrow. You **must** be exhausted."
+                            ],
+                            [
+                                "70-80% Expectation",
+                                "Should / Ought to",
+                                "The bus **should** arrive in five minutes."
+                            ],
+                            [
+                                "40-50% Possibility",
+                                "May / Can",
+                                "We **may** go to the park later today."
+                            ],
+                            [
+                                "10-30% Low Possibility",
+                                "Might / Could",
+                                "It **might** snow next week."
+                            ]
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "High Certainty vs. Low Possibility",
+            "subtitle": "Analyzing Will, Must, Should, Might, and Could",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "high-low-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Strong Deduction vs. Weak Speculation",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "high-low-paragraph",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Notice how modal strength changes based on evidence:\n- **Must** = Logical deduction based on strong proof ('Her coat is wet; it **must** be raining outside.').\n- **Might / Could** = Pure speculation without proof ('He **might** have lost his key.').",
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "certainty-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Select the Correct Modal Verb for Each Certainty Level",
+                        "text": "1. Look at those dark black clouds! It {{blank}} rain any second.\n2. I am not sure where Sarah is; she {{blank}} be in the library.\n3. Train tickets are booked, so we {{blank}} depart tomorrow morning at 8 AM.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "must",
+                                "alternatives": [
+                                    "will",
+                                    "is going to"
+                                ],
+                                "caseSensitive": false
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "might",
+                                "alternatives": [
+                                    "could",
+                                    "may"
+                                ],
+                                "caseSensitive": false
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "will",
+                                "alternatives": [
+                                    "shall",
+                                    "must"
+                                ],
+                                "caseSensitive": false
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Interactive Certainty Scene",
+            "subtitle": "Investigate Evidence and Modal Deductions",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "hotspot-certainty-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Detective Deduction: Inspect Scene Evidence",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "certainty-hotspot-discovery",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Tap the Hotspots to Analyze the Modal Strength of Each Deduction",
+                        "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
+                        "behavior": "discovery",
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.30,
+                                "y": 0.40,
+                                "label": "Footprints in Mud 👣",
+                                "content": "Deduction: 'The intruder MUST have come through the garden.' (Strong logical deduction based on clear evidence)."
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.70,
+                                "y": 0.50,
+                                "label": "Open Window 🪟",
+                                "content": "Deduction: 'The wind MIGHT have blown the shutter open.' (Tentative possibility requiring more investigation)."
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.50,
+                                "y": 0.80,
+                                "label": "Dropped Envelope ✉️",
+                                "content": "Deduction: 'The letter SHOULD arrive by noon tomorrow.' (Expected outcome based on normal postal schedules)."
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Modal Matching & Ordering",
+            "subtitle": "Consolidating Certainty Spectrum Skills",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "matching-heading",
+                    "type": "heading",
+                    "props": {
+                        "content": "Match Each Modal Verb to Its Exact Certainty Level",
+                        "level": 3,
+                        "align": "left"
+                    }
+                },
+                {
+                    "id": "certainty-matching-pairs",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Connect Each Modal Verb to Its Corresponding Degree of Certainty",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Will",
+                                "right": "100% Definite Future Action"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Must",
+                                "right": "High Certainty / Logical Deduction"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Should",
+                                "right": "Expected Outcome / High Probability"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Might",
+                                "right": "Low Possibility / Unproven Speculation"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                },
+                {
+                    "id": "certainty-drag-drop",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Rank these modal sentences in order from HIGHEST certainty (1st) to LOWEST certainty (4th)",
+                        "items": [
+                            {
+                                "id": "d1",
+                                "text": "The concert WILL start at 8 PM.",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "d2",
+                                "text": "She MUST be the new headteacher.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "d3",
+                                "text": "Our team SHOULD win the trophy.",
+                                "correctIndex": 2
+                            },
+                            {
+                                "id": "d4",
+                                "text": "It COULD rain later this afternoon.",
+                                "correctIndex": 3
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Certainty Concept Review Quiz",
+            "subtitle": "Validate Your Mastery of Modal Probability",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "certainty-quiz-1",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Which modal verb expresses a logical deduction based on strong evidence?",
+                                "options": [
+                                    {
+                                        "id": "o1",
+                                        "text": "might",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o2",
+                                        "text": "must",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "o3",
+                                        "text": "could",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o4",
+                                        "text": "can",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Must' is used for strong logical deductions ('He has a key; he must work here')."
+                            },
+                            {
+                                "id": "q2",
+                                "question": "Which sentence expresses the LOWEST level of certainty?",
+                                "options": [
+                                    {
+                                        "id": "o1",
+                                        "text": "The train will arrive at 4 PM.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o2",
+                                        "text": "The train should arrive at 4 PM.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "o3",
+                                        "text": "The train might arrive at 4 PM.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "o4",
+                                        "text": "The train must arrive at 4 PM.",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "'Might' indicates a weak, uncertain possibility compared to 'will', 'must', or 'should'."
+                            }
+                        ],
+                        "showExplanation": true,
+                        "shuffleOptions": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}

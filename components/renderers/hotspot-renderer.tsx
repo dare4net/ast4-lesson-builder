@@ -247,7 +247,13 @@ function HotspotContent({
                 const showNumbers = props.showNumbers ?? false
 
                 return (
-                  <Tooltip key={hotspot.id} open={activeHotspotId === hotspot.id}>
+                  <Tooltip
+                    key={hotspot.id}
+                    open={activeHotspotId === hotspot.id}
+                    onOpenChange={(open) => {
+                      setActiveHotspotId(open ? hotspot.id : null)
+                    }}
+                  >
                     <TooltipTrigger asChild>
                       <button
                         className={cn(

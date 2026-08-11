@@ -69,3 +69,34 @@
 6. **Short Answer** with keyword check — open-ended viable
 7. **Lesson analytics** — time-per-slide, retries, accuracy → tutor dashboard
 8. **Streak / XP persistence** — cross-session via backend
+
+---
+
+## 🧮 Math & STEM Components (Parked — Future Phase)
+
+### 📐 Formula & Symbolic
+| Component | Description |
+|---|---|
+| **mathFormula** | KaTeX renderer for equations (fractions, integrals, roots, matrices) |
+| **mathInput** | On-screen math keypad — evaluates equivalence (0.5 = 1/2 = 2/4) |
+
+### 📊 Graphing & Geometry
+| Component | Description |
+|---|---|
+| **functionGrapher** | Interactive 2D coordinate plane with slope/intercept sliders |
+| **geometryCanvas** | Draggable protractor/ruler, area/perimeter, Pythagorean theorem |
+| **numberLine** | 1D number line for integers, fractions, inequality intervals |
+
+### 🔢 Arithmetic & Algebra
+| Component | Description |
+|---|---|
+| **stepByStepSolver** | Multi-step algebraic proof — student selects next logical step |
+| **fractionVisualizer** | Pie/bar model visual for equivalent fractions (3/4 = 75% = 0.75) |
+| **balanceScale** | 2D balance scale for intuitive equation solving |
+| **truthTable** | Boolean logic (AND/OR/NOT) and Venn diagram set operations |
+| **matrixGrid** | Matrix input for addition, determinants, and vector transforms |
+
+### 🎮 Gamified Drills
+| Component | Description |
+|---|---|
+| **mathSpeedDrill** | Rapid-fire arithmetic racer with streak multipliers and live timer |

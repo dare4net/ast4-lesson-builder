@@ -95,29 +95,82 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
             )}
             onClick={handleImageClick}
           />
-          {hotspots.map((hotspot, index) => (
-            <div
-              key={hotspot.id}
-              style={{
-                position: "absolute",
-                left: `${hotspot.x * 100}%`,
-                top: `${hotspot.y * 100}%`,
-                transform: "translate(-50%, -50%)",
-              }}
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center cursor-pointer border-2 text-[10px] font-black shadow-2xl transition-all duration-300",
-                index === activeHotspotIndex
-                  ? "bg-emerald-500 border-white text-slate-950 scale-125 z-10 shadow-emerald-500/50"
-                  : "bg-slate-950/80 border-emerald-500/50 text-emerald-500 hover:scale-110"
-              )}
-              onClick={() => setActiveHotspotIndex(index)}
-            >
-              {index + 1}
-              {index === activeHotspotIndex && (
-                <div className="absolute inset-0 rounded-full border-4 border-emerald-500 animate-ping opacity-20" />
-              )}
-            </div>
-          ))}
+          {hotspots.map((hotspot, index) => {
+            const isSelected = index === activeHotspotIndex;
+
+            const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setActiveHotspotIndex(index);
+
+              const targetPin = e.currentTarget;
+              targetPin.setPointerCapture(e.pointerId);
+
+              let rafId: number | null = null;
+              let latestX = hotspot.x;
+              let latestY = hotspot.y;
+
+              const onPointerMove = (moveEvent: PointerEvent) => {
+                if (!imageRef.current) return;
+                const rect = imageRef.current.getBoundingClientRect();
+                latestX = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left) / rect.width));
+                latestY = Math.max(0, Math.min(1, (moveEvent.clientY - rect.top) / rect.height));
+
+                if (rafId === null) {
+                  rafId = requestAnimationFrame(() => {
+                    const updated = [...hotspots];
+                    updated[index] = { ...updated[index], x: latestX, y: latestY };
+                    onChange(updated);
+                    rafId = null;
+                  });
+                }
+              };
+
+              const onPointerUp = (upEvent: PointerEvent) => {
+                if (rafId !== null) cancelAnimationFrame(rafId);
+                targetPin.releasePointerCapture(upEvent.pointerId);
+                targetPin.removeEventListener("pointermove", onPointerMove);
+                targetPin.removeEventListener("pointerup", onPointerUp);
+
+                // Final position commit
+                if (!imageRef.current) return;
+                const rect = imageRef.current.getBoundingClientRect();
+                const finalX = Math.max(0, Math.min(1, (upEvent.clientX - rect.left) / rect.width));
+                const finalY = Math.max(0, Math.min(1, (upEvent.clientY - rect.top) / rect.height));
+                const updated = [...hotspots];
+                updated[index] = { ...updated[index], x: finalX, y: finalY };
+                onChange(updated);
+              };
+
+              targetPin.addEventListener("pointermove", onPointerMove);
+              targetPin.addEventListener("pointerup", onPointerUp);
+            };
+
+            return (
+              <div
+                key={hotspot.id}
+                style={{
+                  position: "absolute",
+                  left: `${hotspot.x * 100}%`,
+                  top: `${hotspot.y * 100}%`,
+                  transform: "translate(-50%, -50%)",
+                  transition: "transform 150ms ease, box-shadow 150ms ease",
+                }}
+                onPointerDown={handlePointerDown}
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing border-2 text-[10px] font-black shadow-2xl select-none touch-none",
+                  isSelected
+                    ? "bg-emerald-500 border-white text-slate-950 scale-125 z-20 shadow-emerald-500/50 ring-4 ring-emerald-500/30"
+                    : "bg-slate-950/80 border-emerald-500/50 text-emerald-500 hover:scale-110 z-10"
+                )}
+              >
+                {index + 1}
+                {isSelected && (
+                  <div className="absolute inset-0 rounded-full border-4 border-emerald-500 animate-ping opacity-20" />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

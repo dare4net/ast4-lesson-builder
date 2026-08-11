@@ -1,0 +1,201 @@
+{
+    "id": "year7-english-lesson-10-modal-verbs",
+    "title": "Modal Verbs: Expressing Certainty, Ability & Obligation",
+    "description": "Master modal auxiliary verbs by analyzing how words like must, should, might, and can express degrees of certainty, obligation, and permission in formal writing.",
+    "duration": 30,
+    "level": "Year 7",
+    "slides": [
+        {
+            "id": "slide-1",
+            "title": "Introduction to Modal Verbs",
+            "subtitle": "Unlocking Nuance in Auxiliary Verbs",
+            "layout": "hero",
+            "components": [
+                {
+                    "id": "modal-intro-text",
+                    "type": "text",
+                    "content": "### What are Modal Verbs?\n\n**Modal verbs** are special auxiliary (helping) verbs that combine with main verbs to indicate likelihood, necessity, obligation, permission, or ability.\n\nUnlike main verbs, modal verbs do not change form (e.g., they never add *-ed* or *-s*). They change the tone and certainty of a sentence completely!\n\n- *Certainty*: \"It **will** rain tomorrow.\"\n- *Possibility*: \"It **might** rain tomorrow.\"\n- *Obligation*: \"You **must** wear a helmet.\""
+                },
+                {
+                    "id": "modal-degrees-table",
+                    "type": "table",
+                    "title": "Degrees of Certainty and Obligation",
+                    "rows": 5,
+                    "columns": 3,
+                    "data": [
+                        [
+                            "Modal Verb",
+                            "Function",
+                            "Example Sentence"
+                        ],
+                        [
+                            "Must / Shall",
+                            "High Obligation / Certainty",
+                            "All students **must** complete their homework."
+                        ],
+                        [
+                            "Should / Ought to",
+                            "Recommendation / Advisory",
+                            "You **should** proofread your essay."
+                        ],
+                        [
+                            "Might / Could",
+                            "Low Possibility / Speculation",
+                            "The lost key **might** be under the desk."
+                        ],
+                        [
+                            "Can / May",
+                            "Permission / Ability",
+                            "You **may** begin the exam now."
+                        ]
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-2",
+            "title": "Modal Verbs in Action",
+            "subtitle": "Fine-Tuning Tone and Authority",
+            "layout": "split",
+            "components": [
+                {
+                    "id": "modal-action-text",
+                    "type": "text",
+                    "content": "### Choosing the Right Modal Verb\n\nThe choice of modal verb changes how authoritative or tentative a writer sounds:\n\n- **Weak**: \"The evidence *could* suggest a flaw.\"\n- **Strong**: \"The evidence *must* indicate a flaw.\"\n\nIn persuasive writing, using strong modal verbs like **must** or **will** builds confidence, while **might** or **could** is useful for cautious hypotheses."
+                },
+                {
+                    "id": "modal-fill-blank-1",
+                    "type": "fillInTheBlank",
+                    "title": "Complete the Sentences with Modal Verbs",
+                    "text": "1. To stay safe in the laboratory, all students {{blank}} wear protective goggles.\n2. Although the sky is clear, it {{blank}} rain later in the afternoon.\n3. You {{blank}} check your answers twice before submitting the paper.",
+                    "blanks": [
+                        {
+                            "id": "blank-1",
+                            "answer": "must",
+                            "alternatives": [
+                                "shall",
+                                "have to"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-2",
+                            "answer": "might",
+                            "alternatives": [
+                                "could",
+                                "may"
+                            ],
+                            "caseSensitive": false
+                        },
+                        {
+                            "id": "blank-3",
+                            "answer": "should",
+                            "alternatives": [
+                                "ought to",
+                                "must"
+                            ],
+                            "caseSensitive": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-3",
+            "title": "Modal Verb Exploration Stage",
+            "subtitle": "Analyze Modality in a Rules & Guidelines Document",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "modal-hotspot-1",
+                    "type": "hotspot",
+                    "title": "Tap the Hotspots to Analyze Modal Strengths",
+                    "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+                    "behavior": "discovery",
+                    "hotspots": [
+                        {
+                            "id": "spot-1",
+                            "x": 0.25,
+                            "y": 0.40,
+                            "label": "Strict Requirement",
+                            "content": "Sentence: 'Visitors MUST sign in at reception.' (Modal 'must' expresses non-negotiable obligation)."
+                        },
+                        {
+                            "id": "spot-2",
+                            "x": 0.60,
+                            "y": 0.50,
+                            "label": "Recommendation",
+                            "content": "Sentence: 'Guests SHOULD keep noise to a minimum.' (Modal 'should' provides strong advice)."
+                        },
+                        {
+                            "id": "spot-3",
+                            "x": 0.45,
+                            "y": 0.75,
+                            "label": "Permission",
+                            "content": "Sentence: 'Members MAY access the library on weekends.' (Modal 'may' grants formal permission)."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-4",
+            "title": "Modal Verbs Knowledge Quiz",
+            "subtitle": "Test Your Understanding of Modality",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "modal-quiz-1",
+                    "type": "quiz",
+                    "title": "Modal Verbs Quiz",
+                    "questions": [
+                        {
+                            "id": "q1",
+                            "question": "Which modal verb expresses the HIGHEST degree of certainty?",
+                            "options": [
+                                "The team might win the match.",
+                                "The team could win the match.",
+                                "The team will win the match.",
+                                "The team should win the match."
+                            ],
+                            "correctAnswer": 2,
+                            "explanation": "'Will' expresses absolute certainty about a future event."
+                        },
+                        {
+                            "id": "q2",
+                            "question": "Which sentence uses a modal verb to express formal permission?",
+                            "options": [
+                                "You must leave immediately.",
+                                "You may enter the auditorium now.",
+                                "You should study harder.",
+                                "You might see a shooting star."
+                            ],
+                            "correctAnswer": 1,
+                            "explanation": "'May' is used to grant formal permission."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "slide-5",
+            "title": "Modality Reflection",
+            "subtitle": "Choosing the Right Tone",
+            "layout": "single",
+            "components": [
+                {
+                    "id": "modal-reflection-poll",
+                    "type": "poll",
+                    "title": "Persuasive Writing Poll",
+                    "question": "Which modal verb creates the most persuasive opening for a campaign speech?",
+                    "options": [
+                        "We MUST act today to protect our environment.",
+                        "We SHOULD consider acting to protect our environment.",
+                        "We MIGHT be able to protect our environment.",
+                        "We COULD try to protect our environment."
+                    ]
+                }
+            ]
+        }
+    ]
+}
