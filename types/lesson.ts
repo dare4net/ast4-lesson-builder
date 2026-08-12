@@ -61,6 +61,7 @@ export type ComponentType =
   | "video"
   | "callout"
   | "accordion"
+  | "quote"
   | "tabsPanel"
   | "embed"
 

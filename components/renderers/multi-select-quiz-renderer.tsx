@@ -188,15 +188,16 @@ function MultiSelectContent({
     // ── Option styling ─────────────────────────────────────────────────────────
     const getOptionStyle = (option: MultiSelectOption) => {
         const isSelected = selectedOptions.includes(option.id)
-        const base = `${option.color} text-white`
 
         if (!showResult) {
-            return cn(base, isSelected ? "ring-4 ring-white/60 scale-[1.02]" : "hover:scale-[1.02] opacity-90 hover:opacity-100")
+            return isSelected
+                ? "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-[1.02]"
+                : "bg-white hover:bg-violet-50/50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-violet-300"
         }
-        if (isSelected && option.isCorrect) return cn(base, "ring-4 ring-emerald-300")
-        if (isSelected && !option.isCorrect) return cn(base, "ring-4 ring-rose-400 opacity-70")
-        if (!isSelected && option.isCorrect) return cn(base, "ring-4 ring-emerald-300/60")
-        return cn(base, "opacity-40")
+        if (isSelected && option.isCorrect) return "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950"
+        if (isSelected && !option.isCorrect) return "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950 opacity-80"
+        if (!isSelected && option.isCorrect) return "bg-emerald-50/60 border-emerald-300 border-b-emerald-400 text-emerald-900"
+        return "bg-slate-50 border-slate-200 border-b-slate-200 text-slate-400 opacity-50"
     }
 
     const getCheckIndicator = (option: MultiSelectOption) => {
@@ -205,29 +206,31 @@ function MultiSelectContent({
         if (!showResult) {
             return (
                 <div className={cn(
-                    "w-5 h-5 rounded-md border-2 border-white flex items-center justify-center transition-all",
-                    isSelected ? "bg-white" : "bg-transparent"
+                    "w-6 h-6 rounded-lg border-2 border-b-4 flex items-center justify-center transition-all shadow-sm",
+                    isSelected
+                        ? "bg-white border-white border-b-slate-200 text-[#1CB0F6]"
+                        : "bg-slate-50 border-slate-200 border-b-slate-300 text-transparent"
                 )}>
-                    {isSelected && <Check className="w-3 h-3 text-slate-800" />}
+                    <Check className={cn("w-3.5 h-3.5 stroke-[3]", isSelected ? "text-[#1CB0F6]" : "text-transparent")} />
                 </div>
             )
         }
 
         if ((isSelected && option.isCorrect) || (!isSelected && option.isCorrect)) {
             return (
-                <div className="w-5 h-5 rounded-md bg-emerald-400 border-2 border-white flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" />
+                <div className="w-6 h-6 rounded-lg bg-[#58CC02] border-2 border-[#58CC02] border-b-[#3B8C00] flex items-center justify-center text-white shadow-sm">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
             )
         }
         if (isSelected && !option.isCorrect) {
             return (
-                <div className="w-5 h-5 rounded-md bg-rose-500 border-2 border-white flex items-center justify-center text-white font-black text-[10px]">
-                    ✗
+                <div className="w-6 h-6 rounded-lg bg-[#FF4B4B] border-2 border-[#FF4B4B] border-b-[#CC3C3C] flex items-center justify-center text-white font-black text-xs shadow-sm">
+                    ✕
                 </div>
             )
         }
-        return <div className="w-5 h-5 rounded-md border-2 border-white/50" />
+        return <div className="w-6 h-6 rounded-lg border-2 border-slate-200 border-b-slate-300 bg-slate-100" />
     }
 
     // ── Result analysis ────────────────────────────────────────────────────────
@@ -237,104 +240,114 @@ function MultiSelectContent({
     const isPerfect = showResult && correctSelections.length === correctIds.length && incorrectSelections.length === 0
 
     return (
-        <div className="flex flex-col h-full w-full overflow-hidden px-4 py-2">
-            {/* Segmented Progress Bar & Live Timer */}
-            <div className="shrink-0 mb-3 flex items-center justify-between">
-                <div className="flex-1 mr-4">
-                    <div className="flex items-center gap-1.5">
-                        {questions.map((_, i) => (
-                            <div key={i} className={cn(
-                                "flex-1 h-1.5 rounded-full transition-all duration-500",
-                                i < currentQuestion ? "bg-violet-500" : i === currentQuestion ? "bg-violet-300" : "bg-slate-200"
-                            )} />
+        <div className="w-full my-6 flex flex-col items-center justify-center">
+            <div className="relative w-full max-w-4xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
+                {/* Segmented Progress Bar & Header */}
+                <div className="shrink-0 mb-6 flex items-center justify-between gap-4">
+                    <div className="flex-1">
+                        <div className="flex items-center gap-1.5">
+                            {questions.map((_, i) => (
+                                <div key={i} className={cn(
+                                    "flex-1 h-2 rounded-full transition-all duration-500",
+                                    i < currentQuestion ? "bg-[#58CC02]" : i === currentQuestion ? "bg-[#1CB0F6]" : "bg-slate-200"
+                                )} />
+                            ))}
+                        </div>
+                        <p className="text-[9px] font-black text-violet-600 uppercase tracking-widest mt-2">
+                            Multi-Select Quiz • Question {currentQuestion + 1} of {questions.length}
+                        </p>
+                    </div>
+
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={isComplete}
+                            duration={timeLimit}
+                            onTimeout={handleTimeout}
+                        />
+                    )}
+                </div>
+
+                {/* Main content wrapper */}
+                <div className="flex flex-col items-center gap-5 w-full">
+                    {/* Question Card */}
+                    <div className="w-full p-5 sm:p-6 rounded-2xl bg-violet-50/60 border-2 border-violet-100 border-b-4 text-center flex flex-col items-center justify-center space-y-1">
+                        <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-snug tracking-tight">{question.question}</h2>
+                        <p className="text-[10px] sm:text-xs font-black text-violet-600 uppercase tracking-wider">
+                            ☑ Select all correct answers
+                        </p>
+                    </div>
+
+                    {/* Options 2-column Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
+                        {question.options.map(option => (
+                            <button
+                                key={option.id}
+                                disabled={showResult || isDisabled || isComplete}
+                                onClick={() => handleToggle(option.id)}
+                                className={cn(
+                                    "relative w-full p-4 sm:p-5 rounded-2xl border-2 border-b-4 text-left font-black text-sm leading-snug transition-all duration-200 active:border-b-2 active:translate-y-[2px] flex items-center justify-between shadow-sm cursor-pointer",
+                                    getOptionStyle(option)
+                                )}
+                            >
+                                <span className="pr-3 text-sm font-black leading-snug line-clamp-3">{option.text}</span>
+                                <div className="shrink-0">{getCheckIndicator(option)}</div>
+                            </button>
                         ))}
                     </div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
-                        Question {currentQuestion + 1} of {questions.length}
-                    </p>
-                </div>
 
-                {isLive && (
-                    <LiveTimer
-                        isCompleted={isComplete}
-                        duration={timeLimit}
-                        onTimeout={handleTimeout}
-                    />
-                )}
-            </div>
+                    {/* Submit Button */}
+                    {!showResult && (
+                        <div className="w-full flex justify-center pt-2">
+                            <button
+                                type="button"
+                                onClick={handleSubmit}
+                                disabled={selectedOptions.length === 0 || isDisabled || isComplete}
+                                className={cn(
+                                    "w-full sm:w-auto h-12 px-10 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
+                                    selectedOptions.length > 0
+                                        ? "bg-[#58CC02] hover:bg-[#46a302] text-white border-[#58CC02] border-b-[#3B8C00] shadow-emerald-500/20 cursor-pointer"
+                                        : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
+                                )}
+                            >
+                                Submit Answer
+                            </button>
+                        </div>
+                    )}
 
-            {/* Main content wrapper */}
-            <div className="flex-1 min-h-0 flex flex-col justify-between items-center gap-3 overflow-y-auto py-2 w-full max-w-2xl mx-auto">
-                {/* Question card - Flexibly expands vertically */}
-                <div className="w-full flex-1 min-h-[110px] sm:min-h-[130px] p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-100/80 shadow-sm text-center flex flex-col items-center justify-center space-y-1 shrink-0">
-                    <h2 className="text-sm sm:text-base md:text-xl font-black text-slate-900 leading-snug">{question.question}</h2>
-                    <p className="text-[10px] sm:text-xs font-bold text-violet-600 uppercase tracking-widest">
-                        ☑ Select all correct answers
-                    </p>
-                </div>
-
-                {/* Options 2-column grid - Flexibly expands vertically */}
-                <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full flex-1 min-h-[130px] sm:min-h-[150px]">
-                    {question.options.map(option => (
-                        <button
-                            key={option.id}
-                            disabled={showResult || isDisabled || isComplete}
-                            onClick={() => handleToggle(option.id)}
-                            className={cn(
-                                "relative h-full min-h-[60px] sm:min-h-[70px] p-3.5 sm:p-4 rounded-2xl text-left font-semibold text-xs sm:text-sm leading-snug transition-all duration-200 active:scale-[0.98] flex items-center justify-between shadow-sm",
-                                getOptionStyle(option)
-                            )}
-                        >
-                            <span className="pr-3 text-xs sm:text-sm font-semibold leading-snug line-clamp-3 sm:line-clamp-4 break-words">{option.text}</span>
-                            <div className="shrink-0">{getCheckIndicator(option)}</div>
-                        </button>
-                    ))}
-                </div>
-
-                {/* Submit button */}
-                {!showResult && (
-                    <div className="shrink-0 flex justify-center pt-1">
-                        <Button
-                            onClick={handleSubmit}
-                            disabled={selectedOptions.length === 0 || isDisabled || isComplete}
-                            className="h-10 px-8 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white font-black text-xs uppercase tracking-widest rounded-2xl shadow-md transition-all"
-                        >
-                            Submit Answer
-                        </Button>
-                    </div>
-                )}
-
-                {/* Result feedback */}
-                {showResult && (
-                    <div className={cn(
-                        "w-full shrink-0 p-3 rounded-2xl border animate-in fade-in slide-in-from-bottom-2 duration-400 text-center shadow-sm space-y-0.5",
-                        isPerfect ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
-                    )}>
-                        <p className={cn(
-                            "font-black text-xs sm:text-sm",
-                            isPerfect ? "text-emerald-700" : "text-amber-700"
+                    {/* Result Feedback Card */}
+                    {showResult && (
+                        <div className={cn(
+                            "w-full p-4 sm:p-5 rounded-2xl border-2 border-b-4 text-center shadow-sm space-y-1 animate-in fade-in duration-300",
+                            isPerfect ? "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00]" : "bg-amber-50 border-[#FFC800] border-b-amber-600"
                         )}>
-                            {isPerfect
-                                ? "🎉 Perfect! You got every correct answer!"
-                                : `You got ${correctSelections.length} out of ${correctIds.length} correct answers.`}
-                        </p>
-                        {question.explanation && (
-                            <p className="text-xs font-medium text-slate-500 mt-1">{question.explanation}</p>
-                        )}
-                    </div>
-                )}
+                            <p className={cn(
+                                "font-black text-sm uppercase tracking-wider",
+                                isPerfect ? "text-emerald-950" : "text-amber-950"
+                            )}>
+                                {isPerfect
+                                    ? "🎉 Perfect! You got every correct answer!"
+                                    : `You got ${correctSelections.length} out of ${correctIds.length} correct answers.`}
+                            </p>
+                            {question.explanation && (
+                                <p className="text-xs font-bold text-slate-700 mt-1">{question.explanation}</p>
+                            )}
+                        </div>
+                    )}
 
-                {/* Next question */}
-                {showResult && currentQuestion < questions.length - 1 && (
-                    <div className="shrink-0 flex justify-center pt-1">
-                        <Button
-                            onClick={handleNext}
-                            className="h-10 px-8 bg-violet-500 hover:bg-violet-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl transition-all gap-2 shadow-md shadow-violet-500/20"
-                        >
-                            Next Question <ChevronRight className="w-4 h-4" />
-                        </Button>
-                    </div>
-                )}
+                    {/* Next Question Button */}
+                    {showResult && currentQuestion < questions.length - 1 && (
+                        <div className="w-full flex justify-center pt-2">
+                            <button
+                                type="button"
+                                onClick={handleNext}
+                                className="w-full sm:w-auto h-12 px-10 rounded-2xl bg-[#1CB0F6] hover:bg-[#169ad8] text-white border-2 border-[#1CB0F6] border-b-4 border-b-[#0090CC] font-black text-xs uppercase tracking-[0.15em] transition-all active:border-b-0 active:translate-y-[2px] flex items-center justify-center gap-2 cursor-pointer shadow-sky-500/20"
+                            >
+                                <span>Next Question</span>
+                                <ChevronRight className="w-4 h-4 stroke-[3]" />
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )

@@ -95,12 +95,12 @@ export function SpinTheWheelRenderer({
 
     return (
         <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-4xl bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md text-slate-100 flex flex-col items-center">
+            <div className="relative w-full max-w-4xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 flex flex-col items-center overflow-hidden">
                 {/* Header Bar */}
                 <div className="w-full flex items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-xl">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-amber-600">
                             Spin the Wheel • {points} Points
                         </span>
                     </div>
@@ -108,24 +108,24 @@ export function SpinTheWheelRenderer({
                     <button
                         type="button"
                         onClick={handleSpeak}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all border border-slate-700 active:scale-95 cursor-pointer"
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer shadow-sm"
                         title="Read Aloud"
                     >
-                        <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-amber-400")} />
-                        <span className="text-[10px] uppercase tracking-wider">Listen</span>
+                        <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-amber-600")} />
+                        <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
                     </button>
                 </div>
 
-                <h3 className="text-xl font-black mb-6 text-white text-center">{title}</h3>
+                <h3 className="text-xl font-black mb-6 text-slate-900 text-center tracking-tight">{title}</h3>
 
                 {/* Wheel Container */}
                 <div className="relative w-64 h-64 sm:w-80 sm:h-80 my-4 flex items-center justify-center">
                     {/* Wheel Pointer */}
-                    <div className="absolute -top-3 z-30 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[20px] border-t-amber-400 drop-shadow-lg" />
+                    <div className="absolute -top-3 z-30 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[20px] border-t-[#FFC800] drop-shadow-md" />
 
                     {/* Wheel Disc */}
                     <div
-                        className="w-full h-full rounded-full border-4 border-slate-800 bg-slate-950 relative overflow-hidden shadow-2xl transition-all duration-[3500ms] cubic-bezier(0.15, 0.90, 0.20, 1.00)"
+                        className="w-full h-full rounded-full border-4 border-slate-200 bg-slate-900 relative overflow-hidden shadow-xl transition-all duration-[3500ms] cubic-bezier(0.15, 0.90, 0.20, 1.00)"
                         style={{ transform: `rotate(${rotation}deg)` }}
                     >
                         {items.map((it, idx) => {
@@ -160,23 +160,23 @@ export function SpinTheWheelRenderer({
                         onClick={handleSpin}
                         disabled={isSpinning || isEditing}
                         className={cn(
-                            "absolute z-20 w-16 h-16 rounded-full border-4 border-slate-800 bg-slate-900 font-black text-xs uppercase tracking-wider flex flex-col items-center justify-center shadow-2xl transition-all cursor-pointer active:scale-95",
-                            isSpinning ? "animate-pulse text-amber-400" : "text-white hover:bg-slate-800 hover:border-amber-400"
+                            "absolute z-20 w-16 h-16 rounded-full border-4 border-white bg-[#FFC800] border-b-amber-600 font-black text-xs uppercase tracking-wider flex flex-col items-center justify-center shadow-lg transition-all cursor-pointer active:translate-y-[2px]",
+                            isSpinning ? "animate-pulse text-slate-900" : "text-slate-900 hover:bg-amber-400"
                         )}
                     >
-                        <RotateCw className={cn("w-5 h-5 mb-0.5", isSpinning && "animate-spin text-amber-400")} />
+                        <RotateCw className={cn("w-5 h-5 mb-0.5 text-slate-900", isSpinning && "animate-spin")} />
                         <span className="text-[9px]">SPIN</span>
                     </button>
                 </div>
 
                 {/* Selected Result Card */}
                 {selectedItem && (
-                    <div className="w-full mt-6 p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 flex flex-col items-center text-center animate-in zoom-in-95 duration-300">
-                        <Award className="w-8 h-8 text-amber-400 mb-2" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 mb-1">
+                    <div className="w-full mt-6 p-6 rounded-2xl bg-amber-50 border-2 border-b-4 border-[#FFC800] border-b-amber-600 text-amber-950 flex flex-col items-center text-center animate-in zoom-in-95 duration-300 shadow-sm">
+                        <Award className="w-8 h-8 text-amber-600 mb-2" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-700 mb-1">
                             Wheel Result
                         </span>
-                        <p className="text-base font-extrabold text-white">{selectedItem.text}</p>
+                        <p className="text-base font-black text-slate-900 leading-snug">{selectedItem.text}</p>
                     </div>
                 )}
             </div>

@@ -154,7 +154,7 @@ function WordCloudContent({
             "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6 relative",
             disabledProp && "opacity-75"
         )}>
-            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-purple-500 via-pink-500 to-rose-500" />
+            <div className="absolute top-0 left-0 w-2 h-full bg-[#58CC02]" />
 
             {/* Header */}
             <div className="shrink-0 relative flex items-center justify-between px-2 pt-3">
@@ -198,12 +198,12 @@ function WordCloudContent({
                             onKeyDown={(e) => e.key === "Enter" && handleAddWord()}
                             placeholder={placeholder || "Type a word and press Enter..."}
                             disabled={disabledProp || submittedWords.length >= maxWords}
-                            className="text-xs md:text-sm font-semibold border-2 border-slate-200 focus-visible:ring-0 focus-visible:border-purple-500 rounded-xl bg-slate-50/50 h-11 px-4"
+                            className="text-xs md:text-sm font-black border-2 border-slate-200 border-b-4 focus-visible:ring-0 focus-visible:border-purple-500 rounded-2xl bg-white h-12 px-4 shadow-sm"
                         />
                         <Button
                             onClick={handleAddWord}
                             disabled={disabledProp || !inputWord.trim() || submittedWords.length >= maxWords}
-                            className="h-11 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-black text-xs uppercase tracking-wider shrink-0"
+                            className="h-12 px-5 rounded-2xl bg-[#1CB0F6] hover:bg-sky-500 text-white font-black text-xs uppercase tracking-wider shrink-0 border-2 border-[#1CB0F6] border-b-4 border-b-[#0090CC] active:border-b-0 active:translate-y-[2px] shadow-sm cursor-pointer"
                         >
                             <Plus className="w-4 h-4 mr-1" /> Add
                         </Button>
@@ -215,8 +215,8 @@ function WordCloudContent({
                     {entries.length === 0 ? (
                         <div className="text-center space-y-1 py-6">
                             <Sparkles className="w-6 h-6 text-purple-400 mx-auto animate-pulse" />
-                            <p className="text-xs font-bold text-slate-400">Word Cloud Canvas Empty</p>
-                            <p className="text-[10px] text-slate-600">Type words above to generate the live cloud</p>
+                            <p className="text-xs font-black text-slate-300 uppercase tracking-wider">Word Cloud Canvas Empty</p>
+                            <p className="text-[10px] text-slate-500 font-medium">Type words above to generate the live cloud</p>
                         </div>
                     ) : (
                         entries.map((entry, idx) => {
@@ -228,7 +228,7 @@ function WordCloudContent({
                                     key={entry.word}
                                     style={{ transform: `scale(${scale})` }}
                                     className={cn(
-                                        "px-3.5 py-1.5 rounded-full font-black uppercase tracking-wider shadow-lg bg-gradient-to-r transition-all duration-300 animate-in zoom-in-75",
+                                        "px-3.5 py-1.5 rounded-full font-black uppercase tracking-wider shadow-lg bg-gradient-to-r transition-all duration-300 animate-in zoom-in-75 border border-white/20",
                                         colorClass
                                     )}
                                 >
@@ -246,14 +246,15 @@ function WordCloudContent({
                     <Button
                         onClick={handleSubmitCloud}
                         disabled={disabledProp || submittedWords.length === 0}
-                        className="h-11 w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-purple-500/20"
+                        className="h-12 w-full rounded-2xl bg-[#58CC02] hover:bg-[#46a302] text-white font-black uppercase text-xs tracking-[0.15em] border-2 border-[#58CC02] border-b-4 border-b-[#3B8C00] active:border-b-0 active:translate-y-[2px] shadow-emerald-500/20 cursor-pointer"
                     >
-                        <Send className="w-3.5 h-3.5 mr-1.5" /> Submit Word Cloud ({submittedWords.length} words)
+                        <Send className="w-4 h-4 mr-2" /> Submit Word Cloud ({submittedWords.length} words)
                     </Button>
                 ) : (
-                    <Button disabled className="h-11 w-full rounded-xl bg-purple-600 text-white font-black uppercase text-[10px] tracking-widest">
-                        Word Cloud Submitted (+{props.points || 10} pts)
-                    </Button>
+                    <div className="p-3 bg-emerald-50 border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] rounded-2xl flex items-center justify-center gap-2 text-emerald-950">
+                        <Cloud className="w-5 h-5 text-[#58CC02]" />
+                        <span className="text-xs font-black uppercase tracking-wider">Word Cloud Submitted (+{props.points || 10} pts)</span>
+                    </div>
                 )}
             </div>
         </div>

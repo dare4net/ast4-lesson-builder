@@ -51,42 +51,44 @@ export function AccordionRenderer({
                         <div
                             key={itemId}
                             className={cn(
-                                "rounded-2xl border-2 transition-all duration-300 overflow-hidden shadow-sm backdrop-blur-sm",
+                                "rounded-2xl border-2 border-b-4 transition-all duration-200 overflow-hidden shadow-sm bg-white",
                                 isOpen
-                                    ? "bg-slate-900 border-indigo-500/50 text-white ring-2 ring-indigo-500/20"
-                                    : "bg-slate-900/60 hover:bg-slate-900/80 border-slate-800 text-slate-300"
+                                    ? "border-[#1CB0F6] border-b-[#0090CC] bg-sky-50/20"
+                                    : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
                             )}
                         >
                             {/* Header Trigger */}
                             <button
                                 type="button"
                                 onClick={() => toggleItem(itemId)}
-                                className="w-full flex items-center justify-between p-5 text-left font-bold text-base transition-colors cursor-pointer select-none"
+                                className="w-full flex items-center justify-between p-4 text-left font-black text-slate-900 text-base transition-colors cursor-pointer select-none"
                             >
                                 <div className="flex items-center gap-3 pr-4">
                                     <div className={cn(
-                                        "w-7 h-7 rounded-xl flex items-center justify-center text-xs font-black transition-colors",
-                                        isOpen ? "bg-indigo-500 text-white" : "bg-slate-800 text-slate-400"
+                                        "w-7 h-7 rounded-xl flex items-center justify-center text-xs font-black transition-colors shrink-0 border-2",
+                                        isOpen
+                                            ? "bg-[#1CB0F6] text-white border-[#0090CC]"
+                                            : "bg-slate-100 text-slate-500 border-slate-200"
                                     )}>
-                                        <HelpCircle className="w-4 h-4" />
+                                        {idx + 1}
                                     </div>
-                                    <span>{item.title}</span>
+                                    <span className="tracking-tight">{item.title}</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                     <button
                                         type="button"
                                         onClick={(e) => handleSpeakItem(e, item)}
-                                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer"
+                                        className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-all cursor-pointer border border-slate-200 active:scale-95"
                                         title="Read Aloud"
                                     >
-                                        <Volume2 className={cn("w-4 h-4", isSpeaking && "animate-pulse text-indigo-400")} />
+                                        <Volume2 className={cn("w-4 h-4", isSpeaking && "animate-pulse text-[#1CB0F6]")} />
                                     </button>
 
                                     <ChevronDown
                                         className={cn(
                                             "w-5 h-5 text-slate-400 transition-transform duration-300",
-                                            isOpen && "transform rotate-180 text-indigo-400"
+                                            isOpen && "transform rotate-180 text-[#1CB0F6]"
                                         )}
                                     />
                                 </div>
@@ -94,7 +96,7 @@ export function AccordionRenderer({
 
                             {/* Content Drawer */}
                             {isOpen && (
-                                <div className="px-5 pb-5 pt-1 text-sm leading-relaxed text-slate-300 border-t border-slate-800/80 animate-in slide-in-from-top-1 duration-200">
+                                <div className="px-5 pb-5 pt-2 text-sm font-bold leading-relaxed text-slate-800 border-t-2 border-dashed border-slate-200/60 animate-in slide-in-from-top-1 duration-200">
                                     <p>{item.content}</p>
                                 </div>
                             )}

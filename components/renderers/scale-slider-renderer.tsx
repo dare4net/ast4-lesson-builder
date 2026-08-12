@@ -136,13 +136,13 @@ function ScaleSliderContent({
             "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6 relative",
             disabledProp && "opacity-75"
         )}>
-            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-500 to-indigo-600" />
+            <div className="absolute top-0 left-0 w-2 h-full bg-[#1CB0F6]" />
 
             {/* Header */}
             <div className="shrink-0 relative flex items-center justify-between px-2 pt-3">
                 <div className="space-y-0.5">
-                    <span className="text-[8px] font-black text-blue-600/70 uppercase tracking-[0.2em] flex items-center gap-1">
-                        <Sliders className="w-3 h-3 text-blue-500" /> Opinion Spectrum
+                    <span className="text-[8px] font-black text-sky-600/70 uppercase tracking-[0.2em] flex items-center gap-1">
+                        <Sliders className="w-3 h-3 text-[#1CB0F6]" /> Opinion Spectrum
                     </span>
                     <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
                 </div>
@@ -165,7 +165,7 @@ function ScaleSliderContent({
 
             {/* Center Slider Display */}
             <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-4 space-y-6">
-                <div className="p-4 bg-blue-50/50 border-2 border-blue-100 rounded-2xl text-center">
+                <div className="p-4 bg-sky-50/50 border-2 border-sky-100 rounded-2xl text-center">
                     <p className="text-sm md:text-base font-bold text-slate-900 leading-relaxed">
                         {prompt || "Slide to indicate your rating or confidence level:"}
                     </p>
@@ -173,11 +173,11 @@ function ScaleSliderContent({
 
                 {/* Selected Value Badge */}
                 <div className="flex flex-col items-center justify-center space-y-1">
-                    <div className="px-6 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 animate-in zoom-in-95">
+                    <div className="px-6 py-2 rounded-2xl bg-[#1CB0F6] text-white shadow-sm border-2 border-[#1CB0F6] border-b-[#0090CC] animate-in zoom-in-95">
                         <span className="text-2xl font-black">{selectedValue}</span>
-                        <span className="text-xs font-bold opacity-75 ml-1">/ {max}</span>
+                        <span className="text-xs font-bold opacity-80 ml-1">/ {max}</span>
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Current Rating</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Current Rating</span>
                 </div>
 
                 {/* Slider Controls */}
@@ -194,7 +194,7 @@ function ScaleSliderContent({
 
                     <div className="flex justify-between items-center text-xs font-black uppercase tracking-wider">
                         <span className="text-slate-500 max-w-[120px] text-left">{minLabel}</span>
-                        <span className="text-blue-600 max-w-[120px] text-right">{maxLabel}</span>
+                        <span className="text-[#1CB0F6] max-w-[120px] text-right">{maxLabel}</span>
                     </div>
                 </div>
             </div>
@@ -205,13 +205,13 @@ function ScaleSliderContent({
                     <Button
                         onClick={handleSubmit}
                         disabled={disabledProp}
-                        className="h-11 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-blue-500/20"
+                        className="h-12 w-full rounded-2xl bg-[#1CB0F6] hover:bg-sky-500 text-white font-black uppercase text-xs tracking-[0.15em] border-2 border-[#1CB0F6] border-b-4 border-b-[#0090CC] active:border-b-0 active:translate-y-[2px] shadow-sky-500/20 cursor-pointer"
                     >
-                        <Send className="w-3.5 h-3.5 mr-1.5" /> Confirm Rating ({selectedValue})
+                        <Send className="w-4 h-4 mr-2" /> Confirm Rating ({selectedValue})
                     </Button>
                 ) : (
-                    <div className="p-3 bg-emerald-50 border-2 border-emerald-200 rounded-xl flex items-center justify-center gap-2 text-emerald-800">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <div className="p-3 bg-emerald-50 border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] rounded-2xl flex items-center justify-center gap-2 text-emerald-950">
+                        <CheckCircle2 className="w-5 h-5 text-[#58CC02]" />
                         <span className="text-xs font-black uppercase tracking-wider">Rating Recorded (+{props.points || 10} pts)</span>
                     </div>
                 )}

@@ -143,34 +143,34 @@ export function MemoryGridRenderer({
 
     return (
         <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-4xl bg-slate-900 border-2 border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md text-slate-100">
+            <div className="relative w-full max-w-4xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
                 {/* Header Bar */}
                 <div className="flex items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-2 px-3 py-1 bg-pink-500/10 border border-pink-500/30 rounded-full">
-                        <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-pink-400">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-pink-50 border border-pink-200 rounded-xl">
+                        <Sparkles className="w-3.5 h-3.5 text-pink-600" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-pink-600">
                             Memory Grid • {points} Points
                         </span>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+                        <span className="text-xs font-black uppercase tracking-wider text-slate-500">
                             Attempts: {attempts}
                         </span>
 
                         <button
                             type="button"
                             onClick={handleSpeak}
-                            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all border border-slate-700 active:scale-95 cursor-pointer"
+                            className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer shadow-sm"
                             title="Read Aloud"
                         >
-                            <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-pink-400")} />
-                            <span className="text-[10px] uppercase tracking-wider">Listen</span>
+                            <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-pink-600")} />
+                            <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
                         </button>
                     </div>
                 </div>
 
-                <h3 className="text-xl font-black mb-6 text-white">{title}</h3>
+                <h3 className="text-xl font-black mb-6 text-slate-900 tracking-tight">{title}</h3>
 
                 {/* Card Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
@@ -184,11 +184,11 @@ export function MemoryGridRenderer({
                                 key={card.id}
                                 onClick={() => handleCardClick(card)}
                                 className={cn(
-                                    "relative aspect-[4/3] rounded-2xl border-2 p-3 flex items-center justify-center text-center font-bold text-xs transition-all duration-300 select-none cursor-pointer active:scale-95 shadow-md",
-                                    isMatched && "bg-emerald-500/20 border-emerald-500/50 text-emerald-200 cursor-default opacity-80",
-                                    !isMatched && isFlipped && isTerm && "bg-pink-500 text-slate-950 border-pink-300 shadow-pink-500/20 scale-105",
-                                    !isMatched && isFlipped && !isTerm && "bg-indigo-500 text-white border-indigo-300 shadow-indigo-500/20 scale-105",
-                                    !isMatched && !isFlipped && "bg-slate-950 hover:bg-slate-800/80 border-slate-800 text-slate-500 hover:border-pink-500/50"
+                                    "relative aspect-[4/3] rounded-2xl border-2 border-b-4 p-3 flex items-center justify-center text-center font-black text-xs transition-all duration-200 select-none cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
+                                    isMatched && "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950 cursor-default opacity-85",
+                                    !isMatched && isFlipped && isTerm && "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-105",
+                                    !isMatched && isFlipped && !isTerm && "bg-[#FFC800] text-slate-900 border-[#FFC800] border-b-amber-600 scale-105",
+                                    !isMatched && !isFlipped && "bg-slate-50 hover:bg-pink-50/50 border-slate-200 border-b-slate-300 text-slate-400 hover:border-pink-300"
                                 )}
                             >
                                 {isFlipped || isMatched ? (
@@ -197,8 +197,8 @@ export function MemoryGridRenderer({
                                     </span>
                                 ) : (
                                     <div className="flex flex-col items-center gap-1">
-                                        <Layers className="w-5 h-5 text-slate-700" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Flip</span>
+                                        <Layers className="w-5 h-5 text-slate-400" />
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Flip</span>
                                     </div>
                                 )}
                             </div>
@@ -208,16 +208,16 @@ export function MemoryGridRenderer({
 
                 {/* Completion Bar */}
                 {completed && (
-                    <div className="mt-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-center justify-between font-bold text-xs">
+                    <div className="mt-6 p-4 rounded-2xl bg-emerald-50 border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] text-emerald-950 flex items-center justify-between font-black text-xs uppercase tracking-wider">
                         <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <CheckCircle2 className="w-5 h-5 text-[#58CC02]" />
                             <span>All pairs matched! Earned +{points} Points</span>
                         </div>
 
                         <button
                             type="button"
                             onClick={handleReset}
-                            className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition-all"
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-black border-2 border-slate-200 border-b-4 active:border-b-2 active:translate-y-[2px] cursor-pointer"
                         >
                             <RefreshCw className="w-3.5 h-3.5" />
                             <span>Play Again</span>

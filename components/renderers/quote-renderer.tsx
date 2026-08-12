@@ -19,31 +19,33 @@ export function QuoteRenderer({
     isEditing
 }: QuoteRendererProps) {
     return (
-        <div className="w-full my-4 relative p-8 md:p-10 rounded-2xl border border-slate-800 bg-slate-900/60 backdrop-blur-md shadow-xl overflow-hidden group transition-all">
+        <div className="w-full my-4 relative p-6 md:p-8 rounded-2xl border-2 border-slate-200 border-b-4 bg-white shadow-sm overflow-hidden group transition-all">
             {/* Visual Emerald Accent Strip */}
-            <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500 rounded-l-2xl" />
+            <div className="absolute top-0 left-0 w-2 h-full bg-[#58CC02]" />
 
             {/* Decorative Quote Icon Background */}
             <div className="absolute -right-4 -bottom-4 text-emerald-500/10 pointer-events-none group-hover:scale-110 transition-transform duration-500">
                 <Quote className="w-36 h-36" />
             </div>
 
-            <div className="relative space-y-4">
-                <Quote className="w-8 h-8 text-emerald-400 opacity-80" />
+            <div className="relative space-y-4 pl-2">
+                <div className="flex items-center gap-2">
+                    <Quote className="w-6 h-6 text-[#58CC02]" />
+                    <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Inspirational Quote</span>
+                </div>
 
-                <blockquote className="text-lg md:text-xl font-medium text-slate-100 italic leading-relaxed tracking-wide">
+                <blockquote className="text-base md:text-xl font-black text-slate-900 italic leading-relaxed tracking-tight">
                     "{text}"
                 </blockquote>
 
                 {(author || source) && (
-                    <div className="flex items-center gap-2 pt-2 border-t border-slate-800/80 text-sm">
-                        <div className="w-6 h-[2px] bg-emerald-500/80" />
-                        <span className="font-bold text-emerald-400 tracking-wider">
-                            {author}
+                    <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-[#58CC02] text-xs font-black uppercase tracking-wider">
+                            — {author}
                         </span>
                         {source && (
-                            <span className="text-slate-400 text-xs font-normal">
-                                — {source}
+                            <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">
+                                ({source})
                             </span>
                         )}
                     </div>
