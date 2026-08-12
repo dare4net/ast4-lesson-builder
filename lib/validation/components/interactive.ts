@@ -421,9 +421,17 @@ export const spinTheWheelValidator: ComponentValidator = {
         const res = createResult(component.id, component.type);
         validateTimeLimit(res, component);
 
-        const { items } = component.props || {};
-        if (!Array.isArray(items) || items.length < 2) {
-            addError(res, 'INSUFFICIENT_WHEEL_SLICES', 'props.items', 'Spin the wheel requires at least 2 wheel slices.');
+        const { questions, items, requiredSpins = 3 } = component.props || {};
+        const sliceCount = Array.isArray(questions) ? questions.length : (Array.isArray(items) ? items.length : 0);
+        const minQuestionsRequired = requiredSpins + 2;
+
+        if (sliceCount < minQuestionsRequired) {
+            addError(
+                res,
+                'INSUFFICIENT_WHEEL_QUESTIONS',
+                'props.questions',
+                `Spin the wheel requires total questions (${sliceCount}) to be at least requiredSpins + 2 (${minQuestionsRequired} questions for ${requiredSpins} required spins).`
+            );
         }
         return res;
     }

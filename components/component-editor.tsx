@@ -37,6 +37,7 @@ import { TrueFalseEditor } from "@/components/editors/true-false-editor"
 import { ScaleSliderEditor } from "@/components/editors/scale-slider-editor"
 import { AnnotateImageEditor } from "@/components/editors/annotate-image-editor"
 import { WordCloudEditor } from "@/components/editors/word-cloud-editor"
+import { SpinTheWheelEditor } from "@/components/editors/spin-the-wheel-editor"
 import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { ComponentRenderer } from "@/components/component-renderer"
 
@@ -202,6 +203,15 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
             onWordsChange={(words) => handleChange("words", words)}
             maxWords={props.maxWords ?? 20}
             onMaxWordsChange={(val) => handleChange("maxWords", val)}
+          />
+        ) : component.type === "spinTheWheel" ? (
+          <SpinTheWheelEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            questions={props.questions || (Array.isArray(props.items) && props.items.length > 0 ? props.items : undefined)}
+            onQuestionsChange={(questions) => handleChange("questions", questions)}
+            requiredSpins={props.requiredSpins ?? 3}
+            onRequiredSpinsChange={(val) => handleChange("requiredSpins", val)}
           />
         ) : component.type === "shortAnswer" ? (
           <ShortAnswerEditor
