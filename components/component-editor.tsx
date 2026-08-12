@@ -32,6 +32,11 @@ import { CalloutEditor } from "@/components/editors/callout-editor"
 import { TimelineEditor } from "@/components/editors/timeline-editor"
 import { CategoriseEditor } from "@/components/editors/categorise-editor"
 import { WordScrambleEditor } from "@/components/editors/word-scramble-editor"
+import { MemoryGridEditor } from "@/components/editors/memory-grid-editor"
+import { TrueFalseEditor } from "@/components/editors/true-false-editor"
+import { ScaleSliderEditor } from "@/components/editors/scale-slider-editor"
+import { AnnotateImageEditor } from "@/components/editors/annotate-image-editor"
+import { WordCloudEditor } from "@/components/editors/word-cloud-editor"
 import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { ComponentRenderer } from "@/components/component-renderer"
 
@@ -142,6 +147,61 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
             onWordChange={(val) => handleChange("word", val)}
             hint={props.hint || ""}
             onHintChange={(val) => handleChange("hint", val)}
+          />
+        ) : component.type === "memoryGrid" ? (
+          <MemoryGridEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            pairs={props.pairs || []}
+            onPairsChange={(pairs) => handleChange("pairs", pairs)}
+          />
+        ) : component.type === "trueFalse" ? (
+          <TrueFalseEditor
+            statement={props.statement || ""}
+            onStatementChange={(val) => handleChange("statement", val)}
+            isTrue={props.isTrue ?? true}
+            onIsTrueChange={(val) => handleChange("isTrue", val)}
+            explanation={props.explanation || ""}
+            onExplanationChange={(val) => handleChange("explanation", val)}
+          />
+        ) : component.type === "scaleSlider" ? (
+          <ScaleSliderEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            prompt={props.prompt || ""}
+            onPromptChange={(val) => handleChange("prompt", val)}
+            minLabel={props.minLabel || "Not at all"}
+            onMinLabelChange={(val) => handleChange("minLabel", val)}
+            maxLabel={props.maxLabel || "Very confident"}
+            onMaxLabelChange={(val) => handleChange("maxLabel", val)}
+            min={props.min ?? 1}
+            onMinChange={(val) => handleChange("min", val)}
+            max={props.max ?? 10}
+            onMaxChange={(val) => handleChange("max", val)}
+            step={props.step ?? 1}
+            onStepChange={(val) => handleChange("step", val)}
+            defaultValue={props.defaultValue ?? 5}
+            onDefaultValueChange={(val) => handleChange("defaultValue", val)}
+          />
+        ) : component.type === "annotateImage" ? (
+          <AnnotateImageEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            image={props.image || ""}
+            onImageChange={(val) => handleChange("image", val)}
+            labels={props.labels || []}
+            onLabelsChange={(labels) => handleChange("labels", labels)}
+          />
+        ) : component.type === "wordCloud" ? (
+          <WordCloudEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            prompt={props.prompt || ""}
+            onPromptChange={(val) => handleChange("prompt", val)}
+            words={props.words || []}
+            onWordsChange={(words) => handleChange("words", words)}
+            maxWords={props.maxWords ?? 20}
+            onMaxWordsChange={(val) => handleChange("maxWords", val)}
           />
         ) : component.type === "shortAnswer" ? (
           <ShortAnswerEditor
