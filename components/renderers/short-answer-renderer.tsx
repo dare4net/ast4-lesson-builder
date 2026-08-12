@@ -4,13 +4,14 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { CheckCircle2, Clock, Lock, Send, Sparkles } from "lucide-react"
+import { CheckCircle2, Lock, Send } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import type { Component } from "@/types/lesson"
+import { isInputDisabled, shouldShowRetry, isItemApproved } from "@/lib/tutor-marking-contract"
 
 interface ShortAnswerRendererProps {
     title?: string
@@ -27,13 +28,13 @@ interface ShortAnswerRendererProps {
     setComponentState?: (state: any) => void
     id?: string
     status?: string
+    isTutorView?: boolean
 }
 
 type ShortAnswerState = {
     userResponse: string
     isSubmitted: boolean
     isPendingMarking?: boolean
-    tutorMarkedScore?: number
     score: number
     status?: string
 }
@@ -76,6 +77,19 @@ function ShortAnswerContent({
         score
     } = state
 
+    const tutorMarked = Boolean((state as any)?.tutorMarked || (state as any)?.markedBy);
+
+    const contractContext = {
+        markingMode,
+        mode: isLive ? ('live' as const) : ('practice' as const),
+        isTutorView: Boolean(props.isTutorView),
+        disabledProp
+    };
+
+    const inputsLocked = isInputDisabled(state, contractContext);
+    const displayRetry = shouldShowRetry(state, contractContext, points);
+    const isApproved = isItemApproved(state, score > 0 || (tutorMarked && !isPendingMarking));
+
     useEffect(() => {
         setMounted(true)
     }, [])
@@ -91,7 +105,7 @@ function ShortAnswerContent({
     }, [isLive, hasStarted, isSubmitted, state.status, registerLock, unregisterLock, props.id])
 
     const handleResponseChange = (val: string) => {
-        if (disabledProp || isSubmitted || state.status === "completed") return
+        if (inputsLocked) return
         setState(prev => ({
             ...prev,
             userResponse: val
@@ -99,13 +113,12 @@ function ShortAnswerContent({
     }
 
     const handleSubmit = async () => {
-        if (disabledProp || isSubmitted || state.status === "completed" || !userResponse.trim()) return
+        if (inputsLocked || !userResponse.trim()) return
 
         const trimmedResponse = userResponse.trim().toLowerCase()
 
-        if (markingMode === "tutor-mark" && isLive) {
-            // Tutor mark mode in Live: submit response, set to pending tutor review
-            await playFeedback("complete")
+        if (markingMode === "tutor-mark") {
+            await playFeedback("quizSuccess")
             setState(prev => ({
                 ...prev,
                 isSubmitted: true,
@@ -116,12 +129,10 @@ function ShortAnswerContent({
             return
         }
 
-        // Self-mark mode or practice mode: keyword checking
         let keywordMatch = false
         if (correctKeywords && correctKeywords.length > 0) {
             keywordMatch = correctKeywords.some(kw => trimmedResponse.includes(kw.toLowerCase().trim()))
         } else {
-            // If no keywords defined, treat any non-empty answer as valid for self-mark
             keywordMatch = trimmedResponse.length > 0
         }
 
@@ -178,12 +189,13 @@ function ShortAnswerContent({
             "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6 relative",
             disabledProp && "opacity-75"
         )}>
+            {/* Visual Accent */}
             <div className="absolute top-0 left-0 w-2 h-full bg-sky-500" />
 
             {/* Header */}
-            <div className="shrink-0 relative flex items-center justify-between px-2 pt-3">
+            <div className="shrink-0 flex items-center justify-between px-2 pt-2">
                 <div className="space-y-0.5">
-                    <span className="text-[8px] font-black text-sky-600/70 uppercase tracking-[0.2em]">Open-Ended Assessment</span>
+                    <span className="text-[8px] font-black text-sky-600/60 uppercase tracking-[0.2em]">Open Response</span>
                     <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
                 </div>
                 <div className="flex items-center gap-2">
@@ -194,62 +206,53 @@ function ShortAnswerContent({
                             onTimeout={onTimeout}
                         />
                     )}
-                    {disabledProp && (
-                        <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
-                            <Lock className="h-2.5 w-2.5" />
-                            <span>Locked</span>
+                    {isSubmitted && (
+                        <div className="flex items-center gap-1 text-[9px] font-black uppercase text-emerald-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Submitted</span>
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* Center Prompt & Response Field */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-3 space-y-3">
-                <div className="p-4 bg-sky-50/50 border-2 border-sky-100 rounded-2xl">
-                    <p className="text-sm md:text-base font-bold text-slate-900 leading-relaxed">
-                        {question || "Write your explanation or short response in detail below:"}
-                    </p>
-                </div>
-
+            {/* CENTER SECTION: Question & Input Area */}
+            <div className="flex-1 min-h-0 flex flex-col justify-center py-2 space-y-3 overflow-y-auto">
+                <p className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight">
+                    {question}
+                </p>
                 <Textarea
                     value={userResponse}
                     onChange={(e) => handleResponseChange(e.target.value)}
-                    disabled={isSubmitted || disabledProp}
-                    placeholder={placeholder || "Type your answer here..."}
+                    disabled={inputsLocked}
+                    placeholder={placeholder}
                     rows={4}
-                    className="text-xs md:text-sm font-semibold border-2 border-slate-200 focus-visible:ring-0 focus-visible:border-sky-500 rounded-2xl bg-slate-50/50 p-4 resize-none"
+                    className="bg-slate-50 border-2 border-slate-200 focus-visible:ring-sky-500 focus-visible:border-sky-500 font-semibold text-slate-900 placeholder:text-slate-400 rounded-xl resize-none p-4 text-sm md:text-base shadow-inner"
                 />
             </div>
 
-            {/* Bottom Actions & Status */}
+            {/* BOTTOM SECTION: Feedback & Submit */}
             <div className="shrink-0 space-y-3 px-2 pb-4 pt-1">
                 {isSubmitted && (
                     <div className={cn(
-                        "p-3.5 rounded-xl border-2 animate-in slide-in-from-top-2 duration-300",
-                        isPendingMarking
-                            ? "bg-amber-50 border-amber-200 text-amber-800"
-                            : score > 0
-                                ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-                                : "bg-rose-50 border-rose-200 text-rose-800"
+                        "p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-300 shadow-sm",
+                        ((isPendingMarking && !tutorMarked) || (markingMode === "tutor-mark" && !tutorMarked))
+                            ? "bg-amber-50 border-amber-200 text-amber-900"
+                            : isApproved
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-900"
+                                : "bg-rose-50 border-rose-200 text-rose-900"
                     )}>
-                        {isPendingMarking ? (
-                            <div className="flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-amber-600 animate-pulse" />
-                                <div>
-                                    <p className="text-xs font-black uppercase tracking-wider">Submitted — Pending Tutor Review</p>
-                                    <p className="text-[10px] font-medium opacity-80">Your response has been saved for tutor marking.</p>
-                                </div>
+                        {((isPendingMarking && !tutorMarked) || (markingMode === "tutor-mark" && !tutorMarked)) ? (
+                            <div className="space-y-0.5">
+                                <p className="text-xs font-black uppercase tracking-wider text-amber-700">Submitted — Pending Tutor Review</p>
+                                <p className="text-[10px] font-medium opacity-80">Your response has been saved for tutor evaluation.</p>
                             </div>
-                        ) : score > 0 ? (
-                            <div className="flex items-center gap-2">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                                <div>
-                                    <p className="text-xs font-black uppercase tracking-wider">Correct Response (+{score} pts)</p>
-                                    <p className="text-[10px] font-medium opacity-80">Keywords verified successfully.</p>
-                                </div>
+                        ) : isApproved ? (
+                            <div className="space-y-0.5">
+                                <p className="text-xs font-black uppercase tracking-wider text-emerald-600">Great Job!</p>
+                                <p className="text-[10px] font-medium opacity-80">Your answer covers key concepts.</p>
                             </div>
                         ) : (
-                            <div>
+                            <div className="space-y-0.5">
                                 <p className="text-xs font-black uppercase tracking-wider text-rose-600">Review Required</p>
                                 <p className="text-[10px] font-medium opacity-80">Ensure your answer includes key concepts.</p>
                             </div>
@@ -262,20 +265,21 @@ function ShortAnswerContent({
                         <Button
                             className="h-11 w-full rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-sky-500/20"
                             onClick={handleSubmit}
-                            disabled={disabledProp || !userResponse.trim()}
+                            disabled={inputsLocked || !userResponse.trim()}
                         >
                             <Send className="w-3.5 h-3.5 mr-1.5" /> Submit Response
                         </Button>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
-                            <Button disabled className="h-11 rounded-xl bg-sky-600 text-white font-black uppercase text-[10px] tracking-widest">
-                                Submitted
+                        <div className={cn("w-full", displayRetry && "grid grid-cols-1 sm:grid-cols-2 gap-2")}>
+                            <Button disabled className="h-11 w-full rounded-xl bg-sky-600 text-white font-black uppercase text-[10px] tracking-widest disabled:opacity-100">
+                                {((isPendingMarking && !tutorMarked) || (markingMode === "tutor-mark" && !tutorMarked)) ? "Submitted" : "Scored"}
                             </Button>
-                            {!isLive && (
+                            {displayRetry && (
                                 <Button
                                     onClick={onLocalRetry}
                                     variant="outline"
                                     className="h-11 rounded-xl border-2 border-sky-600 text-sky-600 font-black uppercase text-[10px] tracking-widest"
+                                    disabled={inputsLocked}
                                 >
                                     Try Again
                                 </Button>

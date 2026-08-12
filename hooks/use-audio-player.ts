@@ -31,7 +31,7 @@ export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudio
         }
         audio.onerror = () => {
             setIsPlaying(false)
-            onEnded?.()
+            // Do NOT call onEnded here — audio load failure should let the 30s timer handle unlock
         }
 
         if (autoPlay) {

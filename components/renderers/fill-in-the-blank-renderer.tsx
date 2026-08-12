@@ -24,8 +24,9 @@ interface FillInTheBlankRendererProps {
   text: string
   blanks: Blank[]
   caseSensitive?: boolean
-  markingMode?: "self-mark" | "tutor-mark"
   points?: number
+  markingMode?: "self-mark" | "tutor-mark"
+  timeLimit?: number
   isEditing?: boolean
   scoreContext?: {
     score: number
@@ -35,16 +36,17 @@ interface FillInTheBlankRendererProps {
   mode?: 'practice' | 'live'
   state?: 'active' | 'disabled'
   disabled?: boolean
-  // Persistence & Base props
   savedState?: any
   setComponentState?: (state: any) => void
   id?: string
   status?: string
+  isTutorView?: boolean
 }
 
 type FillInTheBlankState = {
   userAnswers: Record<string, string>
   isSubmitted: boolean
+  isPendingMarking?: boolean
   correctAnswers: Record<string, boolean>
   score: number
   status?: string
@@ -77,14 +79,28 @@ function FillInTheBlankContent({
   const { registerLock, unregisterLock } = useNavigationLock()
   const [hasStarted, setHasStarted] = useState(false)
 
-  const timeLimit = (props as any).timeLimit || 10
+  const timeLimit = props.timeLimit || (props as any).time_limit || 10
 
   const {
     userAnswers,
     isSubmitted,
+    isPendingMarking,
     correctAnswers,
     score
   } = state
+
+  const tutorMarked = Boolean((state as any)?.tutorMarked || (state as any)?.markedBy);
+  const totalPossible = points * blanks.length;
+  const displayScore = tutorMarked
+    ? (correctAnswers && Object.keys(correctAnswers).length > 0
+      ? Object.values(correctAnswers).filter(Boolean).length * points
+      : score)
+    : score;
+  const isApproved = (state as any)?.isApproved !== undefined
+    ? Boolean((state as any)?.isApproved)
+    : (displayScore > 0);
+
+  const inputsLocked = Boolean(props.isTutorView) || disabledProp || isSubmitted || state.status === 'completed';
 
   const parts = text.split("{{blank}}")
 
@@ -102,13 +118,8 @@ function FillInTheBlankContent({
     return () => unregisterLock(props.id || 'fitb-renderer')
   }, [isLive, hasStarted, isSubmitted, state.status, registerLock, unregisterLock, props.id])
 
-  // Initialize state if empty (though initial state passed to ScoredRenderer handles this, 
-  // we might need to populate keys if they are missing in a "partial" save?)
-  // But `initialState` in wrapper does that.
-
   const handleAnswerChange = (blankId: string, value: string) => {
-    const effectiveDisabled = disabledProp || isSubmitted || state.status === 'completed'
-    if (effectiveDisabled) return
+    if (inputsLocked) return
 
     setState(prev => ({
       ...prev,
@@ -126,10 +137,8 @@ function FillInTheBlankContent({
       return caseSensitive ? userAnswer === answer : userAnswer.toLowerCase() === answer.toLowerCase()
     }
 
-    // Check main answer
     if (checkAgainst(blank.answer)) return true
 
-    // Check alternatives
     if (blank.alternatives && blank.alternatives.length > 0) {
       return blank.alternatives.some((alt) => checkAgainst(alt))
     }
@@ -138,19 +147,7 @@ function FillInTheBlankContent({
   }
 
   const handleSubmit = async () => {
-    if (disabledProp || isSubmitted || state.status === 'completed') return;
-
-    if (props.markingMode === 'tutor-mark' && isLive) {
-      await playFeedback('complete');
-      setState(prev => ({
-        ...prev,
-        isSubmitted: true,
-        isPendingMarking: true,
-        score: 0,
-        status: 'completed'
-      }))
-      return;
-    }
+    if (inputsLocked) return;
 
     const results: Record<string, boolean> = {}
     let correctCount = 0
@@ -163,8 +160,8 @@ function FillInTheBlankContent({
 
     const earnedPoints = correctCount * points;
     const allCorrect = correctCount === blanks.length;
+    const isPending = props.markingMode === 'tutor-mark';
 
-    // Feedback
     if (allCorrect) {
       await playFeedback('quizSuccess');
     } else if (correctCount > 0) {
@@ -173,14 +170,12 @@ function FillInTheBlankContent({
       await playFeedback('incorrect');
     }
 
-    // Scoring (Using standardized handlePoints from base renderer)
     handlePoints(earnedPoints);
 
-    // Update State
     setState(prev => ({
       ...prev,
       isSubmitted: true,
-      isPendingMarking: false,
+      isPendingMarking: isPending,
       correctAnswers: results,
       score: earnedPoints,
       status: 'completed'
@@ -188,7 +183,7 @@ function FillInTheBlankContent({
   }
 
   const onLocalRetry = () => {
-    handleRetry() // Centralized handler
+    handleRetry()
     const initialAnswers: Record<string, string> = {}
     blanks.forEach((blank) => {
       initialAnswers[blank.id] = ""
@@ -198,6 +193,7 @@ function FillInTheBlankContent({
       ...prev,
       userAnswers: initialAnswers,
       isSubmitted: false,
+      isPendingMarking: false,
       correctAnswers: {},
       score: 0,
       status: 'active'
@@ -222,13 +218,9 @@ function FillInTheBlankContent({
     )
   }
 
-
-
-  const totalPossible = points * blanks.length
-
   return (
     <div className={cn(
-      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-6 relative",
       disabledProp && "opacity-75"
     )}>
       {/* Visual Accent */}
@@ -262,34 +254,41 @@ function FillInTheBlankContent({
       {/* CENTER SECTION: Interactive Text */}
       <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
         <div className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight my-auto">
-          {parts.map((part, index) => (
-            <React.Fragment key={index}>
-              {part}
-              {index < blanks.length && (
-                <span className="inline-flex relative mx-1.5 group/input align-middle">
-                  <Input
-                    value={userAnswers[blanks[index].id] || ""}
-                    onChange={(e) => handleAnswerChange(blanks[index].id, e.target.value)}
-                    disabled={isSubmitted || disabledProp}
-                    placeholder="..."
-                    className={cn(
-                      "w-28 md:w-36 h-9 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-xs md:text-sm shadow-inner",
-                      isSubmitted && (
-                        correctAnswers[blanks[index].id]
-                          ? "border-emerald-500 bg-emerald-500 text-white shadow-none"
-                          : "border-rose-500 bg-rose-50 text-rose-600 shadow-none"
-                      )
+          {parts.map((part, index) => {
+            const blank = blanks[index];
+            const savedCorrect = (state as any)?.correctAnswers?.[blank?.id];
+            const isBlankCorrect = savedCorrect !== undefined
+              ? Boolean(savedCorrect)
+              : (correctAnswers[blank?.id] ?? checkAnswer(blank, userAnswers[blank?.id] || ""));
+            return (
+              <React.Fragment key={index}>
+                {part}
+                {index < blanks.length && (
+                  <span className="inline-flex relative mx-1.5 group/input align-middle">
+                    <Input
+                      value={userAnswers[blank.id] || ""}
+                      onChange={(e) => handleAnswerChange(blank.id, e.target.value)}
+                      disabled={inputsLocked}
+                      placeholder="..."
+                      className={cn(
+                        "w-28 md:w-36 h-9 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-xs md:text-sm shadow-inner",
+                        isSubmitted && (
+                          isBlankCorrect
+                            ? "border-emerald-500 bg-emerald-500 text-white shadow-none"
+                            : "border-rose-500 bg-rose-50 text-rose-600 shadow-none"
+                        )
+                      )}
+                    />
+                    {isSubmitted && !isBlankCorrect && (
+                      <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white border border-emerald-500 px-2 py-1 rounded shadow-lg z-20 whitespace-nowrap animate-in fade-in zoom-in-95 font-black uppercase text-[8px] tracking-widest text-emerald-600">
+                        Answer: <span className="text-slate-900">{blank.answer}</span>
+                      </div>
                     )}
-                  />
-                  {isSubmitted && !correctAnswers[blanks[index].id] && (
-                    <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white border border-emerald-500 px-2 py-1 rounded shadow-lg z-20 whitespace-nowrap animate-in fade-in zoom-in-95 font-black uppercase text-[8px] tracking-widest text-emerald-600">
-                      Answer: <span className="text-slate-900">{blanks[index].answer}</span>
-                    </div>
-                  )}
-                </span>
-              )}
-            </React.Fragment>
-          ))}
+                  </span>
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
 
@@ -297,28 +296,54 @@ function FillInTheBlankContent({
       <div className="shrink-0 space-y-3 px-2 pb-4 pt-1">
         <div className="min-h-[52px] flex flex-col justify-end">
           {isSubmitted && (
-            <div className={cn(
-              'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
-              score === totalPossible ? 'bg-emerald-50/50 border-emerald-500/20' : 'bg-rose-50/50 border-rose-500/20'
-            )}>
-              {score === totalPossible ? (
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Correct</span>
-                  </div>
-                  <p className="text-sm font-black text-slate-900 leading-tight italic">"Excellent! All answers are correct."</p>
+            ((isPendingMarking && !tutorMarked) || (props.markingMode === 'tutor-mark' && !tutorMarked)) ? (
+              <div className="p-4 rounded-xl border-2 bg-amber-50 border-amber-200 text-amber-800 animate-in slide-in-from-top-2 duration-300">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-700">Submitted — Pending Tutor Review</span>
                 </div>
-              ) : (
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Score</span>
+                <p className="text-[10px] font-medium opacity-80 mt-0.5">Your response has been submitted for tutor marking.</p>
+              </div>
+            ) : (
+              <div className={cn(
+                'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
+                (isApproved || displayScore === totalPossible) ? 'bg-emerald-50/50 border-emerald-500/20' : 'bg-rose-50/50 border-rose-500/20'
+              )}>
+                {(isApproved || displayScore === totalPossible) ? (
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                        {tutorMarked ? "Tutor Approved" : "Correct"}
+                      </span>
+                    </div>
+                    <p className="text-sm font-black text-slate-900 leading-tight italic">
+                      {tutorMarked ? '"Response reviewed and approved by tutor."' : '"Excellent! All answers are correct."'}
+                    </p>
                   </div>
-                  <p className="text-sm font-black text-slate-900 leading-tight">
-                    You got {Math.floor(score / points)} / {blanks.length} correct.
-                  </p>
-                </div>
-              )}
-            </div>
+                ) : displayScore > 0 ? (
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">
+                        {tutorMarked ? "Tutor Scored" : "Partial Credit"}
+                      </span>
+                    </div>
+                    <p className="text-sm font-black text-slate-900 leading-tight">
+                      {tutorMarked ? `Response reviewed by tutor — ${displayScore} / ${totalPossible} pts awarded.` : `You got ${Math.floor(displayScore / points)} / ${blanks.length} correct.`}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">
+                        {tutorMarked ? "Tutor Reviewed" : "Score"}
+                      </span>
+                    </div>
+                    <p className="text-sm font-black text-slate-900 leading-tight">
+                      {tutorMarked ? "Response reviewed by tutor — revision required." : `You got ${Math.floor(displayScore / points)} / ${blanks.length} correct.`}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )
           )}
         </div>
 
@@ -327,9 +352,9 @@ function FillInTheBlankContent({
             <Button
               className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 hover:bg-emerald-500"
               onClick={handleSubmit}
-              disabled={disabledProp}
+              disabled={inputsLocked}
             >
-              Check Answers
+              {props.markingMode === 'tutor-mark' ? "Submit Response" : "Check Answers"}
             </Button>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
@@ -337,13 +362,13 @@ function FillInTheBlankContent({
                 className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest disabled:opacity-100 shadow-lg shadow-emerald-500/20"
                 disabled
               >
-                Completed
+                {((isPendingMarking && !tutorMarked) || (props.markingMode === 'tutor-mark' && !tutorMarked)) ? "Submitted" : "Completed"}
               </Button>
-              {!isLive && score !== totalPossible && (
+              {!isLive && displayScore !== totalPossible && !tutorMarked && (
                 <Button
                   className="h-11 w-full rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95"
                   onClick={onLocalRetry}
-                  disabled={disabledProp}
+                  disabled={inputsLocked}
                 >
                   Retry
                 </Button>
@@ -355,7 +380,7 @@ function FillInTheBlankContent({
         <div className="flex justify-center pt-0.5">
           <div className="px-4 py-1.5 bg-emerald-50/50 border border-emerald-100 rounded">
             <span className="text-[7px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">
-              Points: <span className="text-emerald-700">{score}</span> / {totalPossible}
+              Points: <span className="text-emerald-700">{displayScore}</span> / {totalPossible}
             </span>
           </div>
         </div>
@@ -383,16 +408,17 @@ export function FillInTheBlankRenderer(props: FillInTheBlankRendererProps) {
     status
   } = props
 
+  const effectiveMode = props.mode || mode || 'practice';
+
   const component: Component = {
     id,
     type: 'fillInTheBlank',
     state: componentState as any,
     status: (status || (savedState as any)?.status || 'uncompleted') as any,
-    props: { title, text, blanks, points },
-    mode: mode as any
+    props: { title, text, blanks, points, timeLimit: props.timeLimit },
+    mode: effectiveMode as any
   } as Component
 
-  // Initial State Construction
   const initialAnswers: Record<string, string> = {}
   blanks.forEach((blank) => {
     initialAnswers[blank.id] = ""
@@ -429,12 +455,8 @@ export function FillInTheBlankRenderer(props: FillInTheBlankRendererProps) {
       initialState={initialState}
       savedState={savedState}
       setComponentState={setComponentState}
-      // We pass Points * Blanks as total? No, component consumes 'points' meaning 'Points per blank' in legacy.
-      // But ScoredRenderer prop 'points' is typically total.
-      // But we use manual scoring. So it doesn't matter what we pass to ScoredRenderer strictly, 
-      // EXCEPT if ScoredRenderer uses it for something.
       points={points * blanks.length}
-      mode={mode}
+      mode={effectiveMode}
       disabled={disabled}
       onRender={(renderProps) => (
         <FillInTheBlankContent
@@ -451,3 +473,4 @@ export function FillInTheBlankRenderer(props: FillInTheBlankRendererProps) {
     />
   )
 }
+

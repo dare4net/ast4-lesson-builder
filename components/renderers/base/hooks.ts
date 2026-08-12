@@ -21,27 +21,27 @@ export function useInteractiveState<S>({
     setComponentState
 }: UseInteractiveStateProps<S>) {
     const [state, setState] = useState<S>(savedState ?? initialState)
-    const lastIncomingState = useRef<S | undefined>(savedState)
-    const lastOutgoingState = useRef<S>(savedState ?? initialState)
+    const isIncomingRef = useRef(false)
+    const lastStateRef = useRef<S | undefined>(savedState ?? initialState)
 
-    // Sync from parent (savedState) -> local state
-    // We intentionally do NOT include `state` in the dep array here.
-    // Including it caused a loop: savedState changes → setState → state changes → effect re-runs.
-    // The `lastIncomingState` ref is sufficient to deduplicate incoming updates.
+    // 1. Sync incoming from parent (savedState -> local state)
     useEffect(() => {
-        if (savedState !== undefined && !isEqual(savedState, lastIncomingState.current)) {
+        if (savedState !== undefined && !isEqual(savedState, lastStateRef.current)) {
+            isIncomingRef.current = true
+            lastStateRef.current = savedState
             setState(savedState)
-            lastIncomingState.current = savedState
-            lastOutgoingState.current = savedState
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [savedState])
 
-    // Sync from local state -> parent (setComponentState)
+    // 2. Sync outgoing from local state -> parent (setComponentState)
     useEffect(() => {
-        // Only sync outward if the state has changed from what we last sent or received
-        if (setComponentState && !isEqual(state, lastOutgoingState.current)) {
-            lastOutgoingState.current = state
+        if (isIncomingRef.current) {
+            // State update originated from parent (savedState), do NOT send back
+            isIncomingRef.current = false
+            return
+        }
+        if (setComponentState && !isEqual(state, lastStateRef.current)) {
+            lastStateRef.current = state
             setComponentState(state)
         }
     }, [state, setComponentState])

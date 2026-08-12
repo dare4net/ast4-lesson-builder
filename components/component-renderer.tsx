@@ -87,6 +87,7 @@ interface ComponentRendererProps {
   isLastSlideChild?: boolean;
   onCheckSlideCompletion?: () => void;
   isEditing?: boolean;
+  isTutorView?: boolean;
   onClick?: () => void;
   pollStore?: {
     pollData: PollVotesMap;
@@ -108,7 +109,10 @@ const gamifiedTypes: ComponentType[] = [
   'codeEditor',
   'wordScramble',
   'memoryGrid',
-  'spinTheWheel',
+  'wordCloud',
+  'scaleSlider',
+  'poll',
+  'spinTheWheel'
 ];
 
 const interactiveTypes: ComponentType[] = [
@@ -126,78 +130,80 @@ const interactiveTypes: ComponentType[] = [
   'wordScramble',
   'memoryGrid',
   'spinTheWheel',
+  'crossword',
+  'audioRecording',
+  'wordCloud',
+  'scaleSlider',
+  'drawingCanvas',
+  'poll',
+  'spinTheWheel'
 ];
 
-// Status-safe wrapper for component discovery and live timing
+// Wrapper component for decrypt/discovery mode (handles password encryption, timers, hints)
 const DiscoveryWrapper = ({
   component,
-  children,
   savedState,
-  setComponentState
+  setComponentState,
+  children
 }: {
-  component: Component,
-  children: React.ReactNode,
-  savedState?: any,
-  setComponentState?: (state: any) => void
+  component: Component;
+  savedState?: any;
+  setComponentState?: (state: any) => void;
+  children: React.ReactNode;
 }) => {
-  const timeLimit = component.props?.timeLimit || 0;
-  const isLive = !!timeLimit;
-  // Always start revealed — interactive components manage their own LiveStartScreen and LiveTimer internally.
-  // The outer DiscoveryWrapper gate is not used for any registered component type.
-  const [isRevealed, setIsRevealed] = React.useState(true);
-
-  const [timeLeft, setTimeLeft] = React.useState<number | null>(null);
-  const timerRef = React.useRef<NodeJS.Timeout | null>(null);
-
-  const handleReveal = () => {
-    setIsRevealed(true);
-    if (setComponentState) {
-      setComponentState({ revealed: true });
-    }
-
-    if (isLive) {
-      setTimeLeft(timeLimit);
-    }
-  };
+  const compAny = component as any;
+  const isEncrypted = compAny.discoveryMode === "decrypt" && compAny.encryptionPassword;
+  const isLive = compAny.discoveryMode === "live" && compAny.liveDurationSeconds;
+  const [passwordInput, setPasswordInput] = React.useState("");
+  const [unlocked, setUnlocked] = React.useState(savedState?.unlocked || false);
+  const [timeLeft, setTimeLeft] = React.useState<number | null>(compAny.liveDurationSeconds || null);
 
   React.useEffect(() => {
-    if (timeLeft !== null && timeLeft > 0) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft(prev => (prev !== null && prev > 0) ? prev - 1 : 0);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      // Auto-submit or lock logic could go here
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [timeLeft]);
+    if (!isLive || !timeLeft) return;
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev === null || prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isLive, timeLeft]);
 
-  if (!isRevealed) {
+  if (isEncrypted && !unlocked) {
     return (
-      <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-slate-50/50 transition-all duration-700">
-        <div className="text-center space-y-6 animate-in fade-in zoom-in-95 duration-500 px-6">
-          <div className="relative mx-auto w-20 h-20 flex items-center justify-center mb-8">
-            <div className="absolute inset-0 bg-emerald-500/10 rounded-full animate-ping" />
-            <div className="relative w-14 h-14 bg-white border-2 border-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-xl font-black text-emerald-600">?</span>
-            </div>
+      <div className="relative flex-1 flex flex-col items-center justify-center p-8 bg-slate-900 border-2 border-dashed border-slate-700 rounded-3xl text-center shadow-2xl overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent pointer-events-none" />
+        <div className="relative z-10 max-w-sm space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center mx-auto border border-amber-500/30 text-amber-400">
+            🔒
           </div>
-
-          <div className="space-y-1">
-            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Encrypted Fragment</h3>
-            <p className="text-[10px] font-black text-emerald-600/60 uppercase tracking-[0.3em]">Initialize synchronization protocol</p>
+          <div>
+            <h4 className="text-sm font-black text-white uppercase tracking-widest">Encrypted Data Stream</h4>
+            <p className="text-xs text-slate-400 mt-1">Enter decryption protocol key to reveal payload.</p>
           </div>
-
-          <button
-            onClick={handleReveal}
-            className="group relative h-14 w-64 mx-auto rounded-xl bg-emerald-600 p-[2px] shadow-xl shadow-emerald-500/20 active:scale-95 transition-transform"
-          >
-            <div className="h-full w-full rounded-[10px] bg-emerald-600 flex items-center justify-center gap-3">
-              <span className="text-[10px] font-black text-white uppercase tracking-widest">Decrypt Segment</span>
-            </div>
-          </button>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              placeholder="Enter Access Key..."
+              value={passwordInput}
+              onChange={e => setPasswordInput(e.target.value)}
+              className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+            />
+            <button
+              onClick={() => {
+                if (passwordInput === component.encryptionPassword) {
+                  setUnlocked(true);
+                  if (setComponentState) setComponentState({ ...savedState, unlocked: true });
+                }
+              }}
+              className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition-all shadow-lg shadow-amber-500/20"
+            >
+              Decrypt
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -232,8 +238,8 @@ const DiscoveryWrapper = ({
 };
 
 // Wrapper component for disabled state
-const DisabledWrapper = ({ isDisabled, children }: { isDisabled: boolean, children: React.ReactNode }) => {
-  if (!isDisabled) return <div className="flex-1 flex flex-col w-full">{children}</div>;
+const DisabledWrapper = ({ isDisabled, isTutorView, children }: { isDisabled: boolean, isTutorView?: boolean, children: React.ReactNode }) => {
+  if (!isDisabled || isTutorView) return <div className="flex-1 flex flex-col w-full">{children}</div>;
 
   return (
     <div className="relative group flex-1 flex flex-col w-full">
@@ -252,13 +258,14 @@ const ComponentRendererBase = function ComponentRenderer({
   isLastSlideChild,
   onCheckSlideCompletion,
   isEditing = false,
+  isTutorView = false,
   pollStore
 }: ComponentRendererProps) {
   const Renderer: React.ComponentType<any> = componentRenderers[component.type] || componentRenderers.fallback;
   const isDisabled = component.state === "disabled";
 
   const renderComponent = (props: any) => (
-    <DisabledWrapper isDisabled={isDisabled}>
+    <DisabledWrapper isDisabled={isDisabled} isTutorView={isTutorView}>
       <DiscoveryWrapper
         component={component}
         savedState={savedState}
@@ -266,7 +273,7 @@ const ComponentRendererBase = function ComponentRenderer({
       >
         <div className={cn(
           "flex-1 flex flex-col w-full transition-opacity",
-          isDisabled && "opacity-75"
+          isDisabled && !isTutorView && "opacity-75"
         )}>
           <Renderer {...props} />
         </div>
@@ -281,6 +288,7 @@ const ComponentRendererBase = function ComponentRenderer({
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
       disabled: isDisabled,
+      isTutorView,
       isLastSlideChild,
       onCheckSlideCompletion: isLastSlideChild ? onCheckSlideCompletion : undefined
     });
@@ -293,6 +301,7 @@ const ComponentRendererBase = function ComponentRenderer({
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
       disabled: isDisabled,
+      isTutorView,
       isLastSlideChild,
       onCheckSlideCompletion: isLastSlideChild ? onCheckSlideCompletion : undefined
     });
@@ -306,6 +315,7 @@ const ComponentRendererBase = function ComponentRenderer({
     setComponentState: isDisabled ? undefined : setComponentState,
     status: component.status,
     disabled: isDisabled,
+    isTutorView,
     isEditing,
     // Pass poll-specific store for real-time vote integration
     ...(component.type === 'poll' && pollStore ? {

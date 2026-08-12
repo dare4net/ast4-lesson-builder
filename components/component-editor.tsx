@@ -25,6 +25,7 @@ import { MultiSelectQuizEditor } from "@/components/editors/multi-select-quiz-ed
 import { BulletListEditor } from "@/components/editors/bullet-list-editor"
 import { FillInTheBlankEditor } from "@/components/editors/fill-in-the-blank-editor"
 import { CodeEditorEditor } from "@/components/editors/code-editor-editor"
+import { ShortAnswerEditor } from "@/components/editors/short-answer-editor"
 import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { ComponentRenderer } from "@/components/component-renderer"
 
@@ -89,217 +90,233 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
         onTitleChange={componentDef.propDefinitions.find(d => d.name === "title") ? (val) => handleChange("title", val) : undefined}
         onPointsChange={componentDef.propDefinitions.find(d => d.name === "points") ? (val) => handleChange("points", val) : undefined}
       >
-        <div className="space-y-8">
-          {componentDef.propDefinitions
-            .filter(d => d.name !== "title" && d.name !== "points")
-            .map((propDef) => (
-              <div key={propDef.name} className="space-y-3 group">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor={propDef.name} className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] group-focus-within:text-emerald-500 transition-colors">
-                    {propDef.label}
-                    {propDef.required && <span className="text-emerald-500 ml-1.5 opacity-50">*</span>}
-                  </Label>
-                  {propDef.description && (
-                    <span className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter">
-                      {propDef.type}
-                    </span>
-                  )}
-                </div>
-
-                {propDef.type === "string" && (
-                  <Input
-                    id={propDef.name}
-                    value={props[propDef.name] || ""}
-                    onChange={(e) => handleChange(propDef.name, e.target.value)}
-                    placeholder={propDef.placeholder}
-                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold placeholder:text-slate-700"
-                  />
-                )}
-
-                {propDef.type === "number" && (
-                  <Input
-                    id={propDef.name}
-                    type="number"
-                    value={props[propDef.name] || 0}
-                    onChange={(e) => handleChange(propDef.name, Number(e.target.value))}
-                    min={propDef.min}
-                    max={propDef.max}
-                    step={propDef.step || 1}
-                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold"
-                  />
-                )}
-
-                {propDef.type === "boolean" && (
-                  <div className="flex items-center justify-between p-4 bg-slate-950/30 rounded-xl border border-slate-800 transition-all hover:bg-slate-950/50">
-                    <Label htmlFor={propDef.name} className="text-xs font-bold text-slate-300">
-                      {props[propDef.name] ? "Enabled" : "Disabled"}
+        {component.type === "shortAnswer" ? (
+          <ShortAnswerEditor
+            question={props.question || ""}
+            placeholder={props.placeholder || ""}
+            markingMode={props.markingMode || "self-mark"}
+            correctKeywords={props.correctKeywords || props.keyConcepts || []}
+            onQuestionChange={(val) => handleChange("question", val)}
+            onPlaceholderChange={(val) => handleChange("placeholder", val)}
+            onMarkingModeChange={(val) => handleChange("markingMode", val)}
+            onKeywordsChange={(val) => {
+              handleChange("correctKeywords", val)
+              handleChange("keyConcepts", val)
+            }}
+          />
+        ) : (
+          <div className="space-y-8">
+            {componentDef.propDefinitions
+              .filter(d => d.name !== "title" && d.name !== "points")
+              .map((propDef) => (
+                <div key={propDef.name} className="space-y-3 group">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor={propDef.name} className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] group-focus-within:text-emerald-500 transition-colors">
+                      {propDef.label}
+                      {propDef.required && <span className="text-emerald-500 ml-1.5 opacity-50">*</span>}
                     </Label>
-                    <Switch
+                    {propDef.description && (
+                      <span className="text-[9px] font-bold text-slate-600 uppercase tracking-tighter">
+                        {propDef.type}
+                      </span>
+                    )}
+                  </div>
+
+                  {propDef.type === "string" && (
+                    <Input
                       id={propDef.name}
-                      checked={props[propDef.name] || false}
-                      onCheckedChange={(checked: boolean) => handleChange(propDef.name, checked)}
-                      className="data-[state=checked]:bg-emerald-500"
-                    />
-                  </div>
-                )}
-
-                {propDef.type === "select" && propDef.options && (
-                  <Select
-                    value={String(props[propDef.name])}
-                    onValueChange={(value: string) => handleChange(propDef.name, value)}
-                  >
-                    <SelectTrigger className="bg-slate-950/50 border-slate-800 h-11 text-sm font-bold focus:ring-emerald-500/50">
-                      <SelectValue placeholder={propDef.placeholder || "Select Choice..."} />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
-                      {propDef.options.map((option) => {
-                        const value = typeof option === "object" ? option.value : option
-                        const label = typeof option === "object" ? option.label : option
-
-                        return (
-                          <SelectItem key={String(value)} value={String(value)} className="focus:bg-emerald-500 focus:text-slate-950 font-bold">
-                            {label}
-                          </SelectItem>
-                        )
-                      })}
-                    </SelectContent>
-                  </Select>
-                )}
-
-                {propDef.type === "richText" && (
-                  <div className="rounded-xl overflow-hidden border border-slate-800 focus-within:border-emerald-500/50 transition-all">
-                    <RichTextEditor
                       value={props[propDef.name] || ""}
-                      onChange={(value) => handleChange(propDef.name, value)}
+                      onChange={(e) => handleChange(propDef.name, e.target.value)}
                       placeholder={propDef.placeholder}
+                      className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold placeholder:text-slate-700"
                     />
-                  </div>
-                )}
+                  )}
 
-                {propDef.type === "image" && (
-                  <div className="rounded-xl overflow-hidden shadow-2xl">
-                    <ImageUploader
-                      value={props[propDef.name] || ""}
-                      onChange={(value) => handleChange(propDef.name, value)}
-                      lessonId={lessonId}
-                      componentId={component.id}
+                  {propDef.type === "number" && (
+                    <Input
+                      id={propDef.name}
+                      type="number"
+                      value={props[propDef.name] || 0}
+                      onChange={(e) => handleChange(propDef.name, Number(e.target.value))}
+                      min={propDef.min}
+                      max={propDef.max}
+                      step={propDef.step || 1}
+                      className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold"
                     />
-                  </div>
-                )}
+                  )}
 
-                {propDef.type === "video" && (
-                  <Input
-                    id={propDef.name}
-                    value={props[propDef.name] || props.url || props.src || ""}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      handleChange(propDef.name, val);
-                      handleChange("url", val);
-                      handleChange("src", val);
-                    }}
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold placeholder:text-slate-700"
-                  />
-                )}
+                  {propDef.type === "boolean" && (
+                    <div className="flex items-center justify-between p-4 bg-slate-950/30 rounded-xl border border-slate-800 transition-all hover:bg-slate-950/50">
+                      <Label htmlFor={propDef.name} className="text-xs font-bold text-slate-300">
+                        {props[propDef.name] ? "Enabled" : "Disabled"}
+                      </Label>
+                      <Switch
+                        id={propDef.name}
+                        checked={props[propDef.name] || false}
+                        onCheckedChange={(checked: boolean) => handleChange(propDef.name, checked)}
+                        className="data-[state=checked]:bg-emerald-500"
+                      />
+                    </div>
+                  )}
 
-                {propDef.type === "componentArray" && (
-                  <div className="space-y-4 pt-2">
-                    {component.type === "quiz" && propDef.name === "questions" && (
-                      <QuizEditor
-                        questions={props.questions || []}
-                        onChange={(questions) => handleChange("questions", questions)}
-                        shuffleOptions={props.shuffleOptions !== undefined ? props.shuffleOptions : (props.randomizeAnswers !== undefined ? props.randomizeAnswers : true)}
-                        onShuffleOptionsChange={(val) => {
-                          handleChange("shuffleOptions", val)
-                          handleChange("randomizeAnswers", val)
-                        }}
-                      />
-                    )}
-                    {component.type === "matchingPairs" && propDef.name === "pairs" && (
-                      <MatchingPairsEditor
-                        pairs={props.pairs || []}
-                        onChange={(pairs) => handleChange("pairs", pairs)}
-                      />
-                    )}
-                    {component.type === "dragDrop" && propDef.name === "items" && (
-                      <DragDropEditor
-                        items={props.items || []}
-                        onChange={(items) => handleChange("items", items)}
-                      />
-                    )}
-                    {component.type === "flashcards" && propDef.name === "cards" && (
-                      <FlashcardsEditor
-                        cards={props.cards || []}
-                        onChange={(cards) => handleChange("cards", cards)}
-                      />
-                    )}
-                    {component.type === "hotspot" && propDef.name === "hotspots" && (
-                      <HotspotEditor
-                        image={props.image || ""}
-                        hotspots={props.hotspots || []}
-                        onChange={(hotspots) => handleChange("hotspots", hotspots)}
-                      />
-                    )}
-                    {component.type === "bulletList" && propDef.name === "items" && (
-                      <BulletListEditor
-                        items={props.items || []}
-                        onChange={(items) => handleChange("items", items)}
-                      />
-                    )}
-                    {component.type === "fillInTheBlank" && propDef.name === "blanks" && (
-                      <FillInTheBlankEditor
-                        text={props.text || ""}
-                        blanks={props.blanks || []}
-                        onTextChange={(text) => handleChange("text", text)}
-                        onBlanksChange={(blanks) => handleChange("blanks", blanks)}
-                      />
-                    )}
-                    {component.type === "codeEditor" && propDef.name === "testCases" && (
-                      <CodeEditorEditor
-                        initialCode={props.initialCode || ""}
-                        language={props.language || "javascript"}
-                        testCases={props.testCases || []}
-                        onInitialCodeChange={(code) => handleChange("initialCode", code)}
-                        onLanguageChange={(lang) => handleChange("language", lang)}
-                        onTestCasesChange={(testCases) => handleChange("testCases", testCases)}
-                      />
-                    )}
-                    {component.type === "table" && propDef.name === "data" && (
-                      <TableEditor
-                        component={{ ...component, props }}
-                        updateComponent={(newProps) => {
-                          setProps(newProps);
-                          setHasDraftChanges(true);
-                        }}
-                      />
-                    )}
-                    {component.type === "poll" && propDef.name === "options" && (
-                      <PollEditor
-                        question={props.question || ""}
-                        options={props.options || []}
-                        onQuestionChange={(q) => handleChange("question", q)}
-                        onOptionsChange={(opts) => handleChange("options", opts)}
-                      />
-                    )}
-                    {component.type === "flashcardQuiz" && propDef.name === "questions" && (
-                      <FlashcardQuizEditor
-                        questions={props.questions || []}
-                        onQuestionsChange={(qs) => handleChange("questions", qs)}
-                      />
-                    )}
-                    {component.type === "multiSelectQuiz" && propDef.name === "questions" && (
-                      <MultiSelectQuizEditor
-                        questions={props.questions || []}
-                        onQuestionsChange={(qs) => handleChange("questions", qs)}
-                      />
-                    )}
-                  </div>
-                )}
+                  {propDef.type === "select" && propDef.options && (
+                    <Select
+                      value={String(props[propDef.name])}
+                      onValueChange={(value: string) => handleChange(propDef.name, value)}
+                    >
+                      <SelectTrigger className="bg-slate-950/50 border-slate-800 h-11 text-sm font-bold focus:ring-emerald-500/50">
+                        <SelectValue placeholder={propDef.placeholder || "Select Choice..."} />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-900 border-slate-800 text-slate-200">
+                        {propDef.options.map((option) => {
+                          const value = typeof option === "object" ? option.value : option
+                          const label = typeof option === "object" ? option.label : option
 
-                {propDef.description && <p className="text-[10px] text-slate-600 font-bold ml-1">{propDef.description}</p>}
-              </div>
-            ))}
-        </div>
+                          return (
+                            <SelectItem key={String(value)} value={String(value)} className="focus:bg-emerald-500 focus:text-slate-950 font-bold">
+                              {label}
+                            </SelectItem>
+                          )
+                        })}
+                      </SelectContent>
+                    </Select>
+                  )}
+
+                  {propDef.type === "richText" && (
+                    <div className="rounded-xl overflow-hidden border border-slate-800 focus-within:border-emerald-500/50 transition-all">
+                      <RichTextEditor
+                        value={props[propDef.name] || ""}
+                        onChange={(value) => handleChange(propDef.name, value)}
+                        placeholder={propDef.placeholder}
+                      />
+                    </div>
+                  )}
+
+                  {propDef.type === "image" && (
+                    <div className="rounded-xl overflow-hidden shadow-2xl">
+                      <ImageUploader
+                        value={props[propDef.name] || ""}
+                        onChange={(value) => handleChange(propDef.name, value)}
+                        lessonId={lessonId}
+                        componentId={component.id}
+                      />
+                    </div>
+                  )}
+
+                  {propDef.type === "video" && (
+                    <Input
+                      id={propDef.name}
+                      value={props[propDef.name] || props.url || props.src || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        handleChange(propDef.name, val);
+                        handleChange("url", val);
+                        handleChange("src", val);
+                      }}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold placeholder:text-slate-700"
+                    />
+                  )}
+
+                  {propDef.type === "componentArray" && (
+                    <div className="space-y-4 pt-2">
+                      {component.type === "quiz" && propDef.name === "questions" && (
+                        <QuizEditor
+                          questions={props.questions || []}
+                          onChange={(questions) => handleChange("questions", questions)}
+                          shuffleOptions={props.shuffleOptions !== undefined ? props.shuffleOptions : (props.randomizeAnswers !== undefined ? props.randomizeAnswers : true)}
+                          onShuffleOptionsChange={(val) => {
+                            handleChange("shuffleOptions", val)
+                            handleChange("randomizeAnswers", val)
+                          }}
+                        />
+                      )}
+                      {component.type === "matchingPairs" && propDef.name === "pairs" && (
+                        <MatchingPairsEditor
+                          pairs={props.pairs || []}
+                          onChange={(pairs) => handleChange("pairs", pairs)}
+                        />
+                      )}
+                      {component.type === "dragDrop" && propDef.name === "items" && (
+                        <DragDropEditor
+                          items={props.items || []}
+                          onChange={(items) => handleChange("items", items)}
+                        />
+                      )}
+                      {component.type === "flashcards" && propDef.name === "cards" && (
+                        <FlashcardsEditor
+                          cards={props.cards || []}
+                          onChange={(cards) => handleChange("cards", cards)}
+                        />
+                      )}
+                      {component.type === "hotspot" && propDef.name === "hotspots" && (
+                        <HotspotEditor
+                          image={props.image || ""}
+                          hotspots={props.hotspots || []}
+                          onChange={(hotspots) => handleChange("hotspots", hotspots)}
+                        />
+                      )}
+                      {component.type === "bulletList" && propDef.name === "items" && (
+                        <BulletListEditor
+                          items={props.items || []}
+                          onChange={(items) => handleChange("items", items)}
+                        />
+                      )}
+                      {component.type === "fillInTheBlank" && propDef.name === "blanks" && (
+                        <FillInTheBlankEditor
+                          text={props.text || ""}
+                          blanks={props.blanks || []}
+                          onTextChange={(text) => handleChange("text", text)}
+                          onBlanksChange={(blanks) => handleChange("blanks", blanks)}
+                        />
+                      )}
+                      {component.type === "codeEditor" && propDef.name === "testCases" && (
+                        <CodeEditorEditor
+                          initialCode={props.initialCode || ""}
+                          language={props.language || "javascript"}
+                          testCases={props.testCases || []}
+                          onInitialCodeChange={(code) => handleChange("initialCode", code)}
+                          onLanguageChange={(lang) => handleChange("language", lang)}
+                          onTestCasesChange={(testCases) => handleChange("testCases", testCases)}
+                        />
+                      )}
+                      {component.type === "table" && propDef.name === "data" && (
+                        <TableEditor
+                          component={{ ...component, props }}
+                          updateComponent={(newProps) => {
+                            setProps(newProps);
+                            setHasDraftChanges(true);
+                          }}
+                        />
+                      )}
+                      {component.type === "poll" && propDef.name === "options" && (
+                        <PollEditor
+                          question={props.question || ""}
+                          options={props.options || []}
+                          onQuestionChange={(q) => handleChange("question", q)}
+                          onOptionsChange={(opts) => handleChange("options", opts)}
+                        />
+                      )}
+                      {component.type === "flashcardQuiz" && propDef.name === "questions" && (
+                        <FlashcardQuizEditor
+                          questions={props.questions || []}
+                          onQuestionsChange={(qs) => handleChange("questions", qs)}
+                        />
+                      )}
+                      {component.type === "multiSelectQuiz" && propDef.name === "questions" && (
+                        <MultiSelectQuizEditor
+                          questions={props.questions || []}
+                          onQuestionsChange={(qs) => handleChange("questions", qs)}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  {propDef.description && <p className="text-[10px] text-slate-600 font-bold ml-1">{propDef.description}</p>}
+                </div>
+              ))}
+          </div>
+        )}
       </SingleItemEditor>
     </div>
   )

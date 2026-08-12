@@ -18,7 +18,8 @@ import {
     Timer,
     ChevronDown,
     ChevronUp,
-    Sparkles
+    Sparkles,
+    Eye
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -273,11 +274,16 @@ export default function StudentProgramBreakdownPage() {
                                                     {sector.lessons?.map((lesson: any, lIdx: number) => {
                                                         const lessonTitle = getLessonTitle(lesson, lIdx)
                                                         const isCleared = lesson.status === 'cleared'
+                                                        const studentName = getStudentName(data.student)
+                                                        const returnPath = `/dashboard/tutor/students/${id}/programs/${programId}`
 
                                                         return (
-                                                            <div
+                                                            <button
                                                                 key={lesson._id || lIdx}
-                                                                className={`p-3.5 rounded-2xl border flex items-center justify-between text-xs font-semibold ${isCleared
+                                                                onClick={() => router.push(
+                                                                    `/tutor-view/${lesson._id}?userId=${id}&studentName=${encodeURIComponent(studentName)}&returnUrl=${encodeURIComponent(returnPath)}`
+                                                                )}
+                                                                className={`p-3.5 rounded-2xl border flex items-center justify-between text-xs font-semibold cursor-pointer hover:ring-2 hover:ring-amber-400/40 transition-all ${isCleared
                                                                     ? "bg-green-50/50 border-green-200 text-slate-800"
                                                                     : "bg-slate-50 border-slate-200 text-slate-500"
                                                                     }`}
@@ -292,12 +298,15 @@ export default function StudentProgramBreakdownPage() {
                                                                     </div>
                                                                     <span className="font-bold text-slate-700 line-clamp-1">{lessonTitle}</span>
                                                                 </div>
-                                                                {lesson.score !== undefined && (
-                                                                    <span className="text-[10px] font-extrabold text-[#58CC02] bg-[#58CC02]/10 px-2 py-0.5 rounded-md">
-                                                                        {lesson.score}%
-                                                                    </span>
-                                                                )}
-                                                            </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    {lesson.score !== undefined && (
+                                                                        <span className="text-[10px] font-extrabold text-[#58CC02] bg-[#58CC02]/10 px-2 py-0.5 rounded-md">
+                                                                            {lesson.score}%
+                                                                        </span>
+                                                                    )}
+                                                                    <Eye className="w-3.5 h-3.5 text-amber-500 opacity-0 group-hover:opacity-100" />
+                                                                </div>
+                                                            </button>
                                                         )
                                                     })}
                                                 </div>

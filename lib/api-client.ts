@@ -196,8 +196,10 @@ class APIClient {
         getStudents: () => this.get('/studio/students'),
         getStudentDetail: (id: string) => this.get(`/studio/students/${id}`),
         getStudentProgramBreakdown: (id: string, programId: string) => this.get(`/studio/students/${id}/programs/${programId}`),
-        markStudentResponse: (studentId: string, lessonId: string, componentId: string, data: { score: number; isApproved: boolean }) =>
+        markStudentResponse: (studentId: string, lessonId: string, componentId: string, data: { score: number; isApproved: boolean; mode?: string; correctAnswers?: Record<string, boolean> }) =>
             this.post(`/studio/students/${studentId}/lessons/${lessonId}/components/${componentId}/mark`, data),
+        resetStudentResponse: (studentId: string, lessonId: string, componentId: string) =>
+            this.post(`/studio/students/${studentId}/lessons/${lessonId}/components/${componentId}/reset`),
     };
 
     // Programs (Student access)

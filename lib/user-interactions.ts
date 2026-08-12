@@ -40,6 +40,10 @@ export async function fetchUserInteraction(userId: string, lessonId: string) {
           localStorage.setItem(getOfflineStorageKey(userId, lessonId), JSON.stringify(data));
           return data;
         }
+      } else if (res.status === 404) {
+        // Server explicitly states no interaction exists. Clear stale local storage cache!
+        localStorage.removeItem(getOfflineStorageKey(userId, lessonId));
+        return null;
       }
     } catch (e) {
       console.warn('[user-interactions] Network fetch failed, falling back to local storage:', e);

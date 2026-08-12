@@ -19,11 +19,17 @@ const ReadAloudContext = createContext<ReadAloudContextType>({
     isSpeaking: false,
 })
 
-export function ReadAloudProvider({ children }: { children: React.ReactNode }) {
-    const [isEnabled, setIsEnabled] = useState(true)
+export function ReadAloudProvider({ children, initialEnabled = true }: { children: React.ReactNode, initialEnabled?: boolean }) {
+    const [isEnabled, setIsEnabled] = useState(initialEnabled)
     const [isSpeaking, setIsSpeaking] = useState(false)
     const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
     const isUnlockedRef = useRef(false)
+
+    useEffect(() => {
+        if (!initialEnabled && typeof window !== "undefined" && "speechSynthesis" in window) {
+            window.speechSynthesis.cancel()
+        }
+    }, [initialEnabled])
 
     // Load available voices and pick an English voice
     useEffect(() => {
@@ -99,11 +105,11 @@ export function ReadAloudProvider({ children }: { children: React.ReactNode }) {
 
     const speak = useCallback((text: string, options?: { onEnd?: () => void }) => {
         if (!isEnabled) {
-            options?.onEnd?.()
+            // Read-aloud is off — do NOT call onEnd immediately, let the caller's timer handle it
             return
         }
         if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-            options?.onEnd?.()
+            // Speech synthesis not available — do NOT call onEnd, let the timer handle it
             return
         }
 

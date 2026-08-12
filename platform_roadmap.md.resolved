@@ -15,6 +15,7 @@
 | **Streak / XP persistence** | Score resets per session, not cross-session | Core retention mechanic |
 | **Studio student preview** | Tutors can build but can't quickly preview as a student | Quality of life |
 | **Image/video upload in Studio** | Currently requires external URLs | Reduces content creation friction |
+| **Completed Lesson Heartbeat Optimization** | Stop 30s heartbeat auto-saves once a lesson is marked completed | Reduces unnecessary network traffic and database writes |
 
 ---
 

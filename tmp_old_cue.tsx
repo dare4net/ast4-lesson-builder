@@ -178,6 +178,12 @@ export function LessonIntroCueOverlay({
         onEnded: handleAudioEnded,
     });
 
+    // Effect: unlock button when all resources are preloaded
+    useEffect(() => {
+        if (preloadStatus.totalCount === 0 || (preloadStatus.totalCount > 0 && preloadStatus.progress === 100)) {
+            setCanBegin(true);
+        }
+    }, [preloadStatus.totalCount, preloadStatus.progress]);
 
     // 30-second countdown timer + audio fallback
     useEffect(() => {

@@ -85,12 +85,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const db = client.db('ast_lessons');
       const mainDb = client.db('afterschooltech');
 
+      // Fetch existing interaction to preserve any tutor-marked component states.
+      // Student auto-saves must NOT overwrite marks a tutor has already applied.
+      const existing = await db.collection('interactions').findOne({ userId, lessonId });
+      let mergedComponentsState = { ...componentsState };
+      if (existing?.componentsState) {
+        for (const [compId, existingCompState] of Object.entries(existing.componentsState as Record<string, any>)) {
+          if (existingCompState?.wasReset === true && componentsState[compId]?.isSubmitted !== true) {
+            // Component was reset by tutor: enforce reset state unless student submits a new response
+            mergedComponentsState[compId] = existingCompState;
+          } else if (existingCompState?.tutorMarked === true) {
+            // Preserve all tutor-applied fields, including isApproved and status
+            mergedComponentsState[compId] = {
+              ...(componentsState[compId] || {}),
+              tutorMarked: true,
+              score: existingCompState.score,
+              isApproved: Boolean(existingCompState.isApproved),
+              isPendingMarking: false,
+              status: 'completed',
+              markedBy: existingCompState.markedBy,
+              markedAt: existingCompState.markedAt,
+            };
+          }
+        }
+      }
+
       const result = await db.collection('interactions').updateOne(
         { userId, lessonId },
         {
           $set: {
-            componentsState,
+            componentsState: mergedComponentsState,
             lessonState,
+            lastActiveAt: new Date(),
             lastUpdated: new Date()
           }
         },

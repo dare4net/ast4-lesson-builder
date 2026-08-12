@@ -177,7 +177,9 @@ class SyncEngine {
         try {
             const local = await offlineStore.getInteraction(userId, lessonId);
 
-            // Server timestamp could be 'lastUpdated' or 'updatedAt'
+            if (!local || !local.data) return serverData;
+            if (!serverData || !serverData.componentsState) return local.data;
+
             const serverTime = serverData?.lastUpdated ? new Date(serverData.lastUpdated).getTime() :
                 (serverData?.updatedAt ? new Date(serverData.updatedAt).getTime() : 0);
 
@@ -186,13 +188,27 @@ class SyncEngine {
             console.log(`[SyncEngine] Reconciliation for ${lessonId}:`, {
                 localTime: new Date(localTime).toISOString(),
                 serverTime: new Date(serverTime).toISOString(),
-                useLocal: localTime > serverTime ? 'local is newer' : (localTime < serverTime ? 'server is newer' : 'timestamps are equal')
+                useLocal: localTime > serverTime ? 'local is newer' : 'server is newer'
             });
 
-            // Use local if it's strictly newer
-            if (local && (!serverData || localTime > serverTime)) {
-                return local.data;
+            // Start with base data depending on which timestamp is newer
+            const mergedData = localTime > serverTime ? { ...local.data } : { ...serverData };
+
+            // Merge component states: start with local, overlay server
+            mergedData.componentsState = {
+                ...(local.data.componentsState || {}),
+                ...(serverData.componentsState || {})
+            };
+
+            // CRITICAL: Any component marked or reset by tutor on the server ALWAYS takes precedence over local IndexedDB!
+            for (const [compId, serverComp] of Object.entries(serverData.componentsState || {})) {
+                const sc = serverComp as any;
+                if (sc?.tutorMarked === true || sc?.wasReset === true) {
+                    mergedData.componentsState[compId] = serverComp;
+                }
             }
+
+            return mergedData;
         } catch (err) {
             console.error('[SyncEngine] Error retrieving latest local state:', err);
         }
