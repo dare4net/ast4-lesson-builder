@@ -240,110 +240,156 @@ function MultiSelectContent({
     const isPerfect = showResult && correctSelections.length === correctIds.length && incorrectSelections.length === 0
 
     return (
-        <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-4xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
-                {/* Segmented Progress Bar & Header */}
-                <div className="shrink-0 mb-6 flex items-center justify-between gap-4">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-1.5">
-                            {questions.map((_, i) => (
-                                <div key={i} className={cn(
-                                    "flex-1 h-2 rounded-full transition-all duration-500",
-                                    i < currentQuestion ? "bg-[#58CC02]" : i === currentQuestion ? "bg-[#1CB0F6]" : "bg-slate-200"
-                                )} />
-                            ))}
-                        </div>
-                        <p className="text-[9px] font-black text-violet-600 uppercase tracking-widest mt-2">
-                            Multi-Select Quiz • Question {currentQuestion + 1} of {questions.length}
-                        </p>
+        <div className="w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6">
+            {/* TOP SECTION: Meta & Title */}
+            <div className="shrink-0 space-y-3 pt-2">
+                <div className="relative flex items-center justify-between">
+                    <div className="space-y-0.5">
+                        <span className="text-[8px] font-black text-violet-600/60 uppercase tracking-[0.2em]">Activity</span>
+                        <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">Multi-Select Quiz</h3>
                     </div>
-
-                    {isLive && (
-                        <LiveTimer
-                            isCompleted={isComplete}
-                            duration={timeLimit}
-                            onTimeout={handleTimeout}
-                        />
-                    )}
+                    <div className="flex items-center gap-2">
+                        {isLive && (
+                            <LiveTimer
+                                isCompleted={isComplete}
+                                duration={timeLimit}
+                                onTimeout={handleTimeout}
+                            />
+                        )}
+                    </div>
                 </div>
 
-                {/* Main content wrapper */}
-                <div className="flex flex-col items-center gap-5 w-full">
-                    {/* Question Card */}
-                    <div className="w-full p-5 sm:p-6 rounded-2xl bg-violet-50/60 border-2 border-violet-100 border-b-4 text-center flex flex-col items-center justify-center space-y-1">
-                        <h2 className="text-lg sm:text-xl font-black text-slate-900 leading-snug tracking-tight">{question.question}</h2>
-                        <p className="text-[10px] sm:text-xs font-black text-violet-600 uppercase tracking-wider">
-                            ☑ Select all correct answers
-                        </p>
+                <div className="space-y-1">
+                    <div className="flex justify-between items-end">
+                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Quiz Progress</span>
+                        <span className="text-[8px] font-black text-violet-600 uppercase tracking-tighter">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
                     </div>
-
-                    {/* Options 2-column Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
-                        {question.options.map(option => (
-                            <button
-                                key={option.id}
-                                disabled={showResult || isDisabled || isComplete}
-                                onClick={() => handleToggle(option.id)}
-                                className={cn(
-                                    "relative w-full p-4 sm:p-5 rounded-2xl border-2 border-b-4 text-left font-black text-sm leading-snug transition-all duration-200 active:border-b-2 active:translate-y-[2px] flex items-center justify-between shadow-sm cursor-pointer",
-                                    getOptionStyle(option)
-                                )}
-                            >
-                                <span className="pr-3 text-sm font-black leading-snug line-clamp-3">{option.text}</span>
-                                <div className="shrink-0">{getCheckIndicator(option)}</div>
-                            </button>
-                        ))}
+                    <div className="h-1.5 w-full bg-violet-50 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-gradient-to-r from-violet-500 to-indigo-400 transition-all duration-500 ease-out"
+                            style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                        />
                     </div>
+                </div>
+            </div>
 
-                    {/* Submit Button */}
-                    {!showResult && (
-                        <div className="w-full flex justify-center pt-2">
-                            <button
-                                type="button"
-                                onClick={handleSubmit}
-                                disabled={selectedOptions.length === 0 || isDisabled || isComplete}
-                                className={cn(
-                                    "w-full sm:w-auto h-12 px-10 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
-                                    selectedOptions.length > 0
-                                        ? "bg-[#58CC02] hover:bg-[#46a302] text-white border-[#58CC02] border-b-[#3B8C00] shadow-emerald-500/20 cursor-pointer"
-                                        : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
-                                )}
-                            >
-                                Submit Answer
-                            </button>
+            {/* CENTER SECTION: Question + Options */}
+            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+                <div className="relative space-y-3 my-auto">
+                    <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                            <div className="h-px w-8 bg-violet-500 rounded-full" />
+                            <span className="text-[8px] font-black text-violet-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length} · Select all correct</span>
                         </div>
-                    )}
+                        <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight">{question.question}</h2>
+                    </div>
 
-                    {/* Result Feedback Card */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {question.options.map((option, idx) => {
+                            const isSelected = selectedOptions.includes(option.id)
+                            const isCorrectOpt = option.isCorrect
+                            const showCorrect = showResult && isCorrectOpt
+                            const showIncorrect = showResult && isSelected && !isCorrectOpt
+
+                            return (
+                                <button
+                                    key={option.id}
+                                    disabled={showResult || isDisabled || isComplete}
+                                    onClick={() => handleToggle(option.id)}
+                                    className={cn(
+                                        'group/opt w-full p-3.5 text-left transition-all duration-200 relative rounded-2xl border-2 bg-white shadow-sm overflow-hidden',
+                                        'border-b-4 active:border-b-0 active:translate-y-[2px]',
+                                        isSelected && !showResult && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
+                                        !isSelected && !showResult && 'border-slate-200 hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 hover:shadow-md cursor-pointer',
+                                        showCorrect && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
+                                        showIncorrect && 'bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]',
+                                        showResult && !isSelected && !isCorrectOpt && 'opacity-40 cursor-not-allowed',
+                                        showResult && !isSelected && isCorrectOpt && 'border-[#58CC02] bg-[#58CC02]/10 cursor-not-allowed'
+                                    )}
+                                >
+                                    <div className="flex items-center justify-between relative z-10">
+                                        <div className="flex items-center gap-3">
+                                            <span className={cn(
+                                                "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-colors shrink-0",
+                                                isSelected && !showResult ? "bg-[#1CB0F6] text-white border-[#1CB0F6]" :
+                                                    showCorrect ? "bg-white/30 text-white border-white/30" :
+                                                        showIncorrect ? "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30" :
+                                                            "bg-slate-50 text-slate-400 border-slate-200 group-hover/opt:border-[#1CB0F6]/50 group-hover/opt:text-[#1CB0F6]"
+                                            )}>
+                                                {String.fromCharCode(65 + idx)}
+                                            </span>
+                                            <span className="font-bold text-sm tracking-tight">{option.text}</span>
+                                        </div>
+                                        {showCorrect && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                        {showIncorrect && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                    </div>
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+            </div>
+
+            {/* BOTTOM SECTION: Jump-proof feedback slot + action button */}
+            <div className="shrink-0 space-y-3 pb-4 pt-1">
+                <div className="min-h-[52px] flex flex-col justify-end">
                     {showResult && (
                         <div className={cn(
-                            "w-full p-4 sm:p-5 rounded-2xl border-2 border-b-4 text-center shadow-sm space-y-1 animate-in fade-in duration-300",
-                            isPerfect ? "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00]" : "bg-amber-50 border-[#FFC800] border-b-amber-600"
+                            'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
+                            isPerfect
+                                ? 'bg-emerald-50/50 border-emerald-500/20 shadow-emerald-500/5'
+                                : 'bg-amber-50/50 border-amber-400/20 shadow-amber-500/5'
                         )}>
-                            <p className={cn(
-                                "font-black text-sm uppercase tracking-wider",
-                                isPerfect ? "text-emerald-950" : "text-amber-950"
-                            )}>
-                                {isPerfect
-                                    ? "🎉 Perfect! You got every correct answer!"
-                                    : `You got ${correctSelections.length} out of ${correctIds.length} correct answers.`}
-                            </p>
+                            {isPerfect ? (
+                                <>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">Perfect score!</span>
+                                    </div>
+                                    <p className="text-sm font-black text-slate-900 leading-tight italic">You got every correct answer!</p>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <span className="text-[8px] font-black text-amber-600 uppercase tracking-widest">
+                                            {correctSelections.length} of {correctIds.length} correct
+                                        </span>
+                                    </div>
+                                    <p className="text-sm font-black text-slate-900 leading-tight">Not bad — keep going!</p>
+                                </>
+                            )}
                             {question.explanation && (
-                                <p className="text-xs font-bold text-slate-700 mt-1">{question.explanation}</p>
+                                <p className="text-xs font-bold text-slate-600 leading-tight mt-1">{question.explanation}</p>
                             )}
                         </div>
                     )}
+                </div>
 
-                    {/* Next Question Button */}
-                    {showResult && currentQuestion < questions.length - 1 && (
-                        <div className="w-full flex justify-center pt-2">
+                <div className="w-full">
+                    {currentQuestion < questions.length - 1 || !showResult ? (
+                        <button
+                            type="button"
+                            onClick={showResult ? handleNext : handleSubmit}
+                            disabled={!showResult && (selectedOptions.length === 0 || isDisabled || isComplete)}
+                            className={cn(
+                                'h-12 w-full rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all transform border-b-4 active:border-b-0 active:translate-y-[2px] shadow-md',
+                                showResult
+                                    ? 'bg-[#1CB0F6] text-white shadow-sky-500/20 hover:bg-sky-500 border-[#0090CC]'
+                                    : selectedOptions.length > 0
+                                        ? 'bg-[#58CC02] text-white shadow-emerald-500/20 hover:bg-[#46a302] border-[#3B8C00]'
+                                        : 'bg-slate-100 text-slate-400 border border-slate-200 border-b-slate-200 shadow-none'
+                            )}
+                        >
+                            {showResult
+                                ? (currentQuestion < questions.length - 1 ? 'Next Question' : 'Finish Quiz')
+                                : 'Check Answer'}
+                        </button>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <button
-                                type="button"
-                                onClick={handleNext}
-                                className="w-full sm:w-auto h-12 px-10 rounded-2xl bg-[#1CB0F6] hover:bg-[#169ad8] text-white border-2 border-[#1CB0F6] border-b-4 border-b-[#0090CC] font-black text-xs uppercase tracking-[0.15em] transition-all active:border-b-0 active:translate-y-[2px] flex items-center justify-center gap-2 cursor-pointer shadow-sky-500/20"
+                                className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest opacity-100 shadow-lg shadow-emerald-500/20 cursor-default"
+                                disabled
                             >
-                                <span>Next Question</span>
-                                <ChevronRight className="w-4 h-4 stroke-[3]" />
+                                Quiz Completed
                             </button>
                         </div>
                     )}

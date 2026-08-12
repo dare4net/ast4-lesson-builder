@@ -1839,49 +1839,6 @@ export const componentDefinitions: ComponentDefinition[] = [
     ],
   },
   {
-    type: "spinTheWheel",
-    label: "Spin the Wheel",
-    category: "gamified",
-    description: "Spinning wheel carousel that selects a random prompt or question.",
-    icon: "🎡",
-    defaultProps: {
-      title: "Spin the Wheel",
-      items: [
-        { id: "w1", text: "Explain your key takeaway from this module" },
-        { id: "w2", text: "Give an example of a strong modal verb" },
-        { id: "w3", text: "Challenge question: Define obligation vs necessity" },
-        { id: "w4", text: "Bonus: Award +10 Team Points!" },
-      ],
-      points: 10,
-    },
-    propDefinitions: [
-      {
-        name: "title",
-        label: "Title",
-        type: "string",
-        required: false,
-        defaultValue: "Spin the Wheel",
-      },
-      {
-        name: "items",
-        label: "Wheel Slices / Questions",
-        type: "componentArray",
-        required: true,
-        defaultValue: [
-          { id: "w1", text: "Question / Challenge 1" },
-          { id: "w2", text: "Question / Challenge 2" },
-        ],
-      },
-      {
-        name: "points",
-        label: "Points",
-        type: "number",
-        required: false,
-        defaultValue: 10,
-      },
-    ],
-  },
-  {
     type: "wordCloud",
     label: "Word Cloud",
     category: "interactive",

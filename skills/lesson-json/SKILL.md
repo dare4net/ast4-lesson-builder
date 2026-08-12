@@ -10,8 +10,8 @@ The AST Lesson Builder stores lessons as a single self-contained JSON file. This
 
 > **IMPORTANT - Official Component Catalog**:
 > The following component types are 100% supported, registered, and functional in the builder and viewer:
-> - **Content**: `heading`, `paragraph`, `bulletList`, `image`, `table`, `video` (YouTube embed)
-> - **Interactive & Gamified**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`
+> - **Content**: `heading`, `paragraph`, `bulletList`, `image`, `table`, `video` (YouTube embed), `callout`, `quote`, `accordion`
+> - **Interactive & Gamified**: `quiz`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `dragDrop`, `hotspot`, `codeEditor`, `poll`, `flashcardQuiz`, `multiSelectQuiz`, `spinTheWheel`, `categorise`, `annotateImage`, `scaleSlider`, `wordCloud`, `memoryGrid`, `trueFalse`, `wordScramble`, `timeline`
 > - **Structure**: `slideTitle` (renders as heading)
 
 ---
@@ -1112,6 +1112,10 @@ Before submitting a lesson JSON for loading:
 | `bulletList` | content | — | ✗ | ✗ |
 | `image` | content | — | ✗ | ✗ |
 | `table` | content | — | ✗ | ✗ |
+| `video` | content | — | ✗ | ✗ |
+| `callout` | content | — | ✗ | ✗ |
+| `quote` | content | — | ✗ | ✗ |
+| `accordion` | content | — | ✗ | ✗ |
 | `slideTitle` | content | — | ✗ | ✗ |
 | `quiz` | interactive | practice/live | ✅ | ✅ |
 | `flashcards` | interactive | practice/live | ✗ | ✗ |
@@ -1123,3 +1127,12 @@ Before submitting a lesson JSON for loading:
 | `poll` | interactive | — | participation only | ✗ |
 | `flashcardQuiz` | interactive | practice/live | ✅ | ✅ |
 | `multiSelectQuiz` | interactive | practice/live | ✅ | ✅ |
+| `spinTheWheel` | interactive | practice/live | ✅ | ✅ |
+| `categorise` | interactive | practice/live | ✅ | ✅ |
+| `annotateImage` | interactive | practice/live | ✅ | ✅ |
+| `scaleSlider` | interactive | practice/live | ✅ | ✗ |
+| `wordCloud` | interactive | practice/live | ✗ | ✗ |
+| `memoryGrid` | interactive | practice/live | ✅ | ✅ |
+| `trueFalse` | interactive | practice/live | ✅ | ✅ |
+| `wordScramble` | interactive | practice/live | ✅ | ✅ |
+| `timeline` | interactive | practice/live | ✅ | ✅ |

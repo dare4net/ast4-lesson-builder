@@ -70,10 +70,10 @@ export function CalloutRenderer({
     }
 
     return (
-        <div className="w-full my-4 flex flex-col items-center justify-center">
+        <div className="w-full my-auto py-4 flex flex-col items-center justify-center flex-1 px-4 sm:px-6">
             <div
                 className={cn(
-                    "relative w-full max-w-4xl rounded-2xl border-2 border-b-4 p-5 shadow-sm transition-all duration-300 overflow-hidden",
+                    "relative w-full max-w-2xl rounded-2xl border-2 border-b-4 p-5 shadow-sm transition-all duration-300 overflow-hidden",
                     config.bg
                 )}
             >

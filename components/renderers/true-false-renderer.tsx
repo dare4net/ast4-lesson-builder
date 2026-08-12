@@ -77,132 +77,146 @@ export function TrueFalseRenderer({
     }
 
     return (
-        <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-4xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden text-slate-900">
-                {/* Header Badges */}
-                <div className="flex items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-xl">
-
-                        <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">
-                            True or False • {points} Points
-                        </span>
+        <div className={cn(
+            "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6"
+        )}>
+            {/* TOP SECTION: Meta & Title */}
+            <div className="shrink-0 space-y-3 pt-2">
+                <div className="relative flex items-center justify-between">
+                    <div className="space-y-0.5">
+                        <span className="text-[8px] font-black text-indigo-600/60 uppercase tracking-[0.2em]">Activity</span>
+                        <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">True or False</h3>
                     </div>
-
                     <button
                         type="button"
                         onClick={handleSpeak}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer shadow-sm"
+                        className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer"
                         title="Read Aloud"
                     >
                         <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-indigo-600")} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
+                        <span className="text-[8px] font-black uppercase tracking-wider">Listen</span>
                     </button>
                 </div>
 
-                {/* Statement Prompt */}
-                <div className="mb-8">
-                    <h3 className="text-lg sm:text-xl font-black leading-snug tracking-tight text-slate-900">
-                        {statement}
-                    </h3>
+                <div className="space-y-1">
+                    <div className="flex justify-between items-end">
+                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Statement</span>
+                        <span className="text-[8px] font-black text-indigo-600 uppercase tracking-tighter">{points} pts</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-indigo-50 rounded-full overflow-hidden">
+                        <div className={cn(
+                            "h-full bg-gradient-to-r from-indigo-500 to-violet-400 transition-all duration-500 ease-out",
+                            submitted ? "w-full" : "w-0"
+                        )} />
+                    </div>
                 </div>
+            </div>
 
-                {/* Choice Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* TRUE Card */}
-                    <button
-                        type="button"
-                        onClick={() => handleSelect(true)}
-                        disabled={submitted || isEditing}
-                        className={cn(
-                            "relative flex items-center justify-between p-5 rounded-2xl border-2 border-b-4 font-black text-lg transition-all duration-200 active:border-b-2 active:translate-y-[2px]",
-                            !submitted && "bg-emerald-50/50 border-[#58CC02] border-b-[#3B8C00] text-[#58CC02] hover:bg-emerald-100/50 cursor-pointer shadow-sm",
-                            submitted && isTrue && "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-emerald-500/20",
-                            submitted && isSelectedTrue && !isTrue && "bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]",
-                            submitted && !isSelectedTrue && !isTrue && "opacity-40 bg-slate-100 border-slate-200 border-b-slate-200 text-slate-400"
-                        )}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className={cn(
-                                "w-8 h-8 rounded-xl flex items-center justify-center font-black border-2",
-                                submitted && isTrue ? "bg-white/20 border-white/40 text-white" : "bg-emerald-100 border-emerald-300 text-[#58CC02]"
-                            )}>
-                                T
-                            </div>
-                            <span>TRUE</span>
+            {/* CENTER SECTION: Statement + Choices */}
+            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+                <div className="relative space-y-4 my-auto">
+                    {/* Question label + statement */}
+                    <div className="space-y-1.5">
+                        <div className="flex items-center gap-2">
+                            <div className="h-px w-8 bg-indigo-500 rounded-full" />
+                            <span className="text-[8px] font-black text-indigo-600 uppercase tracking-[0.2em]">Is this TRUE or FALSE?</span>
                         </div>
+                        <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight">{statement}</h2>
+                    </div>
 
-                        {submitted && isTrue && (
-                            <CheckCircle2 className="w-6 h-6 text-white animate-in zoom-in-50" />
-                        )}
-                        {submitted && isSelectedTrue && !isTrue && (
-                            <XCircle className="w-6 h-6 text-[#FF4B4B] animate-in zoom-in-50" />
-                        )}
-                    </button>
-
-                    {/* FALSE Card */}
-                    <button
-                        type="button"
-                        onClick={() => handleSelect(false)}
-                        disabled={submitted || isEditing}
-                        className={cn(
-                            "relative flex items-center justify-between p-5 rounded-2xl border-2 border-b-4 font-black text-lg transition-all duration-200 active:border-b-2 active:translate-y-[2px]",
-                            !submitted && "bg-rose-50/50 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B] hover:bg-rose-100/50 cursor-pointer shadow-sm",
-                            submitted && !isTrue && "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-emerald-500/20",
-                            submitted && isSelectedFalse && isTrue && "bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]",
-                            submitted && !isSelectedFalse && isTrue && "opacity-40 bg-slate-100 border-slate-200 border-b-slate-200 text-slate-400"
-                        )}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className={cn(
-                                "w-8 h-8 rounded-xl flex items-center justify-center font-black border-2",
-                                submitted && !isTrue ? "bg-white/20 border-white/40 text-white" : "bg-rose-100 border-rose-300 text-[#FF4B4B]"
-                            )}>
-                                F
+                    {/* Choice buttons — styled like quiz option buttons */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {/* TRUE */}
+                        <button
+                            type="button"
+                            onClick={() => handleSelect(true)}
+                            disabled={submitted || isEditing}
+                            className={cn(
+                                'w-full p-3.5 text-left transition-all duration-200 relative rounded-2xl border-2 bg-white shadow-sm overflow-hidden',
+                                'border-b-4 active:border-b-0 active:translate-y-[2px]',
+                                !submitted && 'border-slate-200 hover:border-[#58CC02]/60 hover:bg-[#58CC02]/5 hover:shadow-md cursor-pointer',
+                                submitted && isTrue && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
+                                submitted && isSelectedTrue && !isTrue && 'bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]',
+                                submitted && !isSelectedTrue && !isTrue && 'opacity-40 cursor-not-allowed',
+                                submitted && !isSelectedTrue && isTrue && 'cursor-not-allowed'
+                            )}
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-3">
+                                    <span className={cn(
+                                        "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-colors shrink-0",
+                                        submitted && isTrue ? "bg-white/30 text-white border-white/30" :
+                                            submitted && isSelectedTrue && !isTrue ? "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30" :
+                                                "bg-slate-50 text-slate-400 border-slate-200 group-hover:border-[#58CC02]/50"
+                                    )}>T</span>
+                                    <span className="font-bold text-sm tracking-tight">TRUE</span>
+                                </div>
+                                {submitted && isTrue && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                {submitted && isSelectedTrue && !isTrue && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                             </div>
-                            <span>FALSE</span>
-                        </div>
+                        </button>
 
-                        {submitted && !isTrue && (
-                            <CheckCircle2 className="w-6 h-6 text-white animate-in zoom-in-50" />
-                        )}
-                        {submitted && isSelectedFalse && isTrue && (
-                            <XCircle className="w-6 h-6 text-[#FF4B4B] animate-in zoom-in-50" />
-                        )}
-                    </button>
+                        {/* FALSE */}
+                        <button
+                            type="button"
+                            onClick={() => handleSelect(false)}
+                            disabled={submitted || isEditing}
+                            className={cn(
+                                'w-full p-3.5 text-left transition-all duration-200 relative rounded-2xl border-2 bg-white shadow-sm overflow-hidden',
+                                'border-b-4 active:border-b-0 active:translate-y-[2px]',
+                                !submitted && 'border-slate-200 hover:border-[#FF4B4B]/60 hover:bg-[#FF4B4B]/5 hover:shadow-md cursor-pointer',
+                                submitted && !isTrue && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
+                                submitted && isSelectedFalse && isTrue && 'bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]',
+                                submitted && !isSelectedFalse && isTrue && 'opacity-40 cursor-not-allowed',
+                                submitted && !isSelectedFalse && !isTrue && 'cursor-not-allowed'
+                            )}
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-3">
+                                    <span className={cn(
+                                        "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-colors shrink-0",
+                                        submitted && !isTrue ? "bg-white/30 text-white border-white/30" :
+                                            submitted && isSelectedFalse && isTrue ? "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30" :
+                                                "bg-slate-50 text-slate-400 border-slate-200"
+                                    )}>F</span>
+                                    <span className="font-bold text-sm tracking-tight">FALSE</span>
+                                </div>
+                                {submitted && !isTrue && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                {submitted && isSelectedFalse && isTrue && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                            </div>
+                        </button>
+                    </div>
                 </div>
+            </div>
 
-                {/* Feedback / Explanation Box */}
-                {submitted && (
-                    <div
-                        className={cn(
-                            "mt-6 p-4 rounded-2xl border-2 border-b-4 animate-in slide-in-from-top-2 duration-300",
+            {/* BOTTOM SECTION: Jump-proof feedback slot */}
+            <div className="shrink-0 space-y-3 pb-4 pt-1">
+                <div className="min-h-[52px] flex flex-col justify-end">
+                    {submitted && (
+                        <div className={cn(
+                            'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
                             isCorrectChoice
-                                ? "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950"
-                                : "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
-                        )}
-                    >
-                        <div className="flex items-center gap-2 mb-1.5 font-black text-sm uppercase">
+                                ? 'bg-emerald-50/50 border-emerald-500/20 shadow-emerald-500/5'
+                                : 'bg-rose-50/50 border-rose-500/20 shadow-rose-500/5'
+                        )}>
+                            <div className="flex items-center gap-2 mb-1">
+                                {isCorrectChoice ? (
+                                    <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">Correct! +{points} Points</span>
+                                ) : (
+                                    <span className="text-[8px] font-black text-rose-500 uppercase tracking-widest">Incorrect — answer is {isTrue ? "TRUE" : "FALSE"}</span>
+                                )}
+                            </div>
                             {isCorrectChoice ? (
-                                <>
-                                    <CheckCircle2 className="w-5 h-5 text-[#58CC02]" />
-                                    <span>Spot on! +{points} Points</span>
-                                </>
+                                <p className="text-sm font-black text-slate-900 leading-tight italic">Spot on! Well done!</p>
                             ) : (
-                                <>
-                                    <XCircle className="w-5 h-5 text-[#FF4B4B]" />
-                                    <span>Not quite! Correct answer is {isTrue ? "TRUE" : "FALSE"}</span>
-                                </>
+                                <p className="text-sm font-black text-slate-900 leading-tight">Not quite — keep going!</p>
+                            )}
+                            {explanation && (
+                                <p className="text-xs font-bold text-slate-600 leading-tight mt-1">{explanation}</p>
                             )}
                         </div>
-
-                        {explanation && (
-                            <div className="flex items-start gap-2 mt-2 text-xs font-bold pt-2 border-t border-slate-200/80 text-slate-800">
-                                <HelpCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-slate-500" />
-                                <p>{explanation}</p>
-                            </div>
-                        )}
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     )

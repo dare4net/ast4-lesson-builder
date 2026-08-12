@@ -126,15 +126,18 @@ const AccordionItemCard = ({
             )}
         >
             {/* Header Trigger */}
-            <button
-                type="button"
-                onClick={() => toggleItem(itemId)}
+            <div
                 className={cn(
-                    "w-full flex items-center justify-between p-4 text-left font-black text-base transition-colors cursor-pointer select-none",
+                    "w-full flex items-center justify-between p-4 text-left font-black text-base transition-colors select-none",
                     theme.text
                 )}
             >
-                <div className="flex items-center gap-3 pr-4">
+                {/* Clickable toggle area */}
+                <button
+                    type="button"
+                    onClick={() => toggleItem(itemId)}
+                    className="flex-1 flex items-center gap-3 pr-4 cursor-pointer text-left"
+                >
                     <div
                         className={cn(
                             "w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black transition-all shrink-0 border-2 shadow-2xs",
@@ -144,9 +147,9 @@ const AccordionItemCard = ({
                         {idx + 1}
                     </div>
                     <span className="tracking-tight text-slate-900 font-extrabold">{item.title}</span>
-                </div>
+                </button>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                     <button
                         type="button"
                         onClick={handleSpeakItem}
@@ -156,14 +159,21 @@ const AccordionItemCard = ({
                         <Volume2 className={cn("w-4 h-4", isSpeaking && cn("animate-pulse", theme.activeAudio))} />
                     </button>
 
-                    <ChevronDown
-                        className={cn(
-                            "w-5 h-5 text-slate-500 transition-transform duration-300",
-                            isOpen && "transform rotate-180 text-slate-900"
-                        )}
-                    />
+                    <button
+                        type="button"
+                        onClick={() => toggleItem(itemId)}
+                        className="p-1 cursor-pointer"
+                        aria-label="Toggle section"
+                    >
+                        <ChevronDown
+                            className={cn(
+                                "w-5 h-5 text-slate-500 transition-transform duration-300",
+                                isOpen && "transform rotate-180 text-slate-900"
+                            )}
+                        />
+                    </button>
                 </div>
-            </button>
+            </div>
 
             {/* Content Drawer */}
             {isOpen && (

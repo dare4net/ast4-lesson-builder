@@ -123,64 +123,103 @@ export function AnnotateImageRenderer({
     }
 
     return (
-        <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-4xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
-                {/* Header Bar */}
-                <div className="flex items-center justify-between gap-3 mb-6">
-                    <div className="flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-xl">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-teal-600">
-                            Annotate Diagram • {points} Points
-                        </span>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={handleSpeak}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer shadow-sm"
-                        title="Read Aloud"
-                    >
-                        <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-teal-600")} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
-                    </button>
+        <div className="w-full h-full flex-1 flex flex-col justify-center px-4 sm:px-6 py-2 relative min-h-0 overflow-hidden text-slate-900">
+            {/* Header Bar */}
+            <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
+                <div className="flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-xl">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-teal-600">
+                        Annotate Diagram • {points} Points
+                    </span>
                 </div>
 
-                <h3 className="text-xl font-black mb-4 text-slate-900 tracking-tight">{title}</h3>
+                <button
+                    type="button"
+                    onClick={handleSpeak}
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer shadow-sm"
+                    title="Read Aloud"
+                >
+                    <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-teal-600")} />
+                    <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
+                </button>
+            </div>
 
-                {/* Available Tags Bank */}
-                {!submitted && (
-                    <div className="mb-6 p-4 rounded-2xl bg-slate-50/70 border-2 border-slate-200 border-b-4">
-                        <span className="text-xs font-black uppercase tracking-wider text-slate-500 block mb-3">
-                            1. Tap a label tag to select:
-                        </span>
-                        <div className="flex flex-wrap gap-2.5">
-                            {labels.map(label => {
-                                const isPlaced = Object.values(placements).includes(label.id)
-                                const isSelected = selectedTag === label.id
+            <h3 className="text-lg font-black mb-3 text-slate-900 tracking-tight shrink-0">{title}</h3>
 
-                                return (
-                                    <button
-                                        key={label.id}
-                                        type="button"
-                                        onClick={() => handleTagClick(label.id)}
-                                        disabled={isPlaced || isEditing}
-                                        className={cn(
-                                            "flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-b-4 font-black text-xs transition-all duration-200 cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
-                                            isSelected && "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-105",
-                                            !isSelected && !isPlaced && "bg-white hover:bg-teal-50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-teal-300",
-                                            isPlaced && "opacity-40 bg-slate-100 border-slate-200 border-b-slate-200 text-slate-400 cursor-not-allowed active:border-b-4 active:translate-y-0"
-                                        )}
-                                    >
-                                        <Tag className="w-3.5 h-3.5" />
-                                        <span>{label.text}</span>
-                                    </button>
-                                )
-                            })}
+            {/* Main Landscape Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center flex-1 min-h-0 overflow-hidden">
+
+                {/* Left Column: Label Tags Bank + Action Controls */}
+                <div className="lg:col-span-4 flex flex-col justify-between h-full space-y-3 min-h-0">
+                    {/* Available Tags Bank */}
+                    {!submitted ? (
+                        <div className="p-3.5 rounded-2xl bg-slate-50/80 border-2 border-slate-200 border-b-4 flex-1 flex flex-col min-h-0 overflow-y-auto">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2 shrink-0">
+                                Tap a tag, then tap a node:
+                            </span>
+                            <div className="flex flex-wrap gap-2 overflow-y-auto">
+                                {labels.map(label => {
+                                    const isPlaced = Object.values(placements).includes(label.id)
+                                    const isSelected = selectedTag === label.id
+
+                                    return (
+                                        <button
+                                            key={label.id}
+                                            type="button"
+                                            onClick={() => handleTagClick(label.id)}
+                                            disabled={isPlaced || isEditing}
+                                            className={cn(
+                                                "flex items-center gap-1.5 px-3 py-2 rounded-xl border-2 border-b-4 font-black text-xs transition-all duration-200 cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
+                                                isSelected && "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-105",
+                                                !isSelected && !isPlaced && "bg-white hover:bg-teal-50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-teal-300",
+                                                isPlaced && "opacity-40 bg-slate-100 border-slate-200 border-b-slate-200 text-slate-400 cursor-not-allowed active:border-b-4 active:translate-y-0"
+                                            )}
+                                        >
+                                            <Tag className="w-3 h-3" />
+                                            <span>{label.text}</span>
+                                        </button>
+                                    )
+                                })}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <div className="p-3.5 rounded-2xl bg-emerald-50/80 border-2 border-emerald-200 border-b-4 text-center shrink-0">
+                            <span className="text-xs font-black uppercase tracking-wider text-emerald-800 block">
+                                Annotation complete! Review your placements on the diagram.
+                            </span>
+                        </div>
+                    )}
 
-                {/* Diagram Canvas with Target Drop Zones */}
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border-2 border-slate-200 border-b-4 bg-slate-900 shadow-sm">
+                    {/* Action Controls */}
+                    <div className="shrink-0 pt-1">
+                        {submitted ? (
+                            <button
+                                type="button"
+                                onClick={handleReset}
+                                className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer"
+                            >
+                                <RefreshCw className="w-4 h-4" />
+                                <span>Retry Annotation</span>
+                            </button>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={handleCheckAnswers}
+                                disabled={Object.keys(placements).length === 0 || isEditing}
+                                className={cn(
+                                    "w-full h-11 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
+                                    Object.keys(placements).length > 0
+                                        ? "bg-[#58CC02] hover:bg-[#46a302] text-white border-[#58CC02] border-b-[#3B8C00] shadow-emerald-500/20 cursor-pointer"
+                                        : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
+                                )}
+                            >
+                                Check Annotations
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* Right Column: Diagram Canvas with Target Drop Zones */}
+                <div className="lg:col-span-8 relative w-full aspect-video max-h-[50vh] rounded-2xl overflow-hidden border-2 border-slate-200 border-b-4 bg-slate-900 shadow-sm shrink-0">
                     <img src={image} alt={title} className="w-full h-full object-cover select-none" />
 
                     {/* Target Target Nodes */}
@@ -201,7 +240,7 @@ export function AnnotateImageRenderer({
                                     <div
                                         onClick={(e) => handleRemovePlacement(lbl.id, e)}
                                         className={cn(
-                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-b-4 font-black text-xs shadow-lg transition-all duration-200 animate-in zoom-in-50 cursor-pointer active:border-b-2 active:translate-y-[2px]",
+                                            "flex items-center gap-1 px-2.5 py-1 rounded-xl border-2 border-b-4 font-black text-xs shadow-lg transition-all duration-200 animate-in zoom-in-50 cursor-pointer active:border-b-2 active:translate-y-[2px]",
                                             !submitted && "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] hover:bg-[#FF4B4B] hover:border-[#FF4B4B] hover:border-b-[#CC3C3C]",
                                             isCorrect && "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950",
                                             isIncorrect && "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
@@ -214,7 +253,7 @@ export function AnnotateImageRenderer({
                                 ) : (
                                     <div
                                         className={cn(
-                                            "w-9 h-9 rounded-2xl border-2 border-b-4 flex items-center justify-center font-black text-xs transition-all duration-200 shadow-md",
+                                            "w-8 h-8 rounded-2xl border-2 border-b-4 flex items-center justify-center font-black text-xs transition-all duration-200 shadow-md",
                                             selectedTag
                                                 ? "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] animate-bounce scale-110"
                                                 : "bg-white border-slate-200 border-b-slate-300 text-slate-800 hover:border-teal-400"
@@ -226,34 +265,6 @@ export function AnnotateImageRenderer({
                             </div>
                         )
                     })}
-                </div>
-
-                {/* Action Controls */}
-                <div className="mt-6 flex items-center justify-between gap-4">
-                    {submitted ? (
-                        <button
-                            type="button"
-                            onClick={handleReset}
-                            className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer"
-                        >
-                            <RefreshCw className="w-4 h-4" />
-                            <span>Retry Annotation</span>
-                        </button>
-                    ) : (
-                        <button
-                            type="button"
-                            onClick={handleCheckAnswers}
-                            disabled={Object.keys(placements).length === 0 || isEditing}
-                            className={cn(
-                                "w-full h-12 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
-                                Object.keys(placements).length > 0
-                                    ? "bg-[#58CC02] hover:bg-[#46a302] text-white border-[#58CC02] border-b-[#3B8C00] shadow-emerald-500/20 cursor-pointer"
-                                    : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
-                            )}
-                        >
-                            Check Annotations
-                        </button>
-                    )}
                 </div>
             </div>
         </div>

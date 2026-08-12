@@ -426,8 +426,8 @@ export function SpinTheWheelRenderer({
     const spinsLeft = requiredSpins - spinsCompleted
 
     return (
-        <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="relative w-full max-w-2xl bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
+        <div className="w-full my-auto py-4 flex flex-col items-center justify-center flex-1">
+            <div className="relative w-full bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
 
                 {/* Header */}
                 <div className="flex items-center justify-between gap-3 mb-4">
@@ -446,205 +446,223 @@ export function SpinTheWheelRenderer({
                     </button>
                 </div>
 
-                <h3 className="text-xl font-black mb-2 text-slate-900 text-center tracking-tight">{title}</h3>
+                {/* Main Content Grid: Landscape Side-by-Side on LG screens */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
 
-                {/* Progress */}
-                {!activityDone && (
-                    <div className="flex items-center justify-center gap-3 mb-5">
-                        <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
-                            {spinsCompleted} / {requiredSpins} answered
-                        </span>
-                        <div className="flex gap-1.5">
-                            {Array.from({ length: requiredSpins }).map((_, i) => (
-                                <div
-                                    key={i}
-                                    className={cn(
-                                        "w-3 h-3 rounded-full border-2 transition-all",
-                                        i < spinsCompleted
-                                            ? "bg-[#58CC02] border-[#3B8C00]"
-                                            : "bg-slate-100 border-slate-300"
-                                    )}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
+                    {/* Left Column: Title, Progress & SVG Wheel */}
+                    <div className="lg:col-span-5 flex flex-col items-center">
+                        <h3 className="text-xl font-black mb-2 text-slate-900 text-center tracking-tight">{title}</h3>
 
-                {/* Wheel Container */}
-                <div className="flex flex-col items-center">
-                    <div className="relative inline-block">
-                        {/* Pointer triangle */}
-                        <div className="absolute left-1/2 -translate-x-1/2 -top-3 z-30 w-0 h-0
-                            border-l-[12px] border-l-transparent
-                            border-r-[12px] border-r-transparent
-                            border-t-[20px] border-t-[#FFC800]
-                            drop-shadow-md" />
+                        {/* Progress */}
+                        {!activityDone && (
+                            <div className="flex items-center justify-center gap-3 mb-4">
+                                <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                                    {spinsCompleted} / {requiredSpins} answered
+                                </span>
+                                <div className="flex gap-1.5">
+                                    {Array.from({ length: requiredSpins }).map((_, i) => (
+                                        <div
+                                            key={i}
+                                            className={cn(
+                                                "w-3 h-3 rounded-full border-2 transition-all",
+                                                i < spinsCompleted
+                                                    ? "bg-[#58CC02] border-[#3B8C00]"
+                                                    : "bg-slate-100 border-slate-300"
+                                            )}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
-                        {/* SVG Wheel */}
-                        <svg
-                            width="300"
-                            height="300"
-                            viewBox="0 0 300 300"
-                            style={{
-                                transform: `rotate(${rotation}deg)`,
-                                transition: isSpinning
-                                    ? `transform ${SPIN_DURATION}ms cubic-bezier(0.08, 0.82, 0.17, 1.00)`
-                                    : "none",
-                            }}
-                            className="rounded-full shadow-2xl border-4 border-white"
-                        >
-                            {displayQuestions.length === 0 ? (
-                                <circle cx={cx} cy={cy} r={r} fill="#e2e8f0" />
-                            ) : (
-                                displayQuestions.map((q, idx) => {
-                                    const start = idx * activeSliceAngle
-                                    const end = start + activeSliceAngle
-                                    const mid = start + activeSliceAngle / 2
-                                    const originalIdx = safeQuestions.findIndex(orig => orig.id === q.id)
-                                    const color = SLICE_COLORS[(originalIdx >= 0 ? originalIdx : idx) % SLICE_COLORS.length]
-                                    const labelR = r * 0.65
-                                    const labelPos = polarToCartesian(cx, cy, labelR, mid)
-                                    return (
-                                        <g key={q.id}>
-                                            <path
-                                                d={slicePath(cx, cy, r, start, end)}
-                                                fill={color}
-                                                stroke="white"
-                                                strokeWidth="2"
-                                            />
-                                            <text
-                                                x={labelPos.x}
-                                                y={labelPos.y}
-                                                textAnchor="middle"
-                                                dominantBaseline="middle"
-                                                fill="white"
-                                                fontSize="11"
-                                                fontWeight="900"
-                                                transform={`rotate(${mid + 90}, ${labelPos.x}, ${labelPos.y})`}
-                                            >
-                                                Q{originalIdx >= 0 ? originalIdx + 1 : idx + 1}
-                                            </text>
-                                        </g>
-                                    )
-                                })
-                            )}
-                            {/* Center cap */}
-                            <circle cx={cx} cy={cy} r={30} fill="#FFC800" stroke="white" strokeWidth="4" />
-                        </svg>
+                        {/* Wheel Container */}
+                        <div className="relative inline-block">
+                            {/* Pointer triangle */}
+                            <div className="absolute left-1/2 -translate-x-1/2 -top-3 z-30 w-0 h-0
+                                border-l-[12px] border-l-transparent
+                                border-r-[12px] border-r-transparent
+                                border-t-[20px] border-t-[#FFC800]
+                                drop-shadow-md" />
 
-                        {/* Spin button overlay on center cap */}
-                        <button
-                            type="button"
-                            onClick={handleSpin}
-                            disabled={!canSpin}
-                            style={{
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                width: 60,
-                                height: 60,
-                            }}
-                            className={cn(
-                                "rounded-full border-4 border-white flex flex-col items-center justify-center font-black text-[10px] uppercase tracking-wide shadow-lg transition-colors z-20",
-                                canSpin
-                                    ? "bg-[#FFC800] text-slate-900 cursor-pointer hover:bg-amber-400"
-                                    : "bg-[#FFC800] text-slate-900 cursor-default opacity-80"
-                            )}
-                        >
-                            <RotateCw className={cn("w-5 h-5", isSpinning && "animate-spin")} />
-                            <span className="text-[8px] mt-0.5">{isSpinning ? "..." : answerSubmitted ? "NEXT" : "SPIN"}</span>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Question Card */}
-                {currentQuestion && !activityDone && (
-                    <div
-                        key={questionKey}
-                        className="mt-7 w-full p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 border-b-4 shadow-sm animate-in slide-in-from-bottom-3 fade-in duration-300"
-                    >
-                        <div className="flex items-center gap-2 mb-3">
-                            <span
-                                className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg text-white"
-                                style={{ background: SLICE_COLORS[(safeQuestions.findIndex(q => q.id === currentQuestion.id)) % SLICE_COLORS.length] }}
+                            {/* SVG Wheel */}
+                            <svg
+                                width="280"
+                                height="280"
+                                viewBox="0 0 300 300"
+                                style={{
+                                    transform: `rotate(${rotation}deg)`,
+                                    transition: isSpinning
+                                        ? `transform ${SPIN_DURATION}ms cubic-bezier(0.08, 0.82, 0.17, 1.00)`
+                                        : "none",
+                                }}
+                                className="rounded-full shadow-2xl border-4 border-white max-w-full h-auto"
                             >
-                                {currentQuestion.type === "multipleChoice" ? "Multiple Choice"
-                                    : currentQuestion.type === "inputAnswer" ? "Short Answer"
-                                        : "True or False"}
-                            </span>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                Question {spinsCompleted + 1} of {requiredSpins}
-                            </span>
-                        </div>
+                                {displayQuestions.length === 0 ? (
+                                    <circle cx={cx} cy={cy} r={r} fill="#e2e8f0" />
+                                ) : (
+                                    displayQuestions.map((q, idx) => {
+                                        const start = idx * activeSliceAngle
+                                        const end = start + activeSliceAngle
+                                        const mid = start + activeSliceAngle / 2
+                                        const originalIdx = safeQuestions.findIndex(orig => orig.id === q.id)
+                                        const color = SLICE_COLORS[(originalIdx >= 0 ? originalIdx : idx) % SLICE_COLORS.length]
+                                        const labelR = r * 0.65
+                                        const labelPos = polarToCartesian(cx, cy, labelR, mid)
+                                        return (
+                                            <g key={q.id}>
+                                                <path
+                                                    d={slicePath(cx, cy, r, start, end)}
+                                                    fill={color}
+                                                    stroke="white"
+                                                    strokeWidth="2"
+                                                />
+                                                <text
+                                                    x={labelPos.x}
+                                                    y={labelPos.y}
+                                                    textAnchor="middle"
+                                                    dominantBaseline="middle"
+                                                    fill="white"
+                                                    fontSize="11"
+                                                    fontWeight="900"
+                                                    transform={`rotate(${mid + 90}, ${labelPos.x}, ${labelPos.y})`}
+                                                >
+                                                    Q{originalIdx >= 0 ? originalIdx + 1 : idx + 1}
+                                                </text>
+                                            </g>
+                                        )
+                                    })
+                                )}
+                                {/* Center cap */}
+                                <circle cx={cx} cy={cy} r={30} fill="#FFC800" stroke="white" strokeWidth="4" />
+                            </svg>
 
-                        {currentQuestion.type === "multipleChoice" && (
-                            <MultipleChoiceCard
-                                key={`mc-${questionKey}`}
-                                question={currentQuestion}
-                                onAnswer={handleAnswer}
-                                disabled={answerSubmitted}
-                            />
-                        )}
-                        {currentQuestion.type === "inputAnswer" && (
-                            <InputAnswerCard
-                                key={`ia-${questionKey}`}
-                                question={currentQuestion}
-                                onAnswer={handleAnswer}
-                                disabled={answerSubmitted}
-                            />
-                        )}
-                        {currentQuestion.type === "trueFalse" && (
-                            <TrueFalseCard
-                                key={`tf-${questionKey}`}
-                                question={currentQuestion}
-                                onAnswer={handleAnswer}
-                                disabled={answerSubmitted}
-                            />
-                        )}
-
-                        {answerSubmitted && !activityDone && (
+                            {/* Spin button overlay on center cap */}
                             <button
                                 type="button"
                                 onClick={handleSpin}
-                                className="mt-4 w-full h-11 rounded-2xl font-black text-xs uppercase tracking-widest bg-[#1CB0F6] hover:bg-sky-400 text-white border-2 border-[#1CB0F6] border-b-4 border-b-[#0090CC] transition-all cursor-pointer active:border-b-2 active:translate-y-[2px]"
+                                disabled={!canSpin}
+                                style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    width: 56,
+                                    height: 56,
+                                }}
+                                className={cn(
+                                    "rounded-full border-4 border-white flex flex-col items-center justify-center font-black text-[10px] uppercase tracking-wide shadow-lg transition-colors z-20",
+                                    canSpin
+                                        ? "bg-[#FFC800] text-slate-900 cursor-pointer hover:bg-amber-400"
+                                        : "bg-[#FFC800] text-slate-900 cursor-default opacity-80"
+                                )}
                             >
-                                Spin Again →
+                                <RotateCw className={cn("w-5 h-5", isSpinning && "animate-spin")} />
+                                <span className="text-[8px] mt-0.5">{isSpinning ? "..." : answerSubmitted ? "NEXT" : "SPIN"}</span>
                             </button>
+                        </div>
+                    </div>
+
+                    {/* Right Column: Active Question Card / Completion / Prompt */}
+                    <div className="lg:col-span-7 flex flex-col justify-center w-full">
+                        {currentQuestion && !activityDone && (
+                            <div
+                                key={questionKey}
+                                className="w-full p-5 rounded-2xl bg-slate-50 border-2 border-slate-200 border-b-4 shadow-sm animate-in slide-in-from-bottom-3 fade-in duration-300"
+                            >
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span
+                                        className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg text-white"
+                                        style={{ background: SLICE_COLORS[(safeQuestions.findIndex(q => q.id === currentQuestion.id)) % SLICE_COLORS.length] }}
+                                    >
+                                        {currentQuestion.type === "multipleChoice" ? "Multiple Choice"
+                                            : currentQuestion.type === "inputAnswer" ? "Short Answer"
+                                                : "True or False"}
+                                    </span>
+                                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                        Question {spinsCompleted + 1} of {requiredSpins}
+                                    </span>
+                                </div>
+
+                                {currentQuestion.type === "multipleChoice" && (
+                                    <MultipleChoiceCard
+                                        key={`mc-${questionKey}`}
+                                        question={currentQuestion}
+                                        onAnswer={handleAnswer}
+                                        disabled={answerSubmitted}
+                                    />
+                                )}
+                                {currentQuestion.type === "inputAnswer" && (
+                                    <InputAnswerCard
+                                        key={`ia-${questionKey}`}
+                                        question={currentQuestion}
+                                        onAnswer={handleAnswer}
+                                        disabled={answerSubmitted}
+                                    />
+                                )}
+                                {currentQuestion.type === "trueFalse" && (
+                                    <TrueFalseCard
+                                        key={`tf-${questionKey}`}
+                                        question={currentQuestion}
+                                        onAnswer={handleAnswer}
+                                        disabled={answerSubmitted}
+                                    />
+                                )}
+
+                                {answerSubmitted && !activityDone && (
+                                    <button
+                                        type="button"
+                                        onClick={handleSpin}
+                                        className="mt-4 w-full h-11 rounded-2xl font-black text-xs uppercase tracking-widest bg-[#1CB0F6] hover:bg-sky-400 text-white border-2 border-[#1CB0F6] border-b-4 border-b-[#0090CC] transition-all cursor-pointer active:border-b-2 active:translate-y-[2px]"
+                                    >
+                                        Spin Again →
+                                    </button>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Prompt when waiting to spin */}
+                        {!currentQuestion && !activityDone && (
+                            <div className="p-8 rounded-2xl bg-amber-50/60 border-2 border-dashed border-amber-300 text-center flex flex-col items-center justify-center gap-2">
+                                <RotateCw className="w-8 h-8 text-amber-500 animate-bounce" />
+                                <h4 className="font-black text-base text-slate-800">Ready to Spin?</h4>
+                                <p className="text-xs font-bold text-slate-500 max-w-sm">
+                                    Click the yellow center button on the wheel to spin and land on your next challenge!
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Activity Complete */}
+                        {activityDone && (
+                            <div className="w-full p-6 rounded-2xl bg-amber-50 border-2 border-b-4 border-[#FFC800] border-b-amber-500 flex flex-col items-center text-center gap-3 animate-in zoom-in-95 duration-300">
+                                <Award className="w-10 h-10 text-amber-500" />
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-amber-600 mb-1">Activity Complete!</p>
+                                    <p className="text-2xl font-black text-slate-900">
+                                        {correctCount} / {requiredSpins} correct
+                                    </p>
+                                    <p className="text-xs font-bold text-slate-500 mt-1">
+                                        {Math.round((correctCount / requiredSpins) * points)} points earned
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleReset}
+                                    className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 border-b-slate-300 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer"
+                                >
+                                    <RefreshCw className="w-3.5 h-3.5" />
+                                    Play Again
+                                </button>
+                            </div>
+                        )}
+
+                        {safeQuestions.length === 0 && (
+                            <p className="text-center text-xs font-bold text-slate-400">
+                                No questions added yet. Configure questions in the editor.
+                            </p>
                         )}
                     </div>
-                )}
-
-                {/* Activity Complete */}
-                {activityDone && (
-                    <div className="mt-7 w-full p-6 rounded-2xl bg-amber-50 border-2 border-b-4 border-[#FFC800] border-b-amber-500 flex flex-col items-center text-center gap-3 animate-in zoom-in-95 duration-300">
-                        <Award className="w-10 h-10 text-amber-500" />
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-amber-600 mb-1">Activity Complete!</p>
-                            <p className="text-2xl font-black text-slate-900">
-                                {correctCount} / {requiredSpins} correct
-                            </p>
-                            <p className="text-xs font-bold text-slate-500 mt-1">
-                                {Math.round((correctCount / requiredSpins) * points)} points earned
-                            </p>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={handleReset}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 border-b-slate-300 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer"
-                        >
-                            <RefreshCw className="w-3.5 h-3.5" />
-                            Play Again
-                        </button>
-                    </div>
-                )}
-
-                {safeQuestions.length === 0 && (
-                    <p className="mt-6 text-center text-xs font-bold text-slate-400">
-                        No questions added yet. Configure questions in the editor.
-                    </p>
-                )}
+                </div>
             </div>
-        </div >
+        </div>
     )
 }

@@ -109,11 +109,20 @@ Below is the complete list of all registered interactive components, their modes
 | Component Type | Supports `mode`? | Supports `timeLimit`? | Primary Interaction Type | Cognitive Friction | Primary Pedagogical Role |
 |---|---|---|---|---|---|
 | **`poll`** | ❌ (Always Open) | ❌ | Opinion voting & selection | Low | Warm-up engagement, icebreaker opinions, student preferences |
+| **`wordCloud`** | `"practice"` / `"live"` | ❌ | Dynamic term submission | Low | Group brainstorm, keyword gathering, visual topic cloud |
 | **`flashcards`** | `"practice"` / `"live"` | ❌ | 3D card flip study | Low | Vocabulary discovery, key term definitions, quick-concept flipping |
 | **`hotspot`** (discovery) | `"practice"` | ❌ | Visual diagram click inspection | Low | Interactive visual exploration, diagram labeling, spatial scene inspection |
 | **`quiz`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Multiple choice question selection | Medium | Single-concept check, 3-4 option multiple choice evaluation |
+| **`trueFalse`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Binary truth verification | Medium | Quick-fire conceptual validation and misconception checks |
+| **`scaleSlider`** | `"practice"` / `"live"` | ❌ | Continuous range rating | Medium | Self-assessment, confidence rating, parameter scaling |
 | **`flashcardQuiz`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | 3D flip card + 4-option selection | Medium | Gamified 3D card questioning with 4 option cards |
+| **`spinTheWheel`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Gamified wheel spin + quiz question | Medium | Multi-question gamified review wheel (3+ required spins) |
 | **`multiSelectQuiz`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Multi-correct boolean selection | Medium-High | Complex multi-choice evaluation (Select ALL that apply) |
+| **`categorise`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Bucket item sorting | Medium-High | Categorization, concept grouping, bucket classification |
+| **`annotateImage`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Diagram node tag placement | Medium-High | Visual diagram annotation, structural labeling assessment |
+| **`timeline`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Chronological event placement | Medium-High | Historical/process event ordering on interactive timeline |
+| **`wordScramble`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Letter un-scrambling | Medium-High | Key term spelling and exact word retrieval |
+| **`memoryGrid`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | 3D tile pair matching | Medium-High | Memory card matching, term-definition association game |
 | **`hotspot`** (quiz) | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Visual diagram target selection | Medium-High | Visual assessment — clicking exact regions on a diagram under time limit |
 | **`fillInTheBlank`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Sentence reading & typing/selecting text | High (Requires Sealed Concept) | Sentence completion & exact terminology retrieval (ONLY after concept is sealed) |
 | **`matchingPairs`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Dual-column term matching | High (Requires Sealed Concept) | Concept-to-definition linking, dual-column connection checks |
@@ -135,6 +144,13 @@ timeLimit = Base Setup Time (10-20s) + (Per-Item Processing Time × Item Count) 
 | Component Type | Base Setup Time | Per-Item Time | Formula | Minimum `timeLimit` | Practical Examples |
 |---|---|---|---|---|---|
 | **`quiz`** | 10 seconds | 10s per question | `10 + (10 × questions.length)` | **20s** | • 1 Question = **20s**<br>• 2 Questions = **30s**<br>• 3 Questions = **40s** |
+| **`spinTheWheel`** | 15 seconds | 12s per question | `15 + (12 × requiredSpins)` | **35s** | • 3 Required Spins = **50s**<br>• 4 Required Spins = **65s** |
+| **`categorise`** | 15 seconds | 8s per item | `15 + (8 × items.length)` | **35s** | • 4 Items = **45s**<br>• 6 Items = **65s** |
+| **`annotateImage`** | 15 seconds | 10s per label | `15 + (10 × labels.length)` | **35s** | • 3 Labels = **45s**<br>• 5 Labels = **65s** |
+| **`trueFalse`** | 10 seconds | 10s per question | `10 + (10 × questions.length)` | **20s** | • 1 Question = **20s**<br>• 2 Questions = **30s** |
+| **`wordScramble`** | 15 seconds | 15s per word | `15 + (15 × words.length)` | **30s** | • 1 Word = **30s**<br>• 3 Words = **60s** |
+| **`memoryGrid`** | 15 seconds | 10s per pair | `15 + (10 × pairs.length)` | **35s** | • 4 Pairs = **55s**<br>• 6 Pairs = **75s** |
+| **`timeline`** | 15 seconds | 10s per event | `15 + (10 × events.length)` | **35s** | • 3 Events = **45s**<br>• 5 Events = **65s** |
 | **`fillInTheBlank`** | 15 seconds | 15s per blank | `15 + (15 × blanks.length)` | **30s** | • 1 Blank = **30s**<br>• 2 Blanks = **45s**<br>• 3 Blanks = **60s** |
 | **`dragDrop`** | 10 seconds | 10s per item to sort | `10 + (10 × items.length)` | **30s** | • 3 Items = **40s**<br>• 4 Items = **50s**<br>• 5 Items = **60s** |
 | **`matchingPairs`** | 10 seconds | 10s per pair | `10 + (10 × pairs.length)` | **30s** | • 3 Pairs = **40s**<br>• 4 Pairs = **50s**<br>• 5 Pairs = **60s** |
