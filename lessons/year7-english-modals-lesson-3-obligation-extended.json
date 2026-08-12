@@ -1,0 +1,672 @@
+{
+  "id": "year7-english-modals-lesson-3-obligation-extended",
+  "title": "Obligation, Necessity & Permission (Extended): Rules, Advice and Rights",
+  "description": "Distinguish strict mandates from recommendations and prohibitions, compare must versus have to, master formal may versus ability can, and analyse modals in real policy documents and everyday rules.",
+  "author": "AST English Academy",
+  "duration": 45,
+  "level": "Year 7",
+  "settings": {
+    "theme": "educational",
+    "subject": "English Language",
+    "topic": "Modal Verbs — Obligation",
+    "extendedVersionOf": "year7-english-modals-lesson-3-obligation"
+  },
+  "createdAt": "2026-08-12T14:40:00.000Z",
+  "updatedAt": "2026-08-12T14:40:00.000Z",
+  "slides": [
+    {
+      "id": "slide-ext3-001",
+      "title": "Mandates vs Advice vs Permission",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-001",
+          "type": "heading",
+          "props": { "content": "How Compulsory Is the Action?", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext3-001",
+          "type": "paragraph",
+          "props": {
+            "content": "Modal verbs tell the listener how much choice they have. A <strong>strict mandate</strong> leaves no room for debate — you must comply or face consequences. A <strong>recommendation</strong> guides you strongly but allows personal choice. A <strong>permission</strong> grants the right to act. A <strong>prohibition</strong> forbids an action entirely.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext3-001",
+          "type": "table",
+          "props": {
+            "rows": 5,
+            "columns": 3,
+            "data": [
+              ["Category", "Modal Verbs", "Example Sentence"],
+              ["Strict Mandate", "Must / Have to", "Drivers must stop at red traffic lights."],
+              ["Strong Recommendation", "Should / Ought to", "You should drink water during long workouts."],
+              ["Prohibition", "Must not / Cannot", "You must not enter without a permit."],
+              ["Permission", "May / Can", "Sixth-form students may leave campus at lunch."]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext3-001",
+          "type": "callout",
+          "props": {
+            "variant": "warning",
+            "title": "Must Not vs Don't Have To",
+            "content": "'You must not smoke' = forbidden (prohibition). 'You don't have to smoke' = not required but allowed. These mean completely different things — never confuse them!"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-002",
+      "title": "Must vs Have To: External vs Internal",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-002",
+          "type": "heading",
+          "props": { "content": "Two Ways to Express Obligation", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext3-002",
+          "type": "paragraph",
+          "props": {
+            "content": "Both <strong>must</strong> and <strong>have to</strong> express obligation, but with a subtle difference. <strong>Must</strong> often reflects the speaker's own authority or a strong personal rule: <em>'I must finish this essay tonight.'</em> <strong>Have to</strong> typically reflects an external rule or law: <em>'Employees have to wear ID badges.'</em> In everyday modern English, they are often interchangeable for strict rules.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "accordion-ext3-002",
+          "type": "accordion",
+          "props": {
+            "title": "Must vs Have To — FAQ",
+            "allowMultiple": false,
+            "items": [
+              { "id": "acc1", "title": "Can I use must and have to interchangeably?", "content": "For laws and school rules, yes: 'You must wear uniform' = 'You have to wear uniform.' In formal writing, 'must' sounds more authoritative." },
+              { "id": "acc2", "title": "How do I express lack of obligation?", "content": "Use 'don't have to' or 'needn't': 'You don't have to attend the meeting' means attendance is optional." },
+              { "id": "acc3", "title": "What about 'shall' for rules?", "content": "'Shall' appears in very formal legal documents: 'The tenant shall pay rent on the first of each month.' It is rare in everyday speech." }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "trueFalse-ext3-002",
+          "type": "trueFalse",
+          "props": {
+            "statement": "'You don't have to bring a calculator' means bringing a calculator is forbidden.",
+            "isTrue": false,
+            "explanation": "'Don't have to' means it is NOT obligatory — you may bring one if you wish, but it is optional. 'Must not bring' would mean forbidden.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-003",
+      "title": "Should and Ought To: Advisory Modals",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-003",
+          "type": "heading",
+          "props": { "content": "Recommendations Without Force", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext3-003",
+          "type": "paragraph",
+          "props": {
+            "content": "<strong>Should</strong> and <strong>ought to</strong> give advice or express what is morally or practically right — but the listener retains freedom to choose. Teachers, doctors, and parents use these constantly: <em>'You should revise every evening'</em> is guidance, not a law. Ignoring advice may have consequences, but it is not the same as breaking a rule.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcards-ext3-003",
+          "type": "flashcards",
+          "props": {
+            "title": "Mandate vs Advice — Compare the Force",
+            "cards": [
+              { "id": "c1", "front": "MANDATE: You must wear a helmet.", "back": "Non-negotiable safety law. No helmet = no riding." },
+              { "id": "c2", "front": "ADVICE: You should wear a helmet.", "back": "Strong recommendation. You can choose, but it is wise to comply." },
+              { "id": "c3", "front": "PROHIBITION: You must not run in the corridor.", "back": "Absolutely forbidden. Running breaks a school rule." },
+              { "id": "c4", "front": "OPTIONAL: You don't have to join the club.", "back": "Membership is voluntary — no obligation at all." }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "quiz-ext3-003",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which sentence is advice rather than a strict rule?",
+                "options": [
+                  { "id": "o1", "text": "Students must arrive by 8:30 AM.", "isCorrect": false },
+                  { "id": "o2", "text": "Students should review notes each evening.", "isCorrect": true },
+                  { "id": "o3", "text": "Students must not use phones in class.", "isCorrect": false },
+                  { "id": "o4", "text": "Students have to wear school uniform.", "isCorrect": false }
+                ],
+                "explanation": "'Should' expresses a recommendation, not a mandatory rule."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-004",
+      "title": "May vs Can: Permission vs Ability",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-004",
+          "type": "heading",
+          "props": { "content": "Formal Permission and Physical Capability", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext3-004",
+          "type": "paragraph",
+          "props": {
+            "content": "In formal English, <strong>may</strong> grants or requests official permission: <em>'May I ask a question?'</em> In everyday speech, <strong>can</strong> often replaces 'may' for permission, but technically <strong>can</strong> describes physical or mental ability: <em>'She can run ten miles'</em> means she has the capability. Using 'may' in exams and formal writing shows precision and courtesy.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext3-004",
+          "type": "table",
+          "props": {
+            "rows": 4,
+            "columns": 3,
+            "data": [
+              ["Modal", "Function", "Example"],
+              ["May", "Formal permission request/grant", "May I leave the room? / You may begin the exam."],
+              ["Can", "Physical or mental ability", "He can solve complex equations."],
+              ["Can (informal)", "Informal permission", "Can I borrow your pen? (everyday speech)"],
+              ["Could", "Polite permission request", "Could I use the printer, please?"]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "fillInTheBlank-ext3-004",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Complete with Mandate, Advice, or Permission Modals",
+            "text": "1. Safety rule: All factory workers {{blank}} wear protective helmets.\n2. Politeness request: {{blank}} I borrow your dictionary for a moment?\n3. Study tip: You {{blank}} revise your notes every evening.\n4. Physical skill: She {{blank}} speak three languages fluently.",
+            "blanks": [
+              { "id": "b1", "answer": "must", "alternatives": ["Must", "have to"] },
+              { "id": "b2", "answer": "May", "alternatives": ["Can", "Could"] },
+              { "id": "b3", "answer": "should", "alternatives": ["Should", "ought to"] },
+              { "id": "b4", "answer": "can", "alternatives": ["Can"] }
+            ],
+            "caseSensitive": false,
+            "points": 20,
+            "timeLimit": 75,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-005",
+      "title": "School Policy Inspection",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-005",
+          "type": "heading",
+          "props": { "content": "Analyse Modals in a Code of Conduct", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "hotspot-ext3-005",
+          "type": "hotspot",
+          "props": {
+            "title": "Tap Hotspots to Identify Mandates, Prohibitions, and Permissions",
+            "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "discovery",
+            "hotspots": [
+              { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Strict Requirement", "content": "'Students MUST wear full school uniform at all times.' Non-negotiable mandate with disciplinary consequences." },
+              { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Prohibition", "content": "'Mobile phones MUST NOT be used during lesson time.' Absolute prohibition — using a phone breaks this rule." },
+              { "id": "hs3", "x": 0.45, "y": 0.75, "label": "Granted Permission", "content": "'Sixth-form students MAY leave campus during lunch hour.' Formal permission granted to a specific group." },
+              { "id": "hs4", "x": 0.80, "y": 0.30, "label": "Recommendation", "content": "'All students SHOULD join at least one extracurricular club.' Encouraged but not compulsory." }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext3-005",
+          "type": "trueFalse",
+          "props": {
+            "statement": "'You may open your exam papers now' expresses formal permission, not physical ability.",
+            "isTrue": true,
+            "explanation": "'May' here grants official permission from the examiner to begin. This is a formal context where 'may' is preferred over 'can'.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-006",
+      "title": "Categorising Obligation Modals",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-006",
+          "type": "heading",
+          "props": { "content": "Sort Rules into the Correct Category", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "categorise-ext3-006",
+          "type": "categorise",
+          "props": {
+            "title": "Categorise Each Sentence by Modal Function",
+            "categories": [
+              { "id": "mandate", "title": "Strict Mandate" },
+              { "id": "advice", "title": "Recommendation" },
+              { "id": "prohibit", "title": "Prohibition" },
+              { "id": "permit", "title": "Permission" }
+            ],
+            "items": [
+              { "id": "i1", "text": "Visitors must sign the register.", "categoryId": "mandate" },
+              { "id": "i2", "text": "You should eat breakfast before exams.", "categoryId": "advice" },
+              { "id": "i3", "text": "Smoking must not occur on school grounds.", "categoryId": "prohibit" },
+              { "id": "i4", "text": "Guests may use the visitor parking area.", "categoryId": "permit" },
+              { "id": "i5", "text": "All staff have to complete safety training.", "categoryId": "mandate" },
+              { "id": "i6", "text": "You ought to get eight hours of sleep.", "categoryId": "advice" }
+            ],
+            "points": 25,
+            "timeLimit": 65,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "matchingPairs-ext3-006",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match Modal Phrases to Their Legal and Social Function",
+            "pairs": [
+              { "id": "p1", "left": "Must / Have to", "right": "Strict Legal or Official Requirement" },
+              { "id": "p2", "left": "Must not / Cannot", "right": "Strict Prohibition / Forbidden Action" },
+              { "id": "p3", "left": "Should / Ought to", "right": "Recommended Advice or Duty" },
+              { "id": "p4", "left": "May / Can", "right": "Formal or Informal Permission" }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-007",
+      "title": "Common Mistakes and Prohibitions",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-007",
+          "type": "heading",
+          "props": { "content": "Avoid These Obligation Modal Traps", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext3-007",
+          "type": "callout",
+          "props": {
+            "variant": "important",
+            "title": "The Three Most Common Errors",
+            "content": "1. Confusing 'must not' (forbidden) with 'don't have to' (optional). 2. Using 'can' when 'may' is required in formal permission. 3. Treating 'should' as a strict law instead of advice."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "multiSelectQuiz-ext3-007",
+          "type": "multiSelectQuiz",
+          "props": {
+            "title": "Select ALL Sentences That Express PROHIBITION",
+            "questions": [
+              {
+                "id": "msq1",
+                "question": "Which sentences forbid an action?",
+                "options": [
+                  { "id": "a", "text": "You must not cheat in exams.", "isCorrect": true, "color": "bg-violet-500" },
+                  { "id": "b", "text": "You should not eat too much sugar.", "isCorrect": false, "color": "bg-amber-500" },
+                  { "id": "c", "text": "You cannot enter without a ticket.", "isCorrect": true, "color": "bg-sky-500" },
+                  { "id": "d", "text": "You don't have to attend the assembly.", "isCorrect": false, "color": "bg-rose-500" }
+                ],
+                "explanation": "'Must not' and 'cannot' express prohibition. 'Should not' is advice. 'Don't have to' means optional."
+              }
+            ],
+            "points": 15,
+            "timeLimit": 45,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "wordScramble-ext3-007",
+          "type": "wordScramble",
+          "props": {
+            "title": "Unscramble This Rule-Related Term",
+            "word": "PROHIBITION",
+            "hint": "The act of forbidding something by authority or law",
+            "points": 15,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-008",
+      "title": "Obligation in Real Documents",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-008",
+          "type": "heading",
+          "props": { "content": "Reading Modals in Signs, Policies, and Notices", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext3-008",
+          "type": "paragraph",
+          "props": {
+            "content": "Public signs and official documents rely heavily on modal verbs. A <em>'No Entry'</em> sign implies <strong>must not enter</strong>. A <em>'Visitors Welcome'</em> sign implies <strong>may enter</strong>. Learning to decode modals in real texts helps you understand your rights and responsibilities instantly.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "memoryGrid-ext3-008",
+          "type": "memoryGrid",
+          "props": {
+            "title": "Match Each Modal to Its Obligation Function",
+            "pairs": [
+              { "id": "p1", "term": "Must", "definition": "Strict mandatory obligation" },
+              { "id": "p2", "term": "Must not", "definition": "Absolute prohibition" },
+              { "id": "p3", "term": "Should", "definition": "Recommended advice" },
+              { "id": "p4", "term": "May", "definition": "Formal granted permission" }
+            ],
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "dragDrop-ext3-008",
+          "type": "dragDrop",
+          "props": {
+            "title": "Rank from STRONGEST Obligation (1st) to WEAKEST (4th)",
+            "items": [
+              { "id": "d1", "text": "You MUST submit the form today.", "correctIndex": 0 },
+              { "id": "d2", "text": "You HAVE TO attend the briefing.", "correctIndex": 1 },
+              { "id": "d3", "text": "You SHOULD read the instructions.", "correctIndex": 2 },
+              { "id": "d4", "text": "You MAY leave when finished.", "correctIndex": 3 }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-009",
+      "title": "Obligation Mastery Review",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-009",
+          "type": "heading",
+          "props": { "content": "Spin the Wheel: Obligation Challenge", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "spinTheWheel-ext3-009",
+          "type": "spinTheWheel",
+          "props": {
+            "title": "Spin to Test Your Obligation Knowledge",
+            "requiredSpins": 3,
+            "points": 25,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active",
+            "questions": [
+              {
+                "id": "sq1",
+                "type": "multipleChoice",
+                "prompt": "Which modal expresses a non-negotiable requirement?",
+                "options": ["should", "must", "might", "could"],
+                "correctOptionIndex": 1,
+                "explanation": "'Must' communicates an absolute, mandatory obligation."
+              },
+              {
+                "id": "sq2",
+                "type": "trueFalse",
+                "prompt": "'Don't have to' and 'must not' mean the same thing.",
+                "isTrue": false,
+                "explanation": "'Don't have to' = optional. 'Must not' = forbidden. Completely different meanings."
+              },
+              {
+                "id": "sq3",
+                "type": "inputAnswer",
+                "prompt": "Which modal is preferred for formal permission requests?",
+                "keywords": ["may"],
+                "explanation": "'May I...?' is the formal standard for permission requests."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "quiz-ext3-009",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which modal verb expresses a non-negotiable requirement?",
+                "options": [
+                  { "id": "o1", "text": "should", "isCorrect": false },
+                  { "id": "o2", "text": "must", "isCorrect": true },
+                  { "id": "o3", "text": "might", "isCorrect": false },
+                  { "id": "o4", "text": "could", "isCorrect": false }
+                ],
+                "explanation": "'Must' communicates an absolute, mandatory obligation."
+              },
+              {
+                "id": "q2",
+                "question": "Which sentence expresses formal permission rather than physical capability?",
+                "options": [
+                  { "id": "o1", "text": "He can swim across the river.", "isCorrect": false },
+                  { "id": "o2", "text": "You may open your exam papers now.", "isCorrect": true },
+                  { "id": "o3", "text": "She can speak Spanish fluently.", "isCorrect": false },
+                  { "id": "o4", "text": "They can lift heavy boxes.", "isCorrect": false }
+                ],
+                "explanation": "'May' is used to grant formal permission in official contexts."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 20,
+            "timeLimit": 30,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext3-010",
+      "title": "Obligation Summary",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext3-010",
+          "type": "heading",
+          "props": { "content": "Obligation, Permission and Prohibition — Key Takeaways", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quote-ext3-010",
+          "type": "quote",
+          "props": {
+            "text": "Rules are not necessarily sacred, principles are.",
+            "author": "Franklin D. Roosevelt",
+            "source": "On distinguishing laws from values"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext3-010",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "Must/have to = strict mandate; should/ought to = advice; may/can = permission; must not/cannot = prohibition.",
+              "Never confuse 'must not' (forbidden) with 'don't have to' (optional).",
+              "Use 'may' for formal permission; use 'can' for physical ability.",
+              "Policy documents, signs, and school rules all rely on precise modal choice."
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcardQuiz-ext3-010",
+          "type": "flashcardQuiz",
+          "props": {
+            "questions": [
+              {
+                "id": "fq1",
+                "question": "Which sentence expresses a PROHIBITION?",
+                "options": [
+                  "You must not run in the hall.",
+                  "You should not eat sweets.",
+                  "You don't have to run.",
+                  "You may run outside."
+                ],
+                "correctAnswer": 0,
+                "explanation": "'Must not' forbids the action entirely — it is a prohibition."
+              },
+              {
+                "id": "fq2",
+                "question": "Which modal best fits a formal permission request?",
+                "options": ["Must", "May", "Should", "Will"],
+                "correctAnswer": 1,
+                "explanation": "'May I...?' is the standard formal permission request."
+              }
+            ],
+            "points": 20,
+            "timeLimit": 35,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,674 @@
+{
+  "id": "year7-english-modals-lesson-1-intro-extended",
+  "title": "Introduction to Modal Verbs (Extended): The Power of Auxiliary Verbs",
+  "description": "Explore modal auxiliary verbs in depth — their grammar rules, core meanings, real-world uses in signs and speech, and how modals shift certainty, obligation, and permission in everyday English.",
+  "author": "AST English Academy",
+  "duration": 45,
+  "level": "Year 7",
+  "settings": {
+    "theme": "educational",
+    "subject": "English Language",
+    "topic": "Modal Verbs",
+    "extendedVersionOf": "year7-english-modals-lesson-1-intro"
+  },
+  "createdAt": "2026-08-12T14:30:00.000Z",
+  "updatedAt": "2026-08-12T14:30:00.000Z",
+  "slides": [
+    {
+      "id": "slide-ext1-001",
+      "title": "Welcome: One Word Changes Everything",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-001",
+          "type": "heading",
+          "props": { "content": "Welcome to the World of Modal Verbs", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext1-001",
+          "type": "paragraph",
+          "props": {
+            "content": "Compare these two sentences: <strong>'You must hand in your essay today'</strong> versus <strong>'You might hand in your essay today.'</strong> The main verb (<em>hand in</em>) stays the same — but the tiny helper word before it completely changes the force, expectation, and tone. These helper words are <strong>modal auxiliary verbs</strong>, and mastering them is one of the most powerful skills in English writing and speaking.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext1-001",
+          "type": "callout",
+          "props": {
+            "variant": "tip",
+            "title": "Why Modals Matter",
+            "content": "Modal verbs let you fine-tune meaning without rewriting an entire sentence. They express attitude — certainty, obligation, permission, ability, and advice — in just one or two words."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "poll-ext1-001",
+          "type": "poll",
+          "props": {
+            "question": "Which sentence sounds the most forceful to you?",
+            "options": [
+              { "id": "opt1", "text": "You MUST submit the assignment by 5 PM." },
+              { "id": "opt2", "text": "You SHOULD submit the assignment by 5 PM." },
+              { "id": "opt3", "text": "You COULD submit the assignment by 5 PM." },
+              { "id": "opt4", "text": "You MIGHT submit the assignment by 5 PM." }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-002",
+      "title": "What Exactly Is a Modal Verb?",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-002",
+          "type": "heading",
+          "props": { "content": "Defining Modal Auxiliary Verbs", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext1-002",
+          "type": "paragraph",
+          "props": {
+            "content": "A <strong>modal auxiliary verb</strong> (or simply <strong>modal</strong>) is a special type of helping verb that modifies the main verb in a sentence. Modals never stand alone — they always appear before a base verb (the verb without <em>-ing</em>, <em>-ed</em>, or <em>-s</em>). For example: <em>She <strong>can</strong> swim</em>, not <em>She can swims</em>.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "accordion-ext1-002",
+          "type": "accordion",
+          "props": {
+            "title": "Modal Verb FAQ",
+            "allowMultiple": false,
+            "items": [
+              {
+                "id": "acc-ext1-1",
+                "title": "Are modals the same as main verbs?",
+                "content": "No. Main verbs carry the core action (run, write, eat). Modals modify that action by adding attitude — permission, obligation, possibility, etc. You cannot say 'I musted' or 'She cans' because modals never change form."
+              },
+              {
+                "id": "acc-ext1-2",
+                "title": "What is the most common modal error?",
+                "content": "Adding -s, -ed, or -ing to a modal. Correct: 'He must go.' Incorrect: 'He musts go' or 'He must going.' The main verb stays in base form after every modal."
+              },
+              {
+                "id": "acc-ext1-3",
+                "title": "Do modals work in questions?",
+                "content": "Yes. Modals invert with the subject in questions: 'Can you help me?' 'Must we leave now?' 'Should they revise the policy?'"
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "trueFalse-ext1-002",
+          "type": "trueFalse",
+          "props": {
+            "statement": "Modal verbs can be used alone without a main verb, e.g. 'She must.'",
+            "isTrue": false,
+            "explanation": "Modals require a main verb (usually in base form). 'She must leave' is correct; 'She must' alone is incomplete unless the verb is implied from context.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-003",
+      "title": "Three Non-Negotiable Grammar Rules",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-003",
+          "type": "heading",
+          "props": { "content": "Three Key Characteristics of Every Modal", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext1-003",
+          "type": "bulletList",
+          "props": {
+            "type": "ordered",
+            "items": [
+              "They always partner with a main base verb: must GO, can SWIM, should READ.",
+              "They never change form — no adding -ed, -ing, or -s to the modal itself.",
+              "They express attitudes: certainty, obligation, permission, ability, and advice."
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext1-003",
+          "type": "table",
+          "props": {
+            "rows": 5,
+            "columns": 3,
+            "data": [
+              ["Rule", "Correct Example", "Common Mistake"],
+              ["Base verb after modal", "She can speak French.", "She can speaks French."],
+              ["No -s on third person", "He must finish.", "He musts finish."],
+              ["No -ing on modal", "They should study.", "They should studying."],
+              ["No -ed on modal", "We could help.", "We coulded help."]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quiz-ext1-003",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which sentence follows correct modal grammar?",
+                "options": [
+                  { "id": "o1", "text": "She musts complete her homework.", "isCorrect": false },
+                  { "id": "o2", "text": "She must complete her homework.", "isCorrect": true },
+                  { "id": "o3", "text": "She must completing her homework.", "isCorrect": false },
+                  { "id": "o4", "text": "She must completed her homework.", "isCorrect": false }
+                ],
+                "explanation": "'Must' never takes -s, and the following verb stays in base form: 'complete'."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-004",
+      "title": "The Core Modal Family",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-004",
+          "type": "heading",
+          "props": { "content": "Core Modal Verbs and Their Primary Roles", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext1-004",
+          "type": "paragraph",
+          "props": {
+            "content": "English has nine core modals you will use constantly: <strong>can, could, may, might, must, shall, should, will,</strong> and <strong>would</strong>. Semi-modals like <strong>have to, ought to,</strong> and <strong>need to</strong> behave similarly but follow slightly different grammar patterns.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcards-ext1-004",
+          "type": "flashcards",
+          "props": {
+            "title": "Core Modal Verbs — Flip Each Card",
+            "cards": [
+              { "id": "c1", "front": "Must / Shall", "back": "Strict obligation or high certainty: 'You must stop at red lights.' 'I shall return tomorrow.'" },
+              { "id": "c2", "front": "Should / Ought to", "back": "Advice or strong recommendation: 'You should rest after exercise.'" },
+              { "id": "c3", "front": "Might / Could", "back": "Low possibility or polite suggestion: 'It might rain.' 'Could you help me?'" },
+              { "id": "c4", "front": "Can / May", "back": "Ability or formal permission: 'She can swim.' 'May I leave early?'" },
+              { "id": "c5", "front": "Will / Would", "back": "Future certainty or polite requests: 'The bus will arrive soon.' 'Would you mind waiting?'" }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "memoryGrid-ext1-004",
+          "type": "memoryGrid",
+          "props": {
+            "title": "Match Each Modal to Its Primary Function",
+            "pairs": [
+              { "id": "p1", "term": "Must", "definition": "Strict obligation or strong deduction" },
+              { "id": "p2", "term": "Should", "definition": "Advice or recommendation" },
+              { "id": "p3", "term": "Might", "definition": "Low possibility or speculation" },
+              { "id": "p4", "term": "Can", "definition": "Ability or informal permission" }
+            ],
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-005",
+      "title": "Modals in the Real World",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-005",
+          "type": "heading",
+          "props": { "content": "Explore Modal Messages in Everyday Life", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext1-005",
+          "type": "paragraph",
+          "props": {
+            "content": "Modal verbs appear everywhere — on school noticeboards, in library rules, weather forecasts, and polite conversations. Tap each hotspot below to inspect how a single modal word sets the tone of a real-world message.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "hotspot-ext1-005",
+          "type": "hotspot",
+          "props": {
+            "title": "Tap the Hotspots to Inspect How Modal Verbs Set Rules and Expectations",
+            "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "discovery",
+            "hotspots": [
+              { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Library Rule", "content": "'Silence MUST be maintained in the reading room.' — Modal 'must' makes silence non-negotiable; breaking this rule has consequences." },
+              { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Weather Forecast", "content": "'Temperatures MIGHT drop later this evening.' — Modal 'might' expresses possibility, not certainty. The forecast could change." },
+              { "id": "hs3", "x": 0.45, "y": 0.75, "label": "Study Tip", "content": "'Students SHOULD take short breaks every 30 minutes.' — Modal 'should' offers helpful advice without forcing compliance." },
+              { "id": "hs4", "x": 0.80, "y": 0.30, "label": "Permission Sign", "content": "'Visitors MAY use the guest Wi-Fi network.' — Modal 'may' grants formal permission to an allowed action." }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-006",
+      "title": "Sorting Modals by Function",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-006",
+          "type": "heading",
+          "props": { "content": "Categorise Modal Verbs by What They Express", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext1-006",
+          "type": "callout",
+          "props": {
+            "variant": "note",
+            "title": "One Modal, Many Meanings",
+            "content": "Some modals like 'must' can express obligation ('You must wear a helmet') OR logical deduction ('She must be tired — she ran a marathon'). Context tells you which meaning applies."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "categorise-ext1-006",
+          "type": "categorise",
+          "props": {
+            "title": "Sort Each Sentence into the Correct Modal Category",
+            "categories": [
+              { "id": "cat1", "title": "Obligation / Rule" },
+              { "id": "cat2", "title": "Possibility / Uncertainty" },
+              { "id": "cat3", "title": "Permission / Ability" }
+            ],
+            "items": [
+              { "id": "i1", "text": "Drivers must stop at red lights.", "categoryId": "cat1" },
+              { "id": "i2", "text": "It might snow overnight.", "categoryId": "cat2" },
+              { "id": "i3", "text": "You may borrow my pen.", "categoryId": "cat3" },
+              { "id": "i4", "text": "We should recycle more plastic.", "categoryId": "cat1" },
+              { "id": "i5", "text": "She can play three instruments.", "categoryId": "cat3" },
+              { "id": "i6", "text": "They could arrive late.", "categoryId": "cat2" }
+            ],
+            "points": 20,
+            "timeLimit": 65,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-007",
+      "title": "Building Modal Sentences",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-007",
+          "type": "heading",
+          "props": { "content": "Sentence Structure: Subject + Modal + Base Verb", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext1-007",
+          "type": "table",
+          "props": {
+            "rows": 5,
+            "columns": 3,
+            "data": [
+              ["Modal Verb", "Primary Meaning", "Example in Context"],
+              ["Must", "Certainty or Strict Requirement", "You must wear safety glasses."],
+              ["Should", "Advice or Strong Recommendation", "You should review your notes before class."],
+              ["Might", "Possibility or Uncertainty", "We might visit the museum on Tuesday."],
+              ["Can", "Ability or General Permission", "She can speak three languages fluently."]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "fillInTheBlank-ext1-007",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Complete Each Sentence with the Most Appropriate Modal",
+            "text": "1. All passengers {{blank}} fasten their seatbelts before take-off.\n2. Based on the dark clouds, it {{blank}} rain within the hour.\n3. {{blank}} I use the computer lab after school?",
+            "blanks": [
+              { "id": "b1", "answer": "must", "alternatives": ["Must", "have to"] },
+              { "id": "b2", "answer": "might", "alternatives": ["Might", "could", "may"] },
+              { "id": "b3", "answer": "May", "alternatives": ["Can", "Could"] }
+            ],
+            "caseSensitive": false,
+            "points": 15,
+            "timeLimit": 60,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext1-007b",
+          "type": "trueFalse",
+          "props": {
+            "statement": "In the sentence 'He should studying harder', the modal grammar is correct.",
+            "isTrue": false,
+            "explanation": "After 'should', the main verb must stay in base form: 'He should study harder.' Never add -ing directly after a modal.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-008",
+      "title": "The Certainty Spectrum Preview",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-008",
+          "type": "heading",
+          "props": { "content": "Modals as a Volume Dial for Certainty", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext1-008",
+          "type": "paragraph",
+          "props": {
+            "content": "Modal verbs act like a dial controlling how confident a speaker feels. At 100% certainty you hear <strong>will</strong> or <strong>must</strong>. At 70–80% you hear <strong>should</strong>. At 40–50% you hear <strong>may</strong>. At 10–30% you hear <strong>might</strong> or <strong>could</strong>. Explore the timeline below to see how certainty decreases step by step.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "timeline-ext1-008",
+          "type": "timeline",
+          "props": {
+            "title": "The Modal Certainty Spectrum (Highest to Lowest)",
+            "events": [
+              { "id": "e1", "year": "100%", "title": "Will / Must", "description": "Absolute future fact or strong logical deduction: 'The sun will rise.' 'She must be exhausted.'" },
+              { "id": "e2", "year": "75%", "title": "Should / Ought to", "description": "High expectation based on normal patterns: 'The train should arrive on time.'" },
+              { "id": "e3", "year": "45%", "title": "May / Can", "description": "Moderate possibility or permission: 'We may go to the cinema later.'" },
+              { "id": "e4", "year": "20%", "title": "Might / Could", "description": "Low, unproven speculation: 'It might snow next week.'" }
+            ],
+            "interactive": true,
+            "points": 15
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "wordScramble-ext1-008",
+          "type": "wordScramble",
+          "props": {
+            "title": "Unscramble This Key Grammar Term",
+            "word": "MODAL",
+            "hint": "A type of auxiliary verb that expresses attitude before the main verb",
+            "points": 15,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-009",
+      "title": "Gamified Modal Review",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-009",
+          "type": "heading",
+          "props": { "content": "Spin the Wheel: Modal Knowledge Check", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "spinTheWheel-ext1-009",
+          "type": "spinTheWheel",
+          "props": {
+            "title": "Spin to Answer Modal Verb Questions",
+            "requiredSpins": 3,
+            "points": 25,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active",
+            "questions": [
+              {
+                "id": "sq1",
+                "type": "multipleChoice",
+                "prompt": "Which word is the modal in: 'Students must submit work on time'?",
+                "options": ["Students", "must", "submit", "time"],
+                "correctOptionIndex": 1,
+                "explanation": "'Must' is the modal auxiliary modifying the main verb 'submit'."
+              },
+              {
+                "id": "sq2",
+                "type": "trueFalse",
+                "prompt": "Modal verbs change form by adding -s in the third person.",
+                "isTrue": false,
+                "explanation": "Modals never change form. 'He must go' — not 'He musts go'."
+              },
+              {
+                "id": "sq3",
+                "type": "inputAnswer",
+                "prompt": "Which modal expresses advice? (one word)",
+                "keywords": ["should", "ought"],
+                "explanation": "'Should' and 'ought to' both express advice or recommendation."
+              },
+              {
+                "id": "sq4",
+                "type": "multipleChoice",
+                "prompt": "Which modal expresses the lowest certainty?",
+                "options": ["will", "must", "should", "might"],
+                "correctOptionIndex": 3,
+                "explanation": "'Might' indicates weak, uncertain possibility."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "multiSelectQuiz-ext1-009",
+          "type": "multiSelectQuiz",
+          "props": {
+            "title": "Select ALL True Statements About Modal Verbs",
+            "questions": [
+              {
+                "id": "msq1",
+                "question": "Which statements about modal verbs are correct?",
+                "options": [
+                  { "id": "a", "text": "Modals are followed by base-form verbs", "isCorrect": true, "color": "bg-violet-500" },
+                  { "id": "b", "text": "Modals take -ed endings in the past tense", "isCorrect": false, "color": "bg-amber-500" },
+                  { "id": "c", "text": "Can and may can express permission", "isCorrect": true, "color": "bg-sky-500" },
+                  { "id": "d", "text": "Must always means physical ability", "isCorrect": false, "color": "bg-rose-500" }
+                ],
+                "explanation": "Modals use base verbs and never take -ed. 'Can' and 'may' express permission. 'Must' expresses obligation or deduction, not ability."
+              }
+            ],
+            "points": 15,
+            "timeLimit": 45,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext1-010",
+      "title": "Lesson Summary and Next Steps",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext1-010",
+          "type": "heading",
+          "props": { "content": "What You Have Learned — and What Comes Next", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quote-ext1-010",
+          "type": "quote",
+          "props": {
+            "text": "The difference between the right word and the almost right word is the difference between lightning and a lightning bug.",
+            "author": "Mark Twain",
+            "source": "On word choice in writing"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext1-010",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "Modal auxiliary verbs modify main verbs to express attitude — certainty, obligation, permission, ability, and advice.",
+              "Modals never change form and are always followed by a base verb.",
+              "Core modals include can, could, may, might, must, shall, should, will, and would.",
+              "Upcoming lessons cover certainty ranking, obligation rules, permission, and persuasive rhetoric in depth."
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcardQuiz-ext1-010",
+          "type": "flashcardQuiz",
+          "props": {
+            "questions": [
+              {
+                "id": "fq1",
+                "question": "Which word is a modal verb in: 'You must hand in your essay'?",
+                "options": ["You", "must", "hand", "essay"],
+                "correctAnswer": 1,
+                "explanation": "'Must' is the modal auxiliary verb modifying 'hand in'."
+              },
+              {
+                "id": "fq2",
+                "question": "Which sentence has correct modal grammar?",
+                "options": [
+                  "She can runs fast.",
+                  "She can run fast.",
+                  "She cans run fast.",
+                  "She can running fast."
+                ],
+                "correctAnswer": 1,
+                "explanation": "After 'can', the verb stays in base form: 'run'."
+              }
+            ],
+            "points": 20,
+            "timeLimit": 35,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "poll-ext1-010",
+          "type": "poll",
+          "props": {
+            "question": "Which aspect of modal verbs do you most want to explore next?",
+            "options": [
+              { "id": "o1", "text": "Ranking certainty from 100% down to 10%" },
+              { "id": "o2", "text": "Writing rules, commands, and prohibitions" },
+              { "id": "o3", "text": "Using modals in persuasive speeches" }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    }
+  ]
+}

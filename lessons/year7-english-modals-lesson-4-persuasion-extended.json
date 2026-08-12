@@ -1,0 +1,667 @@
+{
+  "id": "year7-english-modals-lesson-4-persuasion-extended",
+  "title": "Modal Verbs in Persuasive Rhetoric (Extended): Authority, Urgency and Concession",
+  "description": "Apply modal verbs strategically in persuasive speeches and formal writing to project authority, escalate urgency, concede counter-arguments respectfully, and transform weak tentative claims into compelling arguments.",
+  "author": "AST English Academy",
+  "duration": 45,
+  "level": "Year 7",
+  "settings": {
+    "theme": "educational",
+    "subject": "English Language",
+    "topic": "Modal Verbs — Persuasion",
+    "extendedVersionOf": "year7-english-modals-lesson-4-persuasion"
+  },
+  "createdAt": "2026-08-12T14:45:00.000Z",
+  "updatedAt": "2026-08-12T14:45:00.000Z",
+  "slides": [
+    {
+      "id": "slide-ext4-001",
+      "title": "Modality as a Rhetorical Tool",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-001",
+          "type": "heading",
+          "props": { "content": "The Power of Persuasive Modals", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext4-001",
+          "type": "paragraph",
+          "props": {
+            "content": "In persuasive speeches, debate essays, and campaign writing, modal verbs control how authoritative and urgent your argument sounds. Using <strong>must</strong> or <strong>will</strong> inspires immediate action. Using <strong>should</strong> recommends reasonable policy. Using <strong>might</strong> or <strong>may</strong> lets you acknowledge opposing views without weakening your own position.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quote-ext4-001",
+          "type": "quote",
+          "props": {
+            "text": "If you would persuade, you must appeal to interest rather than intellect.",
+            "author": "Benjamin Franklin",
+            "source": "On the art of persuasion"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext4-001",
+          "type": "table",
+          "props": {
+            "rows": 5,
+            "columns": 3,
+            "data": [
+              ["Rhetorical Goal", "Target Modals", "Persuasive Example"],
+              ["Urgent Rallying Cry", "Must / Will", "We must act now to save our oceans."],
+              ["Formal Complaint / Policy", "Should / Ought to", "The council should reconsider this decision."],
+              ["Conceding a Counterpoint", "Might / May", "Opponents might argue that costs are high."],
+              ["Polite Suggestion", "Could", "We could introduce recycling bins on every floor."]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-002",
+      "title": "Weak vs Strong Modal Choices",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-002",
+          "type": "heading",
+          "props": { "content": "Upgrading Tentative Language to Authoritative Claims", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext4-002",
+          "type": "paragraph",
+          "props": {
+            "content": "Compare: <em>'We <strong>could</strong> try to reduce plastic waste'</em> (tentative, unconvincing) versus <em>'We <strong>must</strong> eliminate plastic waste'</em> (authoritative, urgent). Skilled persuasive writers deliberately choose strong modals for their main claims and reserve weak modals for concessions and counter-arguments.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext4-002",
+          "type": "callout",
+          "props": {
+            "variant": "tip",
+            "title": "The Modal Upgrade Strategy",
+            "content": "When editing persuasive writing, search for 'could', 'might', and 'may' in your main argument. If the sentence is meant to persuade, upgrade to 'must', 'will', or 'should'. Keep weak modals only where you acknowledge the other side."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "trueFalse-ext4-002",
+          "type": "trueFalse",
+          "props": {
+            "statement": "Replacing 'could' with 'must' in a persuasive claim generally makes the argument sound more authoritative.",
+            "isTrue": true,
+            "explanation": "'Must' creates urgency and moral obligation. 'Could' sounds tentative and uncommitted — weak for a main persuasive claim.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-003",
+      "title": "Upgrading Persuasive Sentences",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-003",
+          "type": "heading",
+          "props": { "content": "Transform Weak Suggestions into Strong Demands", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "fillInTheBlank-ext4-003",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Upgrade Weak Sentences with Authoritative Modal Verbs",
+            "text": "1. Weak: We could plant more trees. → Strong: We {{blank}} plant more trees to combat pollution.\n2. Weak: The school might fix the playground. → Strong: The administration {{blank}} repair the playground immediately.\n3. Concession: While opponents {{blank}} disagree, our proposal remains the best option.\n4. Guarantee: Together, we {{blank}} achieve a cleaner, greener community.",
+            "blanks": [
+              { "id": "b1", "answer": "must", "alternatives": ["Must", "will", "should"] },
+              { "id": "b2", "answer": "must", "alternatives": ["Must", "should", "will"] },
+              { "id": "b3", "answer": "may", "alternatives": ["May", "might", "could"] },
+              { "id": "b4", "answer": "will", "alternatives": ["Will", "shall", "must"] }
+            ],
+            "caseSensitive": false,
+            "points": 20,
+            "timeLimit": 75,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "flashcards-ext4-003",
+          "type": "flashcards",
+          "props": {
+            "title": "Rhetorical Modal Purposes — Flip Each Card",
+            "cards": [
+              { "id": "c1", "front": "MUST in rhetoric", "back": "Creates urgent moral obligation: 'We must protect endangered species.'" },
+              { "id": "c2", "front": "WILL in rhetoric", "back": "Guarantees a positive outcome: 'We will succeed if we unite.'" },
+              { "id": "c3", "front": "SHOULD in rhetoric", "back": "Recommends reasonable policy: 'Schools should teach financial literacy.'" },
+              { "id": "c4", "front": "MAY/MIGHT in rhetoric", "back": "Concedes counter-arguments: 'Critics may question our budget, but...'" }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-004",
+      "title": "Deconstructing a Campaign Speech",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-004",
+          "type": "heading",
+          "props": { "content": "How Modal Choices Shape Audience Reaction", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "hotspot-ext4-004",
+          "type": "hotspot",
+          "props": {
+            "title": "Tap Hotspots to Analyse Modal Choices in a Public Address",
+            "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "discovery",
+            "hotspots": [
+              { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Call to Action", "content": "'We MUST unite to rebuild our community.' Strong modal 'must' creates collective urgency and moral duty." },
+              { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Future Guarantee", "content": "'Together, we WILL secure a brighter future.' Modal 'will' projects absolute confidence in the outcome." },
+              { "id": "hs3", "x": 0.45, "y": 0.75, "label": "Addressing Doubt", "content": "'Critics MAY question our timing, but our purpose is clear.' Modal 'may' acknowledges opposition respectfully without agreeing." },
+              { "id": "hs4", "x": 0.80, "y": 0.30, "label": "Policy Recommendation", "content": "'The council SHOULD invest in youth programmes.' Modal 'should' proposes reasonable, evidence-based policy." }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "accordion-ext4-004",
+          "type": "accordion",
+          "props": {
+            "title": "Persuasive Writing Techniques Using Modals",
+            "allowMultiple": false,
+            "items": [
+              { "id": "acc1", "title": "What is the 'concession and rebuttal' pattern?", "content": "Acknowledge the other side with a weak modal ('Opponents might argue...'), then counter with a strong modal ('...but we must act now'). This shows fairness while keeping your argument powerful." },
+              { "id": "acc2", "title": "Why use 'will' instead of 'might' in conclusions?", "content": "Conclusions should inspire confidence. 'We will build a better future' sounds committed. 'We might build a better future' sounds uncertain and uninspiring." },
+              { "id": "acc3", "title": "When should I avoid 'must'?", "content": "Avoid 'must' when stating facts that need evidence rather than moral force. 'Research shows pollution must decrease' is weaker than 'Research shows pollution is increasing — we must reduce emissions.'" }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-005",
+      "title": "Escalating Modality in Speeches",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-005",
+          "type": "heading",
+          "props": { "content": "Building Argument Strength Slide by Slide", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext4-005",
+          "type": "paragraph",
+          "props": {
+            "content": "Effective persuasive speeches often <strong>escalate modality</strong> — starting with moderate language and building to urgent demands. A typical progression: acknowledge doubt with <em>might</em> → propose policy with <em>should</em> → demand action with <em>must</em> → guarantee success with <em>will</em>.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "dragDrop-ext4-005",
+          "type": "dragDrop",
+          "props": {
+            "title": "Rank Speech Lines from LOWEST Modality (1st) to HIGHEST (4th)",
+            "items": [
+              { "id": "d1", "text": "Some MIGHT doubt our commitment.", "correctIndex": 0 },
+              { "id": "d2", "text": "We SHOULD consider new solutions.", "correctIndex": 1 },
+              { "id": "d3", "text": "We MUST implement these changes now.", "correctIndex": 2 },
+              { "id": "d4", "text": "We WILL achieve total success.", "correctIndex": 3 }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "timeline-ext4-005",
+          "type": "timeline",
+          "props": {
+            "title": "The Persuasive Speech Modality Escalation Pattern",
+            "events": [
+              { "id": "e1", "year": "Step 1", "title": "Acknowledge Doubt (Might/May)", "description": "'Some critics might question our approach' — shows you have considered other views." },
+              { "id": "e2", "year": "Step 2", "title": "Propose Policy (Should)", "description": "'We should invest in renewable energy' — reasonable, evidence-based recommendation." },
+              { "id": "e3", "year": "Step 3", "title": "Demand Action (Must)", "description": "'We must reduce emissions by 2030' — urgent moral imperative." },
+              { "id": "e4", "year": "Step 4", "title": "Guarantee Outcome (Will)", "description": "'Together, we will create a sustainable future' — confident, inspiring conclusion." }
+            ],
+            "interactive": true,
+            "points": 15
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-006",
+      "title": "Matching Rhetorical Functions",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-006",
+          "type": "heading",
+          "props": { "content": "Connect Modals to Their Persuasive Purpose", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "matchingPairs-ext4-006",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match Each Modal to Its Rhetorical Purpose",
+            "pairs": [
+              { "id": "p1", "left": "Must", "right": "Creates urgent moral obligation" },
+              { "id": "p2", "left": "Will", "right": "Guarantees a positive outcome" },
+              { "id": "p3", "left": "Should", "right": "Recommends a reasonable policy" },
+              { "id": "p4", "left": "May", "right": "Concedes a potential counter-argument" },
+              { "id": "p5", "left": "Could", "right": "Offers a gentle, non-threatening suggestion" }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "categorise-ext4-006",
+          "type": "categorise",
+          "props": {
+            "title": "Sort Speech Lines by Rhetorical Function",
+            "categories": [
+              { "id": "urgent", "title": "Urgent Demand" },
+              { "id": "policy", "title": "Policy Recommendation" },
+              { "id": "concede", "title": "Counter-Argument Concession" }
+            ],
+            "items": [
+              { "id": "i1", "text": "We must ban single-use plastics immediately.", "categoryId": "urgent" },
+              { "id": "i2", "text": "Schools should teach media literacy.", "categoryId": "policy" },
+              { "id": "i3", "text": "Sceptics may argue the cost is too high.", "categoryId": "concede" },
+              { "id": "i4", "text": "Governments must fund public healthcare.", "categoryId": "urgent" },
+              { "id": "i5", "text": "Communities should create more green spaces.", "categoryId": "policy" },
+              { "id": "i6", "text": "Opponents might claim results will take years.", "categoryId": "concede" }
+            ],
+            "points": 20,
+            "timeLimit": 65,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-007",
+      "title": "Writing Your Own Persuasive Lines",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-007",
+          "type": "heading",
+          "props": { "content": "Apply Modals in Original Persuasive Sentences", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext4-007",
+          "type": "callout",
+          "props": {
+            "variant": "note",
+            "title": "Persuasive Paragraph Structure",
+            "content": "Opening (should — reasonable claim) → Evidence (must — urgent problem) → Counter-argument (may/might — fair concession) → Rebuttal (must/will — powerful response) → Conclusion (will — confident vision)."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "multiSelectQuiz-ext4-007",
+          "type": "multiSelectQuiz",
+          "props": {
+            "title": "Select ALL Sentences That Use Modals Effectively in Persuasion",
+            "questions": [
+              {
+                "id": "msq1",
+                "question": "Which sentences demonstrate strong persuasive modal use?",
+                "options": [
+                  { "id": "a", "text": "We must reduce carbon emissions now.", "isCorrect": true, "color": "bg-violet-500" },
+                  { "id": "b", "text": "We might possibly try to maybe help.", "isCorrect": false, "color": "bg-amber-500" },
+                  { "id": "c", "text": "Critics may disagree, but the evidence is clear.", "isCorrect": true, "color": "bg-sky-500" },
+                  { "id": "d", "text": "We could perhaps think about it someday.", "isCorrect": false, "color": "bg-rose-500" }
+                ],
+                "explanation": "Strong persuasion uses 'must' for urgency and 'may' for fair concessions. Weak stacked modals ('might possibly maybe') undermine authority."
+              }
+            ],
+            "points": 15,
+            "timeLimit": 45,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "quiz-ext4-007",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which sentence projects the strongest authority in a debate essay?",
+                "options": [
+                  { "id": "o1", "text": "The government could consider funding youth centers.", "isCorrect": false },
+                  { "id": "o2", "text": "The government must fund youth centers immediately.", "isCorrect": true },
+                  { "id": "o3", "text": "The government might try to fund youth centers.", "isCorrect": false },
+                  { "id": "o4", "text": "The government may think about funding youth centers.", "isCorrect": false }
+                ],
+                "explanation": "'Must' establishes an urgent, non-negotiable moral claim."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-008",
+      "title": "Gamified Rhetoric Review",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-008",
+          "type": "heading",
+          "props": { "content": "Spin the Wheel: Persuasive Modals Challenge", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "spinTheWheel-ext4-008",
+          "type": "spinTheWheel",
+          "props": {
+            "title": "Spin to Test Persuasive Modal Knowledge",
+            "requiredSpins": 3,
+            "points": 25,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active",
+            "questions": [
+              {
+                "id": "sq1",
+                "type": "multipleChoice",
+                "prompt": "Which modal creates the strongest call to action?",
+                "options": ["might", "should", "must", "could"],
+                "correctOptionIndex": 2,
+                "explanation": "'Must' establishes urgent moral obligation — the strongest persuasive force."
+              },
+              {
+                "id": "sq2",
+                "type": "trueFalse",
+                "prompt": "Using 'may' to introduce counter-arguments shows fairness without weakening your position.",
+                "isTrue": true,
+                "explanation": "'May/might' acknowledges opposing views respectfully while your main argument stays strong."
+              },
+              {
+                "id": "sq3",
+                "type": "inputAnswer",
+                "prompt": "Which modal guarantees a positive outcome in rhetoric?",
+                "keywords": ["will"],
+                "explanation": "'Will' projects confidence: 'We will succeed.'"
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "memoryGrid-ext4-008",
+          "type": "memoryGrid",
+          "props": {
+            "title": "Match Modals to Rhetorical Functions",
+            "pairs": [
+              { "id": "p1", "term": "Must", "definition": "Urgent moral obligation" },
+              { "id": "p2", "term": "Will", "definition": "Guaranteed positive outcome" },
+              { "id": "p3", "term": "Should", "definition": "Reasonable policy recommendation" },
+              { "id": "p4", "term": "May", "definition": "Respectful counter-argument" }
+            ],
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-009",
+      "title": "Counter-Arguments and Rebuttals",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-009",
+          "type": "heading",
+          "props": { "content": "The Art of Conceding Without Surrendering", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext4-009",
+          "type": "paragraph",
+          "props": {
+            "content": "Skilled debaters use weak modals (<strong>may, might, could</strong>) to introduce opposing views: <em>'Critics <strong>may</strong> argue that the plan is expensive.'</em> This shows intellectual honesty. They then rebut with strong modals: <em>'However, we <strong>must</strong> invest now or pay far more later.'</em> The contrast makes the rebuttal more powerful, not weaker.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "trueFalse-ext4-009",
+          "type": "trueFalse",
+          "props": {
+            "statement": "Using 'may' or 'might' when introducing counter-arguments makes a writer sound unconfident about their own position.",
+            "isTrue": false,
+            "explanation": "Skilled writers use weak modals deliberately to acknowledge opponents respectfully. The confidence comes in the rebuttal with 'must' or 'will'.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "flashcardQuiz-ext4-009",
+          "type": "flashcardQuiz",
+          "props": {
+            "questions": [
+              {
+                "id": "fq1",
+                "question": "Why use 'may' when introducing counter-arguments?",
+                "options": [
+                  "To sound unconfident",
+                  "To acknowledge opponents without agreeing they are right",
+                  "Because you forgot a stronger modal",
+                  "To make the essay longer"
+                ],
+                "correctAnswer": 1,
+                "explanation": "Weak modals allow fair acknowledgment of other views while keeping your main argument strong."
+              },
+              {
+                "id": "fq2",
+                "question": "Which upgrade improves this weak persuasive line: 'We could try to help'?",
+                "options": [
+                  "We might possibly try to help",
+                  "We must act to help those in need",
+                  "We may think about helping",
+                  "We could maybe help someday"
+                ],
+                "correctAnswer": 1,
+                "explanation": "'Must' transforms a tentative suggestion into an urgent moral demand."
+              }
+            ],
+            "points": 20,
+            "timeLimit": 35,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext4-010",
+      "title": "Persuasive Modals Summary",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext4-010",
+          "type": "heading",
+          "props": { "content": "Rhetorical Modality — Key Takeaways", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext4-010",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "Use must/will for urgent calls to action and confident conclusions.",
+              "Use should for reasonable policy recommendations backed by evidence.",
+              "Use may/might/could for concessions and counter-arguments — not for your main claim.",
+              "Escalate modality through a speech: might → should → must → will."
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "wordScramble-ext4-010",
+          "type": "wordScramble",
+          "props": {
+            "title": "Unscramble This Persuasion Keyword",
+            "word": "RHETORIC",
+            "hint": "The art of effective or persuasive speaking and writing",
+            "points": 15,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "quiz-ext4-010",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Why do skilled writers use 'may' or 'might' when introducing counter-arguments?",
+                "options": [
+                  { "id": "o1", "text": "To sound unconfident about their own position.", "isCorrect": false },
+                  { "id": "o2", "text": "To acknowledge opponents' views respectfully without agreeing they are true.", "isCorrect": true },
+                  { "id": "o3", "text": "Because they forgot which modal verb to use.", "isCorrect": false },
+                  { "id": "o4", "text": "To make the essay longer.", "isCorrect": false }
+                ],
+                "explanation": "Low-certainty modals allow writers to mention counterpoints while keeping their main argument strong."
+              },
+              {
+                "id": "q2",
+                "question": "Which modal is best for a persuasive conclusion guaranteeing success?",
+                "options": [
+                  { "id": "o1", "text": "might", "isCorrect": false },
+                  { "id": "o2", "text": "could", "isCorrect": false },
+                  { "id": "o3", "text": "will", "isCorrect": true },
+                  { "id": "o4", "text": "may", "isCorrect": false }
+                ],
+                "explanation": "'Will' projects absolute confidence — ideal for inspiring conclusions."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 20,
+            "timeLimit": 30,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    }
+  ]
+}

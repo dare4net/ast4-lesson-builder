@@ -1,0 +1,685 @@
+{
+  "id": "year7-english-modals-lesson-5-assessment-extended",
+  "title": "Modal Verbs: Comprehensive Live Assessment (Extended)",
+  "description": "Demonstrate full mastery of modal verbs across certainty ranking, obligation and prohibition, permission versus ability, and persuasive rhetoric through timed live challenges covering every concept in the module.",
+  "author": "AST English Academy",
+  "duration": 50,
+  "level": "Year 7",
+  "settings": {
+    "theme": "educational",
+    "subject": "English Language",
+    "topic": "Modal Verbs — Assessment",
+    "extendedVersionOf": "year7-english-modals-lesson-5-assessment"
+  },
+  "createdAt": "2026-08-12T14:50:00.000Z",
+  "updatedAt": "2026-08-12T14:50:00.000Z",
+  "slides": [
+    {
+      "id": "slide-ext5-001",
+      "title": "Assessment Briefing",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-001",
+          "type": "heading",
+          "props": { "content": "Final Live Assessment — Modal Verbs Mastery", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext5-001",
+          "type": "paragraph",
+          "props": {
+            "content": "This extended assessment tests every concept from the modal verbs module under timed <strong>Live Mode</strong> conditions. You will face challenges covering certainty, obligation, permission, and persuasive rhetoric. Read each prompt carefully before the timer expires.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext5-001",
+          "type": "callout",
+          "props": {
+            "variant": "important",
+            "title": "Live Mode Rules",
+            "content": "Each challenge has a calculated time limit based on its difficulty. Submit before time runs out. Explanations appear after each answer to reinforce learning."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "accordion-ext5-001",
+          "type": "accordion",
+          "props": {
+            "title": "Module Concepts Under Assessment",
+            "allowMultiple": true,
+            "items": [
+              { "id": "acc1", "title": "Certainty & Probability", "content": "Ranking will, must, should, may, might, and could from 100% certainty down to 10% possibility." },
+              { "id": "acc2", "title": "Obligation & Rules", "content": "Distinguishing must/have to (mandate), should (advice), must not (prohibition), and don't have to (optional)." },
+              { "id": "acc3", "title": "Permission & Ability", "content": "Formal may (permission) versus can (ability) in context." },
+              { "id": "acc4", "title": "Persuasive Rhetoric", "content": "Using must/will for urgency, should for policy, may/might for concessions." }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext5-001",
+          "type": "table",
+          "props": {
+            "rows": 5,
+            "columns": 3,
+            "data": [
+              ["Concept Area", "Core Focus", "Key Modals"],
+              ["Certainty", "Ranking likelihood 100% to 10%", "Will, Must, Should, Might, Could"],
+              ["Obligation", "Mandates vs advice vs prohibition", "Must, Have to, Should, Must not"],
+              ["Permission", "Formal requests vs physical skill", "May, Can, Could"],
+              ["Persuasion", "Urgency, policy, concessions", "Must, Will, Should, May"]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-002",
+      "title": "Live Challenge 1: Certainty Completion",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-002",
+          "type": "heading",
+          "props": { "content": "Challenge 1: Certainty & Possibility", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext5-002",
+          "type": "paragraph",
+          "props": {
+            "content": "Complete each sentence with the modal that matches the certainty level described in the prompt.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "fillInTheBlank-ext5-002",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Fill in the Missing Modals (Timed)",
+            "text": "1. 100% Guarantee: The solar eclipse {{blank}} occur on August 12.\n2. Strong Evidence: His shoes are covered in mud; he {{blank}} have walked through the field.\n3. Low Possibility: Take an umbrella, as it {{blank}} rain later today.\n4. Expected Outcome: The parcel {{blank}} arrive by Friday.",
+            "blanks": [
+              { "id": "b1", "answer": "will", "alternatives": ["Will", "shall"] },
+              { "id": "b2", "answer": "must", "alternatives": ["Must"] },
+              { "id": "b3", "answer": "might", "alternatives": ["Might", "could", "may"] },
+              { "id": "b4", "answer": "should", "alternatives": ["Should", "ought to"] }
+            ],
+            "caseSensitive": false,
+            "points": 25,
+            "timeLimit": 75,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        },
+        {
+          "id": "trueFalse-ext5-002",
+          "type": "trueFalse",
+          "props": {
+            "statement": "'Must' in 'She must be tired — she ran a marathon' expresses logical deduction, not a command.",
+            "isTrue": true,
+            "explanation": "Here 'must' is a certainty modal based on evidence, not an obligation command.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-003",
+      "title": "Live Challenge 2: Obligation & Permission",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-003",
+          "type": "heading",
+          "props": { "content": "Challenge 2: Rules, Prohibitions and Permission", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "categorise-ext5-003",
+          "type": "categorise",
+          "props": {
+            "title": "Sort Each Rule by Modal Function (Timed)",
+            "categories": [
+              { "id": "mandate", "title": "Strict Mandate" },
+              { "id": "prohibit", "title": "Prohibition" },
+              { "id": "permit", "title": "Permission" },
+              { "id": "advice", "title": "Recommendation" }
+            ],
+            "items": [
+              { "id": "i1", "text": "Visitors must present photo ID.", "categoryId": "mandate" },
+              { "id": "i2", "text": "Smoking must not occur near the building.", "categoryId": "prohibit" },
+              { "id": "i3", "text": "Members may reserve rooms in advance.", "categoryId": "permit" },
+              { "id": "i4", "text": "You should arrive ten minutes early.", "categoryId": "advice" },
+              { "id": "i5", "text": "Staff have to complete safety training.", "categoryId": "mandate" },
+              { "id": "i6", "text": "You cannot enter without a ticket.", "categoryId": "prohibit" }
+            ],
+            "points": 25,
+            "timeLimit": 65,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        },
+        {
+          "id": "multiSelectQuiz-ext5-003",
+          "type": "multiSelectQuiz",
+          "props": {
+            "title": "Select ALL Sentences Expressing Formal Permission (Timed)",
+            "questions": [
+              {
+                "id": "msq1",
+                "question": "Which sentences use modals for permission (not ability)?",
+                "options": [
+                  { "id": "a", "text": "You may begin the examination now.", "isCorrect": true, "color": "bg-violet-500" },
+                  { "id": "b", "text": "She can swim 50 metres.", "isCorrect": false, "color": "bg-amber-500" },
+                  { "id": "c", "text": "Guests may use the car park.", "isCorrect": true, "color": "bg-sky-500" },
+                  { "id": "d", "text": "He can lift 80 kilograms.", "isCorrect": false, "color": "bg-rose-500" }
+                ],
+                "explanation": "'May' grants formal permission. 'Can' in the other sentences describes physical ability."
+              }
+            ],
+            "points": 15,
+            "timeLimit": 45,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-004",
+      "title": "Live Challenge 3: Visual Hotspot Inspection",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-004",
+          "type": "heading",
+          "props": { "content": "Challenge 3: Identify Rules on the Scene", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "hotspot-ext5-004",
+          "type": "hotspot",
+          "props": {
+            "title": "Tap Target Hotspots to Identify Rules and Permissions (Timed)",
+            "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "quiz",
+            "hotspots": [
+              { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Strict Requirement", "content": "Rule: 'Visitors MUST present photo ID upon entry.'", "isTarget": true },
+              { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Prohibition", "content": "Rule: 'Smoking MUST NOT occur within 50 metres of the building.'", "isTarget": true },
+              { "id": "hs3", "x": 0.45, "y": 0.75, "label": "Formal Permission", "content": "Rule: 'Members MAY reserve conference rooms in advance.'", "isTarget": true },
+              { "id": "hs4", "x": 0.80, "y": 0.30, "label": "Recommendation", "content": "Notice: 'Visitors SHOULD sign the guest book.'", "isTarget": true }
+            ],
+            "points": 25,
+            "timeLimit": 55,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-005",
+      "title": "Live Challenge 4: Matching & Ranking",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-005",
+          "type": "heading",
+          "props": { "content": "Challenge 4: Connect Functions and Order Certainty", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "matchingPairs-ext5-005",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match Each Modal to Its Primary Function (Timed)",
+            "pairs": [
+              { "id": "p1", "left": "Must", "right": "Mandatory Obligation / High Deduction" },
+              { "id": "p2", "left": "Might", "right": "Tentative Low Possibility" },
+              { "id": "p3", "left": "May", "right": "Formal Permission Request" },
+              { "id": "p4", "left": "Should", "right": "Recommended Advice" },
+              { "id": "p5", "left": "Will", "right": "Definite Future Action" }
+            ],
+            "shuffled": true,
+            "points": 25,
+            "timeLimit": 60,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        },
+        {
+          "id": "dragDrop-ext5-005",
+          "type": "dragDrop",
+          "props": {
+            "title": "Rank from HIGHEST Certainty (1st) to LOWEST (4th) (Timed)",
+            "items": [
+              { "id": "d1", "text": "The experiment WILL succeed.", "correctIndex": 0 },
+              { "id": "d2", "text": "The experiment MUST succeed.", "correctIndex": 1 },
+              { "id": "d3", "text": "The experiment SHOULD succeed.", "correctIndex": 2 },
+              { "id": "d4", "text": "The experiment MIGHT succeed.", "correctIndex": 3 }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "timeLimit": 50,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-006",
+      "title": "Live Challenge 5: Persuasive Rhetoric",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-006",
+          "type": "heading",
+          "props": { "content": "Challenge 5: Persuasive Modal Selection", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quiz-ext5-006",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which modal creates the strongest call to action in a campaign speech?",
+                "options": [
+                  { "id": "o1", "text": "should", "isCorrect": false },
+                  { "id": "o2", "text": "must", "isCorrect": true },
+                  { "id": "o3", "text": "could", "isCorrect": false },
+                  { "id": "o4", "text": "might", "isCorrect": false }
+                ],
+                "explanation": "'Must' establishes an urgent, non-negotiable imperative."
+              },
+              {
+                "id": "q2",
+                "question": "Which sentence best concedes a counter-argument respectfully?",
+                "options": [
+                  { "id": "o1", "text": "Opponents must be wrong about everything.", "isCorrect": false },
+                  { "id": "o2", "text": "Critics may question our timeline, but the evidence supports us.", "isCorrect": true },
+                  { "id": "o3", "text": "We must ignore all criticism.", "isCorrect": false },
+                  { "id": "o4", "text": "Nobody will ever disagree.", "isCorrect": false }
+                ],
+                "explanation": "'May' acknowledges opposing views without agreeing — a skilled rhetorical concession."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 20,
+            "timeLimit": 30,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        },
+        {
+          "id": "dragDrop-ext5-006b",
+          "type": "dragDrop",
+          "props": {
+            "title": "Rank Persuasive Lines from LOWEST to HIGHEST Modality (Timed)",
+            "items": [
+              { "id": "d1", "text": "Critics MIGHT disagree with us.", "correctIndex": 0 },
+              { "id": "d2", "text": "We SHOULD invest in clean energy.", "correctIndex": 1 },
+              { "id": "d3", "text": "We MUST act before it is too late.", "correctIndex": 2 },
+              { "id": "d4", "text": "We WILL build a sustainable future.", "correctIndex": 3 }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "timeLimit": 50,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-007",
+      "title": "Live Challenge 6: Spin the Wheel Finale",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-007",
+          "type": "heading",
+          "props": { "content": "Challenge 6: Gamified Modal Mastery Wheel", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "spinTheWheel-ext5-007",
+          "type": "spinTheWheel",
+          "props": {
+            "title": "Spin the Wheel — Final Modal Challenge (Timed)",
+            "requiredSpins": 4,
+            "points": 30,
+            "timeLimit": 65,
+            "mode": "live",
+            "state": "active",
+            "questions": [
+              {
+                "id": "sq1",
+                "type": "multipleChoice",
+                "prompt": "Which modal expresses the lowest certainty?",
+                "options": ["will", "must", "should", "might"],
+                "correctOptionIndex": 3,
+                "explanation": "'Might' indicates weak, uncertain possibility."
+              },
+              {
+                "id": "sq2",
+                "type": "trueFalse",
+                "prompt": "'Must not' and 'don't have to' mean the same thing.",
+                "isTrue": false,
+                "explanation": "'Must not' = forbidden. 'Don't have to' = optional."
+              },
+              {
+                "id": "sq3",
+                "type": "inputAnswer",
+                "prompt": "Which modal is preferred for formal permission?",
+                "keywords": ["may"],
+                "explanation": "'May' is the formal standard for permission."
+              },
+              {
+                "id": "sq4",
+                "type": "multipleChoice",
+                "prompt": "Which modal creates the strongest persuasive urgency?",
+                "options": ["could", "might", "must", "may"],
+                "correctOptionIndex": 2,
+                "explanation": "'Must' creates urgent moral obligation in rhetoric."
+              },
+              {
+                "id": "sq5",
+                "type": "trueFalse",
+                "prompt": "Modal verbs can take -s endings in the third person.",
+                "isTrue": false,
+                "explanation": "Modals never change form: 'He must go', not 'He musts go'."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-008",
+      "title": "Live Challenge 7: Memory & Scramble",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-008",
+          "type": "heading",
+          "props": { "content": "Challenge 7: Memory Grid and Word Scramble", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "memoryGrid-ext5-008",
+          "type": "memoryGrid",
+          "props": {
+            "title": "Match Modals to Their Functions (Timed)",
+            "pairs": [
+              { "id": "p1", "term": "Must", "definition": "Strict obligation or deduction" },
+              { "id": "p2", "term": "Might", "definition": "Low possibility" },
+              { "id": "p3", "term": "May", "definition": "Formal permission" },
+              { "id": "p4", "term": "Will", "definition": "Definite future" },
+              { "id": "p5", "term": "Should", "definition": "Advice or expectation" },
+              { "id": "p6", "term": "Can", "definition": "Physical ability" }
+            ],
+            "points": 25,
+            "timeLimit": 75,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        },
+        {
+          "id": "wordScramble-ext5-008",
+          "type": "wordScramble",
+          "props": {
+            "title": "Unscramble This Grammar Term (Timed)",
+            "word": "AUXILIARY",
+            "hint": "A helping verb that supports the main verb — modals are a type of these",
+            "points": 15,
+            "timeLimit": 30,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-009",
+      "title": "Final Knowledge Evaluation",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-009",
+          "type": "heading",
+          "props": { "content": "Final Quiz and Flashcard Challenge", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcardQuiz-ext5-009",
+          "type": "flashcardQuiz",
+          "props": {
+            "questions": [
+              {
+                "id": "fq1",
+                "question": "What is the key difference between 'may' and 'can' in formal writing?",
+                "options": [
+                  "May = permission; Can = ability",
+                  "Can = past; May = future",
+                  "They are identical",
+                  "May is a noun; Can is a verb"
+                ],
+                "correctAnswer": 0,
+                "explanation": "'May' expresses formal permission. 'Can' expresses physical or mental ability."
+              },
+              {
+                "id": "fq2",
+                "question": "Which sentence has correct modal grammar?",
+                "options": [
+                  "She musts finish her homework.",
+                  "She must finish her homework.",
+                  "She must finishing her homework.",
+                  "She must finished her homework."
+                ],
+                "correctAnswer": 1,
+                "explanation": "Modals never take -s and are followed by base verbs."
+              },
+              {
+                "id": "fq3",
+                "question": "Which modal best upgrades: 'We could try to reduce waste'?",
+                "options": [
+                  "We might possibly try",
+                  "We must eliminate waste now",
+                  "We may think about it",
+                  "We could maybe try"
+                ],
+                "correctAnswer": 1,
+                "explanation": "'Must' transforms a tentative suggestion into an urgent persuasive demand."
+              }
+            ],
+            "points": 30,
+            "timeLimit": 45,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        },
+        {
+          "id": "quiz-ext5-009",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which modal verb expresses a logical deduction based on strong evidence?",
+                "options": [
+                  { "id": "o1", "text": "might", "isCorrect": false },
+                  { "id": "o2", "text": "must", "isCorrect": true },
+                  { "id": "o3", "text": "could", "isCorrect": false },
+                  { "id": "o4", "text": "can", "isCorrect": false }
+                ],
+                "explanation": "'Must' is used for strong logical deductions from visible evidence."
+              },
+              {
+                "id": "q2",
+                "question": "Which sentence expresses a PROHIBITION?",
+                "options": [
+                  { "id": "o1", "text": "You should not eat junk food.", "isCorrect": false },
+                  { "id": "o2", "text": "You must not use your phone in the exam.", "isCorrect": true },
+                  { "id": "o3", "text": "You don't have to bring a calculator.", "isCorrect": false },
+                  { "id": "o4", "text": "You may leave when finished.", "isCorrect": false }
+                ],
+                "explanation": "'Must not' forbids the action — it is an absolute prohibition."
+              },
+              {
+                "id": "q3",
+                "question": "In persuasive writing, which modal guarantees a confident conclusion?",
+                "options": [
+                  { "id": "o1", "text": "might", "isCorrect": false },
+                  { "id": "o2", "text": "could", "isCorrect": false },
+                  { "id": "o3", "text": "will", "isCorrect": true },
+                  { "id": "o4", "text": "may", "isCorrect": false }
+                ],
+                "explanation": "'Will' projects absolute confidence — ideal for inspiring conclusions."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 30,
+            "timeLimit": 40,
+            "mode": "live",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "live"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-010",
+      "title": "Assessment Complete",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext5-010",
+          "type": "heading",
+          "props": { "content": "Modal Verbs Module — Assessment Complete", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quote-ext5-010",
+          "type": "quote",
+          "props": {
+            "text": "The right word may be effective, but no word was ever as effective as a rightly timed pause.",
+            "author": "Mark Twain",
+            "source": "On the power of precise language"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext5-010",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "Certainty: will/must (high) → should (expected) → might/could (low).",
+              "Obligation: must/have to (mandate), should (advice), must not (prohibition), may (permission).",
+              "Persuasion: must/will (urgency), should (policy), may/might (concessions).",
+              "Grammar: modals never change form and are always followed by base verbs."
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "poll-ext5-010",
+          "type": "poll",
+          "props": {
+            "question": "How confident do you feel applying modal verbs in your writing now?",
+            "options": [
+              { "id": "op1", "text": "Fully confident — I must write a persuasive speech!" },
+              { "id": "op2", "text": "Very confident — I should review a few examples" },
+              { "id": "op3", "text": "Getting there — I might need one more practice session" },
+              { "id": "op4", "text": "Still building — I could use more flashcard practice" }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    }
+  ]
+}

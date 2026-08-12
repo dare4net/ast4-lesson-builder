@@ -1,0 +1,618 @@
+{
+  "id": "year7-english-modals-lesson-2-certainty-extended",
+  "title": "Expressing Certainty & Possibility (Extended): The Probability Spectrum",
+  "description": "Rank modal verbs from 100% certainty to remote possibility, distinguish deduction from speculation, analyse evidence-based 'must' versus tentative 'might', and apply probability modals in context.",
+  "author": "AST English Academy",
+  "duration": 45,
+  "level": "Year 7",
+  "settings": {
+    "theme": "educational",
+    "subject": "English Language",
+    "topic": "Modal Verbs — Certainty",
+    "extendedVersionOf": "year7-english-modals-lesson-2-certainty"
+  },
+  "createdAt": "2026-08-12T14:35:00.000Z",
+  "updatedAt": "2026-08-12T14:35:00.000Z",
+  "slides": [
+    {
+      "id": "slide-ext2-001",
+      "title": "The Spectrum of Probability",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-001",
+          "type": "heading",
+          "props": { "content": "Modal Verbs as a Certainty Volume Dial", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext2-001",
+          "type": "paragraph",
+          "props": {
+            "content": "When you choose a modal verb, you communicate exactly how confident you are that something is true or will happen. This ranges from <strong>absolute certainty (100%)</strong> down to <strong>remote possibility (10%)</strong>. Think of modals as a volume dial — turn it up for confidence, turn it down for speculation.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext2-001",
+          "type": "table",
+          "props": {
+            "rows": 6,
+            "columns": 3,
+            "data": [
+              ["Certainty Level", "Modal Verbs", "Example Sentence"],
+              ["100% Certainty", "Will / Shall", "The sun will rise tomorrow."],
+              ["90% Logical Deduction", "Must", "Her coat is soaked — it must be raining."],
+              ["70-80% Expectation", "Should / Ought to", "The bus should arrive in five minutes."],
+              ["40-50% Possibility", "May / Can", "We may go to the park later today."],
+              ["10-30% Low Possibility", "Might / Could", "It might snow next week."]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext2-001",
+          "type": "callout",
+          "props": {
+            "variant": "important",
+            "title": "Context Changes Meaning",
+            "content": "'Must' can express obligation ('You must stop') OR logical deduction ('She must be tired'). Always read the full sentence and surrounding evidence to decide which meaning applies."
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-002",
+      "title": "Will and Must: Maximum Confidence",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-002",
+          "type": "heading",
+          "props": { "content": "100% Certainty and Strong Deduction", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext2-002",
+          "type": "paragraph",
+          "props": {
+            "content": "<strong>Will</strong> expresses definite future events based on plans, schedules, or natural laws: <em>'The concert will start at 8 PM.'</em> <strong>Must</strong> expresses logical conclusions drawn from clear evidence: <em>'He has mud on his shoes — he must have walked through the garden.'</em> You are not guessing; you are reasoning from proof.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcards-ext2-002",
+          "type": "flashcards",
+          "props": {
+            "title": "Will vs Must — Flip to Compare",
+            "cards": [
+              { "id": "c1", "front": "WILL — Future Fact", "back": "'Trains will depart every hour.' (Scheduled, guaranteed future action.)" },
+              { "id": "c2", "front": "MUST — Logical Deduction", "back": "'She must know the answer — she studied all night.' (Evidence-based conclusion.)" },
+              { "id": "c3", "front": "WILL — Natural Law", "back": "'Water will freeze at 0°C.' (Scientific certainty.)" },
+              { "id": "c4", "front": "MUST — Physical Evidence", "back": "'The lights are on — someone must be home.' (Visible proof leads to conclusion.)" }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext2-002",
+          "type": "trueFalse",
+          "props": {
+            "statement": "'Must' in 'She must be the new headteacher — everyone is greeting her' expresses logical deduction based on evidence.",
+            "isTrue": true,
+            "explanation": "Here 'must' is not a command. The speaker observes people greeting her and logically concludes she must be the new headteacher.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-003",
+      "title": "Should and Ought To: High Expectation",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-003",
+          "type": "heading",
+          "props": { "content": "Expected Outcomes at 70–80% Probability", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext2-003",
+          "type": "paragraph",
+          "props": {
+            "content": "<strong>Should</strong> and <strong>ought to</strong> express outcomes you expect based on normal patterns, experience, or reasonable assumptions — but without absolute guarantee. <em>'The package should arrive by Friday'</em> means delivery normally takes that long, though delays are possible.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "accordion-ext2-003",
+          "type": "accordion",
+          "props": {
+            "title": "Should vs Ought To — Subtle Differences",
+            "allowMultiple": false,
+            "items": [
+              { "id": "acc1", "title": "Are should and ought to the same?", "content": "In modern English they are nearly interchangeable for expectations: 'The train should arrive soon' = 'The train ought to arrive soon.' 'Ought to' sounds slightly more formal." },
+              { "id": "acc2", "title": "Can 'should' express advice instead of certainty?", "content": "Yes! 'You should drink water' is advice. 'The letter should arrive tomorrow' is expectation. Context determines whether 'should' means advice or probability." },
+              { "id": "acc3", "title": "Is 'should' stronger than 'might'?", "content": "Much stronger. 'Should' implies 70–80% confidence. 'Might' implies only 10–30%. Never use them interchangeably when ranking certainty." }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quiz-ext2-003",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which modal best fits: 'Based on past performance, our team ___ win the trophy.'",
+                "options": [
+                  { "id": "o1", "text": "might", "isCorrect": false },
+                  { "id": "o2", "text": "should", "isCorrect": true },
+                  { "id": "o3", "text": "could", "isCorrect": false },
+                  { "id": "o4", "text": "may", "isCorrect": false }
+                ],
+                "explanation": "'Should' expresses high expectation (70–80%) based on past evidence, not weak speculation."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-004",
+      "title": "Might, Could, May: Lower Possibility",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-004",
+          "type": "heading",
+          "props": { "content": "Speculation Without Strong Proof", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext2-004",
+          "type": "paragraph",
+          "props": {
+            "content": "<strong>Might</strong> and <strong>could</strong> express pure speculation — you have no solid proof. <em>'He might have lost his key'</em> is a guess. <strong>May</strong> sits slightly higher on the scale (40–50%) and can also express permission in other contexts. When ranking certainty, treat <em>might/could</em> as the weakest probability modals.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "categorise-ext2-004",
+          "type": "categorise",
+          "props": {
+            "title": "Sort Each Sentence by Certainty Level",
+            "categories": [
+              { "id": "high", "title": "High Certainty (Will / Must)" },
+              { "id": "mid", "title": "Expected (Should)" },
+              { "id": "low", "title": "Low Possibility (Might / Could)" }
+            ],
+            "items": [
+              { "id": "i1", "text": "The eclipse will occur on August 12.", "categoryId": "high" },
+              { "id": "i2", "text": "She must be exhausted after the marathon.", "categoryId": "high" },
+              { "id": "i3", "text": "The parcel should arrive by Thursday.", "categoryId": "mid" },
+              { "id": "i4", "text": "It might rain during the picnic.", "categoryId": "low" },
+              { "id": "i5", "text": "He could be at the library — I'm not sure.", "categoryId": "low" },
+              { "id": "i6", "text": "We should finish the project on time.", "categoryId": "mid" }
+            ],
+            "points": 20,
+            "timeLimit": 65,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-005",
+      "title": "Detective Deduction Scene",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-005",
+          "type": "heading",
+          "props": { "content": "Evidence-Based Modal Deductions", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext2-005",
+          "type": "paragraph",
+          "props": {
+            "content": "Detectives use modal verbs constantly. Strong physical evidence leads to <strong>must</strong>. Normal expectations use <strong>should</strong>. Unproven theories use <strong>might</strong>. Tap each piece of evidence below to see how the modal strength matches the proof available.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "hotspot-ext2-005",
+          "type": "hotspot",
+          "props": {
+            "title": "Tap Hotspots to Analyse Modal Strength in Each Deduction",
+            "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "discovery",
+            "hotspots": [
+              { "id": "hs1", "x": 0.30, "y": 0.40, "label": "Footprints in Mud", "content": "'The intruder MUST have come through the garden.' Strong logical deduction — clear physical evidence supports this conclusion." },
+              { "id": "hs2", "x": 0.70, "y": 0.50, "label": "Open Window", "content": "'The wind MIGHT have blown the shutter open.' Tentative possibility — other explanations exist and more investigation is needed." },
+              { "id": "hs3", "x": 0.50, "y": 0.80, "label": "Dropped Envelope", "content": "'The letter SHOULD arrive by noon tomorrow.' Expected outcome based on normal postal delivery schedules." },
+              { "id": "hs4", "x": 0.15, "y": 0.65, "label": "Wet Umbrella", "content": "'It MUST have rained recently.' Deduction from physical evidence — the umbrella is wet, so rain is the logical explanation." }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-006",
+      "title": "Contextual Sentence Completion",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-006",
+          "type": "heading",
+          "props": { "content": "Choose the Modal That Matches the Evidence", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "fillInTheBlank-ext2-006",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Select the Correct Modal for Each Certainty Level",
+            "text": "1. Look at those dark clouds! It {{blank}} rain any second.\n2. I am not sure where Sarah is; she {{blank}} be in the library.\n3. Train tickets are booked, so we {{blank}} depart tomorrow at 8 AM.\n4. The exam results {{blank}} be published on Friday — that is the usual schedule.",
+            "blanks": [
+              { "id": "b1", "answer": "must", "alternatives": ["Must", "will"] },
+              { "id": "b2", "answer": "might", "alternatives": ["Might", "could", "may"] },
+              { "id": "b3", "answer": "will", "alternatives": ["Will", "shall", "must"] },
+              { "id": "b4", "answer": "should", "alternatives": ["Should", "ought to"] }
+            ],
+            "caseSensitive": false,
+            "points": 20,
+            "timeLimit": 75,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext2-006",
+          "type": "trueFalse",
+          "props": {
+            "statement": "'It might rain' expresses higher certainty than 'It will rain'.",
+            "isTrue": false,
+            "explanation": "'Will' expresses near-certain future action. 'Might' expresses low, uncertain possibility — the weakest end of the spectrum.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-007",
+      "title": "Ranking and Matching Certainty",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-007",
+          "type": "heading",
+          "props": { "content": "Order Modals from Highest to Lowest Certainty", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "matchingPairs-ext2-007",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match Each Modal to Its Certainty Level",
+            "pairs": [
+              { "id": "p1", "left": "Will", "right": "100% Definite Future Action" },
+              { "id": "p2", "left": "Must", "right": "High Certainty / Logical Deduction" },
+              { "id": "p3", "left": "Should", "right": "Expected Outcome / High Probability" },
+              { "id": "p4", "left": "Might", "right": "Low Possibility / Unproven Speculation" },
+              { "id": "p5", "left": "Could", "right": "Tentative Possibility / Weak Guess" }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "dragDrop-ext2-007",
+          "type": "dragDrop",
+          "props": {
+            "title": "Rank These Sentences from HIGHEST Certainty (1st) to LOWEST (4th)",
+            "items": [
+              { "id": "d1", "text": "The concert WILL start at 8 PM.", "correctIndex": 0 },
+              { "id": "d2", "text": "She MUST be the new headteacher.", "correctIndex": 1 },
+              { "id": "d3", "text": "Our team SHOULD win the trophy.", "correctIndex": 2 },
+              { "id": "d4", "text": "It COULD rain later this afternoon.", "correctIndex": 3 }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-008",
+      "title": "The Certainty Timeline",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-008",
+          "type": "heading",
+          "props": { "content": "Walk Through the Full Probability Spectrum", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "timeline-ext2-008",
+          "type": "timeline",
+          "props": {
+            "title": "Modal Certainty from 100% Down to 10%",
+            "events": [
+              { "id": "e1", "year": "100%", "title": "Will — Definite Future", "description": "'The ceremony will begin at noon.' Scheduled, guaranteed." },
+              { "id": "e2", "year": "90%", "title": "Must — Evidence-Based Deduction", "description": "'He must be lying — his story contradicts the CCTV footage.'" },
+              { "id": "e3", "year": "75%", "title": "Should — Expected Outcome", "description": "'The results should be ready by Monday based on usual processing times.'" },
+              { "id": "e4", "year": "45%", "title": "May — Moderate Possibility", "description": "'We may reschedule if the weather worsens.'" },
+              { "id": "e5", "year": "15%", "title": "Might / Could — Weak Speculation", "description": "'It might snow in April, but that is unlikely.'" }
+            ],
+            "interactive": true,
+            "points": 15
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "memoryGrid-ext2-008",
+          "type": "memoryGrid",
+          "props": {
+            "title": "Match Modals to Their Certainty Percentages",
+            "pairs": [
+              { "id": "p1", "term": "Will", "definition": "100% — definite future" },
+              { "id": "p2", "term": "Must", "definition": "90% — logical deduction" },
+              { "id": "p3", "term": "Should", "definition": "75% — expected outcome" },
+              { "id": "p4", "term": "Might", "definition": "15% — weak speculation" }
+            ],
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-009",
+      "title": "Advanced Certainty Challenges",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-009",
+          "type": "heading",
+          "props": { "content": "Select All That Apply — Certainty Mastery", "level": 2, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "multiSelectQuiz-ext2-009",
+          "type": "multiSelectQuiz",
+          "props": {
+            "title": "Select ALL Sentences That Express LOW Certainty",
+            "questions": [
+              {
+                "id": "msq1",
+                "question": "Which sentences express the lowest level of certainty?",
+                "options": [
+                  { "id": "a", "text": "The train might be delayed.", "isCorrect": true, "color": "bg-violet-500" },
+                  { "id": "b", "text": "The train will depart at 4 PM.", "isCorrect": false, "color": "bg-amber-500" },
+                  { "id": "c", "text": "He could be at the cinema.", "isCorrect": true, "color": "bg-sky-500" },
+                  { "id": "d", "text": "She must be the winner.", "isCorrect": false, "color": "bg-rose-500" }
+                ],
+                "explanation": "'Might' and 'could' express weak, unproven possibility. 'Will' and 'must' express high certainty."
+              }
+            ],
+            "points": 15,
+            "timeLimit": 45,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "spinTheWheel-ext2-009",
+          "type": "spinTheWheel",
+          "props": {
+            "title": "Spin the Wheel: Certainty Challenge",
+            "requiredSpins": 3,
+            "points": 25,
+            "timeLimit": 50,
+            "mode": "practice",
+            "state": "active",
+            "questions": [
+              {
+                "id": "sq1",
+                "type": "multipleChoice",
+                "prompt": "Which modal expresses logical deduction from evidence?",
+                "options": ["might", "must", "could", "may"],
+                "correctOptionIndex": 1,
+                "explanation": "'Must' is used for strong deductions: 'He has a key; he must work here.'"
+              },
+              {
+                "id": "sq2",
+                "type": "trueFalse",
+                "prompt": "'Should' expresses higher certainty than 'might'.",
+                "isTrue": true,
+                "explanation": "'Should' is 70–80% expectation. 'Might' is only 10–30% possibility."
+              },
+              {
+                "id": "sq3",
+                "type": "inputAnswer",
+                "prompt": "Which modal expresses 100% definite future action?",
+                "keywords": ["will", "shall"],
+                "explanation": "'Will' and 'shall' express definite future events."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext2-010",
+      "title": "Certainty Mastery Summary",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "heading-ext2-010",
+          "type": "heading",
+          "props": { "content": "Certainty Spectrum — Key Takeaways", "level": 1, "align": "left" },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext2-010",
+          "type": "bulletList",
+          "props": {
+            "type": "unordered",
+            "items": [
+              "Will/shall = 100% definite future; must = 90% evidence-based deduction.",
+              "Should/ought to = 70–80% expected outcome based on normal patterns.",
+              "May/can = 40–50% moderate possibility; might/could = 10–30% weak speculation.",
+              "Always match modal strength to the evidence available — never overstate or understate certainty."
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quiz-ext2-010",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Which modal verb expresses a logical deduction based on strong evidence?",
+                "options": [
+                  { "id": "o1", "text": "might", "isCorrect": false },
+                  { "id": "o2", "text": "must", "isCorrect": true },
+                  { "id": "o3", "text": "could", "isCorrect": false },
+                  { "id": "o4", "text": "can", "isCorrect": false }
+                ],
+                "explanation": "'Must' is used for strong logical deductions based on visible evidence."
+              },
+              {
+                "id": "q2",
+                "question": "Which sentence expresses the LOWEST level of certainty?",
+                "options": [
+                  { "id": "o1", "text": "The train will arrive at 4 PM.", "isCorrect": false },
+                  { "id": "o2", "text": "The train should arrive at 4 PM.", "isCorrect": false },
+                  { "id": "o3", "text": "The train might arrive at 4 PM.", "isCorrect": true },
+                  { "id": "o4", "text": "The train must arrive at 4 PM.", "isCorrect": false }
+                ],
+                "explanation": "'Might' indicates weak, uncertain possibility — the lowest end of the spectrum."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "randomizeAnswers": true,
+            "points": 20,
+            "timeLimit": 30,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "wordScramble-ext2-010",
+          "type": "wordScramble",
+          "props": {
+            "title": "Unscramble This Certainty Keyword",
+            "word": "CERTAINTY",
+            "hint": "The quality of being sure or confident that something is true",
+            "points": 15,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    }
+  ]
+}

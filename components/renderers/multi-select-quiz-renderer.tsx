@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Check, ChevronRight } from "lucide-react"
+import { Check, CheckCircle2, ChevronRight, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
