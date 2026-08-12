@@ -4,7 +4,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Cloud, Plus, Lock, Send, Sparkles } from "lucide-react"
+import { Cloud, Plus, Lock, Send } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
@@ -214,7 +214,7 @@ function WordCloudContent({
                 <div className="min-h-[160px] p-6 bg-slate-950 rounded-2xl border-2 border-slate-800 flex flex-wrap items-center justify-center gap-3 content-center shadow-inner overflow-hidden relative">
                     {entries.length === 0 ? (
                         <div className="text-center space-y-1 py-6">
-                            <Sparkles className="w-6 h-6 text-purple-400 mx-auto animate-pulse" />
+                            <Cloud className="w-6 h-6 text-purple-400 mx-auto" />
                             <p className="text-xs font-black text-slate-300 uppercase tracking-wider">Word Cloud Canvas Empty</p>
                             <p className="text-[10px] text-slate-500 font-medium">Type words above to generate the live cloud</p>
                         </div>

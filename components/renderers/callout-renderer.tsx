@@ -4,11 +4,13 @@ import React from "react"
 import { cn } from "@/lib/utils"
 import { Info, Lightbulb, AlertTriangle, AlertCircle, Volume2 } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
+import { useAudioPlayer } from "@/hooks/use-audio-player"
 
 interface CalloutRendererProps {
     variant?: "note" | "tip" | "warning" | "important"
     title?: string
     content: string
+    audioUrl?: string
     isEditing?: boolean
     isBuilder?: boolean
 }
@@ -17,9 +19,12 @@ export function CalloutRenderer({
     variant = "note",
     title = "Important Note",
     content,
+    audioUrl,
     isEditing = false,
 }: CalloutRendererProps) {
-    const { speak, isSpeaking } = useReadAloud()
+    const { speak, isSpeaking: isTtsSpeaking } = useReadAloud()
+    const { isPlaying: isAudioPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
+    const isSpeaking = isAudioPlaying || isTtsSpeaking
 
     const variantStyles = {
         note: {
@@ -56,8 +61,12 @@ export function CalloutRenderer({
 
     const handleSpeak = (e: React.MouseEvent) => {
         e.stopPropagation()
-        const fullText = `${title || config.defaultTitle}. ${content}`
-        speak(fullText)
+        if (hasAudio) {
+            playAudio()
+        } else {
+            const fullText = `${title || config.defaultTitle}. ${content}`
+            speak(fullText)
+        }
     }
 
     return (
@@ -87,7 +96,7 @@ export function CalloutRenderer({
                             "flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black transition-all border cursor-pointer active:scale-95 shadow-sm",
                             config.badge
                         )}
-                        title="Read Aloud"
+                        title={hasAudio ? "Play Audio Track" : "Read Aloud"}
                     >
                         <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse")} />
                         <span className="text-[9px] uppercase tracking-wider">Listen</span>

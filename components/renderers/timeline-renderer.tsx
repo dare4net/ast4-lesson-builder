@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { cn } from "@/lib/utils"
-import { Clock, Calendar, CheckCircle2, Volume2, Sparkles } from "lucide-react"
+import { Clock, Calendar, CheckCircle2, Volume2 } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
 import { useFeedback } from "@/hooks/use-feedback"
 
@@ -73,7 +73,6 @@ export function TimelineRenderer({
                 {/* Header Bar */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-xl">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-amber-600">
                             Interactive Timeline • {points} Points
                         </span>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { CheckCircle2, XCircle, Volume2, Sparkles, HelpCircle } from "lucide-react"
+import { CheckCircle2, XCircle, Volume2, HelpCircle } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
 import { useFeedback } from "@/hooks/use-feedback"
 
@@ -82,7 +82,7 @@ export function TrueFalseRenderer({
                 {/* Header Badges */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-xl">
-                        <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+
                         <span className="text-[9px] font-black uppercase tracking-widest text-indigo-600">
                             True or False • {points} Points
                         </span>

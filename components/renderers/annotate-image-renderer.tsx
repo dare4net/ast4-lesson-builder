@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { Tag, CheckCircle2, XCircle, Volume2, Sparkles, RefreshCw } from "lucide-react"
+import { Tag, CheckCircle2, XCircle, Volume2, RefreshCw } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
 import { useFeedback } from "@/hooks/use-feedback"
 
@@ -128,7 +128,6 @@ export function AnnotateImageRenderer({
                 {/* Header Bar */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-xl">
-                        <Sparkles className="w-3.5 h-3.5 text-teal-600" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-teal-600">
                             Annotate Diagram • {points} Points
                         </span>

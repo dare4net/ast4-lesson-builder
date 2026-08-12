@@ -26,6 +26,12 @@ import { BulletListEditor } from "@/components/editors/bullet-list-editor"
 import { FillInTheBlankEditor } from "@/components/editors/fill-in-the-blank-editor"
 import { CodeEditorEditor } from "@/components/editors/code-editor-editor"
 import { ShortAnswerEditor } from "@/components/editors/short-answer-editor"
+import { AccordionEditor } from "@/components/editors/accordion-editor"
+import { QuoteEditor } from "@/components/editors/quote-editor"
+import { CalloutEditor } from "@/components/editors/callout-editor"
+import { TimelineEditor } from "@/components/editors/timeline-editor"
+import { CategoriseEditor } from "@/components/editors/categorise-editor"
+import { WordScrambleEditor } from "@/components/editors/word-scramble-editor"
 import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { ComponentRenderer } from "@/components/component-renderer"
 
@@ -90,7 +96,54 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
         onTitleChange={componentDef.propDefinitions.find(d => d.name === "title") ? (val) => handleChange("title", val) : undefined}
         onPointsChange={componentDef.propDefinitions.find(d => d.name === "points") ? (val) => handleChange("points", val) : undefined}
       >
-        {component.type === "shortAnswer" ? (
+        {component.type === "quote" ? (
+          <QuoteEditor
+            text={props.text || ""}
+            onTextChange={(val) => handleChange("text", val)}
+            author={props.author || ""}
+            onAuthorChange={(val) => handleChange("author", val)}
+            source={props.source || ""}
+            onSourceChange={(val) => handleChange("source", val)}
+            audioUrl={props.audioUrl || ""}
+            onAudioUrlChange={(val) => handleChange("audioUrl", val)}
+          />
+        ) : component.type === "callout" ? (
+          <CalloutEditor
+            variant={props.variant || "note"}
+            onVariantChange={(val) => handleChange("variant", val)}
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            content={props.content || ""}
+            onContentChange={(val) => handleChange("content", val)}
+            audioUrl={props.audioUrl || ""}
+            onAudioUrlChange={(val) => handleChange("audioUrl", val)}
+          />
+        ) : component.type === "timeline" ? (
+          <TimelineEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            events={props.events || []}
+            onEventsChange={(events) => handleChange("events", events)}
+          />
+        ) : component.type === "categorise" ? (
+          <CategoriseEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            categories={props.categories || []}
+            onCategoriesChange={(cats) => handleChange("categories", cats)}
+            items={props.items || []}
+            onItemsChange={(items) => handleChange("items", items)}
+          />
+        ) : component.type === "wordScramble" ? (
+          <WordScrambleEditor
+            title={props.title || ""}
+            onTitleChange={(val) => handleChange("title", val)}
+            word={props.word || ""}
+            onWordChange={(val) => handleChange("word", val)}
+            hint={props.hint || ""}
+            onHintChange={(val) => handleChange("hint", val)}
+          />
+        ) : component.type === "shortAnswer" ? (
           <ShortAnswerEditor
             question={props.question || ""}
             placeholder={props.placeholder || ""}
@@ -307,6 +360,16 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                         <MultiSelectQuizEditor
                           questions={props.questions || []}
                           onQuestionsChange={(qs) => handleChange("questions", qs)}
+                        />
+                      )}
+                      {component.type === "accordion" && propDef.name === "items" && (
+                        <AccordionEditor
+                          title={props.title}
+                          onTitleChange={(t: string) => handleChange("title", t)}
+                          items={props.items || []}
+                          onChange={(items: any[]) => handleChange("items", items)}
+                          allowMultiple={props.allowMultiple}
+                          onAllowMultipleChange={(m: boolean) => handleChange("allowMultiple", m)}
                         />
                       )}
                     </div>

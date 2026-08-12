@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { Type, HelpCircle, CheckCircle2, Volume2, Sparkles, RefreshCw, Delete } from "lucide-react"
+import { Type, HelpCircle, CheckCircle2, Volume2, RefreshCw, Delete } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
 import { useFeedback } from "@/hooks/use-feedback"
 
@@ -111,9 +111,16 @@ export function WordScrambleRenderer({
         }
     }
 
-    const handleSpeak = (e: React.MouseEvent) => {
+    const handleSpeakMain = (e: React.MouseEvent) => {
         e.stopPropagation()
-        speak(`${title}. ${hint ? `Hint: ${hint}` : ""}`)
+        speak(title)
+    }
+
+    const handleSpeakHint = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (hint) {
+            speak(`Hint: ${hint}`)
+        }
     }
 
     return (
@@ -122,7 +129,6 @@ export function WordScrambleRenderer({
                 {/* Header Bar */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-sky-50 border border-sky-200 rounded-xl">
-                        <Sparkles className="w-3.5 h-3.5 text-[#1CB0F6]" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-[#1CB0F6]">
                             Word Scramble • {points} Points
                         </span>
@@ -130,9 +136,9 @@ export function WordScrambleRenderer({
 
                     <button
                         type="button"
-                        onClick={handleSpeak}
+                        onClick={handleSpeakMain}
                         className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 active:scale-95 cursor-pointer shadow-sm"
-                        title="Read Aloud"
+                        title="Read Aloud Title"
                     >
                         <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-[#1CB0F6]")} />
                         <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
@@ -146,15 +152,24 @@ export function WordScrambleRenderer({
                         <button
                             type="button"
                             onClick={() => setShowHint(prev => !prev)}
-                            className="flex items-center gap-2 text-xs font-black text-[#1CB0F6] hover:text-sky-600 transition-colors uppercase tracking-wider"
+                            className="flex items-center gap-2 text-xs font-black text-[#1CB0F6] hover:text-sky-600 transition-colors uppercase tracking-wider cursor-pointer"
                         >
                             <HelpCircle className="w-3.5 h-3.5" />
                             <span>{showHint ? "Hide Hint" : "Need a Hint?"}</span>
                         </button>
                         {showHint && (
-                            <p className="mt-2 text-xs font-bold text-slate-700 bg-sky-50/60 p-3 rounded-2xl border border-sky-200 animate-in fade-in">
-                                💡 {hint}
-                            </p>
+                            <div className="mt-2 text-xs font-bold text-slate-700 bg-sky-50/60 p-3 rounded-2xl border border-sky-200 animate-in fade-in flex items-center justify-between gap-3">
+                                <span>💡 {hint}</span>
+                                <button
+                                    type="button"
+                                    onClick={handleSpeakHint}
+                                    className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-700 text-[10px] font-black transition-all border border-sky-200 shrink-0 cursor-pointer"
+                                    title="Listen to Hint"
+                                >
+                                    <Volume2 className="w-3 h-3 text-[#1CB0F6]" />
+                                    <span>Listen</span>
+                                </button>
+                            </div>
                         )}
                     </div>
                 )}

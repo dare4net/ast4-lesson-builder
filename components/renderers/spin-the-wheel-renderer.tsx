@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { cn } from "@/lib/utils"
-import { Sparkles, RotateCw, Volume2, Award } from "lucide-react"
+import { RotateCw, Volume2, Award } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
 import { useFeedback } from "@/hooks/use-feedback"
 
@@ -41,17 +41,28 @@ export function SpinTheWheelRenderer({
     const sliceAngle = 360 / Math.max(items.length, 1)
 
     const handleSpin = async () => {
-        if (isSpinning || isEditing) return
+        if (isSpinning || isEditing || items.length === 0) return
 
         setIsSpinning(true)
         playFeedback("click", { sound: true })
 
         // Pick random target slice
         const targetIdx = Math.floor(Math.random() * items.length)
-        const extraSpins = (3 + Math.floor(Math.random() * 3)) * 360
-        const targetDegree = extraSpins + (360 - targetIdx * sliceAngle - sliceAngle / 2)
+        const sliceAngle = 360 / items.length
 
-        setRotation(targetDegree)
+        // Calculate extra full 360 spins (5 to 8 full turns)
+        const extraTurns = (5 + Math.floor(Math.random() * 4)) * 360
+        // Pointer is fixed at top (0 deg). Target slice center offset from 0 deg:
+        const targetSliceCenter = targetIdx * sliceAngle + sliceAngle / 2
+        // To bring targetSliceCenter to top (0 deg), wheel needs to be rotated by 360 - targetSliceCenter
+        const stopAngle = 360 - targetSliceCenter
+
+        // Accumulate rotation so the wheel continues spinning forward seamlessly
+        const currentMod = rotation % 360
+        const deltaToStop = (stopAngle - currentMod + 360) % 360
+        const newTotalRotation = rotation + extraTurns + deltaToStop
+
+        setRotation(newTotalRotation)
 
         setTimeout(async () => {
             setIsSpinning(false)
@@ -99,7 +110,7 @@ export function SpinTheWheelRenderer({
                 {/* Header Bar */}
                 <div className="w-full flex items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-xl">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+
                         <span className="text-[9px] font-black uppercase tracking-widest text-amber-600">
                             Spin the Wheel • {points} Points
                         </span>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { Layers, CheckCircle2, XCircle, Volume2, Sparkles, RefreshCw } from "lucide-react"
+import { Layers, CheckCircle2, XCircle, Volume2, RefreshCw } from "lucide-react"
 import { useReadAloud } from "@/context/read-aloud-context"
 import { useFeedback } from "@/hooks/use-feedback"
 
@@ -27,6 +27,51 @@ interface CategoriseRendererProps {
     setComponentState?: (state: any) => void
     isEditing?: boolean
 }
+
+const PALETTES = [
+    {
+        bg: "bg-sky-50/80 border-sky-300 border-b-sky-400",
+        headerBg: "bg-sky-500 text-white",
+        badgeBg: "bg-sky-100 text-sky-900 border-sky-200",
+        hoverBorder: "hover:border-sky-400",
+        accentText: "text-sky-900",
+    },
+    {
+        bg: "bg-emerald-50/80 border-emerald-300 border-b-emerald-400",
+        headerBg: "bg-emerald-500 text-white",
+        badgeBg: "bg-emerald-100 text-emerald-900 border-emerald-200",
+        hoverBorder: "hover:border-emerald-400",
+        accentText: "text-emerald-900",
+    },
+    {
+        bg: "bg-amber-50/80 border-amber-300 border-b-amber-400",
+        headerBg: "bg-amber-500 text-white",
+        badgeBg: "bg-amber-100 text-amber-900 border-amber-200",
+        hoverBorder: "hover:border-amber-400",
+        accentText: "text-amber-900",
+    },
+    {
+        bg: "bg-purple-50/80 border-purple-300 border-b-purple-400",
+        headerBg: "bg-purple-500 text-white",
+        badgeBg: "bg-purple-100 text-purple-900 border-purple-200",
+        hoverBorder: "hover:border-purple-400",
+        accentText: "text-purple-900",
+    },
+    {
+        bg: "bg-rose-50/80 border-rose-300 border-b-rose-400",
+        headerBg: "bg-rose-500 text-white",
+        badgeBg: "bg-rose-100 text-rose-900 border-rose-200",
+        hoverBorder: "hover:border-rose-400",
+        accentText: "text-rose-900",
+    },
+    {
+        bg: "bg-teal-50/80 border-teal-300 border-b-teal-400",
+        headerBg: "bg-teal-500 text-white",
+        badgeBg: "bg-teal-100 text-teal-900 border-teal-200",
+        hoverBorder: "hover:border-teal-400",
+        accentText: "text-teal-900",
+    },
+]
 
 export function CategoriseRenderer({
     id = "categorise-component",
@@ -132,7 +177,6 @@ export function CategoriseRenderer({
                 {/* Header Bar */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200 rounded-xl">
-                        <Sparkles className="w-3.5 h-3.5 text-purple-600" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-purple-600">
                             Categorisation • {points} Points
                         </span>
@@ -153,9 +197,9 @@ export function CategoriseRenderer({
 
                 {/* Item Deck (Unassigned Cards) */}
                 {!submitted && (
-                    <div className="mb-6 p-4 rounded-2xl bg-slate-50/70 border-2 border-slate-200 border-b-4">
+                    <div className="mb-6 p-4 rounded-2xl bg-slate-50/80 border-2 border-slate-200 border-b-4">
                         <span className="text-xs font-black uppercase tracking-wider text-slate-500 block mb-3">
-                            Tap an item, then tap a category column:
+                            Tap an item card below, then tap a category bucket:
                         </span>
                         <div className="flex flex-wrap gap-2.5">
                             {unassignedItems.map(it => {
@@ -181,61 +225,77 @@ export function CategoriseRenderer({
                             })}
 
                             {unassignedItems.length === 0 && (
-                                <span className="text-xs font-black text-[#58CC02] uppercase tracking-wider">
-                                    All items placed into categories! Ready to check.
+                                <span className="text-xs font-black text-[#58CC02] uppercase tracking-wider py-1">
+                                    All items placed into category buckets! Ready to check.
                                 </span>
                             )}
                         </div>
                     </div>
                 )}
 
-                {/* Category Columns Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {categories.map(cat => {
+                {/* Category Columns Grid with 3D Duo Colors */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {categories.map((cat, idx) => {
+                        const palette = PALETTES[idx % PALETTES.length]
                         const assignedItems = items.filter(it => assignments[it.id] === cat.id)
 
                         return (
-                            <div
-                                key={cat.id}
-                                onClick={() => handleAssignToCategory(cat.id)}
-                                className={cn(
-                                    "min-h-[170px] p-4 rounded-2xl border-2 border-b-4 transition-all duration-300 flex flex-col justify-between select-none shadow-sm",
-                                    selectedItemId
-                                        ? "bg-purple-50/60 border-purple-300 border-b-purple-400 hover:bg-purple-100/60 cursor-pointer"
-                                        : "bg-slate-50/40 border-slate-200 border-b-slate-300"
-                                )}
-                            >
-                                <div className="flex items-center justify-between border-b border-slate-200 pb-2.5 mb-3">
-                                    <h4 className="font-black text-sm text-purple-900 uppercase tracking-wider">
-                                        {cat.title}
-                                    </h4>
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                                        {assignedItems.length} items
+                            <div key={cat.id} className="flex flex-col gap-1.5 w-full">
+                                {/* Item Count Pill Above Bucket Card */}
+                                <div className="flex items-center justify-between px-1">
+                                    <span className={cn("text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg border shadow-xs", palette.badgeBg)}>
+                                        {assignedItems.length} item{assignedItems.length === 1 ? "" : "s"}
                                     </span>
                                 </div>
 
-                                <div className="flex-1 space-y-2">
-                                    {assignedItems.map(it => {
-                                        const isCorrect = submitted && it.categoryId === cat.id
-                                        const isIncorrect = submitted && it.categoryId !== cat.id
+                                {/* Category Bucket Card */}
+                                <div
+                                    onClick={() => handleAssignToCategory(cat.id)}
+                                    className={cn(
+                                        "min-h-[180px] rounded-2xl border-2 border-b-4 transition-all duration-300 flex flex-col justify-between select-none shadow-sm overflow-hidden",
+                                        palette.bg,
+                                        selectedItemId && palette.hoverBorder,
+                                        selectedItemId && "cursor-pointer scale-[1.01]"
+                                    )}
+                                >
+                                    {/* Category Header Banner */}
+                                    <div className={cn("p-3.5 flex items-center justify-between border-b border-black/10", palette.headerBg)}>
+                                        <h4 className="font-black text-sm uppercase tracking-wider drop-shadow-sm">
+                                            {cat.title}
+                                        </h4>
+                                    </div>
 
-                                        return (
-                                            <div
-                                                key={it.id}
-                                                onClick={(e) => handleRemoveAssignment(it.id, e)}
-                                                className={cn(
-                                                    "flex items-center justify-between p-3 rounded-xl border-2 border-b-4 font-bold text-xs transition-all shadow-sm",
-                                                    !submitted && "bg-white border-slate-200 border-b-slate-300 text-slate-800 hover:border-[#FF4B4B] hover:text-[#FF4B4B] cursor-pointer",
-                                                    isCorrect && "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950",
-                                                    isIncorrect && "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
-                                                )}
-                                            >
-                                                <span>{it.text}</span>
-                                                {submitted && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#58CC02]" />}
-                                                {submitted && isIncorrect && <XCircle className="w-4 h-4 text-[#FF4B4B]" />}
+                                    {/* Items Inside Bucket */}
+                                    <div className="p-3 flex-1 space-y-2">
+                                        {assignedItems.map(it => {
+                                            const isCorrect = submitted && it.categoryId === cat.id
+                                            const isIncorrect = submitted && it.categoryId !== cat.id
+
+                                            return (
+                                                <div
+                                                    key={it.id}
+                                                    onClick={(e) => handleRemoveAssignment(it.id, e)}
+                                                    className={cn(
+                                                        "flex items-center justify-between p-3 rounded-xl border-2 border-b-4 font-bold text-xs transition-all shadow-sm",
+                                                        !submitted && "bg-white border-slate-200 border-b-slate-300 text-slate-800 hover:border-[#FF4B4B] hover:text-[#FF4B4B] cursor-pointer",
+                                                        isCorrect && "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950",
+                                                        isIncorrect && "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
+                                                    )}
+                                                >
+                                                    <span>{it.text}</span>
+                                                    {submitted && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#58CC02]" />}
+                                                    {submitted && isIncorrect && <XCircle className="w-4 h-4 text-[#FF4B4B]" />}
+                                                </div>
+                                            )
+                                        })}
+                                        {assignedItems.length === 0 && (
+                                            <div className="h-full flex items-center justify-center p-4 border-2 border-dashed border-slate-300/60 rounded-xl">
+                                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                                    Tap item above to assign here
+                                                </span>
                                             </div>
-                                        )
-                                    })}
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         )
