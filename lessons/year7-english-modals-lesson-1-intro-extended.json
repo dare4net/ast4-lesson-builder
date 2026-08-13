@@ -298,7 +298,7 @@
           "props": {
             "title": "Tap the Hotspots to Inspect How Modal Verbs Set Rules and Expectations",
             "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
-            "behavior": "discovery",
+            "behavior": "explore",
             "hotspots": [
               { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Library Rule", "content": "'Silence MUST be maintained in the reading room.' — Modal 'must' makes silence non-negotiable; breaking this rule has consequences." },
               { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Weather Forecast", "content": "'Temperatures MIGHT drop later this evening.' — Modal 'might' expresses possibility, not certainty. The forecast could change." },

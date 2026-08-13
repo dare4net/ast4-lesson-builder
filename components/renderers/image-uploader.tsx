@@ -6,6 +6,7 @@ import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload, ImageIcon, Loader2 } from "lucide-react"
+import { compressImageFile } from "@/lib/compress-image-client"
 
 interface ImageUploaderProps {
   value: string
@@ -44,8 +45,9 @@ export function ImageUploader({ value, onChange, className, lessonId, componentI
 
     setIsUploading(true)
     try {
+      const compressed = await compressImageFile(file)
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', compressed)
       formData.append('lessonId', lessonId)
       formData.append('componentId', componentId)
 

@@ -173,7 +173,7 @@
                     "props": {
                         "title": "Click each zone to discover the 3 types of Personification",
                         "image": "/placeholder.svg?height=380&width=640",
-                        "behavior": "discovery",
+                        "behavior": "explore",
                         "mode": "practice",
                         "hotspots": [
                             {

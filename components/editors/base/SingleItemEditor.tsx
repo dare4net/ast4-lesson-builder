@@ -44,7 +44,7 @@ export function SingleItemEditor({
                         <Label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Reward Points</Label>
                         <Input
                             type="number"
-                            value={points}
+                            value={points ?? ""}
                             onChange={(e) => onPointsChange(Number.parseInt(e.target.value) || 0)}
                             placeholder="10"
                             className="w-full bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-slate-200 placeholder:text-slate-600"

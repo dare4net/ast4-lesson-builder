@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useReadAloud } from "@/context/read-aloud-context";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
 import { cn } from "@/lib/utils";
 import {

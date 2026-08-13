@@ -1,63 +1,5 @@
 import type { Component, ComponentType, ComponentType_Category } from "@/types/lesson"
-
-/**
- * Maps component types to their categories.
- * This is the single source of truth for component categorization.
- */
-const COMPONENT_CATEGORY_MAP: Record<string, ComponentType_Category> = {
-    // Content Components
-    paragraph: "content",
-    heading: "content",
-    bulletList: "content",
-    table: "content",
-    codeBlock: "content",
-    quote: "content",
-
-    // Visual & Layout
-    divider: "visual-guide",
-    box: "visual-guide",
-    callout: "visual-guide",
-    grid: "structure",
-    carousel: "structure",
-    accordion: "structure",
-    iconBlock: "visual-guide",
-
-    // Media
-    image: "media",
-    video: "media",
-
-    // Interactive Components  
-    quiz: "interactive",
-    poll: "interactive",
-    dragDrop: "interactive",
-    matchingPairs: "interactive",
-    fillInTheBlank: "interactive",
-    codeEditor: "interactive",
-    clickableImage: "interactive",
-    hotspot: "interactive",
-    flashcardQuiz: "interactive",
-    multiSelectQuiz: "interactive",
-
-    // Gamified Components
-    flashcards: "gamified",
-    badgeReveal: "gamified",
-    miniGame: "gamified",
-    progressBar: "gamified",
-
-    // Structure
-    slideTitle: "structure",
-    lessonIntro: "structure",
-    lessonSummary: "structure",
-    lessonComplete: "structure",
-
-    // Utility
-    timer: "utility",
-    audioPlayer: "utility",
-    languageToggle: "utility",
-    themeSwitch: "utility",
-    hint: "utility",
-    notePad: "utility",
-}
+import { getRegistryCategory, isGatedComponent } from "@/lib/component-registry"
 
 /**
  * Get the category for a given component type.
@@ -65,7 +7,7 @@ const COMPONENT_CATEGORY_MAP: Record<string, ComponentType_Category> = {
  * @returns The category of the component
  */
 export function getComponentCategory(type: ComponentType | string): ComponentType_Category {
-    return COMPONENT_CATEGORY_MAP[type] || "content"
+    return getRegistryCategory(type)
 }
 
 /**
@@ -147,8 +89,7 @@ export function getInteractiveAndGamifiedComponents(components: Component[]): Co
  * @returns True if the component is interactive or gamified
  */
 export function isInteractiveComponent(type: ComponentType | string): boolean {
-    const category = getComponentCategory(type)
-    return category === "interactive" || category === "gamified"
+    return isGatedComponent(type)
 }
 
 /**

@@ -22,7 +22,9 @@ const soundsToCache = [
   '/sounds/dng-click.mp3',
   '/sounds/dng-success.mp3',
   '/sounds/quiz-success.mp3',
-  '/sounds/finished-lesson.mp3'
+  '/sounds/finished-lesson.mp3',
+  '/sounds/categorize-slot.mp3',
+  '/sounds/categorize-bucket-complete.mp3'
 ];
 
 console.log('Service Worker Initialized');

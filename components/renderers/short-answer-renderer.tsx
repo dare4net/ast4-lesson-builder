@@ -115,6 +115,8 @@ function ShortAnswerContent({
     const handleSubmit = async () => {
         if (inputsLocked || !userResponse.trim()) return
 
+        void playFeedback("click", { sound: true, animation: false })
+
         const trimmedResponse = userResponse.trim().toLowerCase()
 
         if (markingMode === "tutor-mark") {

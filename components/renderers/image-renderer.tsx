@@ -1,33 +1,65 @@
 "use client"
 
+import { useState } from "react"
 import { cn } from "@/lib/utils"
+import { useFeedback } from "@/hooks/use-feedback"
+import { useAudioPlayer } from "@/hooks/use-audio-player"
+import { ListenButton } from "@/components/renderers/listen-button"
+import { playReveal } from "@/lib/sound-effects"
 
 interface ImageRendererProps {
   src: string
   alt: string
   caption?: string
+  audioUrl?: string
   width?: string
   isEditing?: boolean
   savedState?: any
   setComponentState?: (state: any) => void
 }
 
-export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = false, savedState, setComponentState }: ImageRendererProps) {
+export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isEditing = false, savedState, setComponentState }: ImageRendererProps) {
+  const { playFeedback } = useFeedback()
+  const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
+  const [localRevealed, setLocalRevealed] = useState(false)
+
   const isAcknowledged = savedState?.status === "completed"
+  // Builder/editor always shows the image; preview-without-state uses local reveal
+  const isRevealed = isEditing || isAcknowledged || localRevealed
 
   const handleAcknowledge = () => {
+    void playFeedback("click", { sound: true, animation: false })
+    playReveal()
     if (setComponentState) {
       setComponentState({ status: "completed" })
+    } else {
+      setLocalRevealed(true)
     }
+  }
+
+  const handleListen = () => {
+    playAudio()
   }
 
   return (
     <figure className="my-2 group/image space-y-3 animate-in fade-in duration-700 w-full h-full flex flex-col items-center justify-center overflow-hidden p-2">
+      {hasAudio && (
+        <div className="w-full max-w-2xl flex justify-end shrink-0">
+          <ListenButton
+            hasAudio={hasAudio}
+            isPlaying={isPlaying}
+            onClick={handleListen}
+            className="bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+            iconClassName={cn(isPlaying && "text-emerald-600")}
+          />
+        </div>
+      )}
+
       <div
         className={cn(
           "w-full max-h-[55vh] flex justify-center items-center overflow-hidden transition-all duration-500",
-          !isAcknowledged && "blur-md grayscale opacity-30",
-          isAcknowledged && "animate-in fade-in slide-in-from-bottom-2 duration-500"
+          !isRevealed && "blur-md grayscale opacity-30",
+          isRevealed && "animate-in fade-in slide-in-from-bottom-2 duration-500"
         )}
         style={{ width }}
       >
@@ -38,7 +70,7 @@ export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = f
         />
       </div>
 
-      {!isAcknowledged && !isEditing && (
+      {!isRevealed && !isEditing && (
         <div className="flex justify-center flex-col items-center gap-2 shrink-0">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Tap to reveal the image</p>
           <button
@@ -50,7 +82,7 @@ export function ImageRenderer({ src, alt, caption, width = "100%", isEditing = f
         </div>
       )}
 
-      {isAcknowledged && caption && (
+      {isRevealed && caption && (
         <figcaption className="text-center mt-2 animate-in fade-in slide-in-from-top-2 duration-700 shrink-0">
           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-1">Image Caption</span>
           <span className="text-slate-900 text-sm font-black italic tracking-tight">

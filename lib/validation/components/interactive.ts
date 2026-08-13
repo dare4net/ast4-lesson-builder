@@ -1,5 +1,7 @@
 import { ComponentValidator } from '../types';
 import { createResult, addError, addWarning, validateTimeLimit } from './base-utils';
+import { resolveSpinTheWheelQuestions, minWheelQuestionsForSpins } from '@/lib/spin-the-wheel-utils';
+import { normalizeHotspotBehavior, validateMaxClicks, getCorrectHotspots, resolveHotspotComponentProps } from '@/lib/hotspot-utils';
 
 // Quiz Validator
 export const quizValidator: ComponentValidator = {
@@ -177,7 +179,8 @@ export const hotspotValidator: ComponentValidator = {
         const res = createResult(component.id, component.type);
         validateTimeLimit(res, component);
 
-        const { image, hotspots, behavior } = component.props || {};
+        const resolved = resolveHotspotComponentProps(component);
+        const { image, hotspots, behavior, maxClicks, markingMode } = resolved;
 
         if (typeof image !== 'string' || image.trim() === '') {
             addError(res, 'MISSING_HOTSPOT_IMAGE', 'props.image', 'Hotspot background image URL is required.');
@@ -195,10 +198,25 @@ export const hotspotValidator: ComponentValidator = {
                 if (typeof hs.y !== 'number' || hs.y < 0 || hs.y > 1) {
                     addError(res, 'INVALID_Y_COORD', `props.hotspots[${idx}].y`, `Hotspot ${idx + 1} y-coordinate (${hs.y}) must be a decimal between 0.0 and 1.0.`);
                 }
-                if (behavior === 'discovery' && (!hs.content || typeof hs.content !== 'string' || hs.content.trim() === '')) {
+                if (behavior === 'explore' && (!hs.content || typeof hs.content !== 'string' || hs.content.trim() === '')) {
                     addWarning(res, 'MISSING_HOTSPOT_CONTENT', `props.hotspots[${idx}].content`, `Hotspot ${idx + 1} has no popup explanation text.`);
                 }
             });
+
+            if (behavior === 'discover') {
+                const correctCount = getCorrectHotspots(hotspots).length;
+                if (correctCount === 0) {
+                    addError(res, 'NO_CORRECT_HOTSPOTS', 'props.hotspots', 'Discover mode requires at least one correct target node.');
+                }
+                const nodeCount = hotspots.length;
+                const effectiveMaxClicks = typeof maxClicks === 'number' ? maxClicks : nodeCount + 6;
+                if (!validateMaxClicks(effectiveMaxClicks, nodeCount)) {
+                    addError(res, 'INVALID_MAX_CLICKS', 'props.maxClicks', `Max clicks (${effectiveMaxClicks}) must be greater than total nodes + 5 (minimum ${nodeCount + 6}).`);
+                }
+                if (markingMode && markingMode !== 'self-mark' && markingMode !== 'tutor-mark') {
+                    addError(res, 'INVALID_MARKING_MODE', 'props.markingMode', 'Marking mode must be "self-mark" or "tutor-mark".');
+                }
+            }
         }
         return res;
     }
@@ -421,9 +439,10 @@ export const spinTheWheelValidator: ComponentValidator = {
         const res = createResult(component.id, component.type);
         validateTimeLimit(res, component);
 
-        const { questions, items, requiredSpins = 3 } = component.props || {};
-        const sliceCount = Array.isArray(questions) ? questions.length : (Array.isArray(items) ? items.length : 0);
-        const minQuestionsRequired = requiredSpins + 2;
+        const { requiredSpins = 3 } = component.props || {};
+        const resolvedQuestions = resolveSpinTheWheelQuestions(component.props || {});
+        const sliceCount = resolvedQuestions.length;
+        const minQuestionsRequired = minWheelQuestionsForSpins(requiredSpins);
 
         if (sliceCount < minQuestionsRequired) {
             addError(

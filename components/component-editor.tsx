@@ -40,6 +40,7 @@ import { WordCloudEditor } from "@/components/editors/word-cloud-editor"
 import { SpinTheWheelEditor } from "@/components/editors/spin-the-wheel-editor"
 import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { ComponentRenderer } from "@/components/component-renderer"
+import { normalizeHotspotBehavior, resolveHotspotComponentProps } from "@/lib/hotspot-utils"
 
 interface ComponentEditorProps {
   component: Component
@@ -50,19 +51,20 @@ interface ComponentEditorProps {
 }
 
 export function ComponentEditor({ component, updateComponent, onClose, isMobile = false, lessonId }: ComponentEditorProps) {
-  const [props, setProps] = useState<Record<string, any>>(component.props)
+  const [props, setProps] = useState<Record<string, any>>(() =>
+    component.type === "hotspot" ? resolveHotspotComponentProps(component) : component.props,
+  )
   const [hasDraftChanges, setHasDraftChanges] = useState(false)
 
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
 
   useEffect(() => {
-    setProps(component.props)
+    setProps(component.type === "hotspot" ? resolveHotspotComponentProps(component) : component.props)
     setHasDraftChanges(false)
   }, [component])
 
   const handleChange = (name: string, value: any) => {
-    const updatedProps = { ...props, [name]: value }
-    setProps(updatedProps)
+    setProps((prev) => ({ ...prev, [name]: value }))
     setHasDraftChanges(true)
   }
 
@@ -208,8 +210,23 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
           <SpinTheWheelEditor
             title={props.title || ""}
             onTitleChange={(val) => handleChange("title", val)}
-            questions={props.questions || (Array.isArray(props.items) && props.items.length > 0 ? props.items : undefined)}
-            onQuestionsChange={(questions) => handleChange("questions", questions)}
+            questions={props.questions}
+            items={props.items}
+            onQuestionsChange={(questions) => {
+              setProps((prev) => {
+                const updatedProps = { ...prev, questions }
+                if (Array.isArray(updatedProps.items) && updatedProps.items.length > 0) {
+                  delete updatedProps.items
+                }
+                const count = Array.isArray(questions) ? questions.length : 0
+                const currentSpins = updatedProps.requiredSpins ?? 3
+                if (count > 0 && currentSpins > count) {
+                  updatedProps.requiredSpins = count
+                }
+                return updatedProps
+              })
+              setHasDraftChanges(true)
+            }}
             requiredSpins={props.requiredSpins ?? 3}
             onRequiredSpinsChange={(val) => handleChange("requiredSpins", val)}
           />
@@ -284,7 +301,11 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
 
                   {propDef.type === "select" && propDef.options && (
                     <Select
-                      value={String(props[propDef.name])}
+                      value={
+                        component.type === "hotspot" && propDef.name === "behavior"
+                          ? normalizeHotspotBehavior(props[propDef.name])
+                          : String(props[propDef.name] ?? propDef.defaultValue ?? "")
+                      }
                       onValueChange={(value: string) => handleChange(propDef.name, value)}
                     >
                       <SelectTrigger className="bg-slate-950/50 border-slate-800 h-11 text-sm font-bold focus:ring-emerald-500/50">
@@ -376,6 +397,7 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                         <HotspotEditor
                           image={props.image || ""}
                           hotspots={props.hotspots || []}
+                          behavior={props.behavior}
                           onChange={(hotspots) => handleChange("hotspots", hotspots)}
                         />
                       )}

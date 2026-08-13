@@ -3,6 +3,8 @@
  * Derived strictly from skills/curriculum-lesson-generator/SKILL.md Section 3.
  */
 
+import { resolveHotspotComponentProps } from '@/lib/hotspot-utils';
+
 export interface TimeRecommendation {
     recommendedSeconds: number;
     minimumSeconds: number;
@@ -93,7 +95,10 @@ export function calculateRecommendedTimeLimit(
         }
 
         case 'hotspot': {
-            if (props.behavior === 'quiz') {
+            const resolved = resolveHotspotComponentProps({ props })
+            const behavior = String(resolved.behavior ?? '').toLowerCase()
+            const isDiscover = behavior === 'discover' || behavior === 'quiz'
+            if (isDiscover) {
                 const hCount = Array.isArray(props.hotspots) ? props.hotspots.length : 1;
                 const rec = 15 + 10 * Math.max(1, hCount);
                 return {

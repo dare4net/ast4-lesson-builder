@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
+import { normalizeHotspotBehavior, type HotspotBehavior } from "@/lib/hotspot-utils"
 
 interface Hotspot {
   id: string
@@ -16,15 +18,20 @@ interface Hotspot {
   y: number
   label: string
   content: string
+  isCorrect?: boolean
 }
 
 interface HotspotEditorProps {
   image: string
   hotspots: Hotspot[]
   onChange: (hotspots: Hotspot[]) => void
+  behavior?: HotspotBehavior | "discovery" | "quiz"
 }
 
-export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps) {
+export function HotspotEditor({ image, hotspots, onChange, behavior: rawBehavior }: HotspotEditorProps) {
+  const behavior = normalizeHotspotBehavior(rawBehavior ?? "explore")
+  const isDiscover = behavior === "discover"
+
   const [activeHotspotIndex, setActiveHotspotIndex] = useState(0)
   const [isAddingHotspot, setIsAddingHotspot] = useState(false)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -36,12 +43,13 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
       y,
       label: `Hotspot ${hotspots.length + 1}`,
       content: "Description goes here",
+      isCorrect: true,
     }
     onChange([...hotspots, newHotspot])
     setIsAddingHotspot(false)
   }
 
-  const updateHotspot = (index: number, field: keyof Hotspot, value: any) => {
+  const updateHotspot = (index: number, field: keyof Hotspot, value: unknown) => {
     const updatedHotspots = [...hotspots]
     updatedHotspots[index] = {
       ...updatedHotspots[index],
@@ -96,55 +104,55 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
             onClick={handleImageClick}
           />
           {hotspots.map((hotspot, index) => {
-            const isSelected = index === activeHotspotIndex;
+            const isSelected = index === activeHotspotIndex
+            const isDecoy = isDiscover && hotspot.isCorrect === false
 
             const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setActiveHotspotIndex(index);
+              e.stopPropagation()
+              e.preventDefault()
+              setActiveHotspotIndex(index)
 
-              const targetPin = e.currentTarget;
-              targetPin.setPointerCapture(e.pointerId);
+              const targetPin = e.currentTarget
+              targetPin.setPointerCapture(e.pointerId)
 
-              let rafId: number | null = null;
-              let latestX = hotspot.x;
-              let latestY = hotspot.y;
+              let rafId: number | null = null
+              let latestX = hotspot.x
+              let latestY = hotspot.y
 
               const onPointerMove = (moveEvent: PointerEvent) => {
-                if (!imageRef.current) return;
-                const rect = imageRef.current.getBoundingClientRect();
-                latestX = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left) / rect.width));
-                latestY = Math.max(0, Math.min(1, (moveEvent.clientY - rect.top) / rect.height));
+                if (!imageRef.current) return
+                const rect = imageRef.current.getBoundingClientRect()
+                latestX = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left) / rect.width))
+                latestY = Math.max(0, Math.min(1, (moveEvent.clientY - rect.top) / rect.height))
 
                 if (rafId === null) {
                   rafId = requestAnimationFrame(() => {
-                    const updated = [...hotspots];
-                    updated[index] = { ...updated[index], x: latestX, y: latestY };
-                    onChange(updated);
-                    rafId = null;
-                  });
+                    const updated = [...hotspots]
+                    updated[index] = { ...updated[index], x: latestX, y: latestY }
+                    onChange(updated)
+                    rafId = null
+                  })
                 }
-              };
+              }
 
               const onPointerUp = (upEvent: PointerEvent) => {
-                if (rafId !== null) cancelAnimationFrame(rafId);
-                targetPin.releasePointerCapture(upEvent.pointerId);
-                targetPin.removeEventListener("pointermove", onPointerMove);
-                targetPin.removeEventListener("pointerup", onPointerUp);
+                if (rafId !== null) cancelAnimationFrame(rafId)
+                targetPin.releasePointerCapture(upEvent.pointerId)
+                targetPin.removeEventListener("pointermove", onPointerMove)
+                targetPin.removeEventListener("pointerup", onPointerUp)
 
-                // Final position commit
-                if (!imageRef.current) return;
-                const rect = imageRef.current.getBoundingClientRect();
-                const finalX = Math.max(0, Math.min(1, (upEvent.clientX - rect.left) / rect.width));
-                const finalY = Math.max(0, Math.min(1, (upEvent.clientY - rect.top) / rect.height));
-                const updated = [...hotspots];
-                updated[index] = { ...updated[index], x: finalX, y: finalY };
-                onChange(updated);
-              };
+                if (!imageRef.current) return
+                const rect = imageRef.current.getBoundingClientRect()
+                const finalX = Math.max(0, Math.min(1, (upEvent.clientX - rect.left) / rect.width))
+                const finalY = Math.max(0, Math.min(1, (upEvent.clientY - rect.top) / rect.height))
+                const updated = [...hotspots]
+                updated[index] = { ...updated[index], x: finalX, y: finalY }
+                onChange(updated)
+              }
 
-              targetPin.addEventListener("pointermove", onPointerMove);
-              targetPin.addEventListener("pointerup", onPointerUp);
-            };
+              targetPin.addEventListener("pointermove", onPointerMove)
+              targetPin.addEventListener("pointerup", onPointerUp)
+            }
 
             return (
               <div
@@ -160,18 +168,31 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing border-2 text-[10px] font-black shadow-2xl select-none touch-none",
                   isSelected
-                    ? "bg-emerald-500 border-white text-slate-950 scale-125 z-20 shadow-emerald-500/50 ring-4 ring-emerald-500/30"
-                    : "bg-slate-950/80 border-emerald-500/50 text-emerald-500 hover:scale-110 z-10"
+                    ? isDecoy
+                      ? "bg-rose-500 border-white text-white scale-125 z-20 shadow-rose-500/50 ring-4 ring-rose-500/30"
+                      : "bg-emerald-500 border-white text-slate-950 scale-125 z-20 shadow-emerald-500/50 ring-4 ring-emerald-500/30"
+                    : isDecoy
+                      ? "bg-slate-950/80 border-rose-500/50 text-rose-400 hover:scale-110 z-10"
+                      : "bg-slate-950/80 border-emerald-500/50 text-emerald-500 hover:scale-110 z-10"
                 )}
               >
                 {index + 1}
                 {isSelected && (
-                  <div className="absolute inset-0 rounded-full border-4 border-emerald-500 animate-ping opacity-20" />
+                  <div className={cn(
+                    "absolute inset-0 rounded-full border-4 animate-ping opacity-20",
+                    isDecoy ? "border-rose-500" : "border-emerald-500"
+                  )} />
                 )}
               </div>
-            );
+            )
           })}
         </div>
+
+        {isDiscover && (
+          <p className="text-[10px] font-bold text-slate-500 mt-2 px-1">
+            Discover mode: emerald pins are correct targets, rose pins are decoys (waste a click, no point deduction).
+          </p>
+        )}
       </div>
 
       <ArrayItemEditor<Hotspot>
@@ -183,6 +204,19 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
         maxItems={10}
         renderItem={(hotspot, index) => (
           <div className="space-y-6">
+            {isDiscover && (
+              <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/40 px-4 py-3">
+                <div className="space-y-0.5">
+                  <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Correct Target</Label>
+                  <p className="text-xs text-slate-400">Turn off to mark this node as a decoy</p>
+                </div>
+                <Switch
+                  checked={hotspot.isCorrect !== false}
+                  onCheckedChange={(checked) => updateHotspot(index, "isCorrect", checked)}
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Node Identifier</Label>
               <Input
@@ -207,6 +241,5 @@ export function HotspotEditor({ image, hotspots, onChange }: HotspotEditorProps)
         )}
       />
     </div>
-  );
+  )
 }
-

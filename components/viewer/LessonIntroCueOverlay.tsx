@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useReadAloud } from "@/context/read-aloud-context";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
-import { useLessonPreloader } from "@/hooks/use-lesson-preloader";
 import { cn } from "@/lib/utils";
 import {
     getSlideTheme,
@@ -152,18 +150,10 @@ export function LessonIntroCueOverlay({
     const [isStarting, setIsStarting] = useState(false);
     const overlayOpenedAtRef = useRef<number>(0);
 
-    // Preload lesson resources (images & audio) with 1-hour TTL
-    const preloadStatus = useLessonPreloader({
-        lessonData,
-        enabled: isVisible,
-    });
-
     const lessonTitle = lessonData?.title || "Untitled Lesson";
     const lessonDescription = lessonData?.description?.trim();
     const slides = lessonData?.slides || [];
     const introAudioUrl = lessonData?.introAudioUrl;
-
-    const { speak, stop: stopReadAloud } = useReadAloud();
 
     // Audio end handler — unlocks button immediately
     const handleAudioEnded = useCallback(() => {
@@ -179,26 +169,17 @@ export function LessonIntroCueOverlay({
     });
 
 
-    // 30-second countdown timer + audio fallback
+    // 30-second countdown timer (pre-recorded intro audio when available)
     useEffect(() => {
         if (!isVisible) {
             setCanBegin(false);
             setSecondsLeft(30);
-            stopReadAloud();
             return;
         }
 
         overlayOpenedAtRef.current = Date.now();
         setSecondsLeft(30);
 
-        // TTS Read Aloud fallback if pre-recorded audio is missing
-        if (!introAudioUrl) {
-            const slideTitlesList = slides.map((s: any, idx: number) => `Slide ${idx + 1}: ${s.title || 'Untitled Slide'}`).join(". ");
-            const speechText = `Welcome to lesson ${lessonNumber} of the ${moduleTitle} module. Today's lesson is ${lessonTitle}. ${lessonDescription ? `You'll learn about ${lessonDescription}. ` : ""}Here is what you will learn: ${slideTitlesList}`;
-            speak(speechText, { onEnd: handleAudioEnded });
-        }
-
-        // 30-second countdown timer
         const interval = setInterval(() => {
             setSecondsLeft((prev) => {
                 const next = prev - 1;
@@ -213,7 +194,6 @@ export function LessonIntroCueOverlay({
 
         return () => {
             clearInterval(interval);
-            stopReadAloud();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible, lessonData]);
@@ -224,7 +204,6 @@ export function LessonIntroCueOverlay({
         if (isStarting) return;
         setIsStarting(true);
         stopAudioPlayer();
-        stopReadAloud();
         onBegin();
         setTimeout(() => setIsStarting(false), 500);
     };

@@ -18,8 +18,6 @@ import { NavigationLockProvider } from '@/context/navigation-lock-context';
 import { apiClient } from '@/lib/api-client';
 
 import { useRouter } from 'next/navigation';
-import { ReadAloudProvider } from '@/context/read-aloud-context';
-
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
@@ -389,7 +387,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   return (
     <ScoringProvider lesson={lessonData}>
       <NavigationLockProvider>
-        <ReadAloudProvider>
           <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
             {/* Desktop/Tablet Sidebar */}
             <div className="hidden md:block w-80 shrink-0">
@@ -430,7 +427,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
               </div>
             </div>
           </div>
-        </ReadAloudProvider>
       </NavigationLockProvider>
     </ScoringProvider>
   );

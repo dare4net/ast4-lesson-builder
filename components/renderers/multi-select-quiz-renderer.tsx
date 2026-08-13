@@ -46,6 +46,8 @@ type MultiSelectQuizState = {
     questionsAnswered: boolean[]
     questionsCorrect: boolean[]
     scores: number[]
+    selectedOptionsByQuestion: string[][]
+    showResultByQuestion: boolean[]
     status?: string
     isComplete?: boolean
 }
@@ -86,9 +88,10 @@ function MultiSelectContent({
         })),
     }))
 
-    const { currentQuestion, questionsAnswered, questionsCorrect } = state
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-    const [showResult, setShowResult] = useState(false)
+    const { currentQuestion, questionsAnswered, questionsCorrect, selectedOptionsByQuestion, showResultByQuestion } = state
+
+    const selectedOptions = selectedOptionsByQuestion[currentQuestion] ?? []
+    const showResult = showResultByQuestion[currentQuestion] ?? false
 
     const question = normalizedQuestions[currentQuestion]
     const pointsPerQ = questions.length > 0 ? points / questions.length : 0
@@ -106,9 +109,16 @@ function MultiSelectContent({
 
     const handleToggle = (optionId: string) => {
         if (showResult || isDisabled || isComplete) return
-        setSelectedOptions(prev =>
-            prev.includes(optionId) ? prev.filter(id => id !== optionId) : [...prev, optionId]
-        )
+        void playFeedback("click", { sound: true, animation: false })
+        setState(prev => {
+            const current = prev.selectedOptionsByQuestion[prev.currentQuestion] ?? []
+            const next = current.includes(optionId)
+                ? current.filter(id => id !== optionId)
+                : [...current, optionId]
+            const nextSelections = [...prev.selectedOptionsByQuestion]
+            nextSelections[prev.currentQuestion] = next
+            return { ...prev, selectedOptionsByQuestion: nextSelections }
+        })
     }
 
     const handleSubmit = async () => {
@@ -137,15 +147,19 @@ function MultiSelectContent({
             await playFeedback('incorrect')
         }
 
-        setShowResult(true)
-        setState(prev => ({
-            ...prev,
-            questionsAnswered: newAnswered,
-            questionsCorrect: newCorrect,
-            scores: newScores,
-            isComplete: allDone,
-            status: allDone ? 'completed' : 'active',
-        }))
+        setState(prev => {
+            const nextShowResult = [...prev.showResultByQuestion]
+            nextShowResult[currentQuestion] = true
+            return {
+                ...prev,
+                questionsAnswered: newAnswered,
+                questionsCorrect: newCorrect,
+                scores: newScores,
+                showResultByQuestion: nextShowResult,
+                isComplete: allDone,
+                status: allDone ? 'completed' : 'active',
+            }
+        })
 
         if (allDone) {
             handlePoints(newScores.reduce((a, b) => a + b, 0))
@@ -155,8 +169,6 @@ function MultiSelectContent({
     const handleNext = () => {
         if (currentQuestion < questions.length - 1) {
             setState(prev => ({ ...prev, currentQuestion: prev.currentQuestion + 1 }))
-            setSelectedOptions([])
-            setShowResult(false)
         }
     }
 
@@ -240,7 +252,7 @@ function MultiSelectContent({
     const isPerfect = showResult && correctSelections.length === correctIds.length && incorrectSelections.length === 0
 
     return (
-        <div className="w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6">
+        <div className="w-full h-full flex-1 flex flex-col bg-white text-slate-900 overflow-hidden transition-all duration-300 px-6">
             {/* TOP SECTION: Meta & Title */}
             <div className="shrink-0 space-y-3 pt-2">
                 <div className="relative flex items-center justify-between">
@@ -297,7 +309,7 @@ function MultiSelectContent({
                                     disabled={showResult || isDisabled || isComplete}
                                     onClick={() => handleToggle(option.id)}
                                     className={cn(
-                                        'group/opt w-full p-3.5 text-left transition-all duration-200 relative rounded-2xl border-2 bg-white shadow-sm overflow-hidden',
+                                        'group/opt w-full p-3.5 text-left text-slate-900 transition-all duration-200 relative rounded-2xl border-2 bg-white shadow-sm overflow-hidden',
                                         'border-b-4 active:border-b-0 active:translate-y-[2px]',
                                         isSelected && !showResult && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
                                         !isSelected && !showResult && 'border-slate-200 hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 hover:shadow-md cursor-pointer',
@@ -318,7 +330,7 @@ function MultiSelectContent({
                                             )}>
                                                 {String.fromCharCode(65 + idx)}
                                             </span>
-                                            <span className="font-bold text-sm tracking-tight">{option.text}</span>
+                                            <span className="font-bold text-sm tracking-tight text-inherit">{option.text}</span>
                                         </div>
                                         {showCorrect && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                                         {showIncorrect && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
@@ -419,7 +431,7 @@ export function MultiSelectQuizRenderer(props: MultiSelectQuizRendererProps) {
 
     if (isEditing) {
         return (
-            <div className="border p-4 rounded-2xl bg-white shadow-sm space-y-2">
+            <div className="border p-4 rounded-2xl bg-white text-slate-900 shadow-sm space-y-2">
                 <span className="text-[9px] font-black text-violet-600 uppercase tracking-widest">☑ Multi-Select Quiz Preview ({mode} mode)</span>
                 <p className="text-xs font-bold text-slate-500">{questions.length} question{questions.length !== 1 ? 's' : ''} · {points} pts total</p>
                 {questions.slice(0, 2).map((q, i) => (
@@ -440,19 +452,34 @@ export function MultiSelectQuizRenderer(props: MultiSelectQuizRendererProps) {
         mode: mode as any,
     } as Component
 
-    const initialState: MultiSelectQuizState = {
+    const baseInitialState: MultiSelectQuizState = {
         currentQuestion: 0,
         questionsAnswered: new Array(questions.length).fill(false),
         questionsCorrect: new Array(questions.length).fill(false),
         scores: new Array(questions.length).fill(0),
+        selectedOptionsByQuestion: new Array(questions.length).fill(null).map(() => []),
+        showResultByQuestion: new Array(questions.length).fill(false),
         status: 'active',
     }
+
+    const mergedSavedState = savedState
+        ? {
+            ...baseInitialState,
+            ...savedState,
+            selectedOptionsByQuestion:
+                savedState.selectedOptionsByQuestion ??
+                baseInitialState.selectedOptionsByQuestion,
+            showResultByQuestion:
+                savedState.showResultByQuestion ??
+                baseInitialState.showResultByQuestion,
+        }
+        : undefined
 
     return (
         <ScoredRenderer<MultiSelectQuizState>
             component={component}
-            initialState={initialState}
-            savedState={savedState}
+            initialState={baseInitialState}
+            savedState={mergedSavedState}
             setComponentState={setComponentState}
             points={points}
             mode={mode}

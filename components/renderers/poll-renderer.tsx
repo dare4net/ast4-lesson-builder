@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { CheckCircle2, BarChart2, Check, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import { useFeedback } from "@/hooks/use-feedback"
 import type { Component } from "@/types/lesson"
 
 interface PollOption {
@@ -52,6 +53,7 @@ function PollContent({
     props: PollRendererProps
 }) {
     const [mounted, setMounted] = useState(false)
+    const { playFeedback } = useFeedback()
 
     const { selectedOption, votes, totalVotes, hasVoted } = state
 
@@ -87,7 +89,9 @@ function PollContent({
             status: 'completed'
         }))
 
-        // POST vote to server — response updates counts to server-authoritative values
+        void playFeedback("dngClick", { sound: true, animation: false })
+
+        // POST vote to server
         if (props.onVote) {
             try {
                 await props.onVote(optionId)

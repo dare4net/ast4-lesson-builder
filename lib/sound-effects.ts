@@ -1,6 +1,6 @@
 import { Howl } from 'howler';
 
-export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'timerTick';
+export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'timerTick' | 'categorizeSlot' | 'categorizeBucketComplete' | 'softMiss' | 'blockedClick';
 
 // Synthesized tick sound via Web Audio API (no file needed)
 function playTickSound(volume: number = 0.5) {
@@ -17,6 +17,48 @@ function playTickSound(volume: number = 0.5) {
     oscillator.start(ctx.currentTime)
     oscillator.stop(ctx.currentTime + 0.08)
     oscillator.onended = () => ctx.close()
+  } catch (_) { }
+}
+
+/** Quiet low tap for non-penalty misses (e.g. hotspot decoy / empty click) */
+function playSoftMissSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(240, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.07)
+    gain.gain.setValueAtTime(volume * 0.12, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.09)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.09)
+    osc.onended = () => ctx.close()
+  } catch (_) { }
+}
+
+/** Short buzz when input is blocked (e.g. no clicks remaining) */
+function playBlockedClickSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const start = ctx.currentTime
+    for (let i = 0; i < 2; i++) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.type = 'square'
+      const t = start + i * 0.11
+      osc.frequency.setValueAtTime(140, t)
+      gain.gain.setValueAtTime(0.001, t)
+      gain.gain.linearRampToValueAtTime(volume * 0.07, t + 0.015)
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07)
+      osc.start(t)
+      osc.stop(t + 0.075)
+    }
+    setTimeout(() => ctx.close(), 300)
   } catch (_) { }
 }
 
@@ -109,6 +151,118 @@ export function playFlashcardComplete(volume = 0.5) {
   } catch (_) { }
 }
 
+// Slider step tick — soft mechanical notch
+export function playSliderTick(volume = 0.35) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'triangle'
+    osc.frequency.setValueAtTime(520, ctx.currentTime)
+    gain.gain.setValueAtTime(volume * 0.3, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.06)
+    osc.onended = () => ctx.close()
+  } catch (_) { }
+}
+
+// Code run — quick double terminal blip
+export function playCodeRun(volume = 0.4) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    ;[640, 820].forEach((freq, i) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.type = 'square'
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.05)
+      gain.gain.setValueAtTime(volume * 0.12, ctx.currentTime + i * 0.05)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05 + i * 0.05)
+      osc.start(ctx.currentTime + i * 0.05)
+      osc.stop(ctx.currentTime + 0.07 + i * 0.05)
+      osc.onended = () => { if (i === 1) ctx.close() }
+    })
+  } catch (_) { }
+}
+
+// Content reveal — brief ascending sweep (image/table acknowledge)
+export function playReveal(volume = 0.45) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(320, ctx.currentTime)
+    osc.frequency.exponentialRampToValueAtTime(720, ctx.currentTime + 0.15)
+    gain.gain.setValueAtTime(volume * 0.25, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.18)
+    osc.onended = () => ctx.close()
+  } catch (_) { }
+}
+
+// Spin wheel — launch whoosh, decelerating peg ticks, landing ding
+export function playWheelSpin(durationMs = 6500, volume = 0.45) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const now = ctx.currentTime
+    const dur = durationMs / 1000
+
+    // Launch whoosh
+    const whoosh = ctx.createOscillator()
+    const whooshGain = ctx.createGain()
+    whoosh.type = 'sawtooth'
+    whoosh.frequency.setValueAtTime(220, now)
+    whoosh.frequency.exponentialRampToValueAtTime(80, now + 0.18)
+    whooshGain.gain.setValueAtTime(volume * 0.07, now)
+    whooshGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22)
+    whoosh.connect(whooshGain)
+    whooshGain.connect(ctx.destination)
+    whoosh.start(now)
+    whoosh.stop(now + 0.22)
+
+    // Peg ticks — spacing eases out to mimic wheel slowing down
+    const tickCount = 32
+    for (let i = 0; i < tickCount; i++) {
+      const progress = i / Math.max(tickCount - 1, 1)
+      const t = now + 0.1 + progress * progress * Math.max(dur - 0.4, 0.5)
+      const tickOsc = ctx.createOscillator()
+      const tickGain = ctx.createGain()
+      tickOsc.type = 'triangle'
+      tickOsc.frequency.setValueAtTime(780 + (1 - progress) * 520, t)
+      tickGain.gain.setValueAtTime(volume * (0.08 + (1 - progress) * 0.12), t)
+      tickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.035)
+      tickOsc.connect(tickGain)
+      tickGain.connect(ctx.destination)
+      tickOsc.start(t)
+      tickOsc.stop(t + 0.04)
+    }
+
+    // Landing chime when the wheel stops
+    const landT = now + dur - 0.08
+    ;[880, 1318.5].forEach((freq, i) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(freq, landT + i * 0.05)
+      gain.gain.setValueAtTime(volume * 0.28, landT + i * 0.05)
+      gain.gain.exponentialRampToValueAtTime(0.001, landT + 0.45 + i * 0.05)
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.start(landT + i * 0.05)
+      osc.stop(landT + 0.5 + i * 0.05)
+      if (i === 1) osc.onended = () => ctx.close()
+    })
+  } catch (_) { }
+}
+
 interface SoundStatus {
   loaded: boolean;
   error: boolean;
@@ -132,7 +286,11 @@ class SoundEffectManager {
     dngSuccess: 1,
     quizSuccess: 1,
     finishedLesson: 1,
-    timerTick: 0.5
+    timerTick: 0.5,
+    categorizeSlot: 0.5,
+    categorizeBucketComplete: 0.7,
+    softMiss: 0.35,
+    blockedClick: 0.4,
   };
 
   constructor() {
@@ -204,6 +362,26 @@ class SoundEffectManager {
         html5: false,
         preload: true
       }),
+      categorizeSlot: new Howl({
+        src: ['/sounds/categorize-slot.mp3'],
+        html5: false,
+        preload: true
+      }),
+      categorizeBucketComplete: new Howl({
+        src: ['/sounds/categorize-bucket-complete.mp3'],
+        html5: false,
+        preload: true
+      }),
+      softMiss: new Howl({
+        src: ['/sounds/ui-click.mp3'], // Dummy Howl; synthesized Web Audio is used in play()
+        html5: false,
+        preload: false
+      }),
+      blockedClick: new Howl({
+        src: ['/sounds/ui-click.mp3'], // Dummy Howl; synthesized Web Audio is used in play()
+        html5: false,
+        preload: false
+      }),
     };
 
     this.status = Object.keys(this.sounds).reduce((acc, key) => ({
@@ -226,9 +404,17 @@ class SoundEffectManager {
   async play(effect: SoundEffect): Promise<void> {
     if (this.isMuted) return;
 
-    // timerTick is synthesized — no Howl entry needed
+    // timerTick / softMiss are synthesized — no Howl playback needed
     if (effect === 'timerTick') {
       playTickSound(this.volume)
+      return
+    }
+    if (effect === 'softMiss') {
+      playSoftMissSound(this.volume)
+      return
+    }
+    if (effect === 'blockedClick') {
+      playBlockedClickSound(this.volume)
       return
     }
 

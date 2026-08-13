@@ -185,7 +185,7 @@
                                 "content": "Liquid particles cool further until locked in a rigid solid grid."
                             }
                         ],
-                        "behavior": "discovery",
+                        "behavior": "explore",
                         "mode": "practice",
                         "state": "active"
                     },

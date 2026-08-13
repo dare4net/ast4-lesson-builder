@@ -86,7 +86,7 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
 
                     const resolvedVoice = (formData.voice && formData.voice !== "inherit") ? formData.voice : (moduleVoice || "en-GB-SoniaNeural")
 
-                    const audioMap = await generateBatchAudio(
+                    const { urlMap: audioMap } = await generateBatchAudio(
                         [
                             {
                                 componentId: "intro",

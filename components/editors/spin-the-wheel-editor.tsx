@@ -8,8 +8,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RotateCw, Plus, Trash2, ChevronDown, ChevronUp, CheckCircle2, Type, ToggleLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
-import type { WheelQuestion, QuestionType } from "@/components/renderers/spin-the-wheel-renderer"
-import { DEFAULT_WHEEL_QUESTIONS } from "@/components/renderers/spin-the-wheel-renderer"
+import type { WheelQuestion, QuestionType } from "@/lib/spin-the-wheel-utils"
+import {
+    resolveSpinTheWheelQuestions,
+    minWheelQuestionsForSpins,
+} from "@/lib/spin-the-wheel-utils"
 
 const SLICE_COLORS = [
     "#FF4B4B", "#FFC800", "#58CC02", "#1CB0F6",
@@ -38,6 +41,7 @@ interface SpinTheWheelEditorProps {
     title?: string
     onTitleChange?: (val: string) => void
     questions?: WheelQuestion[]
+    items?: unknown[]
     onQuestionsChange?: (q: WheelQuestion[]) => void
     requiredSpins?: number
     onRequiredSpinsChange?: (val: number) => void
@@ -57,6 +61,7 @@ function QuestionCard({
     onDelete: () => void
 }) {
     const [expanded, setExpanded] = useState(index === 0)
+    const typeMeta = TYPE_META[question.type] ?? TYPE_META.multipleChoice
 
     const set = (field: keyof WheelQuestion, value: any) => onUpdate({ ...question, [field]: value })
 
@@ -88,37 +93,37 @@ function QuestionCard({
     return (
         <div className="w-full max-w-full rounded-2xl border-2 border-b-4 border-slate-200 border-b-slate-300 bg-white shadow-sm min-w-0 overflow-hidden">
             {/* Header */}
-            <button
-                type="button"
-                onClick={() => setExpanded(v => !v)}
-                className="w-full max-w-full flex items-center gap-2 p-3 cursor-pointer hover:bg-slate-50 transition-colors text-left min-w-0 overflow-hidden"
-            >
-                <span
-                    className="w-7 h-7 rounded-xl flex items-center justify-center text-white text-[11px] font-black shrink-0 shadow-sm"
-                    style={{ background: color }}
+            <div className="w-full max-w-full flex items-center gap-2 p-3 min-w-0 overflow-hidden hover:bg-slate-50 transition-colors">
+                <button
+                    type="button"
+                    onClick={() => setExpanded(v => !v)}
+                    className="w-0 flex-1 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity text-left min-w-0 overflow-hidden"
                 >
-                    Q{index + 1}
-                </span>
-                <span className="flex items-center gap-1 text-[10px] font-black text-slate-500 uppercase tracking-wider shrink-0 max-w-[80px] truncate">
-                    {TYPE_META[question.type].icon}
-                    <span className="truncate">{TYPE_META[question.type].label}</span>
-                </span>
-                <span className="text-xs font-bold text-slate-700 w-0 flex-1 truncate min-w-0 max-w-full block">
-                    {question.prompt || <span className="text-slate-400 italic">No prompt yet</span>}
-                </span>
-                <div className="flex items-center gap-1 shrink-0 ml-auto">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={e => { e.stopPropagation(); onDelete() }}
-                        className="h-7 w-7 text-rose-400 hover:bg-rose-500/10 rounded-lg shrink-0"
+                    <span
+                        className="w-7 h-7 rounded-xl flex items-center justify-center text-white text-[11px] font-black shrink-0 shadow-sm"
+                        style={{ background: color }}
                     >
-                        <Trash2 className="w-3.5 h-3.5" />
-                    </Button>
+                        Q{index + 1}
+                    </span>
+                    <span className="flex items-center gap-1 text-[10px] font-black text-slate-500 uppercase tracking-wider shrink-0 max-w-[80px] truncate">
+                        {typeMeta.icon}
+                        <span className="truncate">{typeMeta.label}</span>
+                    </span>
+                    <span className="text-xs font-bold text-slate-700 w-0 flex-1 truncate min-w-0 max-w-full block">
+                        {question.prompt || <span className="text-slate-400 italic">No prompt yet</span>}
+                    </span>
                     {expanded ? <ChevronUp className="w-4 h-4 text-slate-400 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />}
-                </div>
-            </button>
+                </button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={onDelete}
+                    className="h-7 w-7 text-rose-400 hover:bg-rose-500/10 rounded-lg shrink-0"
+                >
+                    <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+            </div>
 
             {/* Body */}
             {expanded && (
@@ -293,20 +298,28 @@ export function SpinTheWheelEditor({
     title = "Spin the Wheel",
     onTitleChange,
     questions,
+    items,
     onQuestionsChange,
     requiredSpins = 3,
     onRequiredSpinsChange,
 }: SpinTheWheelEditorProps) {
 
-    // Ensure questions pool is never empty (fallback to DEFAULT_WHEEL_QUESTIONS)
-    const effectiveQuestions = (questions && questions.length > 0) ? questions : DEFAULT_WHEEL_QUESTIONS
+    const resolvedQuestions = React.useMemo(
+        () => resolveSpinTheWheelQuestions({ questions, items }),
+        [questions, items],
+    )
 
-    // Auto-seed parent props if questions were missing
+    const minQuestions = minWheelQuestionsForSpins(requiredSpins)
+
+    // One-time legacy migration: props.items → props.questions (no auto-padding)
+    const migratedLegacyRef = React.useRef(false)
     React.useEffect(() => {
-        if (!questions || questions.length === 0) {
-            onQuestionsChange?.(DEFAULT_WHEEL_QUESTIONS)
-        }
-    }, [questions, onQuestionsChange])
+        if (migratedLegacyRef.current) return
+        const hasLegacyItems = Array.isArray(items) && items.length > 0
+        if (!hasLegacyItems) return
+        migratedLegacyRef.current = true
+        onQuestionsChange?.(resolveSpinTheWheelQuestions({ items }))
+    }, [items, onQuestionsChange])
 
     const handleAddQuestion = (type: QuestionType) => {
         const newQ: WheelQuestion = {
@@ -317,18 +330,18 @@ export function SpinTheWheelEditor({
             ...(type === "inputAnswer" ? { keywords: [""] } : {}),
             ...(type === "trueFalse" ? { isTrue: true } : {}),
         }
-        onQuestionsChange?.([...effectiveQuestions, newQ])
+        onQuestionsChange?.([...resolvedQuestions, newQ])
     }
 
     const handleUpdate = (id: string, updated: WheelQuestion) => {
-        onQuestionsChange?.(effectiveQuestions.map(q => q.id === id ? updated : q))
+        onQuestionsChange?.(resolvedQuestions.map(q => q.id === id ? updated : q))
     }
 
     const handleDelete = (id: string) => {
-        onQuestionsChange?.(effectiveQuestions.filter(q => q.id !== id))
+        onQuestionsChange?.(resolvedQuestions.filter(q => q.id !== id))
     }
 
-    const effectiveRequired = Math.min(requiredSpins, Math.max(effectiveQuestions.length, 1))
+    const effectiveRequired = Math.min(requiredSpins, Math.max(resolvedQuestions.length, 1))
 
     return (
         <div className="space-y-6 w-full max-w-full min-w-0 overflow-hidden">
@@ -358,7 +371,7 @@ export function SpinTheWheelEditor({
                     <Input
                         type="number"
                         min={1}
-                        max={effectiveQuestions.length || 1}
+                        max={resolvedQuestions.length || 1}
                         value={requiredSpins}
                         onChange={e => onRequiredSpinsChange?.(Math.max(1, Number(e.target.value)))}
                         className="bg-slate-900 border-slate-800 h-9 text-sm font-black text-amber-400 w-20 shrink-0"
@@ -369,7 +382,7 @@ export function SpinTheWheelEditor({
                         ))}
                     </div>
                     <span className="text-[10px] font-bold text-slate-500 shrink-0">
-                        of {effectiveQuestions.length} question{effectiveQuestions.length !== 1 ? "s" : ""}
+                        of {resolvedQuestions.length} question{resolvedQuestions.length !== 1 ? "s" : ""}
                     </span>
                 </div>
             </div>
@@ -379,9 +392,15 @@ export function SpinTheWheelEditor({
                 <div className="flex items-center justify-between gap-2 flex-wrap w-full max-w-full min-w-0">
                     <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide flex items-center gap-1.5 shrink-0">
                         <RotateCw className="w-4 h-4 text-amber-400 shrink-0" />
-                        Question Bank ({effectiveQuestions.length})
+                        Question Bank ({resolvedQuestions.length})
                     </Label>
                 </div>
+
+                {resolvedQuestions.length < minQuestions && (
+                    <p className="text-[10px] font-bold text-amber-400/90 bg-amber-500/10 border border-amber-500/20 rounded-xl px-3 py-2">
+                        Add at least {minQuestions} questions for {requiredSpins} required spins (required spins + 2). You currently have {resolvedQuestions.length}.
+                    </p>
+                )}
 
                 {/* Add Question buttons */}
                 <div className="grid grid-cols-1 gap-2 w-full max-w-full min-w-0">
@@ -406,7 +425,7 @@ export function SpinTheWheelEditor({
                     ))}
                 </div>
 
-                {effectiveQuestions.length === 0 ? (
+                {resolvedQuestions.length === 0 ? (
                     <div className="p-6 text-center bg-slate-950/40 rounded-2xl border-2 border-dashed border-slate-800 space-y-2 w-full max-w-full min-w-0">
                         <RotateCw className="w-6 h-6 text-slate-700 mx-auto" />
                         <p className="text-xs font-bold text-slate-500">Add questions above to build your question bank.</p>
@@ -414,7 +433,7 @@ export function SpinTheWheelEditor({
                     </div>
                 ) : (
                     <div className="space-y-3 w-full max-w-full min-w-0">
-                        {effectiveQuestions.map((q, idx) => (
+                        {resolvedQuestions.map((q, idx) => (
                             <QuestionCard
                                 key={q.id}
                                 question={q}

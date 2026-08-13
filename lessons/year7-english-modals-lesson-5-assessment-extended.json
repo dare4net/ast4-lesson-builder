@@ -232,7 +232,7 @@
           "props": {
             "title": "Tap Target Hotspots to Identify Rules and Permissions (Timed)",
             "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
-            "behavior": "quiz",
+            "behavior": "discover",
             "hotspots": [
               { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Strict Requirement", "content": "Rule: 'Visitors MUST present photo ID upon entry.'", "isTarget": true },
               { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Prohibition", "content": "Rule: 'Smoking MUST NOT occur within 50 metres of the building.'", "isTarget": true },

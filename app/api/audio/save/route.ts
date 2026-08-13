@@ -5,8 +5,10 @@ import { EdgeTTS } from 'node-edge-tts'
 import { normalizeTextForSpeech } from '@/lib/audio-generator'
 import { uploadAudioToCloudinary } from '@/lib/cloudinary'
 
-// Extend route timeout to 60s (TTS synthesis + Cloudinary upload can be slow for large batches)
-export const maxDuration = 60
+// TTS + Cloudinary per clip can be slow; large lessons need headroom.
+export const maxDuration = 300
+
+const TTS_CONCURRENCY = 3
 
 interface AudioItem {
     componentId: string
@@ -20,13 +22,35 @@ interface BatchAudioRequest {
     voice?: string
 }
 
+async function mapWithConcurrency<T, R>(
+    items: T[],
+    concurrency: number,
+    fn: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+    if (items.length === 0) return []
+
+    const results = new Array<R>(items.length)
+    let nextIndex = 0
+
+    async function worker() {
+        while (nextIndex < items.length) {
+            const currentIndex = nextIndex++
+            results[currentIndex] = await fn(items[currentIndex], currentIndex)
+        }
+    }
+
+    await Promise.all(
+        Array.from({ length: Math.min(concurrency, items.length) }, () => worker()),
+    )
+
+    return results
+}
+
 /**
  * POST /api/audio/save
  * Accepts a batch of {componentId, text, lessonId, voice} items.
- * Normalizes text (strips emojis, bracketed text, HTML, lowercases).
- * Generates MP3 audio for each using specified Edge Neural TTS voice (default: en-GB-SoniaNeural).
- * Uploads audio to Cloudinary with overwrite: true (discarding old audio).
- * Returns { results: { componentId, audioUrl }[] }
+ * Generates MP3 audio sequentially (limited concurrency) and uploads to Cloudinary.
+ * Returns partial success — failed items have audioUrl: null and an error field.
  */
 export async function POST(req: NextRequest) {
     try {
@@ -37,27 +61,32 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'No items provided' }, { status: 400 })
         }
 
-        const results = await Promise.all(
-            items.map(({ componentId, text, lessonId, voice: itemVoice }) => {
-                const selectedVoice = itemVoice || batchVoice || 'en-GB-SoniaNeural';
-                const lang = selectedVoice.slice(0, 5);
+        const results = await mapWithConcurrency(items, TTS_CONCURRENCY, (item) => {
+            const selectedVoice = item.voice || batchVoice || 'en-GB-SoniaNeural'
+            const lang = selectedVoice.slice(0, 5)
 
-                const tts = new EdgeTTS({
-                    voice: selectedVoice,
-                    lang: lang,
-                    outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
-                });
-
-                return generateAudio(tts, componentId, text, lessonId);
+            const tts = new EdgeTTS({
+                voice: selectedVoice,
+                lang,
+                outputFormat: 'audio-24khz-48kbitrate-mono-mp3',
             })
-        )
 
-        const failedItem = results.find(r => r.error)
-        if (failedItem) {
-            return NextResponse.json({ error: `Audio upload failed: ${failedItem.error}` }, { status: 500 })
+            return generateAudio(tts, item.componentId, item.text, item.lessonId)
+        })
+
+        const failed = results.filter((r) => r.error)
+        if (failed.length > 0) {
+            console.warn(
+                `[audio/save] ${failed.length}/${results.length} clips failed:`,
+                failed.map((f) => `${f.componentId}: ${f.error}`).join('; '),
+            )
         }
 
-        return NextResponse.json({ results })
+        return NextResponse.json({
+            results,
+            generated: results.filter((r) => r.audioUrl).length,
+            failed: failed.length,
+        })
     } catch (err: any) {
         console.error('[audio/save] Error:', err)
         return NextResponse.json({ error: err.message || 'Failed to generate audio' }, { status: 500 })

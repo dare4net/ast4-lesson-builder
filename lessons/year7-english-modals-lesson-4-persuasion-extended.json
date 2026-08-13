@@ -190,7 +190,7 @@
           "props": {
             "title": "Tap Hotspots to Analyse Modal Choices in a Public Address",
             "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
-            "behavior": "discovery",
+            "behavior": "explore",
             "hotspots": [
               { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Call to Action", "content": "'We MUST unite to rebuild our community.' Strong modal 'must' creates collective urgency and moral duty." },
               { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Future Guarantee", "content": "'Together, we WILL secure a brighter future.' Modal 'will' projects absolute confidence in the outcome." },

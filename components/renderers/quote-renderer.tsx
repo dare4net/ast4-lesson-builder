@@ -1,10 +1,9 @@
 "use client"
 
 import React from "react"
-import { Quote, Volume2 } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useReadAloud } from "@/context/read-aloud-context"
+import { Quote } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
+import { ListenButton } from "@/components/renderers/listen-button"
 
 interface QuoteRendererProps {
     text?: string
@@ -22,17 +21,10 @@ export function QuoteRenderer({
     audioUrl,
     isEditing
 }: QuoteRendererProps) {
-    const { speak, isSpeaking: isTtsSpeaking } = useReadAloud()
-    const { isPlaying: isAudioPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
-    const isSpeaking = isAudioPlaying || isTtsSpeaking
+    const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
 
-    const handleSpeak = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        if (hasAudio) {
-            playAudio()
-        } else {
-            speak(`Quote: "${text}". Author: ${author}`)
-        }
+    const handleSpeak = () => {
+        playAudio()
     }
 
     return (
@@ -52,14 +44,16 @@ export function QuoteRenderer({
                         <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Inspirational Quote</span>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={handleSpeak}
-                        className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#58CC02] transition-all cursor-pointer border-2 border-emerald-200 border-b-3 active:border-b-2 active:translate-y-[1px]"
-                        title={hasAudio ? "Play Audio Track" : "Read Aloud"}
-                    >
-                        <Volume2 className={cn("w-4 h-4", isSpeaking && "animate-pulse")} />
-                    </button>
+                    {hasAudio && (
+                        <ListenButton
+                            hasAudio={hasAudio}
+                            isPlaying={isPlaying}
+                            onClick={handleSpeak}
+                            showLabel={false}
+                            className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#58CC02] border-2 border-emerald-200 border-b-3 active:border-b-2 active:translate-y-[1px]"
+                            iconClassName="w-4 h-4"
+                        />
+                    )}
                 </div>
 
                 <blockquote className="text-base md:text-xl font-black text-slate-900 italic leading-relaxed tracking-tight">

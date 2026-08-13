@@ -143,7 +143,7 @@
                     "props": {
                         "title": "Tap the Hotspot Regions to Identify Rules & Permissions (Timed: 45s)",
                         "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
-                        "behavior": "quiz",
+                        "behavior": "discover",
                         "hotspots": [
                             {
                                 "id": "hs1",

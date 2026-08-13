@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { ComponentLibrary } from "@/components/component-library"
 import { SlideEditor } from "@/components/slide-editor"
-import { SlidePreview } from "@/components/slide-preview"
+import { BuilderLessonPreview } from "@/components/builder/BuilderLessonPreview"
 import { LessonControls } from "@/components/lesson-controls"
 import { SlideNavigator } from "@/components/slide-navigator"
 import { useMobile } from "@/hooks/use-mobile"
@@ -26,7 +26,8 @@ import { LoadLessonModal } from "@/components/modals/load-lesson-modal"
 import { useSearchParams } from 'next/navigation'
 import { apiClient } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
-import { generateBatchAudio, hashText, normalizeTextForSpeech } from '@/lib/audio-generator'
+import { generateBatchAudio, type AudioGenerationProgress } from '@/lib/audio-generator'
+import { applyLessonComponentAudioPatches, planLessonAudioPublish } from '@/lib/component-audio'
 
 import { LessonVerificationOverlay } from "@/components/builder/lesson-verification-overlay"
 import { validateLesson } from "@/lib/validation/master-validator"
@@ -40,6 +41,14 @@ export function LessonBuilder() {
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [previewMode, setPreviewMode] = useState(false)
+  const [previewSessionKey, setPreviewSessionKey] = useState(0)
+
+  const handleSetPreviewMode = useCallback((next: boolean) => {
+    if (next && !previewMode) {
+      setPreviewSessionKey((k) => k + 1)
+    }
+    setPreviewMode(next)
+  }, [previewMode])
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeSidebar, setActiveSidebar] = useState<"components" | "slides">("components")
   const [editingComponentId, setEditingComponentId] = useState<string | null>(null)
@@ -55,6 +64,15 @@ export function LessonBuilder() {
   const masterReport = React.useMemo(() => validateLesson(lesson), [lesson])
   const hasValidationErrors = !masterReport.isValid || masterReport.errors.length > 0
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false)
+  const [audioGenerationProgress, setAudioGenerationProgress] = useState<AudioGenerationProgress | null>(null)
+
+  const lessonIdForAudio = currentLessonId || lesson.id
+  const audioPublishPlan = useMemo(
+    () => planLessonAudioPublish(lesson, lessonIdForAudio),
+    [lesson, lessonIdForAudio],
+  )
+  const missingAudioCount = audioPublishPlan.pendingCount
+  const canPublish = hasUnpublishedChanges || missingAudioCount > 0
 
   const { toast } = useToast()
   const isMobile = useMobile()
@@ -360,63 +378,15 @@ export function LessonBuilder() {
     }
   }, [currentLessonId, lesson, toast]);
 
-  // Publish & Generate Audio for all text components (single batch server call)
+  // Publish & Generate Audio — resumes only missing/failed clips on retry
   const handlePublishAndGenerateAudio = useCallback(async () => {
     const lessonId = currentLessonId || lesson.id
     setIsGeneratingAudio(true)
+    setAudioGenerationProgress(null)
 
-    // 1. Collect all text components that need (re)generation
-    type Item = { componentId: string; text: string; lessonId: string; slideIdx: number; compIdx: number; newHash: string }
-    const itemsToGenerate: Item[] = []
-    const skippedIds = new Set<string>()
+    const plan = planLessonAudioPublish(lesson, lessonId)
+    const { componentItems: itemsToGenerate, slideCueItems, skippedIds } = plan
 
-    lesson.slides.forEach((slide, si) => {
-      slide.components.forEach((comp, ci) => {
-        if (!['paragraph', 'bulletList', 'heading'].includes(comp.type)) return
-
-        const rawText = comp.type === 'bulletList'
-          ? (comp.props?.items || []).join('. ')
-          : (comp.props?.content || '')
-
-        const cleanText = normalizeTextForSpeech(rawText)
-        if (!cleanText) return
-
-        const resolvedVoiceForHash = (lesson.voice && lesson.voice !== 'inherit') ? lesson.voice : 'default'
-        const newHash = hashText(`${cleanText}::${resolvedVoiceForHash}`)
-        const enableCache = process.env.NEXT_PUBLIC_ENABLE_AUDIO_CACHE === 'true'
-
-        if (enableCache && comp.props?.textHash === newHash && comp.props?.audioUrl) {
-          skippedIds.add(comp.id)
-          return // Cache enabled and unchanged (same text + same voice) — reuse existing audio
-        }
-
-        itemsToGenerate.push({ componentId: comp.id, text: cleanText, lessonId, slideIdx: si, compIdx: ci, newHash })
-      })
-    })
-
-    // 1b. Collect slide title cue items (one per slide)
-    type SlideCueItem = { componentId: string; text: string; lessonId: string; slideIdx: number; newHash: string }
-    const slideCueItems: SlideCueItem[] = []
-
-    lesson.slides.forEach((slide, si) => {
-      const rawTitle = `Slide ${si + 1}. ${slide.title}`
-      const cleanTitle = normalizeTextForSpeech(rawTitle)
-      if (!cleanTitle) return
-
-      const resolvedVoiceForHash = (lesson.voice && lesson.voice !== 'inherit') ? lesson.voice : 'default'
-      const newHash = hashText(`${cleanTitle}::${resolvedVoiceForHash}`)
-      const enableCache = process.env.NEXT_PUBLIC_ENABLE_AUDIO_CACHE === 'true'
-      const cueId = `slide-cue-${slide.id}`
-
-      if (enableCache && slide.titleTextHash === newHash && slide.titleAudioUrl) {
-        skippedIds.add(cueId)
-        return // Title unchanged (same text + same voice) — reuse existing cue audio
-      }
-
-      slideCueItems.push({ componentId: cueId, text: cleanTitle, lessonId, slideIdx: si, newHash })
-    })
-
-    // 2. Send ALL items to backend in one call (components + slide cues together)
     const resolvedVoice = (lesson.voice && lesson.voice !== "inherit") ? lesson.voice : undefined
     const allBatchItems = [
       ...itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId, voice: resolvedVoice })),
@@ -424,30 +394,22 @@ export function LessonBuilder() {
     ]
 
     let urlMap: Record<string, string | null> = {}
+    let succeeded = 0
+    let failed = 0
+
     if (allBatchItems.length > 0) {
-      urlMap = await generateBatchAudio(allBatchItems, resolvedVoice)
+      const result = await generateBatchAudio(allBatchItems, resolvedVoice, setAudioGenerationProgress)
+      urlMap = result.urlMap
+      succeeded = result.succeeded
+      failed = result.failed
+    } else {
+      setAudioGenerationProgress({ completed: 0, total: 0, percent: 100 })
     }
 
-    const generated = Object.values(urlMap).filter(Boolean).length
     const skipped = skippedIds.size
 
-    // 3. Patch lesson with new audioUrls and hashes for components
-    const updatedSlides = lesson.slides.map((slide, si) => {
-      // Patch component audio
-      const patchedComponents = slide.components.map((comp, ci) => {
-        const item = itemsToGenerate.find(i => i.slideIdx === si && i.compIdx === ci)
-        if (!item) return comp
-        return {
-          ...comp,
-          props: {
-            ...comp.props,
-            audioUrl: urlMap[comp.id] ?? comp.props?.audioUrl,
-            textHash: item.newHash,
-          }
-        }
-      })
-
-      // Patch slide title cue audio
+    const slidesWithComponentAudio = applyLessonComponentAudioPatches(lesson.slides, itemsToGenerate, urlMap)
+    const updatedSlides = slidesWithComponentAudio.map((slide, si) => {
       const slideCueItem = slideCueItems.find(i => i.slideIdx === si)
       const cueId = `slide-cue-${slide.id}`
       const newTitleAudioUrl = slideCueItem ? (urlMap[cueId] ?? slide.titleAudioUrl) : slide.titleAudioUrl
@@ -455,7 +417,6 @@ export function LessonBuilder() {
 
       return {
         ...slide,
-        components: patchedComponents,
         titleAudioUrl: newTitleAudioUrl,
         titleTextHash: newTitleTextHash,
       }
@@ -464,10 +425,12 @@ export function LessonBuilder() {
     const updatedLesson = { ...lesson, slides: updatedSlides }
     lastSavedLessonRef.current = JSON.stringify(updatedLesson)
     setLesson(updatedLesson)
-    setIsGeneratingAudio(false)
-    setHasUnpublishedChanges(false)
 
-    // 4. Auto-save to database
+    const remainingMissing = planLessonAudioPublish(updatedLesson, lessonId).pendingCount
+
+    setIsGeneratingAudio(false)
+    setAudioGenerationProgress(null)
+
     if (currentLessonId) {
       try {
         await apiClient.studio.updateLesson(currentLessonId, {
@@ -480,16 +443,22 @@ export function LessonBuilder() {
           level: updatedLesson.level,
           duration: updatedLesson.duration,
         } as any)
+        lastSavedLessonRef.current = JSON.stringify(updatedLesson)
+        setHasUnpublishedChanges(false)
       } catch (e) {
         console.error('[publish] DB save failed:', e)
+        setHasUnpublishedChanges(true)
       }
     }
 
     toast({
-      title: '🎙️ Audio Published!',
+      title: remainingMissing > 0 ? '🎙️ Audio partly published' : '🎙️ Audio Published!',
       description: allBatchItems.length === 0
         ? `All audio up to date (${skipped} unchanged)`
-        : `Generated: ${generated}${skipped > 0 ? `, Skipped: ${skipped}` : ''}`,
+        : remainingMissing > 0
+          ? `Generated: ${succeeded}, Still missing: ${remainingMissing} — click publish again to resume${skipped > 0 ? ` (${skipped} skipped)` : ''}`
+          : `Generated: ${succeeded}${skipped > 0 ? `, Skipped: ${skipped}` : ''}`,
+      variant: remainingMissing > 0 ? 'destructive' : undefined,
     })
   }, [lesson, currentLessonId, toast])
 
@@ -662,23 +631,36 @@ export function LessonBuilder() {
             onContextMenu={(e) => e.preventDefault()}
             className="flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#0F172A] text-slate-200 select-none relative"
           >
+            {!previewMode && (
             <LessonControls
               lesson={lesson}
               updateLessonMetadata={updateLessonMetadata}
               exportLesson={exportLesson}
               importLesson={importLesson}
               previewMode={previewMode}
-              setPreviewMode={setPreviewMode}
+              setPreviewMode={handleSetPreviewMode}
               isMobile={isMobile}
               onSaveToDatabase={saveToDatabase}
               isSaving={isSaving}
               onPublishAndGenerateAudio={handlePublishAndGenerateAudio}
               isGeneratingAudio={isGeneratingAudio}
+              audioGenerationProgress={audioGenerationProgress}
+              missingAudioCount={missingAudioCount}
+              canPublish={canPublish}
               hasUnpublishedChanges={hasUnpublishedChanges}
               hasValidationErrors={hasValidationErrors}
               className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
             />
+            )}
             <div className="flex flex-1 min-h-0 overflow-hidden relative">
+              {previewMode ? (
+                <BuilderLessonPreview
+                  key={previewSessionKey}
+                  lesson={lesson}
+                  onExitPreview={() => handleSetPreviewMode(false)}
+                />
+              ) : (
+              <>
               {/* Far left - Slide Navigator */}
               {!isMobile && (
                 <div className="w-[260px] border-r border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm">
@@ -700,25 +682,15 @@ export function LessonBuilder() {
               <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full max-w-full overflow-hidden bg-slate-950/50 pb-16 sm:pb-0">
                 <div className="flex-1 h-full min-h-0 w-full max-w-full flex flex-col p-1 sm:p-8 overflow-hidden">
                   <div className="w-full max-w-full sm:max-w-5xl flex-1 h-full min-h-0 sm:aspect-[16/9] bg-white rounded-xl shadow-2xl shadow-emerald-900/10 overflow-hidden relative border border-slate-800 mx-auto">
-                    {previewMode ? (
-                      <SlidePreview
-                        slide={currentSlide}
-                        onNext={handleNextSlide}
-                        onPrev={handlePrevSlide}
-                        isFirst={currentSlideIndex === 0}
-                        isLast={currentSlideIndex === lesson.slides.length - 1}
-                      />
-                    ) : (
-                      <SlideEditor
-                        slide={currentSlide}
-                        updateSlide={updateSlide}
-                        deleteSlide={deleteSlide}
-                        slideIndex={currentSlideIndex}
-                        onSelectComponent={handleSelectComponent}
-                        selectedComponentId={editingComponentId}
-                        className="h-full"
-                      />
-                    )}
+                    <SlideEditor
+                      slide={currentSlide}
+                      updateSlide={updateSlide}
+                      deleteSlide={deleteSlide}
+                      slideIndex={currentSlideIndex}
+                      onSelectComponent={handleSelectComponent}
+                      selectedComponentId={editingComponentId}
+                      className="h-full"
+                    />
                   </div>
                 </div>
               </div>
@@ -809,11 +781,12 @@ export function LessonBuilder() {
                   </SheetContent>
                 </Sheet>
               )}
+              </>
+              )}
             </div>
-          </div>
 
           {/* Mobile Bottom Action Bar — Fixed to bottom of viewport */}
-          {isMobile && (
+          {isMobile && !previewMode && (
             <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-2 py-2 border-t border-slate-800 bg-[#0F172A]/95 backdrop-blur-lg shadow-2xl shrink-0">
               <button
                 onClick={() => setSlidesSheetOpen(true)}
@@ -837,7 +810,7 @@ export function LessonBuilder() {
                 <span className="text-[10px] font-bold tracking-wider">Add Slide</span>
               </button>
               <button
-                onClick={() => setPreviewMode(!previewMode)}
+                onClick={() => handleSetPreviewMode(!previewMode)}
                 className={`flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-all ${previewMode
                   ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
                   : "text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60"
@@ -879,6 +852,7 @@ export function LessonBuilder() {
             isVisible={isVerifyingLesson}
             lessonTitle={lesson.title}
           />
+          </div>
         </CustomDndProvider>
       </ScoringProvider>
     </NavigationLockProvider >

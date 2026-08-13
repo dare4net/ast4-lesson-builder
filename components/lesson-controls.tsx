@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { useRouter } from "next/navigation"
 import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard, Mic, Volume2 } from "lucide-react"
 import type { Lesson } from "@/types/lesson"
+import type { AudioGenerationProgress } from "@/lib/audio-generator"
 import { defaultLesson } from "@/lib/default-lesson"
 import { useToast } from "@/components/ui/use-toast"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
@@ -45,6 +46,9 @@ interface LessonControlsProps {
   isSaving?: boolean
   onPublishAndGenerateAudio?: () => Promise<void>
   isGeneratingAudio?: boolean
+  audioGenerationProgress?: AudioGenerationProgress | null
+  missingAudioCount?: number
+  canPublish?: boolean
   hasUnpublishedChanges?: boolean
   hasValidationErrors?: boolean
 }
@@ -63,6 +67,9 @@ export function LessonControls({
   isSaving = false,
   onPublishAndGenerateAudio,
   isGeneratingAudio = false,
+  audioGenerationProgress = null,
+  missingAudioCount = 0,
+  canPublish = false,
   hasUnpublishedChanges = false,
   hasValidationErrors = false,
 }: LessonControlsProps) {
@@ -72,6 +79,31 @@ export function LessonControls({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
   const router = useRouter()
+
+  const publishDisabled = !canPublish || isGeneratingAudio || hasValidationErrors
+  const progressPercent = audioGenerationProgress?.percent ?? 0
+  const progressLabel = isGeneratingAudio && audioGenerationProgress
+    ? audioGenerationProgress.total > 0
+      ? `Generating ${progressPercent}%`
+      : "Generating..."
+    : null
+
+  const getPublishLabel = () => {
+    if (progressLabel) return progressLabel
+    if (hasValidationErrors) return "Fix Errors to Publish"
+    if (missingAudioCount > 0 && !hasUnpublishedChanges) return `Retry Audio (${missingAudioCount})`
+    if (missingAudioCount > 0 && hasUnpublishedChanges) return `Publish (${missingAudioCount} audio)`
+    if (canPublish) return "Publish Lesson"
+    return "Published & Saved"
+  }
+
+  const getPublishTitle = () => {
+    if (hasValidationErrors) return "Cannot publish: Fix verification errors in your lesson first"
+    if (isGeneratingAudio) return "Generating lesson audio..."
+    if (missingAudioCount > 0) return `${missingAudioCount} audio clip(s) still missing — click to resume generation`
+    if (canPublish) return "Generate audio & save lesson changes"
+    return "All changes and audio are up to date"
+  }
 
   const handleImportClick = () => {
     fileInputRef.current?.click()
@@ -173,12 +205,17 @@ export function LessonControls({
                 {onPublishAndGenerateAudio && (
                   <Button
                     variant="outline"
-                    disabled={!hasUnpublishedChanges || isGeneratingAudio || hasValidationErrors}
-                    className="w-full justify-start border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-bold"
+                    disabled={publishDisabled}
+                    className={cn(
+                      "w-full justify-start font-bold",
+                      missingAudioCount > 0
+                        ? "border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300"
+                        : "border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400",
+                    )}
                     onClick={() => { setIsMobileMenuOpen(false); onPublishAndGenerateAudio(); }}
                   >
-                    <Mic className="h-4 w-4 mr-3 text-emerald-400" />
-                    {isGeneratingAudio ? "Generating Audio..." : "Publish Lesson & Audio"}
+                    <Mic className="h-4 w-4 mr-3" />
+                    {getPublishLabel()}
                   </Button>
                 )}
                 {onSaveToDatabase && (
@@ -225,24 +262,27 @@ export function LessonControls({
             <Button
               size="sm"
               onClick={onPublishAndGenerateAudio}
-              disabled={!hasUnpublishedChanges || isGeneratingAudio || hasValidationErrors}
+              disabled={publishDisabled}
               className={cn(
-                "rounded-full px-3 h-8 text-[11px] font-bold shadow-md transition-all flex items-center gap-1",
+                "rounded-full px-3 h-8 text-[11px] font-bold shadow-md transition-all flex items-center gap-1 min-w-[88px]",
                 hasValidationErrors
                   ? "bg-rose-950/60 text-rose-400 border border-rose-800/80"
-                  : !hasUnpublishedChanges
+                  : !canPublish
                     ? "bg-slate-800/80 text-slate-500 border border-slate-800"
-                    : isGeneratingAudio
-                      ? "bg-slate-800 text-slate-400"
-                      : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                    : missingAudioCount > 0
+                      ? "bg-amber-600 hover:bg-amber-500 text-white"
+                      : isGeneratingAudio
+                        ? "bg-slate-800 text-slate-400"
+                        : "bg-emerald-600 hover:bg-emerald-500 text-white"
               )}
+              title={getPublishTitle()}
             >
               {isGeneratingAudio ? (
                 <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-400" />
               ) : (
                 <Mic className="h-3.5 w-3.5" />
               )}
-              <span>{isGeneratingAudio ? "Audio..." : "Publish"}</span>
+              <span>{progressLabel ?? (canPublish ? (missingAudioCount > 0 ? "Retry" : "Publish") : "Done")}</span>
             </Button>
           ) : (
             onSaveToDatabase && (
@@ -411,39 +451,40 @@ export function LessonControls({
             <Button
               size="sm"
               onClick={onPublishAndGenerateAudio}
-              disabled={!hasUnpublishedChanges || isGeneratingAudio || hasValidationErrors}
+              disabled={publishDisabled}
               className={cn(
-                "rounded-full px-5 font-bold shadow-md transition-all",
+                "rounded-full px-5 font-bold shadow-md transition-all min-w-[160px]",
                 hasValidationErrors
                   ? "bg-rose-950/60 text-rose-400 border border-rose-800/80 cursor-not-allowed"
-                  : !hasUnpublishedChanges
+                  : !canPublish
                     ? "bg-slate-800/80 text-slate-500 border border-slate-800 cursor-not-allowed"
-                    : isGeneratingAudio
-                      ? "bg-slate-800 text-slate-400 border border-slate-700"
-                      : "bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/30"
+                    : missingAudioCount > 0
+                      ? "bg-amber-600 hover:bg-amber-500 text-white border border-amber-500/30"
+                      : isGeneratingAudio
+                        ? "bg-slate-800 text-slate-400 border border-slate-700"
+                        : "bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-500/30"
               )}
-              title={
-                hasValidationErrors
-                  ? "Cannot publish: Fix verification errors in your lesson first"
-                  : hasUnpublishedChanges
-                    ? "Generate audio & save lesson changes"
-                    : "All changes and audio are up to date"
-              }
+              title={getPublishTitle()}
             >
               {isGeneratingAudio ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin text-emerald-400" />
-                  Generating Audio...
+                  {progressLabel}
                 </>
               ) : hasValidationErrors ? (
                 <>
                   <span className="text-rose-400 mr-1.5">⚠</span>
                   Fix Errors to Publish
                 </>
-              ) : hasUnpublishedChanges ? (
+              ) : missingAudioCount > 0 && !hasUnpublishedChanges ? (
                 <>
                   <Mic className="h-4 w-4 mr-2" />
-                  Publish Lesson
+                  Retry Audio ({missingAudioCount})
+                </>
+              ) : canPublish ? (
+                <>
+                  <Mic className="h-4 w-4 mr-2" />
+                  {missingAudioCount > 0 ? `Publish (${missingAudioCount} audio)` : "Publish Lesson"}
                 </>
               ) : (
                 <>

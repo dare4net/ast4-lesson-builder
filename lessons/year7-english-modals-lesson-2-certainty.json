@@ -152,7 +152,7 @@
                     "props": {
                         "title": "Tap the Hotspots to Analyze the Modal Strength of Each Deduction",
                         "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
-                        "behavior": "discovery",
+                        "behavior": "explore",
                         "hotspots": [
                             {
                                 "id": "hs1",

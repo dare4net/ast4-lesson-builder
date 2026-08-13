@@ -1,10 +1,12 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
-import { ChevronDown, Volume2, BookOpen } from "lucide-react"
-import { useReadAloud } from "@/context/read-aloud-context"
-import { useAudioPlayer } from "@/hooks/use-audio-player"
+import { ChevronDown, CheckCircle2 } from "lucide-react"
+import { ListenButton } from "@/components/renderers/listen-button"
+import { useFeedback } from "@/hooks/use-feedback"
+import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import type { Component } from "@/types/lesson"
 
 interface AccordionItem {
     id?: string
@@ -18,6 +20,17 @@ interface AccordionRendererProps {
     items?: AccordionItem[]
     allowMultiple?: boolean
     isEditing?: boolean
+    savedState?: AccordionState
+    setComponentState?: (state: AccordionState) => void
+    id?: string
+    status?: string
+    disabled?: boolean
+}
+
+type AccordionState = {
+    openIds: string[]
+    openedIds: string[]
+    status?: "active" | "completed"
 }
 
 const PASTEL_THEMES = [
@@ -89,103 +102,301 @@ const PASTEL_THEMES = [
     },
 ]
 
+function useAccordionAudio() {
+    const audioRef = useRef<HTMLAudioElement | null>(null)
+    const [playingItemId, setPlayingItemId] = React.useState<string | null>(null)
+
+    const stopAudio = useCallback(() => {
+        if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+            audioRef.current.src = ""
+            audioRef.current = null
+        }
+        setPlayingItemId(null)
+    }, [])
+
+    const playItemAudio = useCallback((itemId: string, audioUrl?: string) => {
+        if (!audioUrl) return
+
+        stopAudio()
+
+        const audio = new Audio(audioUrl)
+        audioRef.current = audio
+        setPlayingItemId(itemId)
+
+        audio.onended = () => {
+            setPlayingItemId((current) => (current === itemId ? null : current))
+        }
+        audio.onerror = () => {
+            setPlayingItemId((current) => (current === itemId ? null : current))
+        }
+
+        audio.play().catch((err) => {
+            console.warn("[accordion] audio play blocked:", err)
+            setPlayingItemId((current) => (current === itemId ? null : current))
+        })
+    }, [stopAudio])
+
+    useEffect(() => () => stopAudio(), [stopAudio])
+
+    return {
+        playingItemId,
+        playItemAudio,
+        stopAudio,
+        isPlayingItem: (itemId: string) => playingItemId === itemId,
+    }
+}
+
 const AccordionItemCard = ({
     item,
     idx,
     isOpen,
-    toggleItem,
+    isOpened,
+    isPlaying,
+    hasAudio,
+    onToggle,
+    onVolumeClick,
 }: {
     item: AccordionItem
     idx: number
     isOpen: boolean
-    toggleItem: (id: string) => void
+    isOpened: boolean
+    isPlaying: boolean
+    hasAudio: boolean
+    onToggle: () => void
+    onVolumeClick: () => void
 }) => {
-    const itemId = item.id || `acc-${idx}`
     const theme = PASTEL_THEMES[idx % PASTEL_THEMES.length]
-    const { speak, isSpeaking: isTtsSpeaking } = useReadAloud()
-    const { isPlaying: isAudioPlaying, hasAudio, play: playAudio } = useAudioPlayer({
-        audioUrl: item.audioUrl,
-    })
-
-    const isSpeaking = isAudioPlaying || isTtsSpeaking
-
-    const handleSpeakItem = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        if (hasAudio) {
-            playAudio()
-        } else {
-            speak(`${item.title}. ${item.content}`)
-        }
-    }
 
     return (
         <div
             className={cn(
                 "rounded-2xl border-2 border-b-4 transition-all duration-200 overflow-hidden shadow-xs",
-                isOpen ? cn(theme.openBg, theme.openBorder) : cn(theme.bg, theme.border)
+                isOpen ? cn(theme.openBg, theme.openBorder) : cn(theme.bg, theme.border),
+                isOpened && !isOpen && "ring-1 ring-emerald-300/60",
             )}
         >
-            {/* Header Trigger */}
             <div
                 className={cn(
                     "w-full flex items-center justify-between p-4 text-left font-black text-base transition-colors select-none",
-                    theme.text
+                    theme.text,
                 )}
             >
-                {/* Clickable toggle area */}
                 <button
                     type="button"
-                    onClick={() => toggleItem(itemId)}
+                    onClick={onToggle}
                     className="flex-1 flex items-center gap-3 pr-4 cursor-pointer text-left"
                 >
                     <div
                         className={cn(
                             "w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black transition-all shrink-0 border-2 shadow-2xs",
-                            isOpen ? theme.badgeOpen : theme.badgeClosed
+                            isOpen ? theme.badgeOpen : isOpened ? "bg-emerald-100 text-emerald-800 border-emerald-300" : theme.badgeClosed,
                         )}
                     >
-                        {idx + 1}
+                        {isOpened ? "✓" : idx + 1}
                     </div>
                     <span className="tracking-tight text-slate-900 font-extrabold">{item.title}</span>
                 </button>
 
                 <div className="flex items-center gap-2 shrink-0">
-                    <button
-                        type="button"
-                        onClick={handleSpeakItem}
-                        className="p-2 rounded-xl bg-white/80 hover:bg-white text-slate-600 hover:text-slate-950 transition-all cursor-pointer border-2 border-slate-200 border-b-3 active:border-b-2 active:translate-y-[1px]"
-                        title={hasAudio ? "Play Audio Track" : "Read Aloud"}
-                    >
-                        <Volume2 className={cn("w-4 h-4", isSpeaking && cn("animate-pulse", theme.activeAudio))} />
-                    </button>
+                    {hasAudio && (
+                        <ListenButton
+                            hasAudio={hasAudio}
+                            isPlaying={isPlaying && isOpen}
+                            onClick={onVolumeClick}
+                            showLabel={false}
+                            className={cn(
+                                "p-2 rounded-xl bg-white/80 hover:bg-white text-slate-600 hover:text-slate-950 border-2 border-slate-200 border-b-3 active:border-b-2 active:translate-y-[1px]",
+                                !isOpen && "opacity-80",
+                            )}
+                            iconClassName={cn("w-4 h-4", isPlaying && isOpen && theme.activeAudio)}
+                        />
+                    )}
 
                     <button
                         type="button"
-                        onClick={() => toggleItem(itemId)}
+                        onClick={onToggle}
                         className="p-1 cursor-pointer"
                         aria-label="Toggle section"
                     >
                         <ChevronDown
                             className={cn(
                                 "w-5 h-5 text-slate-500 transition-transform duration-300",
-                                isOpen && "transform rotate-180 text-slate-900"
+                                isOpen && "transform rotate-180 text-slate-900",
                             )}
                         />
                     </button>
                 </div>
             </div>
 
-            {/* Content Drawer */}
             {isOpen && (
                 <div
                     className={cn(
                         "px-5 pb-5 pt-3 text-sm font-bold leading-relaxed text-slate-800 border-t-2 border-dashed animate-in slide-in-from-top-1 duration-200",
-                        theme.divider
+                        theme.divider,
                     )}
                 >
                     <p>{item.content}</p>
                 </div>
             )}
+        </div>
+    )
+}
+
+function AccordionContent({
+    title,
+    items,
+    allowMultiple,
+    isEditing,
+    state,
+    setState,
+    isComplete,
+}: InteractiveRenderProps<AccordionState> & {
+    title: string
+    items: AccordionItem[]
+    allowMultiple: boolean
+    isEditing: boolean
+}) {
+    const { playFeedback } = useFeedback()
+    const { playItemAudio, stopAudio, isPlayingItem } = useAccordionAudio()
+
+    const itemIds = items.map((item, idx) => item.id || `acc-${idx}`)
+    const { openIds, openedIds } = state
+    const exploredCount = openedIds.length
+    const totalCount = items.length
+
+    const markOpened = useCallback((itemId: string, audioUrl?: string) => {
+        let justCompleted = false
+
+        setState((prev) => {
+            const nextOpened = prev.openedIds.includes(itemId)
+                ? prev.openedIds
+                : [...prev.openedIds, itemId]
+
+            const allOpened = itemIds.length > 0 && itemIds.every((id) => nextOpened.includes(id))
+            justCompleted = allOpened && prev.status !== "completed"
+
+            return {
+                ...prev,
+                openedIds: nextOpened,
+                status: allOpened ? "completed" : prev.status ?? "active",
+            }
+        })
+
+        if (justCompleted) {
+            void playFeedback("quizSuccess", { sound: true })
+        }
+
+        if (audioUrl) {
+            playItemAudio(itemId, audioUrl)
+        }
+    }, [itemIds, playFeedback, playItemAudio, setState])
+
+    const openItem = useCallback((itemId: string, audioUrl?: string) => {
+        setState((prev) => {
+            const nextOpenIds = allowMultiple
+                ? prev.openIds.includes(itemId) ? prev.openIds : [...prev.openIds, itemId]
+                : [itemId]
+
+            return { ...prev, openIds: nextOpenIds }
+        })
+        markOpened(itemId, audioUrl)
+    }, [allowMultiple, markOpened, setState])
+
+    const closeItem = useCallback((itemId: string) => {
+        if (isPlayingItem(itemId)) {
+            stopAudio()
+        }
+        setState((prev) => ({
+            ...prev,
+            openIds: prev.openIds.filter((id) => id !== itemId),
+        }))
+    }, [isPlayingItem, setState, stopAudio])
+
+    const toggleItem = useCallback((itemId: string, audioUrl?: string) => {
+        void playFeedback("click", { sound: true, animation: false })
+        const isOpen = openIds.includes(itemId)
+        if (isOpen) {
+            closeItem(itemId)
+        } else {
+            if (!allowMultiple) {
+                openIds.forEach((id) => {
+                    if (id !== itemId && isPlayingItem(id)) stopAudio()
+                })
+            }
+            openItem(itemId, audioUrl)
+        }
+    }, [allowMultiple, closeItem, openIds, openItem, playFeedback, isPlayingItem, stopAudio])
+
+    const handleVolumeClick = useCallback((itemId: string, audioUrl: string | undefined, isOpen: boolean) => {
+        if (isOpen) return
+
+        if (!allowMultiple) {
+            openIds.forEach((id) => {
+                if (id !== itemId && isPlayingItem(id)) stopAudio()
+            })
+        }
+        openItem(itemId, audioUrl)
+    }, [allowMultiple, openIds, openItem, isPlayingItem, stopAudio])
+
+    if (isEditing) {
+        return (
+            <div className="w-full my-6 max-w-4xl mx-auto space-y-2">
+                {title && <h3 className="font-black text-lg tracking-tight text-slate-900">{title}</h3>}
+                {items.map((item, idx) => (
+                    <div key={item.id || idx} className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <p className="font-bold text-slate-900">{item.title}</p>
+                        <p className="text-sm text-slate-600 mt-1">{item.content}</p>
+                        {item.audioUrl && (
+                            <p className="text-[10px] text-emerald-600 mt-2 uppercase tracking-wider font-bold">Audio published</p>
+                        )}
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    return (
+        <div className="w-full my-6 flex flex-col items-center justify-center">
+            <div className="w-full max-w-4xl space-y-3">
+                {title && (
+                    <div className="px-1 py-1 mb-2 flex items-end justify-between gap-3">
+                        <h3 className="font-black text-lg tracking-tight text-slate-900">{title}</h3>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 shrink-0">
+                            {exploredCount} / {totalCount} opened
+                        </span>
+                    </div>
+                )}
+
+                {items.map((item, idx) => {
+                    const itemId = itemIds[idx]
+                    const isOpen = openIds.includes(itemId)
+                    const isOpened = openedIds.includes(itemId)
+                    const hasAudio = Boolean(item.audioUrl)
+
+                    return (
+                        <AccordionItemCard
+                            key={itemId}
+                            item={item}
+                            idx={idx}
+                            isOpen={isOpen}
+                            isOpened={isOpened}
+                            isPlaying={isPlayingItem(itemId)}
+                            hasAudio={hasAudio}
+                            onToggle={() => toggleItem(itemId, item.audioUrl)}
+                            onVolumeClick={() => handleVolumeClick(itemId, item.audioUrl, isOpen)}
+                        />
+                    )
+                })}
+
+                {isComplete && (
+                    <div className="mt-2 p-3.5 rounded-2xl bg-emerald-50 border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] text-emerald-950 flex items-center gap-2 font-black text-xs uppercase tracking-wider">
+                        <CheckCircle2 className="w-5 h-5 text-[#58CC02]" />
+                        <span>All sections explored!</span>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
@@ -197,42 +408,43 @@ export function AccordionRenderer({
         { id: "2", title: "Why is it important?", content: "Key significance and context." },
     ],
     allowMultiple = false,
+    isEditing = false,
+    savedState,
+    setComponentState,
+    id = "accordion-component",
+    status,
+    disabled = false,
 }: AccordionRendererProps) {
-    const [openIds, setOpenIds] = useState<string[]>(["1"])
+    const component: Component = {
+        id,
+        type: "accordion",
+        state: "active",
+        status: (status || savedState?.status || "uncompleted") as Component["status"],
+        props: { title, items, allowMultiple },
+    } as Component
 
-    const toggleItem = (id: string) => {
-        if (allowMultiple) {
-            setOpenIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
-        } else {
-            setOpenIds((prev) => (prev.includes(id) ? [] : [id]))
-        }
+    const initialState: AccordionState = {
+        openIds: [],
+        openedIds: [],
+        status: "active",
     }
 
     return (
-        <div className="w-full my-6 flex flex-col items-center justify-center">
-            <div className="w-full max-w-4xl space-y-3">
-                {/* Top Section Header Banner (Flat title without icon) */}
-                {title && (
-                    <div className="px-1 py-1 mb-2 text-slate-900">
-                        <h3 className="font-black text-lg tracking-tight">{title}</h3>
-                    </div>
-                )}
-
-                {items.map((item, idx) => {
-                    const itemId = item.id || `acc-${idx}`
-                    const isOpen = openIds.includes(itemId)
-
-                    return (
-                        <AccordionItemCard
-                            key={itemId}
-                            item={item}
-                            idx={idx}
-                            isOpen={isOpen}
-                            toggleItem={toggleItem}
-                        />
-                    )
-                })}
-            </div>
-        </div>
+        <InteractiveRenderer<AccordionState>
+            component={component}
+            initialState={initialState}
+            savedState={savedState}
+            setComponentState={disabled ? undefined : setComponentState}
+            disabled={disabled}
+            onRender={(renderProps) => (
+                <AccordionContent
+                    {...renderProps}
+                    title={title}
+                    items={items}
+                    allowMultiple={allowMultiple}
+                    isEditing={isEditing}
+                />
+            )}
+        />
     )
 }

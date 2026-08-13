@@ -106,7 +106,7 @@
                     "type": "hotspot",
                     "title": "Tap the Hotspots to Uncover Hyperbole & Onomatopoeia",
                     "image": "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?q=80&w=1000&auto=format&fit=crop",
-                    "behavior": "discovery",
+                    "behavior": "explore",
                     "hotspots": [
                         {
                             "id": "spot-1",

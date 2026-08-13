@@ -1,23 +1,5 @@
-import { Lesson, Component, ComponentType } from "@/types/lesson"
-
-const SCORED_COMPONENT_TYPES: ComponentType[] = [
-    "quiz",
-    "trueFalse",
-    "annotateImage",
-    "categorise",
-    "timeline",
-    "dragDrop",
-    "matchingPairs",
-    "fillInTheBlank",
-    "codeEditor",
-    "hotspot",
-    "flashcardQuiz",
-    "multiSelectQuiz",
-    "wordScramble",
-    "memoryGrid",
-    "spinTheWheel",
-    // "clickableImage" maps to hotspot
-]
+import { Lesson, Component } from "@/types/lesson"
+import { isScoredComponentType } from "@/lib/component-registry"
 
 export const ScoringService = {
     /**
@@ -42,7 +24,7 @@ export const ScoringService = {
      * Checks if a component is a scored type
      */
     isScoredComponent(component: Component): boolean {
-        return SCORED_COMPONENT_TYPES.includes(component.type) && (component.props.points || 0) > 0
+        return isScoredComponentType(component.type) && (component.props.points || 0) > 0
     },
 
     /**

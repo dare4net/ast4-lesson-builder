@@ -78,7 +78,7 @@ export function EditLessonSettingsModal({
             const resolvedVoice = (voice && voice !== "inherit") ? voice : (moduleVoice || "en-GB-SoniaNeural");
 
             try {
-                const audioMap = await generateBatchAudio(
+                const { urlMap: audioMap } = await generateBatchAudio(
                     [
                         {
                             componentId: "intro",

@@ -142,7 +142,7 @@ export function CalloutEditor({
                     className="bg-slate-950/60 border-slate-800 focus-visible:ring-sky-500/50 h-10 text-xs font-mono placeholder:text-slate-700 rounded-xl text-slate-400"
                 />
                 <p className="text-[10px] text-slate-500 font-medium">
-                    Plays audio narration when student taps the audio icon on the callout card.
+                    Plays automatically when the callout appears in the lesson. Students can replay via the listen button.
                 </p>
             </div>
         </div>

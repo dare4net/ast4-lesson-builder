@@ -8,6 +8,35 @@ cloudinary.config({
     secure: true,
 })
 
+type ImageUploadVariant = 'lesson' | 'thumbnail'
+
+/** Max edge length — stored asset is capped here; originals are not kept at full resolution. */
+const IMAGE_MAX_DIMENSION: Record<ImageUploadVariant, number> = {
+    lesson: Number(process.env.CLOUDINARY_IMAGE_MAX_WIDTH) || 1600,
+    thumbnail: Number(process.env.CLOUDINARY_THUMBNAIL_MAX_WIDTH) || 800,
+}
+
+/**
+ * Incoming upload transformations applied before Cloudinary stores the file.
+ * The saved asset is the optimized version, not the uploaded original.
+ */
+function getOptimizedImageUploadOptions(variant: ImageUploadVariant) {
+    const max = IMAGE_MAX_DIMENSION[variant]
+    return {
+        transformation: `c_limit,w_${max},h_${max}/q_auto:good/f_auto/fl_strip_profile`,
+    }
+}
+
+function baseImageUploadOptions(publicId: string, variant: ImageUploadVariant) {
+    return {
+        public_id: publicId,
+        resource_type: 'image' as const,
+        overwrite: true,
+        invalidate: true,
+        ...getOptimizedImageUploadOptions(variant),
+    }
+}
+
 /**
  * Uploads an audio MP3 file to Cloudinary.
  *
@@ -76,12 +105,7 @@ export async function uploadImageToCloudinary(
     try {
         const publicId = `ast_images/${lessonId}/${componentId}`
 
-        const result = await cloudinary.uploader.upload(filePath, {
-            public_id: publicId,
-            resource_type: 'image',
-            overwrite: true,
-            invalidate: true,
-        })
+        const result = await cloudinary.uploader.upload(filePath, baseImageUploadOptions(publicId, 'lesson'))
 
         if (!result || !result.secure_url) {
             throw new Error(`Cloudinary image upload returned invalid response for ${componentId}`)
@@ -106,12 +130,7 @@ export async function uploadImageBufferToCloudinary(
     return new Promise((resolve, reject) => {
         const publicId = `ast_images/${lessonId}/${componentId}`
         const uploadStream = cloudinary.uploader.upload_stream(
-            {
-                public_id: publicId,
-                resource_type: 'image',
-                overwrite: true,
-                invalidate: true,
-            },
+            baseImageUploadOptions(publicId, 'lesson'),
             (error, result) => {
                 if (error || !result?.secure_url) {
                     console.error(`[Cloudinary] Buffer upload failed for ${componentId}:`, error)
@@ -177,12 +196,7 @@ export async function uploadThumbnailToCloudinary(
         return imageDataUrl
     }
     const publicId = `ast_thumbnails/${type}_${id}`
-    const result = await cloudinary.uploader.upload(imageDataUrl, {
-        public_id: publicId,
-        resource_type: 'image',
-        overwrite: true,
-        invalidate: true,
-    })
+    const result = await cloudinary.uploader.upload(imageDataUrl, baseImageUploadOptions(publicId, 'thumbnail'))
 
     if (!result || !result.secure_url) {
         throw new Error(`Cloudinary thumbnail upload failed for ${type} ${id}`)

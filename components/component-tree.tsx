@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Component, ComponentType } from "@/types/lesson";
+import { resolveHotspotComponentProps } from "@/lib/hotspot-utils";
 import { validateSingleComponent } from "@/lib/validation/registry";
 import { ComponentValidationResult } from "@/lib/validation/types";
 import { VerificationModal } from "@/components/builder/verification-modal";
@@ -83,7 +84,9 @@ function getComponentIcon(type: ComponentType) {
 
 // Helper to get descriptive label for a component
 function getComponentLabel(component: Component): string {
-    const props = component.props || {};
+    const props = component.type === "hotspot"
+        ? resolveHotspotComponentProps(component)
+        : (component.props || {});
     if (props.title) return props.title;
     if (props.content && typeof props.content === "string") {
         const clean = props.content.replace(/<[^>]*>?/gm, "").trim();

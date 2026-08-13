@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { SoundEffects, SoundEffect } from '../lib/sound-effects';
 
-type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson';
+type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'categorizeSlot' | 'categorizeBucketComplete' | 'softMiss' | 'blockedClick';
 
 interface FeedbackOptions {
   animation?: boolean;

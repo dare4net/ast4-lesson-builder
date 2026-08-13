@@ -14,7 +14,6 @@ import { TutorLessonContent } from './TutorLessonContent';
 
 import { ScoringProvider } from '@/context/scoring-context';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
-import { ReadAloudProvider } from '@/context/read-aloud-context';
 
 import { SoundEffects } from '@/lib/sound-effects';
 
@@ -214,7 +213,6 @@ export function TutorLessonViewer({
     return (
         <ScoringProvider lesson={lessonData} initialScore={resolvedInteraction?.lessonState?.score || 0}>
             <NavigationLockProvider>
-                <ReadAloudProvider initialEnabled={false}>
                     <div className="h-screen w-screen flex overflow-hidden bg-slate-950">
                         {/* Desktop Sidebar */}
                         <div className={cn(
@@ -291,7 +289,6 @@ export function TutorLessonViewer({
                             </div>
                         </div>
                     </div>
-                </ReadAloudProvider>
             </NavigationLockProvider>
         </ScoringProvider>
     );

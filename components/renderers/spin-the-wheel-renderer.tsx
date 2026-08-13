@@ -2,80 +2,27 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
-import { RotateCw, Volume2, Award, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
-import { useReadAloud } from "@/context/read-aloud-context"
+import { RotateCw, Award, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
+import { playWheelSpin } from "@/lib/sound-effects"
+import {
+    resolveSpinTheWheelQuestions,
+    type QuestionType,
+    type WheelQuestion,
+} from "@/lib/spin-the-wheel-utils"
 
-// ── Types ──────────────────────────────────────────────────────────────────────
-
-export type QuestionType = "multipleChoice" | "inputAnswer" | "trueFalse"
-
-export interface WheelQuestion {
-    id: string
-    type: QuestionType
-    prompt: string
-    // multipleChoice
-    options?: string[]
-    correctOptionIndex?: number
-    // inputAnswer
-    keywords?: string[]
-    // trueFalse
-    isTrue?: boolean
-    // shared
-    explanation?: string
-}
-
-export const DEFAULT_WHEEL_QUESTIONS: WheelQuestion[] = [
-    {
-        id: "q1",
-        type: "multipleChoice",
-        prompt: "What gas do plants absorb from the atmosphere for photosynthesis?",
-        options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
-        correctOptionIndex: 0,
-        explanation: "Plants take in carbon dioxide and release oxygen during photosynthesis.",
-    },
-    {
-        id: "q2",
-        type: "trueFalse",
-        prompt: "Sound travels faster in air than in water.",
-        isTrue: false,
-        explanation: "Sound travels about 4 times faster in water because water particles are denser.",
-    },
-    {
-        id: "q3",
-        type: "inputAnswer",
-        prompt: "What is the hardest natural substance on Earth?",
-        keywords: ["diamond"],
-        explanation: "Diamond is carbon arranged in a crystal lattice structure.",
-    },
-    {
-        id: "q4",
-        type: "multipleChoice",
-        prompt: "Which organ in the human body pumps blood?",
-        options: ["Brain", "Lungs", "Heart", "Liver"],
-        correctOptionIndex: 2,
-        explanation: "The heart is a muscular organ that pumps blood through the circulatory system.",
-    },
-    {
-        id: "q5",
-        type: "trueFalse",
-        prompt: "The Earth revolves around the Sun.",
-        isTrue: true,
-        explanation: "It takes approximately 365.25 days for Earth to complete one orbit around the Sun.",
-    },
-    {
-        id: "q6",
-        type: "inputAnswer",
-        prompt: "What force pulls objects toward the center of the Earth?",
-        keywords: ["gravity"],
-        explanation: "Gravity is a fundamental force of attraction between masses.",
-    },
-]
+export type { QuestionType, WheelQuestion }
+export {
+    DEFAULT_WHEEL_QUESTIONS,
+    normalizeWheelQuestion,
+    normalizeWheelQuestions,
+} from "@/lib/spin-the-wheel-utils"
 
 interface SpinTheWheelRendererProps {
     id?: string
     title?: string
     questions?: WheelQuestion[]
+    items?: unknown[]
     requiredSpins?: number
     points?: number
     savedState?: any
@@ -299,31 +246,79 @@ export function SpinTheWheelRenderer({
     id = "spin-the-wheel-component",
     title = "Spin the Wheel",
     questions = [],
+    items,
     requiredSpins = 3,
     points = 20,
     savedState,
     setComponentState,
     isEditing = false,
 }: SpinTheWheelRendererProps) {
-    const [rotation, setRotation] = useState(0)
+    const [rotation, setRotation] = useState(savedState?.rotation ?? 0)
     const [isSpinning, setIsSpinning] = useState(false)
-    const [currentQuestion, setCurrentQuestion] = useState<WheelQuestion | null>(null)
-    const [questionKey, setQuestionKey] = useState(0) // force remount of question card
+    const safeQuestions = React.useMemo(
+        () => resolveSpinTheWheelQuestions({ questions, items }),
+        [questions, items],
+    )
+    const [currentQuestion, setCurrentQuestion] = useState<WheelQuestion | null>(() => {
+        if (savedState?.currentQuestionId) {
+            return safeQuestions.find(q => q.id === savedState.currentQuestionId) ?? null
+        }
+        return null
+    })
+    const [questionKey, setQuestionKey] = useState(0)
     const [spinsCompleted, setSpinsCompleted] = useState(savedState?.spinsCompleted ?? 0)
     const [correctCount, setCorrectCount] = useState(savedState?.correctCount ?? 0)
     const [completedIds, setCompletedIds] = useState<string[]>(savedState?.completedIds ?? [])
     const [activityDone, setActivityDone] = useState(savedState?.completed ?? false)
-    const [answerSubmitted, setAnswerSubmitted] = useState(false)
+    const [answerSubmitted, setAnswerSubmitted] = useState(savedState?.answerSubmitted ?? false)
 
-    const { speak, isSpeaking } = useReadAloud()
     const { playFeedback } = useFeedback()
     const spinTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-    const safeQuestions = (questions && questions.length > 0) ? questions : DEFAULT_WHEEL_QUESTIONS
     const activeQuestions = safeQuestions.filter(q => !completedIds.includes(q.id))
     const displayQuestions = activeQuestions.length > 0 ? activeQuestions : safeQuestions
     const activeSliceAngle = 360 / Math.max(displayQuestions.length, 1)
     const SPIN_DURATION = 6500
+
+    // Persist in-progress state so Next → Previous restores mid-activity progress
+    useEffect(() => {
+        if (!setComponentState) return
+        setComponentState({
+            status: activityDone ? "completed" : "active",
+            score: activityDone ? Math.round((correctCount / requiredSpins) * points) : undefined,
+            maxScore: points,
+            spinsCompleted,
+            correctCount,
+            completedIds,
+            completed: activityDone,
+            currentQuestionId: currentQuestion?.id ?? null,
+            answerSubmitted,
+            rotation,
+        })
+    }, [
+        spinsCompleted,
+        correctCount,
+        completedIds,
+        activityDone,
+        currentQuestion,
+        answerSubmitted,
+        rotation,
+        setComponentState,
+        requiredSpins,
+        points,
+    ])
+
+    // Restore active question card when remounting mid-activity
+    useEffect(() => {
+        if (currentQuestion || !savedState?.currentQuestionId) return
+        const restored = safeQuestions.find(q => q.id === savedState.currentQuestionId)
+        if (restored) {
+            setCurrentQuestion(restored)
+            if (savedState.answerSubmitted) {
+                setAnswerSubmitted(true)
+            }
+        }
+    }, [savedState?.currentQuestionId, safeQuestions])
 
     // Pick a random question that hasn't been completed yet (or any if all done)
     const getNextQuestion = (): WheelQuestion | null => {
@@ -339,12 +334,13 @@ export function SpinTheWheelRenderer({
             // Clear question before next spin
             setCurrentQuestion(null)
             setAnswerSubmitted(false)
+            void playFeedback("click", { sound: true, animation: false })
             return
         }
 
         setIsSpinning(true)
         setCurrentQuestion(null)
-        playFeedback("click", { sound: true })
+        playWheelSpin(SPIN_DURATION)
 
         // Determine which question to show
         const targetQuestion = getNextQuestion()!
@@ -365,7 +361,6 @@ export function SpinTheWheelRenderer({
             setIsSpinning(false)
             setCurrentQuestion(targetQuestion)
             setQuestionKey(prev => prev + 1)
-            playFeedback("click", { sound: true })
         }, SPIN_DURATION)
     }
 
@@ -413,13 +408,6 @@ export function SpinTheWheelRenderer({
         setActivityDone(false)
     }
 
-    const handleSpeak = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        speak(currentQuestion
-            ? `Question: ${currentQuestion.prompt}`
-            : `${title}. Spin the wheel to reveal your question.`)
-    }
-
     const cx = 150, cy = 150, r = 140
 
     const canSpin = !isSpinning && !isEditing && safeQuestions.length > 0 && !activityDone
@@ -436,14 +424,6 @@ export function SpinTheWheelRenderer({
                             Spin the Wheel • {points} Points
                         </span>
                     </div>
-                    <button
-                        type="button"
-                        onClick={handleSpeak}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 active:scale-95 cursor-pointer shadow-sm transition-all"
-                    >
-                        <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse text-amber-600")} />
-                        <span className="text-[9px] font-black uppercase tracking-wider">Listen</span>
-                    </button>
                 </div>
 
                 {/* Main Content Grid: Landscape Side-by-Side on LG screens */}

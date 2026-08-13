@@ -7,6 +7,7 @@ import { Slider } from "@/components/ui/slider"
 import { Sliders, Lock, CheckCircle2, Send } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
+import { playSliderTick } from "@/lib/sound-effects"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
@@ -92,15 +93,20 @@ function ScaleSliderContent({
 
     const handleSliderChange = (vals: number[]) => {
         if (disabledProp || isSubmitted) return
+        const next = vals[0]
+        if (next !== selectedValue) {
+            playSliderTick()
+        }
         setState(prev => ({
             ...prev,
-            selectedValue: vals[0]
+            selectedValue: next
         }))
     }
 
     const handleSubmit = async () => {
         if (disabledProp || isSubmitted) return
 
+        void playFeedback("click", { sound: true, animation: false })
         await playFeedback("quizSuccess")
         handlePoints(props.points || 10)
 

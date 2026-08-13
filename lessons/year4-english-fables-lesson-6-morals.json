@@ -1,197 +1,472 @@
 {
-    "id": "year4-english-fables-lesson-6-morals",
-    "title": "Extracting Morals & Life Lessons from Fables",
-    "description": "Learn how to extract universal morals and practical life lessons from fable plots by analyzing character choices and their consequences.",
-    "duration": 30,
-    "level": "Year 4",
-    "slides": [
+  "id": "year4-english-fables-lesson-6-morals",
+  "title": "Extracting Morals & Life Lessons from Fables",
+  "description": "Lesson 6 in the Fables series. Learn how to uncover the universal life lesson hidden inside every fable — by studying character choices, consequences, and the advice the story leaves behind.",
+  "voice": "en-GB-LibbyNeural",
+  "settings": {
+    "duration": 35,
+    "level": "Year 4"
+  },
+  "author": "Damilare Adeyemi Adepoju",
+  "slides": [
+    {
+      "id": "slide-ext6-01",
+      "title": "Welcome to the Moral Detective Agency",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
         {
-            "id": "slide-1",
-            "title": "What is a Fable's Moral?",
-            "subtitle": "Uncovering the Core Life Lesson",
-            "layout": "hero",
-            "components": [
-                {
-                    "id": "moral-intro-text",
-                    "type": "text",
-                    "content": "### Understanding the Moral\n\nThe **moral** of a fable is the fundamental lesson or piece of advice about human behavior that the story teaches.\n\nWhile the characters are usually talking animals, the moral applies directly to real-life decisions—such as honesty, kindness, perseverance, and avoiding greed or foolish pride."
-                },
-                {
-                    "id": "fable-morals-table",
-                    "type": "table",
-                    "title": "Famous Fables & Their Morals",
-                    "rows": 4,
-                    "columns": 3,
-                    "data": [
-                        [
-                            "Fable Title",
-                            "Character Actions",
-                            "The Moral (Life Lesson)"
-                        ],
-                        [
-                            "The Tortoise and The Hare",
-                            "Hare slacks off; Tortoise keeps going steady.",
-                            "Slow and steady wins the race."
-                        ],
-                        [
-                            "The Boy Who Cried Wolf",
-                            "Boy tells false stories until no one believes him.",
-                            "Liars are not believed even when they tell the truth."
-                        ],
-                        [
-                            "The Lion and The Mouse",
-                            "Little mouse frees the trapped lion from a net.",
-                            "No act of kindness, no matter how small, is ever wasted."
-                        ]
-                    ]
-                }
-            ]
+          "id": "image-ext6-01",
+          "type": "image",
+          "props": {
+            "src": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop",
+            "alt": "An open storybook with animal fable illustrations and a magnifying glass",
+            "caption": "Every fable hides a life lesson — today you become the detective who finds it!",
+            "width": "100%"
+          },
+          "state": "active",
+          "status": "uncompleted"
         },
         {
-            "id": "slide-2",
-            "title": "How to Find the Moral",
-            "subtitle": "Analyzing Cause and Effect",
-            "layout": "split",
-            "components": [
-                {
-                    "id": "moral-strategy-text",
-                    "type": "text",
-                    "content": "### 3 Steps to Extract a Moral\n\n1. **Identify the Main Conflict**: What mistake or challenge does the main character face?\n2. **Look at the Outcome**: What happens as a result of their choices? Were they rewarded or punished?\n3. **State the Rule**: What advice would stop someone from making that same mistake?"
-                },
-                {
-                    "id": "moral-fill-blank-1",
-                    "type": "fillInTheBlank",
-                    "title": "Match the Fable to its Moral",
-                    "text": "1. In 'The Fox and the Grapes', when the Fox can't reach the fruit and claims it is sour, the moral teaches us not to despise what we cannot {{blank}}.\n2. In 'The Ant and the Grasshopper', preparing for winter early teaches the value of hard work and {{blank}}.\n3. In 'The Dog and his Reflection', losing a bone by snatching at a shadow warns against {{blank}}.",
-                    "blanks": [
-                        {
-                            "id": "blank-1",
-                            "answer": "obtain",
-                            "alternatives": [
-                                "get",
-                                "reach",
-                                "have"
-                            ],
-                            "caseSensitive": false
-                        },
-                        {
-                            "id": "blank-2",
-                            "answer": "foresight",
-                            "alternatives": [
-                                "planning",
-                                "preparation"
-                            ],
-                            "caseSensitive": false
-                        },
-                        {
-                            "id": "blank-3",
-                            "answer": "greed",
-                            "alternatives": [
-                                "foolishness",
-                                "selfishness"
-                            ],
-                            "caseSensitive": false
-                        }
-                    ]
-                }
-            ]
+          "id": "heading-ext6-01",
+          "type": "heading",
+          "props": {
+            "content": "Welcome to the Moral Detective Agency 🔍",
+            "level": 1,
+            "align": "center"
+          },
+          "state": "active",
+          "status": "uncompleted"
         },
         {
-            "id": "slide-3",
-            "title": "Moral Discovery Scene",
-            "subtitle": "Explore Lessons in The Ant and The Grasshopper",
-            "layout": "single",
-            "components": [
-                {
-                    "id": "moral-hotspot-1",
-                    "type": "hotspot",
-                    "title": "Tap the Hotspots to Analyze Moral Choices",
-                    "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop",
-                    "behavior": "discovery",
-                    "hotspots": [
-                        {
-                            "id": "spot-1",
-                            "x": 0.30,
-                            "y": 0.50,
-                            "label": "Grasshopper's Choice",
-                            "content": "Action: Sang all summer and ignored winter prep. Consequence: Left hungry in the snow. Lesson: Idleness leads to hardship."
-                        },
-                        {
-                            "id": "spot-2",
-                            "x": 0.65,
-                            "y": 0.60,
-                            "label": "Ant's Diligence",
-                            "content": "Action: Carried grain every single day. Consequence: Warm and well-fed in winter. Lesson: Preparation brings security."
-                        },
-                        {
-                            "id": "spot-3",
-                            "x": 0.48,
-                            "y": 0.80,
-                            "label": "The Universal Moral",
-                            "content": "Moral Statement: 'There is a time for work and a time for play—do not put off today's duties for tomorrow.'"
-                        }
-                    ]
-                }
-            ]
+          "id": "callout-ext6-01",
+          "type": "callout",
+          "props": {
+            "variant": "note",
+            "title": "Story So Far",
+            "content": "You have explored similes, personification, metaphors, hyperbole, and onomatopoeia — the tools fable writers use to make stories vivid. Today we go deeper: every fable carries a moral, a piece of advice about how to live wisely."
+          },
+          "state": "active",
+          "status": "uncompleted"
         },
         {
-            "id": "slide-4",
-            "title": "Moral Analysis Practice",
-            "subtitle": "Test Your Ability to Identify Morals",
-            "layout": "single",
-            "components": [
-                {
-                    "id": "moral-quiz-1",
-                    "type": "quiz",
-                    "title": "Moral Comprehension Quiz",
-                    "questions": [
-                        {
-                            "id": "q1",
-                            "question": "What is the moral of a fable?",
-                            "options": [
-                                "The name of the main animal character.",
-                                "The secret password hidden in the fable.",
-                                "The underlying lesson or rule about life that the story teaches.",
-                                "The list of words used in the story."
-                            ],
-                            "correctAnswer": 2,
-                            "explanation": "A moral is the practical life advice or ethical lesson derived from the fable's events."
-                        },
-                        {
-                            "id": "q2",
-                            "question": "In 'The Crow and the Pitcher', the thirsty crow drops pebbles into a pitcher one by one until the water rises. What is the moral?",
-                            "options": [
-                                "Crows dislike drinking water.",
-                                "Little by little does the trick; ingenuity solves difficult problems.",
-                                "Pebbles are lighter than water.",
-                                "Never drink water from a glass pitcher."
-                            ],
-                            "correctAnswer": 1,
-                            "explanation": "The crow's patient problem-solving shows that persistence and clever thinking overcome obstacles."
-                        }
-                    ]
-                }
-            ]
+          "id": "paragraph-ext6-01",
+          "type": "paragraph",
+          "props": {
+            "content": "Your Mission Today\n\nYou will learn what a fable's moral is, how to extract it from a plot by studying cause and effect, and how to spot the universal life lesson that applies to real people — not just talking animals.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
         },
         {
-            "id": "slide-5",
-            "title": "Fable Moral Reflection",
-            "subtitle": "Choosing a Moral for Your Own Story",
-            "layout": "single",
-            "components": [
-                {
-                    "id": "moral-reflection-poll",
-                    "type": "poll",
-                    "title": "Moral Selection Poll",
-                    "question": "Which moral would be most interesting to write a new animal fable about?",
-                    "options": [
-                        "Pride goes before a fall.",
-                        "Kindness is more powerful than force.",
-                        "Honesty is the best policy.",
-                        "Do not count your chickens before they hatch."
-                    ]
-                }
-            ]
+          "id": "poll-ext6-01",
+          "type": "poll",
+          "props": {
+            "question": "Before we learn the official definition — what do YOU think a fable's moral is?",
+            "options": [
+              { "id": "o1", "text": "The name of the main animal character" },
+              { "id": "o2", "text": "The secret password hidden in the story" },
+              { "id": "o3", "text": "The life lesson or advice the story teaches" },
+              { "id": "o4", "text": "The list of words used in the fable" }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
         }
-    ]
+      ]
+    },
+    {
+      "id": "slide-ext6-02",
+      "title": "What Is a Fable's Moral?",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "accordion-ext6-02",
+          "type": "accordion",
+          "props": {
+            "title": "Peek at Today's Big Idea",
+            "allowMultiple": false,
+            "items": [
+              {
+                "id": "acc1",
+                "title": "What exactly is a moral?",
+                "content": "The moral is the fundamental lesson or piece of advice about human behaviour that the story teaches — such as honesty, kindness, perseverance, or avoiding greed."
+              },
+              {
+                "id": "acc2",
+                "title": "Why do fables use animals?",
+                "content": "Talking animals make the story fun and safe to explore. But the moral always applies to real-life decisions that people make every day."
+              },
+              {
+                "id": "acc3",
+                "title": "How is a moral different from the plot?",
+                "content": "The plot is WHAT happens (the Hare naps, the Tortoise wins). The moral is WHY it matters ('Slow and steady wins the race')."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "table-ext6-02",
+          "type": "table",
+          "props": {
+            "rows": 4,
+            "columns": 3,
+            "data": [
+              ["Fable Title", "Character Actions", "The Moral (Life Lesson)"],
+              ["The Tortoise and The Hare", "Hare slacks off; Tortoise keeps going steady.", "Slow and steady wins the race."],
+              ["The Boy Who Cried Wolf", "Boy tells false stories until no one believes him.", "Liars are not believed even when they tell the truth."],
+              ["The Lion and The Mouse", "Little mouse frees the trapped lion from a net.", "No act of kindness, no matter how small, is ever wasted."]
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcards-ext6-02",
+          "type": "flashcards",
+          "props": {
+            "title": "Key Vocabulary — Flip Each Card",
+            "cards": [
+              {
+                "id": "c1",
+                "front": "Moral",
+                "back": "The life lesson or advice about behaviour that a fable teaches its reader."
+              },
+              {
+                "id": "c2",
+                "front": "Life Lesson",
+                "back": "Practical wisdom you can apply to your own choices — not just something that happened in the story."
+              },
+              {
+                "id": "c3",
+                "front": "Consequence",
+                "back": "What happens as a result of a character's choice — reward or punishment."
+              },
+              {
+                "id": "c4",
+                "front": "Universal",
+                "back": "Applies to everyone, everywhere — not just one character in one story."
+              }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext6-02",
+          "type": "trueFalse",
+          "props": {
+            "statement": "A fable's moral only applies to animals and has nothing to do with real people.",
+            "isTrue": false,
+            "explanation": "Fables use animals as characters, but the moral is always advice for real human behaviour — like being honest, kind, or prepared.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext6-03",
+      "title": "How to Find the Moral",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "accordion-ext6-03",
+          "type": "accordion",
+          "props": {
+            "title": "The 3-Step Moral Detective Method",
+            "allowMultiple": true,
+            "items": [
+              {
+                "id": "step1",
+                "title": "Step 1 — Identify the Main Conflict",
+                "content": "What mistake or challenge does the main character face? What went wrong?"
+              },
+              {
+                "id": "step2",
+                "title": "Step 2 — Look at the Outcome",
+                "content": "What happens because of their choices? Were they rewarded or punished?"
+              },
+              {
+                "id": "step3",
+                "title": "Step 3 — State the Rule",
+                "content": "What advice would stop someone from making that same mistake? Write it as a short, clear sentence."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext6-03",
+          "type": "paragraph",
+          "props": {
+            "content": "Cause and Effect Thinking\n\nEvery moral comes from cause and effect. A character makes a choice (cause), something happens (effect), and the story shows us whether that choice was wise. Your job is to turn that pattern into a rule for life.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "matchingPairs-ext6-03",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match Each Fable to Its Moral",
+            "pairs": [
+              {
+                "id": "p1",
+                "left": "The Fox and the Grapes",
+                "right": "Do not despise what you cannot obtain."
+              },
+              {
+                "id": "p2",
+                "left": "The Ant and the Grasshopper",
+                "right": "Hard work and foresight bring security."
+              },
+              {
+                "id": "p3",
+                "left": "The Dog and his Reflection",
+                "right": "Greed can make you lose what you already have."
+              },
+              {
+                "id": "p4",
+                "left": "The Boy Who Cried Wolf",
+                "right": "Liars are not believed when they tell the truth."
+              }
+            ],
+            "shuffled": true,
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "fillInTheBlank-ext6-03",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Complete the Moral Statement",
+            "text": "In 'The Tortoise and the Hare', the Hare's mistake teaches us that slow and steady {{blank}} the race.",
+            "blanks": [
+              {
+                "id": "b1",
+                "answer": "wins",
+                "alternatives": ["win", "won"]
+              }
+            ],
+            "caseSensitive": false,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext6-04",
+      "title": "Moral Discovery Scene",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "hotspot-ext6-04",
+          "type": "hotspot",
+          "props": {
+            "title": "Tap the Hotspots — Analyse The Ant and The Grasshopper",
+            "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "explore",
+            "hotspots": [
+              {
+                "id": "spot-1",
+                "x": 0.30,
+                "y": 0.50,
+                "label": "Grasshopper's Choice",
+                "content": "Action: Sang all summer and ignored winter prep. Consequence: Left hungry in the snow. Lesson: Idleness leads to hardship."
+              },
+              {
+                "id": "spot-2",
+                "x": 0.65,
+                "y": 0.60,
+                "label": "Ant's Diligence",
+                "content": "Action: Carried grain every single day. Consequence: Warm and well-fed in winter. Lesson: Preparation brings security."
+              },
+              {
+                "id": "spot-3",
+                "x": 0.48,
+                "y": 0.80,
+                "label": "The Universal Moral",
+                "content": "Moral Statement: 'There is a time for work and a time for play — do not put off today's duties for tomorrow.'"
+              }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "paragraph-ext6-04",
+          "type": "paragraph",
+          "props": {
+            "content": "Detective Debrief\n\nNotice how each hotspot follows the same pattern: choice → consequence → lesson. The Grasshopper chose play over work and suffered. The Ant chose preparation and was rewarded. The moral is the rule that connects them.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "trueFalse-ext6-04",
+          "type": "trueFalse",
+          "props": {
+            "statement": "In 'The Ant and the Grasshopper', the moral is that you should never have fun — only work.",
+            "isTrue": false,
+            "explanation": "The moral is about balance and preparation — there IS a time for play, but you must not ignore your responsibilities.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext6-05",
+      "title": "Moral Analysis Practice",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "callout-ext6-05",
+          "type": "callout",
+          "props": {
+            "variant": "tip",
+            "title": "Mini Fable — Read Before You Answer",
+            "content": "In 'The Crow and the Pitcher', a thirsty crow finds a pitcher with water too low to reach. Instead of giving up, the crow drops pebbles into the pitcher one by one until the water rises high enough to drink. Think: what choice did the crow make, and what happened because of it?"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "quiz-ext6-05",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "What is the moral of a fable?",
+                "options": [
+                  { "id": "o1", "text": "The name of the main animal character.", "isCorrect": false },
+                  { "id": "o2", "text": "The secret password hidden in the fable.", "isCorrect": false },
+                  { "id": "o3", "text": "The underlying lesson or rule about life that the story teaches.", "isCorrect": true },
+                  { "id": "o4", "text": "The list of words used in the story.", "isCorrect": false }
+                ],
+                "explanation": "A moral is the practical life advice or ethical lesson derived from the fable's events."
+              },
+              {
+                "id": "q2",
+                "question": "In 'The Crow and the Pitcher', the thirsty crow drops pebbles into a pitcher one by one until the water rises. What is the moral?",
+                "options": [
+                  { "id": "o1", "text": "Crows dislike drinking water.", "isCorrect": false },
+                  { "id": "o2", "text": "Little by little does the trick; ingenuity solves difficult problems.", "isCorrect": true },
+                  { "id": "o3", "text": "Pebbles are lighter than water.", "isCorrect": false },
+                  { "id": "o4", "text": "Never drink water from a glass pitcher.", "isCorrect": false }
+                ],
+                "explanation": "The crow's patient problem-solving shows that persistence and clever thinking overcome obstacles."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext6-05",
+          "type": "trueFalse",
+          "props": {
+            "statement": "To find a moral, you only need to remember the character's name — you do not need to think about their choices or consequences.",
+            "isTrue": false,
+            "explanation": "Extracting a moral requires analysing cause and effect: what the character chose, what happened, and what rule that teaches us.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext6-06",
+      "title": "Choose Your Moral & Write On",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "poll-ext6-06",
+          "type": "poll",
+          "props": {
+            "question": "Which moral would be most interesting to write a new animal fable about?",
+            "options": [
+              { "id": "o1", "text": "Pride goes before a fall." },
+              { "id": "o2", "text": "Kindness is more powerful than force." },
+              { "id": "o3", "text": "Honesty is the best policy." },
+              { "id": "o4", "text": "Do not count your chickens before they hatch." }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "bulletList-ext6-06",
+          "type": "bulletList",
+          "props": {
+            "items": [
+              "A moral is the life lesson a fable teaches — not just what happened in the plot",
+              "Use the 3-step method: conflict → outcome → rule",
+              "Morals apply to real people, even when the characters are animals",
+              "Every good moral comes from studying cause and effect"
+            ],
+            "type": "unordered"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext6-06",
+          "type": "callout",
+          "props": {
+            "variant": "success",
+            "title": "Writer's Challenge",
+            "content": "Pick the moral you voted for and sketch a quick fable: choose two animal characters, give one a wise choice and one a foolish choice, and end with your moral written as one clear sentence. You are now a Moral Detective AND a fable author!"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    }
+  ]
 }

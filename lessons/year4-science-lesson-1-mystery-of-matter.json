@@ -473,7 +473,7 @@
                                 "content": "MATTER! Liquid water has mass and takes up volume."
                             }
                         ],
-                        "behavior": "discovery",
+                        "behavior": "explore",
                         "mode": "practice",
                         "state": "active"
                     },

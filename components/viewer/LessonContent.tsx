@@ -2,7 +2,7 @@
 
 import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Volume2, VolumeX, LogOut, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LogOut, Loader2 } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
@@ -11,13 +11,13 @@ import { getComponentCategory, formatSlideTitle, isInteractiveComponent } from '
 import isEqual from 'lodash.isequal';
 import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
-import { useReadAloud } from '@/context/read-aloud-context';
 import { SlideTransitionOverlay } from '@/components/viewer/SlideTransitionOverlay';
 import { LessonIntroCueOverlay } from '@/components/viewer/LessonIntroCueOverlay';
 import { LessonCompletionOverlay } from '@/components/viewer/LessonCompletionOverlay';
 import { IncompleteLessonModal } from '@/components/viewer/IncompleteLessonModal';
 import { getSlideTheme } from '@/lib/slide-themes';
 import { usePollStore } from '@/hooks/use-poll-store';
+import { useLessonPreloader } from '@/hooks/use-lesson-preloader';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -31,11 +31,16 @@ interface LessonContentProps {
   onEndLesson?: () => void;
   nextLesson?: { id: string; title: string } | null;
   onNextLesson?: (nextLessonId: string) => void;
+  /** Skip lesson intro + slide transition overlays (builder preview, tutor view) */
+  suppressCues?: boolean;
+  /** Builder preview: exit label + direct exit without completion modals */
+  previewMode?: boolean;
 }
 
 export interface LessonContentRef {
   setCurrentSlideIndex: (index: number) => void;
   getAllComponentStates: () => Record<string, any>;
+  triggerEndLesson: () => void;
 }
 
 function useLatestRef<T>(value: T) {
@@ -58,11 +63,14 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     onEndLesson,
     nextLesson,
     onNextLesson,
+    suppressCues = false,
+    previewMode = false,
   }, ref) {
     const { playFeedback } = useFeedback();
     const { currentScore: score, totalScore: totalPossible } = useScoring();
-    // Pre-fetch all poll vote data once during lesson load (intro cue phase)
+    // Pre-fetch poll votes and preload all lesson media for the full session
     const pollStore = usePollStore(lesson);
+    useLessonPreloader({ lessonData: lesson, enabled: !!lesson?.id });
 
     const currentSlide = useMemo(() => lesson.slides[currentSlideIndex], [lesson.slides, currentSlideIndex]);
     const onSlidesUpdateRef = useLatestRef(onSlidesUpdate);
@@ -75,7 +83,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     const [componentStates, setComponentStates] = useState<Record<string, any>>(initialComponentStates);
     const [innerStepIndex, setInnerStepIndex] = useState(0);
-    const [showIntroCue, setShowIntroCue] = useState(true);
+    const [showIntroCue, setShowIntroCue] = useState(!suppressCues);
     const [showOverlay, setShowOverlay] = useState(false);
     const [showCompletionOverlay, setShowCompletionOverlay] = useState(false);
     const [showIncompleteModal, setShowIncompleteModal] = useState(false);
@@ -101,21 +109,29 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const allSlidesCompleted = completedSlidesCount === lesson.slides.length;
 
     const handleEndLessonTrigger = useCallback(() => {
+      if (previewMode) {
+        onEndLesson?.();
+        return;
+      }
       if (allSlidesCompleted) {
         setShowCompletionOverlay(true);
       } else {
         setShowIncompleteModal(true);
       }
-    }, [allSlidesCompleted]);
+    }, [allSlidesCompleted, previewMode, onEndLesson]);
 
     useEffect(() => {
       setInnerStepIndex(0);
+      if (suppressCues) {
+        prevSlideIndexRef.current = currentSlideIndex;
+        return;
+      }
       // Show overlay whenever we actually change slides (skip first load where prev === current)
       if (prevSlideIndexRef.current !== -1 && prevSlideIndexRef.current !== currentSlideIndex) {
         setShowOverlay(true);
       }
       prevSlideIndexRef.current = currentSlideIndex;
-    }, [currentSlideIndex]);
+    }, [currentSlideIndex, suppressCues]);
 
     useImperativeHandle(ref, () => ({
       setCurrentSlideIndex: onSlideChange,
@@ -139,7 +155,6 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     const activeComponent = processedComponents[innerStepIndex];
     const { isLocked } = useNavigationLock();
-    const { isEnabled, toggleReadAloud } = useReadAloud();
 
     const isCurrentComponentCompleted = useMemo(() => {
       if (!activeComponent) return true;
@@ -333,22 +348,6 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
           {/* Metrics & Controls */}
           <div className="flex gap-4 shrink-0 items-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleReadAloud}
-              className={cn(
-                "h-8 px-2.5 rounded-full font-bold text-xs flex items-center gap-1.5 transition-all border",
-                isEnabled
-                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20"
-                  : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700"
-              )}
-              title={isEnabled ? "Disable Read Aloud" : "Enable Read Aloud"}
-            >
-              {isEnabled ? <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" /> : <VolumeX className="w-3.5 h-3.5 text-slate-500" />}
-              <span className="hidden sm:inline text-[10px] uppercase tracking-wider">{isEnabled ? "Voice On" : "Voice Off"}</span>
-            </Button>
-
             <div className="flex flex-col items-end justify-center">
               <span className="text-[10px] font-medium text-slate-400">Score</span>
               <span className="text-sm font-bold text-white tabular-nums">{score}</span>
@@ -383,6 +382,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         </main>
 
         {/* Overall Lesson Starting Cue Overlay */}
+        {!suppressCues && (
         <LessonIntroCueOverlay
           isVisible={showIntroCue}
           lessonData={lesson}
@@ -390,8 +390,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           lessonNumber={(lesson as any).lessonNumber || 1}
           onBegin={() => setShowIntroCue(false)}
         />
+        )}
 
         {/* Slide Transition Overlay */}
+        {!suppressCues && (
         <SlideTransitionOverlay
           isVisible={showOverlay}
           lessonId={lesson.id}
@@ -402,6 +404,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           totalSlides={lesson.slides.length}
           onBegin={() => setShowOverlay(false)}
         />
+        )}
 
         {/* Footer Navigation */}
         <footer className="shrink-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30 py-3.5 px-6 shadow-sm">
@@ -424,10 +427,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                   playFeedback('uiClick');
                   handleEndLessonTrigger();
                 }}
-                disabled={isNavigating || !isCurrentComponentCompleted}
+                disabled={isNavigating || (!previewMode && !isCurrentComponentCompleted)}
               >
                 {isNavigating ? <Loader2 className="h-3.5 w-3.5 animate-spin ml-1" /> : <LogOut className="h-3.5 w-3.5 ml-1" />}
-                End Lesson
+                {previewMode ? "Back to Editor" : "End Lesson"}
               </Button>
             ) : (() => {
               // Detect if we are on the last component of the current slide (not the last slide)
@@ -460,6 +463,8 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         </footer>
 
         {/* Lesson Completion Celebration Overlay */}
+        {!previewMode && (
+        <>
         <LessonCompletionOverlay
           isVisible={showCompletionOverlay}
           lessonId={lesson.id}
@@ -479,7 +484,6 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           } : undefined}
         />
 
-        {/* Incomplete Lesson Warning Modal */}
         <IncompleteLessonModal
           isOpen={showIncompleteModal}
           completedSlidesCount={completedSlidesCount}
@@ -490,6 +494,8 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             if (onEndLesson) onEndLesson();
           }}
         />
+        </>
+        )}
       </div>
     );
   }

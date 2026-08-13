@@ -278,7 +278,7 @@ export function QuizRenderer(props: QuizRendererProps) {
 
         return (
           <div className={cn(
-            "w-full h-full flex-1 flex flex-col bg-white overflow-hidden transition-all duration-300 px-6",
+            "w-full h-full flex-1 flex flex-col bg-white text-slate-900 overflow-hidden transition-all duration-300 px-6",
             animationClass
           )}>
             {/* TOP SECTION: Meta & Title */}
@@ -343,7 +343,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                       <button
                         key={option.id}
                         className={cn(
-                          'group/opt w-full p-3.5 text-left transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
+                          'group/opt w-full p-3.5 text-left text-slate-900 transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
                           'border-b-4 active:border-b-0 active:translate-y-[2px]',
                           isSelected && !isAnswered && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
                           showCorrect && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
@@ -364,7 +364,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                             )}>
                               {String.fromCharCode(65 + idx)}
                             </span>
-                            <span className="font-bold text-sm tracking-tight">{option.text}</span>
+                            <span className="font-bold text-sm tracking-tight text-inherit">{option.text}</span>
                           </div>
                           {showCorrect && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                           {showIncorrect && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in shake duration-500 shrink-0" />}

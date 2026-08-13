@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle2, XCircle, Play, RefreshCw, Lock } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
+import { useFeedback } from "@/hooks/use-feedback"
+import { playCodeRun } from "@/lib/sound-effects"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import type { Component } from "@/types/lesson"
 
@@ -70,6 +72,7 @@ function CodeEditorContent({
 }) {
   const [mounted, setMounted] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
+  const { playFeedback } = useFeedback()
 
   const {
     code,
@@ -100,6 +103,7 @@ function CodeEditorContent({
   const runCode = () => {
     setIsRunning(true)
     setState(prev => ({ ...prev, output: "" }))
+    playCodeRun()
 
     try {
       // Simple JavaScript evaluation for demo purposes
@@ -204,6 +208,12 @@ function CodeEditorContent({
             : `${passedCount} of ${testCasesList.length} tests passed. Try again!`,
         status: isLive ? 'completed' : 'active'
       }))
+
+      if (allPassed) {
+        void playFeedback('quizSuccess', { sound: true, animation: false })
+      } else {
+        void playFeedback('incorrect', { sound: true, animation: false })
+      }
 
     } catch (error) {
       setState(prev => ({ ...prev, output: `Error running tests: ${error instanceof Error ? error.message : 'An unknown error occurred'}` }))

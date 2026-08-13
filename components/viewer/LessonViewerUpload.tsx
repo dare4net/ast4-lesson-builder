@@ -18,8 +18,6 @@ import { NavigationLockProvider } from '@/context/navigation-lock-context';
 import { useRouter } from 'next/navigation';
 import { syncEngine } from '@/lib/sync-engine';
 import { SyncStatusHUD } from './SyncStatusHUD';
-import { ReadAloudProvider } from '@/context/read-aloud-context';
-import { useLessonPreloader } from '@/hooks/use-lesson-preloader';
 
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
@@ -40,11 +38,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [totalPossibleScore, setTotalPossibleScore] = useState(0);
   const [nextLesson, setNextLesson] = useState<{ id: string; title: string } | null>(null);
 
-  // Preload all lesson media assets (images, audio, TTS) whenever any lesson is opened
-  useLessonPreloader({
-    lessonData,
-    enabled: isHydrated && !!lessonData,
-  });
   const lessonContentRef = useRef<any>(null);
 
   const currentSlideIndexRef = useRef(currentSlideIndex);

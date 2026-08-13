@@ -1,0 +1,640 @@
+{
+  "id": "year4-english-fables-lesson-5-hyperbole-extended",
+  "title": "Hyperbole & Onomatopoeia: Exaggeration & Sound Effects",
+  "description": "Lesson 5 in the Fables Figurative Language series. Discover how authors make fables louder and sillier with extreme exaggeration (hyperbole) and sound-effect words (onomatopoeia) — building on similes, personification, and metaphors.",
+  "voice": "en-GB-LibbyNeural",
+  "settings": {
+    "duration": 40,
+    "level": "Year 4"
+  },
+  "author": "Damilare Adeyemi Adepoju",
+  "slides": [
+    {
+      "id": "slide-ext5-01",
+      "title": "Welcome to the Fable Sound Studio",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "image-ext5-01",
+          "type": "image",
+          "props": {
+            "src": "https://res.cloudinary.com/rwjtoqiy/image/upload/v1786444429/ast_images/6a78e7d82200c8165f3a6a2c/image-1.png",
+            "alt": "A lion roaring so loudly that leaves blow off nearby trees, with a large BOOM sound effect",
+            "caption": "Today your fable gets LOUDER and BIGGER than ever before!",
+            "width": "100%"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "heading-ext5-01",
+          "type": "heading",
+          "props": {
+            "content": "Welcome to the Fable Sound Studio 🎬",
+            "level": 1,
+            "align": "center"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "callout-ext5-01",
+          "type": "callout",
+          "props": {
+            "variant": "note",
+            "title": "Story So Far",
+            "content": "You already explored similes (like/as), personification, and metaphors. Today fable writers turn the volume up — with exaggeration and sound-effect words that make beasts fight, boast, and buzz!"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext5-01",
+          "type": "paragraph",
+          "props": {
+            "content": "Your Mission Today\n\nYou will learn two new tools: hyperbole (extreme exaggeration) and onomatopoeia (words that copy real sounds). By the end, you will spot both inside a fable and know why writers use them.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "poll-ext5-01",
+          "type": "poll",
+          "props": {
+            "question": "Before we learn the fancy names — which sentence sounds the silliest to you?",
+            "options": [
+              { "id": "o1", "text": "I've told you a million times!" },
+              { "id": "o2", "text": "I could eat an entire mountain of apples!" },
+              { "id": "o3", "text": "This bag weighs a thousand tonnes!" },
+              { "id": "o4", "text": "I waited for a hundred years!" }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-02",
+      "title": "Meet the Two New Devices",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "accordion-ext5-02",
+          "type": "accordion",
+          "props": {
+            "title": "Peek at Today's Two Devices",
+            "allowMultiple": false,
+            "items": [
+              {
+                "id": "acc1",
+                "title": "What is hyperbole in one sentence?",
+                "content": "Hyperbole is when a writer stretches the truth to an impossible extreme — like saying 'I'm so hungry I could eat a horse!'"
+              },
+              {
+                "id": "acc2",
+                "title": "How do I spot onomatopoeia?",
+                "content": "Say the word out loud! If it sounds like the noise it describes — CRACK, SPLASH, BZZZZ — it's onomatopoeia."
+              },
+              {
+                "id": "acc3",
+                "title": "Why do fable writers use both?",
+                "content": "Hyperbole shows how strongly a character feels. Onomatopoeia lets the reader HEAR the action. Together they make fables exciting!"
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext5-02",
+          "type": "paragraph",
+          "props": {
+            "content": "Two New Tools\n\nHyperbole stretches the truth on purpose — nobody believes it literally. Onomatopoeia is a word that sounds like the noise it names, such as BUZZ or CRASH.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "flashcards-ext5-02",
+          "type": "flashcards",
+          "props": {
+            "title": "Key Vocabulary — Flip Each Card",
+            "cards": [
+              {
+                "id": "c1",
+                "front": "Hyperbole",
+                "back": "Extreme exaggeration for emphasis or humour — NOT meant literally."
+              },
+              {
+                "id": "c2",
+                "front": "Onomatopoeia",
+                "back": "A word that imitates a real sound, like BUZZ or CRASH."
+              },
+              {
+                "id": "c3",
+                "front": "Exaggeration",
+                "back": "Making something sound bigger, faster, or more extreme than it really is."
+              },
+              {
+                "id": "c4",
+                "front": "Sound Effect Word",
+                "back": "A word written to be heard — often in CAPITALS with an exclamation mark!"
+              }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext5-02",
+          "type": "trueFalse",
+          "props": {
+            "statement": "Hyperbole and onomatopoeia are meant to be taken completely literally.",
+            "isTrue": false,
+            "explanation": "Hyperbole stretches the truth on purpose — nobody really waits a million years! Onomatopoeia is a sound word like BOOM!, not a plain fact.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-03",
+      "title": "Hyperbole: Stretch the Truth",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "image-ext5-03",
+          "type": "image",
+          "props": {
+            "src": "https://res.cloudinary.com/rwjtoqiy/image/upload/v1786444429/ast_images/6a78e7d82200c8165f3a6a2c/image-1.png",
+            "alt": "A boastful hare and a proud lion — fable characters used to show extreme exaggeration",
+            "caption": "Hyperbole makes feelings LOUDER than life!",
+            "width": "100%"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext5-03",
+          "type": "paragraph",
+          "props": {
+            "content": "Spotting Hyperbole\n\nHyperbole shows how strongly a character feels by stretching the truth far beyond what is possible. A boastful hare claiming he can run 'faster than light' highlights his arrogance — no one actually believes it, and that's the point.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "memoryGrid-ext5-03",
+          "type": "memoryGrid",
+          "props": {
+            "title": "Match Each Example to Its Device",
+            "pairs": [
+              {
+                "id": "p1",
+                "term": "A million tons",
+                "definition": "Hyperbole — impossible weight"
+              },
+              {
+                "id": "p2",
+                "term": "CRACK!",
+                "definition": "Onomatopoeia — branch sound"
+              },
+              {
+                "id": "p3",
+                "term": "Earth split in half",
+                "definition": "Hyperbole — impossible roar"
+              },
+              {
+                "id": "p4",
+                "term": "BZZZZ!",
+                "definition": "Onomatopoeia — insect buzz"
+              }
+            ],
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext5-03",
+          "type": "trueFalse",
+          "props": {
+            "statement": "'The Lion roared so loudly that the earth split in half' is an example of hyperbole.",
+            "isTrue": true,
+            "explanation": "No roar can literally split the earth — this is an extreme exaggeration to show how loud and angry the Lion is.",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "quiz-ext5-03",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "Why does a writer use hyperbole?",
+                "options": [
+                  { "id": "o1", "text": "To trick the reader into believing something false", "isCorrect": false },
+                  { "id": "o2", "text": "To emphasise a feeling with dramatic, humorous exaggeration", "isCorrect": true },
+                  { "id": "o3", "text": "Because they don't know the real facts", "isCorrect": false }
+                ],
+                "explanation": "Hyperbole is used deliberately for emphasis or humour — everyone knows it isn't literally true."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-04",
+      "title": "Onomatopoeia: Words You Can Hear",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "image-ext5-04",
+          "type": "image",
+          "props": {
+            "src": "https://res.cloudinary.com/rwjtoqiy/image/upload/v1786444514/ast_images/6a78e7d82200c8165f3a6a2c/image-3.png",
+            "alt": "A tree branch snapping under a bear's weight, with the word CRACK bursting from the branch",
+            "caption": "CRACK! — say it out loud. Does it sound like a branch breaking?",
+            "width": "100%"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "paragraph-ext5-04",
+          "type": "paragraph",
+          "props": {
+            "content": "The Golden Rule\n\nAn onomatopoeia word imitates the actual sound of the thing it describes. Say the word out loud — if it sounds like the noise it's naming (like CRACK, BUZZ, or SPLASH), it's onomatopoeia!",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "wordScramble-ext5-04",
+          "type": "wordScramble",
+          "props": {
+            "title": "Unscramble the Sound-Effect Word",
+            "word": "CRASH",
+            "hint": "A loud noise when something breaks or falls down",
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "matchingPairs-ext5-04",
+          "type": "matchingPairs",
+          "props": {
+            "title": "Match Each Sound Effect to Its Action",
+            "pairs": [
+              { "id": "1", "left": "CRACK!", "right": "A branch breaking" },
+              { "id": "2", "left": "SPLASH!", "right": "Something falling into water" },
+              { "id": "3", "left": "BUZZ!", "right": "An insect flying nearby" },
+              { "id": "4", "left": "THUD!", "right": "Something heavy hitting the ground" }
+            ],
+            "shuffled": true,
+            "points": 15,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "trueFalse-ext5-04",
+          "type": "trueFalse",
+          "props": {
+            "statement": "SPLASH! is an example of onomatopoeia.",
+            "isTrue": true,
+            "explanation": "SPLASH! mimics the sound of something hitting water — say it out loud and you can hear it!",
+            "points": 10
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-05",
+      "title": "The Lion and the Gnat — Scene Investigation",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "hotspot-ext5-05",
+          "type": "hotspot",
+          "props": {
+            "title": "The Lion & the Gnat — Tap Each Hotspot!",
+            "image": "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?q=80&w=1000&auto=format&fit=crop",
+            "behavior": "explore",
+            "hotspots": [
+              {
+                "id": "spot-1",
+                "x": 0.35,
+                "y": 0.45,
+                "label": "The Gnat's Buzzing",
+                "content": "Onomatopoeia: 'BZZZZ! The gnat zoomed right into the Lion's ear.' (Imitates the flying sound)."
+              },
+              {
+                "id": "spot-2",
+                "x": 0.6,
+                "y": 0.3,
+                "label": "The Lion's Roar",
+                "content": "Hyperbole: 'The Lion roared so loudly that the earth split in half.' (Extreme exaggeration of volume)."
+              },
+              {
+                "id": "spot-3",
+                "x": 0.5,
+                "y": 0.7,
+                "label": "The Mighty Strike",
+                "content": "Both! 'CLAW! The Lion swiped a thousand times in a single second.' (Sound effect + impossible speed)."
+              }
+            ],
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "paragraph-ext5-05",
+          "type": "paragraph",
+          "props": {
+            "content": "Detective Debrief\n\nGreat work! You found onomatopoeia in the buzzing and claw sounds, and hyperbole in the impossible roar and thousand swipes. Fable writers mix both to make action feel huge and loud.",
+            "align": "left"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "categorise-ext5-05",
+          "type": "categorise",
+          "props": {
+            "title": "Sort Each Sentence — Hyperbole or Onomatopoeia?",
+            "categories": [
+              { "id": "cat1", "title": "Hyperbole" },
+              { "id": "cat2", "title": "Onomatopoeia" }
+            ],
+            "items": [
+              { "id": "i1", "text": "I've waited a million years!", "categoryId": "cat1" },
+              { "id": "i2", "text": "SPLASH! The stone hit the pond.", "categoryId": "cat2" },
+              { "id": "i3", "text": "The Fox ran faster than a shooting star.", "categoryId": "cat1" },
+              { "id": "i4", "text": "CRACK! The branch snapped.", "categoryId": "cat2" }
+            ],
+            "points": 20,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "fillInTheBlank-ext5-05",
+          "type": "fillInTheBlank",
+          "props": {
+            "title": "Complete the Fable Sentence",
+            "text": "The thirsty Crow felt as if he hadn't drunk water in a million {{blank}}.",
+            "blanks": [
+              { "id": "b1", "answer": "years", "alternatives": ["days", "centuries"] }
+            ],
+            "caseSensitive": false,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-06",
+      "title": "Build Your Own Dramatic Scene",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "accordion-ext5-06",
+          "type": "accordion",
+          "props": {
+            "title": "Writer's Toolkit — Open Each Step",
+            "allowMultiple": true,
+            "items": [
+              {
+                "id": "w1",
+                "title": "Step 1 — Start with a true feeling",
+                "content": "Begin with something real: 'I am very tired' or 'I am very hungry.'"
+              },
+              {
+                "id": "w2",
+                "title": "Step 2 — Pick a number, size, or speed",
+                "content": "Choose something connected to the feeling — years, mountains, or lightning speed."
+              },
+              {
+                "id": "w3",
+                "title": "Step 3 — Push it to an impossible extreme",
+                "content": "'I'm tired' becomes 'I could sleep for a hundred years!' Nobody believes it literally — that's the joke."
+              },
+              {
+                "id": "w4",
+                "title": "Step 4 — Add a sound word",
+                "content": "Pair hyperbole with onomatopoeia for extra drama — like YAWN! or CRASH!"
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "dragDrop-ext5-06",
+          "type": "dragDrop",
+          "props": {
+            "title": "Put the Hyperbole Steps in Order",
+            "items": [
+              { "id": "1", "text": "Start with a true feeling (e.g. I am very tired)", "correctIndex": 0 },
+              { "id": "2", "text": "Pick a number, size, or speed connected to it", "correctIndex": 1 },
+              { "id": "3", "text": "Push it to an impossible extreme (e.g. a hundred years)", "correctIndex": 2 },
+              { "id": "4", "text": "Say it confidently, as if it were completely true!", "correctIndex": 3 }
+            ],
+            "shuffled": true,
+            "points": 15,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "quiz-ext5-06",
+          "type": "quiz",
+          "props": {
+            "questions": [
+              {
+                "id": "q1",
+                "question": "'CRASH! went the falling tree' — hyperbole or onomatopoeia?",
+                "options": [
+                  { "id": "o1", "text": "Hyperbole", "isCorrect": false },
+                  { "id": "o2", "text": "Onomatopoeia", "isCorrect": true },
+                  { "id": "o3", "text": "Simile", "isCorrect": false }
+                ],
+                "explanation": "CRASH! imitates the sound of the tree falling — that's onomatopoeia."
+              }
+            ],
+            "showExplanation": true,
+            "shuffleOptions": true,
+            "points": 10,
+            "mode": "practice",
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        }
+      ]
+    },
+    {
+      "id": "slide-ext5-07",
+      "title": "Sound Studio Grand Finale",
+      "status": "uncompleted",
+      "state": "active",
+      "components": [
+        {
+          "id": "poll-ext5-07",
+          "type": "poll",
+          "props": {
+            "question": "Which sound effect best fits a sneaky fox opening a wooden trap?",
+            "options": [
+              { "id": "o1", "text": "CREAK!" },
+              { "id": "o2", "text": "CLANG!" },
+              { "id": "o3", "text": "SWOOSH!" },
+              { "id": "o4", "text": "THUD!" }
+            ],
+            "points": 5,
+            "state": "active"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        },
+        {
+          "id": "spinTheWheel-ext5-07",
+          "type": "spinTheWheel",
+          "props": {
+            "title": "Spin the Fable Sound Wheel",
+            "requiredSpins": 3,
+            "points": 25,
+            "mode": "practice",
+            "state": "active",
+            "questions": [
+              {
+                "id": "sq1",
+                "type": "multipleChoice",
+                "prompt": "Which sentence is hyperbole?",
+                "options": [
+                  "The mouse nibbled softly.",
+                  "I am so hungry I could eat an entire mountain of apples!",
+                  "The owl hooted in the tree."
+                ],
+                "correctOptionIndex": 1,
+                "explanation": "'Eat an entire mountain' is an obvious, dramatic exaggeration."
+              },
+              {
+                "id": "sq2",
+                "type": "trueFalse",
+                "prompt": "SPLASH! is an example of onomatopoeia.",
+                "isTrue": true,
+                "explanation": "SPLASH! mimics the sound of something hitting water."
+              },
+              {
+                "id": "sq3",
+                "type": "multipleChoice",
+                "prompt": "What is the main purpose of hyperbole in a fable?",
+                "options": [
+                  "To state exact, believable facts",
+                  "To emphasise a feeling through dramatic exaggeration",
+                  "To imitate a real sound"
+                ],
+                "correctOptionIndex": 1,
+                "explanation": "Hyperbole exaggerates a feeling or trait — it is never meant literally."
+              },
+              {
+                "id": "sq4",
+                "type": "multipleChoice",
+                "prompt": "Which device uses words like BOOM and CRACK?",
+                "options": ["Hyperbole", "Onomatopoeia", "Simile", "Metaphor"],
+                "correctOptionIndex": 1,
+                "explanation": "Onomatopoeia words imitate the sounds they describe."
+              },
+              {
+                "id": "sq5",
+                "type": "trueFalse",
+                "prompt": "'I've told you a million times' is hyperbole.",
+                "isTrue": true,
+                "explanation": "Nobody literally says something a million times — this is exaggeration for effect."
+              }
+            ]
+          },
+          "state": "active",
+          "status": "uncompleted",
+          "mode": "practice"
+        },
+        {
+          "id": "bulletList-ext5-07",
+          "type": "bulletList",
+          "props": {
+            "items": [
+              "Hyperbole exaggerates — it is NOT literally true",
+              "Onomatopoeia sounds like the noise it describes",
+              "Fable writers use both to make scenes exciting and dramatic",
+              "You completed the Fable Sound Studio — amazing work!"
+            ],
+            "type": "unordered"
+          },
+          "state": "active",
+          "status": "uncompleted"
+        }
+      ]
+    }
+  ]
+}

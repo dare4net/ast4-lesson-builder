@@ -273,7 +273,7 @@
           "props": {
             "title": "Tap Hotspots to Analyse Modal Strength in Each Deduction",
             "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?q=80&w=1000&auto=format&fit=crop",
-            "behavior": "discovery",
+            "behavior": "explore",
             "hotspots": [
               { "id": "hs1", "x": 0.30, "y": 0.40, "label": "Footprints in Mud", "content": "'The intruder MUST have come through the garden.' Strong logical deduction — clear physical evidence supports this conclusion." },
               { "id": "hs2", "x": 0.70, "y": 0.50, "label": "Open Window", "content": "'The wind MIGHT have blown the shutter open.' Tentative possibility — other explanations exist and more investigation is needed." },

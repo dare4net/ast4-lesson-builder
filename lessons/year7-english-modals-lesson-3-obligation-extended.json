@@ -274,7 +274,7 @@
           "props": {
             "title": "Tap Hotspots to Identify Mandates, Prohibitions, and Permissions",
             "image": "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop",
-            "behavior": "discovery",
+            "behavior": "explore",
             "hotspots": [
               { "id": "hs1", "x": 0.25, "y": 0.40, "label": "Strict Requirement", "content": "'Students MUST wear full school uniform at all times.' Non-negotiable mandate with disciplinary consequences." },
               { "id": "hs2", "x": 0.60, "y": 0.50, "label": "Prohibition", "content": "'Mobile phones MUST NOT be used during lesson time.' Absolute prohibition — using a phone breaks this rule." },

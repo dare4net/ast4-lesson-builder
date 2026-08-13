@@ -1,4 +1,5 @@
 import type { ComponentDefinition } from "@/types/lesson"
+import { DEFAULT_WHEEL_QUESTIONS } from "@/lib/spin-the-wheel-utils"
 
 export const componentDefinitions: ComponentDefinition[] = [
   // Content Components
@@ -1142,7 +1143,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       timeLimit: 15,
       mode: "practice",
       state: "active",
-      behavior: "quiz", // "discovery" | "quiz"
+      behavior: "discover",
     },
     propDefinitions: [
       {
@@ -1174,10 +1175,30 @@ export const componentDefinitions: ComponentDefinition[] = [
         label: "Interaction Behavior",
         type: "select",
         required: true,
-        defaultValue: "quiz",
+        defaultValue: "discover",
         options: [
-          { label: "Discovery (Information only)", value: "discovery" },
-          { label: "Quiz (Find all to complete)", value: "quiz" },
+          { label: "Explore (Information only)", value: "explore" },
+          { label: "Discover (Find hidden targets)", value: "discover" },
+        ],
+      },
+      {
+        name: "maxClicks",
+        label: "Max Clicks (Discover mode)",
+        type: "number",
+        required: false,
+        defaultValue: 8,
+        min: 1,
+        max: 50,
+      },
+      {
+        name: "markingMode",
+        label: "Marking Mode (Discover mode)",
+        type: "select",
+        required: false,
+        defaultValue: "self-mark",
+        options: [
+          { label: "Self Mark (Auto)", value: "self-mark" },
+          { label: "Tutor Mark (Manual)", value: "tutor-mark" },
         ],
       },
       {
@@ -1411,52 +1432,7 @@ export const componentDefinitions: ComponentDefinition[] = [
       points: 20,
       mode: "practice",
       state: "active",
-      questions: [
-        {
-          id: "q1",
-          type: "multipleChoice",
-          prompt: "What gas do plants absorb from the atmosphere for photosynthesis?",
-          options: ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
-          correctOptionIndex: 0,
-          explanation: "Plants take in carbon dioxide and release oxygen during photosynthesis.",
-        },
-        {
-          id: "q2",
-          type: "trueFalse",
-          prompt: "Sound travels faster in air than in water.",
-          isTrue: false,
-          explanation: "Sound travels about 4 times faster in water because water particles are denser.",
-        },
-        {
-          id: "q3",
-          type: "inputAnswer",
-          prompt: "What is the hardest natural substance on Earth?",
-          keywords: ["diamond"],
-          explanation: "Diamond is carbon arranged in a crystal lattice structure.",
-        },
-        {
-          id: "q4",
-          type: "multipleChoice",
-          prompt: "Which organ in the human body pumps blood?",
-          options: ["Brain", "Lungs", "Heart", "Liver"],
-          correctOptionIndex: 2,
-          explanation: "The heart is a muscular organ that pumps blood through the circulatory system.",
-        },
-        {
-          id: "q5",
-          type: "trueFalse",
-          prompt: "The Earth revolves around the Sun.",
-          isTrue: true,
-          explanation: "It takes approximately 365.25 days for Earth to complete one orbit around the Sun.",
-        },
-        {
-          id: "q6",
-          type: "inputAnswer",
-          prompt: "What force pulls objects toward the center of the Earth?",
-          keywords: ["gravity"],
-          explanation: "Gravity is a fundamental force of attraction between masses.",
-        },
-      ],
+      questions: DEFAULT_WHEEL_QUESTIONS,
     },
     propDefinitions: [
       {

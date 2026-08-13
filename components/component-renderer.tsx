@@ -6,6 +6,8 @@ import { createElement } from "react"
 import { cn } from "@/lib/utils"
 import type { Component, ComponentType } from "@/types/lesson"
 import type { PollVotesMap } from "@/hooks/use-poll-store"
+import { usesGamifiedRendererProps, usesInteractiveRendererProps } from "@/lib/component-registry"
+import { resolveHotspotComponentProps } from "@/lib/hotspot-utils"
 
 type ComponentRenderers = Record<string, React.ComponentType<any>>;
 
@@ -95,49 +97,6 @@ interface ComponentRendererProps {
     submitVote: (componentId: string, optionId: string) => Promise<void>;
   };
 }
-
-const gamifiedTypes: ComponentType[] = [
-  'quiz',
-  'trueFalse',
-  'shortAnswer',
-  'annotateImage',
-  'categorise',
-  'timeline',
-  'dragDrop',
-  'matchingPairs',
-  'fillInTheBlank',
-  'codeEditor',
-  'wordScramble',
-  'memoryGrid',
-  'wordCloud',
-  'scaleSlider',
-  'poll',
-  'spinTheWheel'
-];
-
-const interactiveTypes: ComponentType[] = [
-  'quiz',
-  'trueFalse',
-  'annotateImage',
-  'categorise',
-  'timeline',
-  'dragDrop',
-  'matchingPairs',
-  'fillInTheBlank',
-  'flashcards',
-  'codeEditor',
-  'hotspot',
-  'wordScramble',
-  'memoryGrid',
-  'spinTheWheel',
-  'crossword',
-  'audioRecording',
-  'wordCloud',
-  'scaleSlider',
-  'drawingCanvas',
-  'poll',
-  'spinTheWheel'
-];
 
 // Wrapper component for decrypt/discovery mode (handles password encryption, timers, hints)
 const DiscoveryWrapper = ({
@@ -281,7 +240,7 @@ const ComponentRendererBase = function ComponentRenderer({
     </DisabledWrapper>
   );
 
-  if (gamifiedTypes.includes(component.type)) {
+  if (usesGamifiedRendererProps(component.type)) {
     return renderComponent({
       ...component.props,
       savedState,
@@ -294,9 +253,14 @@ const ComponentRendererBase = function ComponentRenderer({
     });
   }
 
-  if (interactiveTypes.includes(component.type)) {
+  if (usesInteractiveRendererProps(component.type)) {
+    const resolvedProps = component.type === "hotspot"
+      ? resolveHotspotComponentProps(component)
+      : component.props
+
     return renderComponent({
-      ...component.props,
+      ...resolvedProps,
+      id: component.id,
       savedState,
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,

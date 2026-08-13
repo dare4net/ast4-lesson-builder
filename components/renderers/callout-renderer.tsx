@@ -2,9 +2,9 @@
 
 import React from "react"
 import { cn } from "@/lib/utils"
-import { Info, Lightbulb, AlertTriangle, AlertCircle, Volume2 } from "lucide-react"
-import { useReadAloud } from "@/context/read-aloud-context"
+import { Info, Lightbulb, AlertTriangle, AlertCircle } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
+import { ListenButton } from "@/components/renderers/listen-button"
 
 interface CalloutRendererProps {
     variant?: "note" | "tip" | "warning" | "important"
@@ -13,6 +13,7 @@ interface CalloutRendererProps {
     audioUrl?: string
     isEditing?: boolean
     isBuilder?: boolean
+    autoPlayAudio?: boolean
 }
 
 export function CalloutRenderer({
@@ -21,10 +22,14 @@ export function CalloutRenderer({
     content,
     audioUrl,
     isEditing = false,
+    isBuilder = false,
+    autoPlayAudio,
 }: CalloutRendererProps) {
-    const { speak, isSpeaking: isTtsSpeaking } = useReadAloud()
-    const { isPlaying: isAudioPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
-    const isSpeaking = isAudioPlaying || isTtsSpeaking
+    const shouldAutoPlay = autoPlayAudio ?? (!isBuilder && !isEditing)
+    const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({
+        audioUrl,
+        autoPlay: shouldAutoPlay && !!audioUrl,
+    })
 
     const variantStyles = {
         note: {
@@ -59,14 +64,8 @@ export function CalloutRenderer({
 
     const config = variantStyles[variant] || variantStyles.note
 
-    const handleSpeak = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        if (hasAudio) {
-            playAudio()
-        } else {
-            const fullText = `${title || config.defaultTitle}. ${content}`
-            speak(fullText)
-        }
+    const handleSpeak = () => {
+        playAudio()
     }
 
     return (
@@ -89,18 +88,14 @@ export function CalloutRenderer({
                         </h4>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={handleSpeak}
-                        className={cn(
-                            "flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black transition-all border cursor-pointer active:scale-95 shadow-sm",
-                            config.badge
-                        )}
-                        title={hasAudio ? "Play Audio Track" : "Read Aloud"}
-                    >
-                        <Volume2 className={cn("w-3.5 h-3.5", isSpeaking && "animate-pulse")} />
-                        <span className="text-[9px] uppercase tracking-wider">Listen</span>
-                    </button>
+                    {hasAudio && (
+                        <ListenButton
+                            hasAudio={hasAudio}
+                            isPlaying={isPlaying}
+                            onClick={handleSpeak}
+                            className={config.badge}
+                        />
+                    )}
                 </div>
 
                 {/* Body Content */}

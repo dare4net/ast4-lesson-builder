@@ -199,7 +199,7 @@
                                 "content": "The total amount of liquid remains constant no matter how wide the glass is."
                             }
                         ],
-                        "behavior": "discovery",
+                        "behavior": "explore",
                         "mode": "practice",
                         "state": "active"
                     },
