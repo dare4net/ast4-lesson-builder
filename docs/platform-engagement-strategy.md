@@ -92,11 +92,11 @@ Points only motivate when they connect to something the learner values. Currentl
 - Failure feedback is functional (red X + explanation), not light/retry-friendly
 - Live mode timers add stress inappropriate for the age group
 
-**Can the platform serve them?** Yes — with different authoring, not a different engine.
+**Can the platform serve them?** Yes — fully validated! After deploying `skills/primary-lesson-generator/SKILL.md` (discovery-first, story-framed, light text density), revamped lessons received unsolicited "fun" ratings from a Year 4 student. Authoring style, not engine capability, was the true obstacle.
 
-**Should they be a primary marketing target today?** No — not until primary authoring tooling and examples exist.
+**Should they be a primary marketing target today?** Supported now via `primary-lesson-generator` authoring workflows.
 
-**Strategy:** Expert-authored primary mode later. Do not dilute KS3 product to chase primary.
+**Strategy:** Use `primary-lesson-generator` for primary content and `curriculum-lesson-generator` for KS3+ depth. Do not mix the two authoring styles.
 
 ### Year 7–9 (KS3) — Strong fit today
 
@@ -228,9 +228,10 @@ Duolingo empty dopamine (streaks, meaningless points, notification loops)
 | Decision | Rationale |
 |---|---|
 | Don't permanently exclude Year 4/5 | Platform can serve them with different authoring — exclusion is a marketing/priority call, not a technical one |
-| Exclude Year 4/5 from default target for now | Current skills, samples, and UI don't support them without expert effort |
+| Primary authoring validated | `primary-lesson-generator` skill produced lessons that Year 4 students unsolicitedly rated as "fun" |
 | Year 7 = core user | Validated by student enjoyment; build scoring/leaderboard here first |
 | Create `primary-lesson-generator` skill | Same components, different rules — not dumber content |
+| Standardize `attempts` in Practice Mode | Year 7 students actively compete against their own retries ("1st attempt clear"); tracking attempts creates intrinsic motivation without artificial points |
 | Don't become Duolingo | Interaction-first yes; meaningless dopamine loops no |
 | Scores must mean mastery | Points utility > more components |
 
