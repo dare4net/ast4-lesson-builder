@@ -28,7 +28,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     return null;
   });
   const [error, setError] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);

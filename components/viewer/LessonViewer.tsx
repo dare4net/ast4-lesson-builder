@@ -387,46 +387,48 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   return (
     <ScoringProvider lesson={lessonData}>
       <NavigationLockProvider>
-          <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950">
-            {/* Desktop/Tablet Sidebar */}
-            <div className="hidden md:block w-80 shrink-0">
+        <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950 relative">
+          {/* Collapsible Sidebar Drawer (Hidden by default on all screens) */}
+          <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+            <SheetContent side="left" className="p-0 border-r-0 w-80 bg-slate-900 text-white z-50">
               {renderSidebarContent()}
-            </div>
+            </SheetContent>
+          </Sheet>
 
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
-              {(() => {
-                const completedSlidesCount = lessonData?.slides.filter(s => s.status === 'completed').length || 0;
-                const totalSlidesCount = lessonData?.slides.length || 0;
-                const overallProgress = totalSlidesCount > 0 ? (completedSlidesCount / totalSlidesCount) * 100 : 0;
-                const isAllCompleted = totalSlidesCount > 0 && completedSlidesCount === totalSlidesCount;
+          {/* Main Content Area (Full screen width by default) */}
+          <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
+            {(() => {
+              const completedSlidesCount = lessonData?.slides.filter(s => s.status === 'completed').length || 0;
+              const totalSlidesCount = lessonData?.slides.length || 0;
+              const overallProgress = totalSlidesCount > 0 ? (completedSlidesCount / totalSlidesCount) * 100 : 0;
+              const isAllCompleted = totalSlidesCount > 0 && completedSlidesCount === totalSlidesCount;
 
-                return (
-                  <TopProgressBar
-                    progress={overallProgress}
-                    completedSlides={completedSlidesCount}
-                    totalSlides={totalSlidesCount}
-                    isCompleted={isAllCompleted}
-                    onMenuClick={() => setIsSidebarOpen(true)}
-                  />
-                );
-              })()}
-
-              <div className="flex-1 relative overflow-hidden">
-                <LessonContent
-                  ref={lessonContentRef}
-                  lesson={lessonData!}
-                  currentSlideIndex={currentSlideIndex}
-                  onSlideChange={handleSlideChange}
-                  initialComponentStates={initialInteraction?.componentsState || {}}
-                  onProgressUpdate={handleProgressUpdate}
-                  onSlidesUpdate={handleSlidesUpdate}
-                  onScoreUpdate={handleScoreUpdate}
-                  onEndLesson={handleEndLesson}
+              return (
+                <TopProgressBar
+                  progress={overallProgress}
+                  completedSlides={completedSlidesCount}
+                  totalSlides={totalSlidesCount}
+                  isCompleted={isAllCompleted}
+                  onMenuClick={() => setIsSidebarOpen(true)}
                 />
-              </div>
+              );
+            })()}
+
+            <div className="flex-1 relative overflow-hidden">
+              <LessonContent
+                ref={lessonContentRef}
+                lesson={lessonData!}
+                currentSlideIndex={currentSlideIndex}
+                onSlideChange={handleSlideChange}
+                initialComponentStates={initialInteraction?.componentsState || {}}
+                onProgressUpdate={handleProgressUpdate}
+                onSlidesUpdate={handleSlidesUpdate}
+                onScoreUpdate={handleScoreUpdate}
+                onEndLesson={handleEndLesson}
+              />
             </div>
           </div>
+        </div>
       </NavigationLockProvider>
     </ScoringProvider>
   );

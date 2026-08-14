@@ -173,19 +173,19 @@ export function playSliderTick(volume = 0.35) {
 export function playCodeRun(volume = 0.4) {
   try {
     const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
-    ;[640, 820].forEach((freq, i) => {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.type = 'square'
-      osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.05)
-      gain.gain.setValueAtTime(volume * 0.12, ctx.currentTime + i * 0.05)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05 + i * 0.05)
-      osc.start(ctx.currentTime + i * 0.05)
-      osc.stop(ctx.currentTime + 0.07 + i * 0.05)
-      osc.onended = () => { if (i === 1) ctx.close() }
-    })
+      ;[640, 820].forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.type = 'square'
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.05)
+        gain.gain.setValueAtTime(volume * 0.12, ctx.currentTime + i * 0.05)
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05 + i * 0.05)
+        osc.start(ctx.currentTime + i * 0.05)
+        osc.stop(ctx.currentTime + 0.07 + i * 0.05)
+        osc.onended = () => { if (i === 1) ctx.close() }
+      })
   } catch (_) { }
 }
 
@@ -247,19 +247,98 @@ export function playWheelSpin(durationMs = 6500, volume = 0.45) {
 
     // Landing chime when the wheel stops
     const landT = now + dur - 0.08
-    ;[880, 1318.5].forEach((freq, i) => {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = 'sine'
-      osc.frequency.setValueAtTime(freq, landT + i * 0.05)
-      gain.gain.setValueAtTime(volume * 0.28, landT + i * 0.05)
-      gain.gain.exponentialRampToValueAtTime(0.001, landT + 0.45 + i * 0.05)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start(landT + i * 0.05)
-      osc.stop(landT + 0.5 + i * 0.05)
-      if (i === 1) osc.onended = () => ctx.close()
-    })
+      ;[880, 1318.5].forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, landT + i * 0.05)
+        gain.gain.setValueAtTime(volume * 0.28, landT + i * 0.05)
+        gain.gain.exponentialRampToValueAtTime(0.001, landT + 0.45 + i * 0.05)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(landT + i * 0.05)
+        osc.stop(landT + 0.5 + i * 0.05)
+        if (i === 1) osc.onended = () => ctx.close()
+      })
+  } catch (_) { }
+}
+
+// ── Synthesized Fallback Sound Effects (Web Audio API) ──────────────────────────
+
+function playSynthesizedCorrectSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const now = ctx.currentTime
+      ;[523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, now + i * 0.08)
+        gain.gain.setValueAtTime(volume * 0.25, now + i * 0.08)
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3 + i * 0.08)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(now + i * 0.08)
+        osc.stop(now + 0.35 + i * 0.08)
+        if (i === 2) osc.onended = () => ctx.close()
+      })
+  } catch (_) { }
+}
+
+function playSynthesizedIncorrectSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const now = ctx.currentTime
+      ;[220, 164.81].forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sawtooth'
+        osc.frequency.setValueAtTime(freq, now + i * 0.1)
+        gain.gain.setValueAtTime(volume * 0.2, now + i * 0.1)
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25 + i * 0.1)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(now + i * 0.1)
+        osc.stop(now + 0.28 + i * 0.1)
+        if (i === 1) osc.onended = () => ctx.close()
+      })
+  } catch (_) { }
+}
+
+function playSynthesizedChimeSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const now = ctx.currentTime
+      ;[659.25, 880].forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, now + i * 0.06)
+        gain.gain.setValueAtTime(volume * 0.25, now + i * 0.06)
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25 + i * 0.06)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(now + i * 0.06)
+        osc.stop(now + 0.3 + i * 0.06)
+        if (i === 1) osc.onended = () => ctx.close()
+      })
+  } catch (_) { }
+}
+
+function playSynthesizedClickSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.type = 'triangle'
+    osc.frequency.setValueAtTime(800, ctx.currentTime)
+    gain.gain.setValueAtTime(volume * 0.25, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04)
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.045)
+    osc.onended = () => ctx.close()
   } catch (_) { }
 }
 
@@ -393,12 +472,28 @@ class SoundEffectManager {
     Object.entries(this.sounds).forEach(([key, sound]) => {
       sound.on('load', () => {
         this.status[key as SoundEffect].loaded = true;
+        this.status[key as SoundEffect].error = false;
       });
 
       sound.on('loaderror', () => {
         this.status[key as SoundEffect].error = true;
+        this.status[key as SoundEffect].loaded = false;
       });
     });
+  }
+
+  private playFallbackSynthesized(effect: SoundEffect, volume: number): void {
+    if (effect === 'correct') {
+      playSynthesizedCorrectSound(volume);
+    } else if (effect === 'incorrect') {
+      playSynthesizedIncorrectSound(volume);
+    } else if (effect === 'complete' || effect === 'finishedLesson' || effect === 'levelUp' || effect === 'streak') {
+      playSynthesizedCorrectSound(volume);
+    } else if (effect === 'quizSuccess' || effect === 'dngSuccess' || effect === 'categorizeBucketComplete') {
+      playSynthesizedChimeSound(volume);
+    } else {
+      playSynthesizedClickSound(volume);
+    }
   }
 
   async play(effect: SoundEffect): Promise<void> {
@@ -419,7 +514,7 @@ class SoundEffectManager {
     }
 
     const sound = this.sounds[effect];
-    if (!sound) return;
+    const effectVolume = (this.soundVolumes[effect] || 0.5) * this.volume;
 
     try {
       // Resume Howler AudioContext if browser suspended it
@@ -427,16 +522,20 @@ class SoundEffectManager {
         await (window as any).Howler.ctx.resume()
       }
 
-      if (sound.state() === 'unloaded') {
-        sound.load()
+      if (!sound || sound.state() !== 'loaded' || this.status[effect]?.error) {
+        if (sound && sound.state() === 'unloaded') {
+          sound.load();
+        }
+        // Always guarantee audio feedback via Web Audio synthesizer
+        this.playFallbackSynthesized(effect, effectVolume);
+        return;
       }
 
-      const effectVolume = this.soundVolumes[effect] || 0.5;
-      const finalVolume = this.volume * effectVolume;
-      sound.volume(finalVolume);
+      sound.volume(effectVolume);
       sound.play();
     } catch (error) {
-      console.error(`Error playing sound effect ${effect}:`, error);
+      console.warn(`[SoundEffectManager] Error playing sound effect ${effect}, using synthesized fallback:`, error);
+      this.playFallbackSynthesized(effect, effectVolume);
     }
   }
 

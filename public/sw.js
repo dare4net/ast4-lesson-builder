@@ -1,7 +1,7 @@
 // Service Worker for AST Lesson Builder PWA
 
-const CACHE_NAME = 'ast-builder-cache-v4';
-const SOUND_CACHE_NAME = 'ast-builder-sounds-v2';
+const CACHE_NAME = 'ast-builder-cache-v5';
+const SOUND_CACHE_NAME = 'ast-builder-sounds-v3';
 
 const urlsToCache = [
   '/',
@@ -70,26 +70,40 @@ self.addEventListener('fetch', (event) => {
     return; // Allow standard browser handling
   }
 
-  // 2. Audio & Sound files: Cache-First (Offline Cloudinary TTS & SFX playback)
+  // 2. Audio & Sound files: Cache-First with robust validation (Offline Cloudinary TTS & SFX playback)
   if (url.pathname.includes('/sounds/') || url.pathname.includes('/audio/') || url.hostname.includes('res.cloudinary.com')) {
     event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) return cachedResponse;
-        return fetch(event.request.clone())
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200) {
-              const responseToCache = networkResponse.clone();
-              const targetCache = url.pathname.includes('/sounds/') ? SOUND_CACHE_NAME : CACHE_NAME;
-              caches.open(targetCache).then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-            }
-            return networkResponse;
-          })
-          .catch(() => {
-            return new Response('Audio asset unavailable offline', { status: 404, statusText: 'Not Found' });
-          });
-      })
+      (async () => {
+        const targetCacheName = url.pathname.includes('/sounds/') ? SOUND_CACHE_NAME : CACHE_NAME;
+        const cache = await caches.open(targetCacheName);
+
+        // Match by clean URL to prevent Range header mismatches
+        const cleanRequest = new Request(url.pathname, { method: 'GET' });
+        const cachedResponse = await cache.match(cleanRequest);
+
+        // Validate cached response — if valid 200 OK, return it!
+        if (cachedResponse && cachedResponse.ok && cachedResponse.status === 200) {
+          return cachedResponse;
+        }
+
+        // If corrupted/error response was cached by mistake, purge it!
+        if (cachedResponse) {
+          await cache.delete(cleanRequest);
+        }
+
+        // Fetch fresh from network
+        try {
+          const networkResponse = await fetch(event.request);
+          if (networkResponse && networkResponse.status === 200) {
+            // Only cache valid 200 OK full responses (not 206 Partial or 404 error pages)
+            cache.put(cleanRequest, networkResponse.clone());
+          }
+          return networkResponse;
+        } catch (err) {
+          // If offline and no valid cache, return clean error response
+          return new Response('Audio asset unavailable offline', { status: 404, statusText: 'Not Found' });
+        }
+      })()
     );
     return;
   }
