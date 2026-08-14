@@ -47,6 +47,18 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AST Builder" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__deferredPWAInstallPrompt = null;
+              window.addEventListener('beforeinstallprompt', function(e) {
+                e.preventDefault();
+                window.__deferredPWAInstallPrompt = e;
+                window.dispatchEvent(new Event('pwa-install-available'));
+              });
+            `,
+          }}
+        />
         <script src="/register-sw.js" defer></script>
       </head>
       <body className={inter.className} suppressHydrationWarning>

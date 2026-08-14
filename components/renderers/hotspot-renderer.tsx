@@ -52,35 +52,84 @@ interface HotspotRendererProps {
 function HotspotDetailPanel({
     hotspot,
     isDecoy,
+    containerRef,
 }: {
     hotspot: HotspotNode
     isDecoy: boolean
+    containerRef: React.RefObject<HTMLDivElement | null>
 }) {
+    const panelRef = useRef<HTMLDivElement>(null)
+    const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({ position: "absolute", opacity: 0 })
+    const [arrowDir, setArrowDir] = useState<"above" | "below">("above")
+    const [arrowOffset, setArrowOffset] = useState(0)
+
+    useEffect(() => {
+        const panel = panelRef.current
+        const container = containerRef.current
+        if (!panel || !container) return
+
+        const cW = container.offsetWidth
+        const cH = container.offsetHeight
+        const pW = panel.offsetWidth
+        const pH = panel.offsetHeight
+        const pinX = hotspot.x * cW
+        const pinY = hotspot.y * cH
+        const GAP = 12
+        const EDGE = 8
+
+        // Prefer above; fall back to below if not enough room at top
+        let top = pinY - pH - GAP
+        let dir: "above" | "below" = "above"
+        if (top < EDGE) {
+            top = pinY + GAP
+            dir = "below"
+        }
+        top = Math.max(EDGE, Math.min(top, cH - pH - EDGE))
+
+        // Center panel over pin, clamp within container width
+        let left = pinX - pW / 2
+        left = Math.max(EDGE, Math.min(left, cW - pW - EDGE))
+
+        // Arrow: where pinX falls relative to panel left edge
+        const arrow = Math.max(10, Math.min(pinX - left, pW - 10))
+
+        setPanelStyle({ position: "absolute", top, left, opacity: 1 })
+        setArrowDir(dir)
+        setArrowOffset(arrow)
+    }, [hotspot.x, hotspot.y, containerRef])
+
+    const colorBorder = isDecoy ? "border-rose-500" : "border-emerald-500"
+    const colorText = isDecoy ? "text-rose-600" : "text-emerald-600"
+    const arrowBorder = isDecoy ? "border-rose-500" : "border-emerald-500"
+
     return (
         <div
+            ref={panelRef}
             className={cn(
-                "absolute z-50 w-max max-w-[min(16rem,70vw)] rounded-xl border-2 bg-white p-4 shadow-xl pointer-events-auto",
-                isDecoy ? "border-rose-500" : "border-emerald-500",
+                "absolute z-[100] w-max max-w-[min(16rem,70vw)] rounded-xl border-2 bg-white p-4 shadow-xl pointer-events-auto",
+                colorBorder,
             )}
-            style={{
-                left: `${hotspot.x * 100}%`,
-                top: `${hotspot.y * 100}%`,
-                transform: "translate(-50%, calc(-100% - 10px))",
-            }}
+            style={panelStyle}
             onClick={(e) => e.stopPropagation()}
             onPointerDown={(e) => e.stopPropagation()}
         >
             <div className="space-y-1.5">
-                <p
-                    className={cn(
-                        "text-[10px] font-black uppercase tracking-[0.2em]",
-                        isDecoy ? "text-rose-600" : "text-emerald-600",
-                    )}
-                >
+                <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", colorText)}>
                     {hotspot.label}
                 </p>
                 <p className="text-sm font-black text-slate-900 leading-tight">{hotspot.content}</p>
             </div>
+
+            {/* Chat-bubble arrow — always points at the pin */}
+            {arrowDir === "above" ? (
+                <div className="absolute bottom-[-7px]" style={{ left: arrowOffset - 6 }}>
+                    <div className={cn("w-3 h-3 rotate-45 bg-white border-b-2 border-r-2", arrowBorder)} />
+                </div>
+            ) : (
+                <div className="absolute top-[-7px]" style={{ left: arrowOffset - 6 }}>
+                    <div className={cn("w-3 h-3 rotate-45 bg-white border-t-2 border-l-2", arrowBorder)} />
+                </div>
+            )}
         </div>
     )
 }
@@ -97,6 +146,7 @@ function HotspotPin({
     activeHotspotId,
     onClickPin,
     behavior,
+    containerRef,
 }: {
     hotspot: HotspotNode
     index: number
@@ -109,6 +159,7 @@ function HotspotPin({
     activeHotspotId: string | null
     onClickPin: (id: string) => void
     behavior: HotspotBehavior
+    containerRef: React.RefObject<HTMLDivElement | null>
 }) {
     const isExplore = behavior === "explore"
     const foundDuringPlay = behavior === "discover" && !isRevealed && wasClicked
@@ -124,17 +175,17 @@ function HotspotPin({
                 ? "correct-hit"
                 : "correct-missed"
             : wasClicked
-              ? "decoy-hit"
-              : "decoy-unclicked"
+                ? "decoy-hit"
+                : "decoy-unclicked"
         : isExplore
-          ? isDiscovered
-              ? "explored"
-              : "explore-idle"
-          : foundCorrectDuringPlay
-            ? "correct-found-play"
-            : foundDecoyDuringPlay
-              ? "decoy-found-play"
-              : "discover-clicked"
+            ? isDiscovered
+                ? "explored"
+                : "explore-idle"
+            : foundCorrectDuringPlay
+                ? "correct-found-play"
+                : foundDecoyDuringPlay
+                    ? "decoy-found-play"
+                    : "discover-clicked"
 
     const isOpen = activeHotspotId === hotspot.id
 
@@ -190,6 +241,7 @@ function HotspotPin({
                 <HotspotDetailPanel
                     hotspot={hotspot}
                     isDecoy={!isCorrectTarget && (foundDecoyDuringPlay || (isRevealed && wasClicked))}
+                    containerRef={containerRef}
                 />
             )}
         </>
@@ -221,6 +273,7 @@ function HotspotContent({
     const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null)
     const allFoundSoundPlayed = useRef(false)
     const imageRef = useRef<HTMLImageElement>(null)
+    const stageRef = useRef<HTMLDivElement>(null)
     const { playFeedback } = useFeedback()
     const { registerLock, unregisterLock } = useNavigationLock()
 
@@ -544,38 +597,47 @@ function HotspotContent({
 
             <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
                 <div className="flex items-center justify-center w-full h-full my-auto">
+                    {/* Outer wrapper: overflow-visible so tooltips/panels aren't clipped */}
                     <div
+                        ref={stageRef}
                         className={cn(
-                            "relative inline-block shrink-0 rounded-2xl border-2 border-emerald-100 bg-white overflow-hidden shadow-sm max-w-full",
+                            "relative inline-block shrink-0 max-w-full",
                             canClick && "cursor-crosshair",
                             !canClick && isDiscover && !isRevealed && !isSubmitted && "cursor-not-allowed",
                         )}
                         onClick={handleStageClick}
                     >
-                        <img
-                            ref={imageRef}
-                            src={image || "/placeholder.svg?height=300&width=400"}
-                            alt={title}
-                            className="max-h-[42vh] w-auto h-auto object-contain block select-none"
-                            draggable={false}
-                        />
-
-                        {hotspots.map((hotspot, idx) => (
-                            <HotspotPin
-                                key={hotspot.id}
-                                hotspot={hotspot}
-                                index={idx}
-                                showNumbers={props.showNumbers ?? false}
-                                isDiscovered={discoveredHotspots.includes(hotspot.id)}
-                                isRevealed={isRevealed}
-                                isCorrectTarget={hotspot.isCorrect !== false}
-                                wasClicked={clickedHotspotIds.includes(hotspot.id)}
-                                clickResult={getClickResult(hotspot)}
-                                activeHotspotId={activeHotspotId}
-                                onClickPin={handlePinClick}
-                                behavior={behavior}
+                        {/* Image wrapper: overflow-hidden here only clips the img to the border-radius */}
+                        <div className="rounded-2xl border-2 border-emerald-100 overflow-hidden shadow-sm">
+                            <img
+                                ref={imageRef}
+                                src={image || "/placeholder.svg?height=300&width=400"}
+                                alt={title}
+                                className="max-h-[42vh] w-auto h-auto object-contain block select-none bg-white"
+                                draggable={false}
                             />
-                        ))}
+                        </div>
+
+                        {/* Pin + panel layer: sits above the image, not clipped */}
+                        <div className="absolute inset-0">
+                            {hotspots.map((hotspot, idx) => (
+                                <HotspotPin
+                                    key={hotspot.id}
+                                    hotspot={hotspot}
+                                    index={idx}
+                                    showNumbers={props.showNumbers ?? false}
+                                    isDiscovered={discoveredHotspots.includes(hotspot.id)}
+                                    isRevealed={isRevealed}
+                                    isCorrectTarget={hotspot.isCorrect !== false}
+                                    wasClicked={clickedHotspotIds.includes(hotspot.id)}
+                                    clickResult={getClickResult(hotspot)}
+                                    activeHotspotId={activeHotspotId}
+                                    onClickPin={handlePinClick}
+                                    behavior={behavior}
+                                    containerRef={stageRef}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -625,10 +687,10 @@ function HotspotContent({
                                 isPendingMarking && !tutorMarkedFlag
                                     ? "bg-amber-50 border-amber-200"
                                     : approved || correctFoundCount >= totalCorrectTargets
-                                      ? "bg-emerald-50/50 border-emerald-500/20"
-                                      : correctFoundCount > 0
-                                        ? "bg-amber-50/50 border-amber-300/30"
-                                        : "bg-rose-50/50 border-rose-300/30",
+                                        ? "bg-emerald-50/50 border-emerald-500/20"
+                                        : correctFoundCount > 0
+                                            ? "bg-amber-50/50 border-amber-300/30"
+                                            : "bg-rose-50/50 border-rose-300/30",
                             )}
                         >
                             {isPendingMarking && !tutorMarkedFlag ? (

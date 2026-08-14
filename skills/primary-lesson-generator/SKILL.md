@@ -22,7 +22,7 @@ Primary lessons follow a different north star from KS3:
 | KS3 (curriculum-lesson-generator) | Primary (this skill) |
 |---|---|
 | Depth → mastery → live assessment | Action → discovery → gentle check |
-| Intertwined text + multiple components per slide | **One main activity per slide** |
+| Long academic blocks before doing | **Mixed read → do → read → do per slide** |
 | Academic framing | **Story / mission framing allowed** |
 | Timed live mode | **Practice mode only** |
 | Meta-language ("modal verb", "certainty spectrum") | **Concrete language** ("strong word", "maybe word") |
@@ -57,7 +57,7 @@ Primary modules are **shorter and lighter** than KS3 modules:
 
 2. **Lessons 2 through N−1 — One Idea Per Lesson (6–10 slides)**:
    - One concrete concept only (e.g. "solids vs liquids", not "states of matter + particle theory + phase changes").
-   - Each slide = one activity OR one tiny explanation + one activity.
+   - Each slide teaches through a **mixed sequence** of short content + activities — as many components as the concept needs, as long as each step earns its place (see Section 4).
    - Revisit the story frame on every slide opening line.
 
 3. **Final Lesson — Show What You Found (4–6 slides)**:
@@ -68,29 +68,43 @@ Primary modules are **shorter and lighter** than KS3 modules:
 
 ---
 
-## 4. The One-Component-Per-Slide Rule (Critical)
+## 4. Slide Composition — Earn Your Place (Critical)
 
 The AST lesson **viewer shows one component at a time** per slide. The learner taps Next to step through each component sequentially.
 
-### ❌ Bad primary slide (6 Next taps before fun)
-```
-heading → paragraph → paragraph → table → callout → quiz
-```
+**Multiple components per slide is correct and encouraged** when each Next tap delivers something new and purposeful. Lengthy slides are **not** a problem — boring slides are.
 
-### ✅ Good primary slide (instant action)
+### ❌ Bad primary slide (passive wall before doing)
 ```
-memoryGrid   (alone on slide)
+paragraph → paragraph → table → callout → quiz
 ```
-or
+Six Next taps, all reading, then a test on something never explained on this slide.
+
+### ❌ Bad primary slide (component buffet for novelty)
 ```
-heading (max 8 words) → hotspot discovery
+wordScramble → spinTheWheel → memoryGrid → categorise → poll
+```
+Fun activities with no teaching thread — novelty without learning.
+
+### ✅ Good primary slide (mixed, interwoven, teach-before-test)
+```
+heading → callout (define hyperbole) → paragraph (one example) → trueFalse → memoryGrid
+```
+Read → do → read → do. Concept is shown before it is tested.
+
+Another valid pattern:
+```
+heading → accordion (2 panels) → categorise → quiz (2 options)
 ```
 
 **Rules**:
-- **Maximum 2 components per slide** for Year 4–5.
-- **Preferred: 1 component per slide** for ages 8–9.
-- If using 2 components: short `heading` (≤8 words) + one interactive component.
-- **Never** stack `paragraph` + `table` + `quiz` on the same slide.
+- **No component count cap** — use as many as the slide's learning goal requires.
+- **Every component must earn its place**: teach, reinforce, or check something the slide already set up.
+- **Never stack continuous passive content** (`paragraph` → `paragraph` → `table` with no activity between).
+- **Teach before test** — never open a slide with a quiz on a concept explained later on the same or next slide.
+- **Start every slide with non-autoplay content** — usually `heading` (≤8 words); never open with a component that autoplays audio.
+- **Learning first, experience second** — pick components because the concept needs them, not because you want her to "try everything new."
+- **Repeating one component type across slides is fine** if that is what the slide needs (e.g. two `trueFalse` checks after two separate mini-lessons).
 
 ---
 
@@ -240,6 +254,18 @@ components:
   - poll ("What was your favourite part?" — 3 fun options)
 ```
 
+### Pattern G — Teach, Then Check (validated for Year 4 fables)
+```
+slide: "📢 Loud and Bigger — Hyperbole!"
+components:
+  - heading (level 2, ≤8 words, no autoplay)
+  - callout (define the device in 1–2 sentences)
+  - paragraph (one fable example)
+  - trueFalse (check the example just shown)
+  - memoryGrid (3–4 pairs reinforcing the device)
+```
+Each Next tap alternates explanation and doing. No arbitrary component cap.
+
 ---
 
 ## 9. Mode & Scoring Rules (Primary)
@@ -316,7 +342,7 @@ Use the built-in UI cue system instead — controlled by lesson metadata and sli
 
 ### Other platform behaviours to know
 
-1. **Viewer shows one component at a time** per slide — design slides accordingly (see Section 4).
+1. **Viewer shows one component at a time** per slide — mix content and activities so each Next tap earns its place (see Section 4).
 2. **Read-aloud** is available on some content components via `audioUrl` — prefer adding audio for non-readers where possible.
 3. **Graphic patterns** (`polka-dots`, `waves`, `squiggles`, etc.) are lesson-locked via `getLessonPattern(lessonId)` — consistent visual identity per lesson.
 4. **UI chrome** on individual components (point badges, formal labels) is neutral/teen-toned — compensate with playful slide titles and cue overlays.
@@ -341,8 +367,10 @@ Use the built-in UI cue system instead — controlled by lesson metadata and sli
 
 Before submitting a primary lesson JSON:
 
-- [ ] Every slide has ≤2 components (prefer 1)
-- [ ] No slide opens with `paragraph` or `table` alone — activity first
+- [ ] Every slide mixes content + activity — no passive-only stacks (`paragraph` → `paragraph` → `table`)
+- [ ] No slide opens with a quiz/check on an untaught concept (teach before test)
+- [ ] No slide opens with a component that autoplays audio — use `heading` or other non-autoplay content first
+- [ ] Every component on the slide earns its place (learning first, novelty second)
 - [ ] No `fillInTheBlank` with more than 1 blank
 - [ ] No `multiSelectQuiz`, `shortAnswer`, or `codeEditor`
 - [ ] No `"mode": "live"` anywhere
@@ -370,13 +398,13 @@ Before submitting a primary lesson JSON:
 
 | Slide | Title (used by UI cues) | Components on slide |
 |---|---|---|
-| 1 | 🌊 Splash Lab! | `poll` only |
-| 2 | 🔍 Explore the Pool | `hotspot` discovery |
-| 3 | 🎴 Match the Objects | `memoryGrid` (3 pairs) |
-| 4 | ⭐ True or False? | `trueFalse` |
-| 5 | 📦 Sort It! | `categorise` (2 buckets, 4 items) |
-| 6 | 🎡 Spin to Win! | `spinTheWheel` (2 spins) |
-| 7 | 🎉 Scientist Badge! | `bulletList` + `poll` |
+| 1 | 🌊 Splash Lab! | `heading` → `poll` |
+| 2 | 🔍 Explore the Pool | `heading` → `hotspot` discovery |
+| 3 | 💧 Solids, Liquids, Gas | `callout` → `paragraph` → `trueFalse` |
+| 4 | 🎴 Match the Objects | `heading` → `memoryGrid` (3 pairs) |
+| 5 | 📦 Sort It! | `heading` → `categorise` (2 buckets, 4 items) |
+| 6 | 🎡 Spin to Win! | `heading` → `spinTheWheel` (2 spins) |
+| 7 | 🎉 Scientist Badge! | `bulletList` → `poll` |
 
 **Duration**: 25 minutes | **Level**: Year 4 | **Mode**: All practice
 

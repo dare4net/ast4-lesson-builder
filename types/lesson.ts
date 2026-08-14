@@ -8,6 +8,8 @@ export interface Lesson {
   slides: Slide[]
   settings?: Record<string, any>
   voice?: string
+  introAudioUrl?: string
+  introTextHash?: string
   createdAt: string
   updatedAt: string
 }

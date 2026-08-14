@@ -118,9 +118,17 @@ export interface SlideCueAudioItem {
     newHash: string
 }
 
+export interface IntroAudioItem {
+    componentId: string
+    text: string
+    lessonId: string
+    newHash: string
+}
+
 export interface LessonAudioPublishPlan {
     componentItems: CollectedAudioItem[]
     slideCueItems: SlideCueAudioItem[]
+    introItem: IntroAudioItem | null
     skippedIds: Set<string>
     pendingCount: number
     readyCount: number
@@ -133,6 +141,35 @@ function resolveVoiceForHash(lesson: Lesson): string {
 
 function shouldReuseExistingAudio(existingHash: string | undefined, newHash: string, existingAudio: string | undefined): boolean {
     return Boolean(existingHash === newHash && existingAudio)
+}
+
+export function collectIntroAudioItem(lesson: Lesson, lessonId: string): {
+    item: IntroAudioItem | null
+    isSkipped: boolean
+} {
+    const cleanTitle = lesson.title?.trim() || ""
+    const cleanDesc = lesson.description?.trim() || ""
+    const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`
+    const speechText = normalizeTextForSpeech(welcomeText)
+    if (!speechText) return { item: null, isSkipped: false }
+
+    const resolvedVoiceForHash = resolveVoiceForHash(lesson)
+    const newHash = hashText(`${speechText}::${resolvedVoiceForHash}`)
+    const introId = "intro"
+
+    if (shouldReuseExistingAudio(lesson.introTextHash, newHash, lesson.introAudioUrl)) {
+        return { item: null, isSkipped: true }
+    }
+
+    return {
+        item: {
+            componentId: introId,
+            text: speechText,
+            lessonId,
+            newHash,
+        },
+        isSkipped: false,
+    }
 }
 
 export function collectSlideCueAudioItems(lesson: Lesson, lessonId: string): {
@@ -212,15 +249,21 @@ export function collectLessonComponentAudioItems(
 export function planLessonAudioPublish(lesson: Lesson, lessonId: string): LessonAudioPublishPlan {
     const { items: componentItems, skippedIds: componentSkipped } = collectLessonComponentAudioItems(lesson, lessonId)
     const { items: slideCueItems, skippedIds: cueSkipped } = collectSlideCueAudioItems(lesson, lessonId)
+    const { item: introItem, isSkipped: introSkipped } = collectIntroAudioItem(lesson, lessonId)
 
     const skippedIds = new Set<string>([...componentSkipped, ...cueSkipped])
-    const pendingCount = componentItems.length + slideCueItems.length
+    if (introSkipped) {
+        skippedIds.add("intro")
+    }
+
+    const pendingCount = componentItems.length + slideCueItems.length + (introItem ? 1 : 0)
     const readyCount = skippedIds.size
     const totalEligible = pendingCount + readyCount
 
     return {
         componentItems,
         slideCueItems,
+        introItem,
         skippedIds,
         pendingCount,
         readyCount,

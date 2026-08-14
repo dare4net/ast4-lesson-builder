@@ -4,123 +4,117 @@ import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { X, Download, Share } from "lucide-react"
 
+declare global {
+  interface Window {
+    __deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null
+  }
+}
+
+function isIOSSafari() {
+  if (typeof navigator === "undefined") return false
+  const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+  return isIOSDevice && isSafari
+}
+
+function isStandalone() {
+  if (typeof window === "undefined") return false
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone ||
+    document.referrer.includes("android-app://")
+  )
+}
+
 export function PWAInstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false)
-  const [isIOS, setIsIOS] = useState(false)
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
-  const [installable, setInstallable] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
 
   useEffect(() => {
-    // Check if it's iOS
-    const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
-    setIsIOS(isIOSDevice)
-    console.log("Is iOS device:", isIOSDevice)
-    console.log("Is Safari:", isSafari)
+    if (isStandalone()) return
 
-    // Check if running in standalone mode
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || 
-                        (window.navigator as any).standalone || 
-                        document.referrer.includes("android-app://")
-    console.log("Is standalone:", isStandalone)
-
-    if (isStandalone) {
-      console.log("App is already installed")
-      return
-    }
-
-    // Show prompt immediately for iOS Safari
-    if (isIOSDevice && isSafari) {
-      console.log("Showing iOS Safari install instructions")
+    if (isIOSSafari()) {
       setShowPrompt(true)
       return
     }
 
-    // For other browsers, show prompt after a delay
-    const timer = setTimeout(() => {
-      if (!isStandalone && !deferredPrompt) {
-        console.log("Showing default install prompt")
-        setShowPrompt(true)
+    const adoptPrompt = (event: BeforeInstallPromptEvent) => {
+      setDeferredPrompt(event)
+      setShowPrompt(true)
+    }
+
+    // Prompt may have fired before React mounted (captured in register-sw.js)
+    if (window.__deferredPWAInstallPrompt) {
+      adoptPrompt(window.__deferredPWAInstallPrompt)
+    }
+
+    const onInstallAvailable = () => {
+      if (window.__deferredPWAInstallPrompt) {
+        adoptPrompt(window.__deferredPWAInstallPrompt)
       }
-    }, 3000)
+    }
 
-    // Handle PWA install prompt for other devices
-    const handleInstallPrompt = (e: any) => {
-      console.log("Install prompt event fired")
-      console.log("Browser supports PWA installation")
+    const onBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
-      setDeferredPrompt(e)
-      setInstallable(true)
-      setShowPrompt(true)
+      const prompt = e as BeforeInstallPromptEvent
+      window.__deferredPWAInstallPrompt = prompt
+      adoptPrompt(prompt)
     }
-    
-    console.log("Setting up beforeinstallprompt listener")
-    window.addEventListener("beforeinstallprompt", handleInstallPrompt)
-    
-    // Log if browser doesn't support installation
-    if (!('BeforeInstallPromptEvent' in window)) {
-      console.log("Browser doesn't support PWA installation")
-    }
+
+    window.addEventListener("pwa-install-available", onInstallAvailable)
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt)
 
     return () => {
-      clearTimeout(timer)
-      window.removeEventListener("beforeinstallprompt", handleInstallPrompt)
+      window.removeEventListener("pwa-install-available", onInstallAvailable)
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt)
     }
   }, [])
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return
+    const prompt = deferredPrompt ?? window.__deferredPWAInstallPrompt
+    if (!prompt) return
 
     try {
-      deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      console.log('Install prompt outcome:', outcome)
-
+      await prompt.prompt()
+      const { outcome } = await prompt.userChoice
       if (outcome === "accepted") {
         setShowPrompt(false)
       }
     } catch (error) {
-      console.error('Error during installation:', error)
+      console.error("Error during installation:", error)
     }
 
+    window.__deferredPWAInstallPrompt = null
     setDeferredPrompt(null)
-    setInstallable(false)
   }
 
   if (!showPrompt) return null
 
-  const isIOSSafari = isIOS && /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+  const iosSafari = isIOSSafari()
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:w-[400px] bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border z-50 animate-in slide-in-from-bottom-5">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-            {isIOSSafari ? <Share className="h-5 w-5" /> : <Download className="h-5 w-5" />}
+            {iosSafari ? <Share className="h-5 w-5" /> : <Download className="h-5 w-5" />}
             Install App
           </h3>
-          {isIOSSafari ? (
+          {iosSafari ? (
             <div className="space-y-2">
               <p className="text-sm text-gray-600 dark:text-gray-300">
                 To install this app on your iOS device:
               </p>
               <ol className="text-sm text-gray-600 dark:text-gray-300 list-decimal list-inside space-y-1">
                 <li>Tap the share button <Share className="h-4 w-4 inline" /></li>
-                <li>Scroll down and tap "Add to Home Screen"</li>
-                <li>Tap "Add" to install</li>
+                <li>Scroll down and tap &quot;Add to Home Screen&quot;</li>
+                <li>Tap &quot;Add&quot; to install</li>
               </ol>
             </div>
           ) : (
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Install this app for a better experience with offline support and quick access
-              </p>
-              {!installable && (
-                <p className="text-xs text-gray-500 mt-2">
-                  Tip: Use Chrome or Edge for the best installation experience
-                </p>
-              )}
-            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Install this app for a better experience with offline support and quick access.
+            </p>
           )}
         </div>
         <Button
@@ -132,8 +126,8 @@ export function PWAInstallPrompt() {
           <X className="h-4 w-4" />
         </Button>
       </div>
-      
-      {!isIOSSafari && (
+
+      {!iosSafari && deferredPrompt && (
         <div className="mt-4 flex justify-end gap-4">
           <Button
             variant="outline"
@@ -142,25 +136,14 @@ export function PWAInstallPrompt() {
           >
             Not now
           </Button>
-          {installable ? (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleInstall}
-              className="bg-[#4CAF50] hover:bg-[#43A047]"
-            >
-              Install Now
-            </Button>
-          ) : (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => window.open('https://www.google.com/chrome/', '_blank')}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              Get Chrome
-            </Button>
-          )}
+          <Button
+            variant="default"
+            size="sm"
+            onClick={handleInstall}
+            className="bg-[#4CAF50] hover:bg-[#43A047]"
+          >
+            Install Now
+          </Button>
         </div>
       )}
     </div>

@@ -1,3 +1,12 @@
+// Capture install prompt as early as possible — before React hydrates.
+// Chrome fires beforeinstallprompt once; if we miss it, only "Get Chrome" fallback would show.
+window.__deferredPWAInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.__deferredPWAInstallPrompt = e;
+  window.dispatchEvent(new Event('pwa-install-available'));
+});
+
 // Global self-healing emergency reset utility for PWA
 window.__emergencyPWAReset = async function () {
   console.warn('[PWA] Executing emergency storage & SW reset...');

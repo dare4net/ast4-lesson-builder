@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Settings, Volume2 } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
-import { generateBatchAudio, normalizeTextForSpeech } from "@/lib/audio-generator";
+import { generateBatchAudio, normalizeTextForSpeech, hashText } from "@/lib/audio-generator";
 import { VoiceSelector } from "@/components/ui/voice-selector";
 import { getVoiceById } from "@/lib/voices";
 
@@ -16,6 +16,7 @@ interface Lesson {
     title: string;
     description: string;
     introAudioUrl?: string;
+    introTextHash?: string;
     voice?: string;
 }
 
@@ -70,12 +71,14 @@ export function EditLessonSettingsModal({
             // 1. Generate clean speech text for the lesson intro with full welcome prefix
             const cleanTitle = title.trim();
             const cleanDesc = description.trim();
-            const welcomeText = `Welcome to lesson ${lessonNumber} of the ${moduleTitle} module. Today's lesson is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`;
+            const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`;
             const speechText = normalizeTextForSpeech(welcomeText);
 
             // 2. Synthesize audio via EdgeTTS & upload to Cloudinary (ast_lessons/{lessonId}/intro)
             let cloudinaryAudioUrl: string | null = null;
             const resolvedVoice = (voice && voice !== "inherit") ? voice : (moduleVoice || "en-GB-SoniaNeural");
+            const resolvedVoiceForHash = (voice && voice !== "inherit") ? voice : "default";
+            const introHash = hashText(`${speechText}::${resolvedVoiceForHash}`);
 
             try {
                 const { urlMap: audioMap } = await generateBatchAudio(
@@ -102,6 +105,7 @@ export function EditLessonSettingsModal({
             };
             if (cloudinaryAudioUrl) {
                 updatePayload.introAudioUrl = cloudinaryAudioUrl;
+                updatePayload.introTextHash = introHash;
             }
 
             await apiClient.studio.updateLesson(lesson._id, updatePayload);

@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Sparkles } from "lucide-react"
 import { apiClient } from "@/lib/api-client"
-import { generateBatchAudio, normalizeTextForSpeech } from "@/lib/audio-generator"
+import { generateBatchAudio, normalizeTextForSpeech, hashText } from "@/lib/audio-generator"
 import { useToast } from "@/hooks/use-toast"
 import { VoiceSelector } from "@/components/ui/voice-selector"
 import { getVoiceById } from "@/lib/voices"
@@ -85,8 +85,10 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
                     const speechText = normalizeTextForSpeech(welcomeText)
 
                     const resolvedVoice = (formData.voice && formData.voice !== "inherit") ? formData.voice : (moduleVoice || "en-GB-SoniaNeural")
+                    const resolvedVoiceForHash = (formData.voice && formData.voice !== "inherit") ? formData.voice : "default"
+                    const introHash = hashText(`${speechText}::${resolvedVoiceForHash}`)
 
-                    const { urlMap: audioMap } = await generateBatchAudio(
+                    const audioResult = await generateBatchAudio(
                         [
                             {
                                 componentId: "intro",
@@ -98,9 +100,11 @@ export function LessonCreationModal({ isOpen, onClose, moduleId, moduleVoice }: 
                         resolvedVoice
                     )
 
-                    if (audioMap["intro"]) {
+                    const introUrl = audioResult.urlMap["intro"]
+                    if (introUrl) {
                         await apiClient.studio.updateLesson(lessonId, {
-                            introAudioUrl: audioMap["intro"]
+                            introAudioUrl: introUrl,
+                            introTextHash: introHash,
                         } as any)
                     }
                 } catch (audioErr) {

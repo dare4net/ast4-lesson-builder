@@ -111,6 +111,8 @@ export function LessonBuilder() {
             title: fetchedLesson.title || fetchedLesson.content?.title || "",
             description: fetchedLesson.description || fetchedLesson.content?.description || "",
             voice: fetchedLesson.voice || fetchedLesson.content?.voice || "inherit",
+            introAudioUrl: fetchedLesson.introAudioUrl || fetchedLesson.content?.introAudioUrl || undefined,
+            introTextHash: fetchedLesson.introTextHash || fetchedLesson.content?.introTextHash || undefined,
             slides: slides,
             settings: fetchedLesson.settings || fetchedLesson.content?.settings || {},
             author: fetchedLesson.author || fetchedLesson.content?.author || "",
@@ -352,6 +354,8 @@ export function LessonBuilder() {
         description: lesson.description,
         slides: lesson.slides,
         voice: lesson.voice,
+        introAudioUrl: lesson.introAudioUrl,
+        introTextHash: lesson.introTextHash,
         settings: lesson.settings || {},
         author: lesson.author,
         level: lesson.level,
@@ -385,10 +389,11 @@ export function LessonBuilder() {
     setAudioGenerationProgress(null)
 
     const plan = planLessonAudioPublish(lesson, lessonId)
-    const { componentItems: itemsToGenerate, slideCueItems, skippedIds } = plan
+    const { componentItems: itemsToGenerate, slideCueItems, introItem, skippedIds } = plan
 
     const resolvedVoice = (lesson.voice && lesson.voice !== "inherit") ? lesson.voice : undefined
     const allBatchItems = [
+      ...(introItem ? [{ componentId: introItem.componentId, text: introItem.text, lessonId: introItem.lessonId, voice: resolvedVoice }] : []),
       ...itemsToGenerate.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId, voice: resolvedVoice })),
       ...slideCueItems.map(({ componentId, text, lessonId }) => ({ componentId, text, lessonId, voice: resolvedVoice })),
     ]
@@ -408,6 +413,9 @@ export function LessonBuilder() {
 
     const skipped = skippedIds.size
 
+    const newIntroAudioUrl = introItem ? (urlMap["intro"] ?? lesson.introAudioUrl) : lesson.introAudioUrl
+    const newIntroTextHash = introItem ? introItem.newHash : lesson.introTextHash
+
     const slidesWithComponentAudio = applyLessonComponentAudioPatches(lesson.slides, itemsToGenerate, urlMap)
     const updatedSlides = slidesWithComponentAudio.map((slide, si) => {
       const slideCueItem = slideCueItems.find(i => i.slideIdx === si)
@@ -422,7 +430,12 @@ export function LessonBuilder() {
       }
     })
 
-    const updatedLesson = { ...lesson, slides: updatedSlides }
+    const updatedLesson = {
+      ...lesson,
+      introAudioUrl: newIntroAudioUrl,
+      introTextHash: newIntroTextHash,
+      slides: updatedSlides,
+    }
     lastSavedLessonRef.current = JSON.stringify(updatedLesson)
     setLesson(updatedLesson)
 
@@ -438,6 +451,8 @@ export function LessonBuilder() {
           description: updatedLesson.description,
           slides: updatedLesson.slides,
           voice: updatedLesson.voice,
+          introAudioUrl: updatedLesson.introAudioUrl,
+          introTextHash: updatedLesson.introTextHash,
           settings: updatedLesson.settings || {},
           author: updatedLesson.author,
           level: updatedLesson.level,
@@ -632,25 +647,25 @@ export function LessonBuilder() {
             className="flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#0F172A] text-slate-200 select-none relative"
           >
             {!previewMode && (
-            <LessonControls
-              lesson={lesson}
-              updateLessonMetadata={updateLessonMetadata}
-              exportLesson={exportLesson}
-              importLesson={importLesson}
-              previewMode={previewMode}
-              setPreviewMode={handleSetPreviewMode}
-              isMobile={isMobile}
-              onSaveToDatabase={saveToDatabase}
-              isSaving={isSaving}
-              onPublishAndGenerateAudio={handlePublishAndGenerateAudio}
-              isGeneratingAudio={isGeneratingAudio}
-              audioGenerationProgress={audioGenerationProgress}
-              missingAudioCount={missingAudioCount}
-              canPublish={canPublish}
-              hasUnpublishedChanges={hasUnpublishedChanges}
-              hasValidationErrors={hasValidationErrors}
-              className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
-            />
+              <LessonControls
+                lesson={lesson}
+                updateLessonMetadata={updateLessonMetadata}
+                exportLesson={exportLesson}
+                importLesson={importLesson}
+                previewMode={previewMode}
+                setPreviewMode={handleSetPreviewMode}
+                isMobile={isMobile}
+                onSaveToDatabase={saveToDatabase}
+                isSaving={isSaving}
+                onPublishAndGenerateAudio={handlePublishAndGenerateAudio}
+                isGeneratingAudio={isGeneratingAudio}
+                audioGenerationProgress={audioGenerationProgress}
+                missingAudioCount={missingAudioCount}
+                canPublish={canPublish}
+                hasUnpublishedChanges={hasUnpublishedChanges}
+                hasValidationErrors={hasValidationErrors}
+                className="flex-shrink-0 border-b border-slate-800 bg-[#0F172A]/80 backdrop-blur-md"
+              />
             )}
             <div className="flex flex-1 min-h-0 overflow-hidden relative">
               {previewMode ? (
@@ -660,198 +675,198 @@ export function LessonBuilder() {
                   onExitPreview={() => handleSetPreviewMode(false)}
                 />
               ) : (
-              <>
-              {/* Far left - Slide Navigator */}
-              {!isMobile && (
-                <div className="w-[260px] border-r border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm">
-                  <ScrollArea className="flex-1">
-                    <SlideNavigator
-                      slides={lesson.slides}
-                      currentSlideIndex={currentSlideIndex}
-                      setCurrentSlideIndex={setCurrentSlideIndex}
-                      addSlide={handleAddSlide}
-                      deleteSlide={handleDeleteSlide}
-                      reorderSlides={reorderSlides}
-                      slideResults={masterReport.slideResults}
-                    />
-                  </ScrollArea>
-                </div>
-              )}
-
-              {/* Main content area (Stage) */}
-              <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full max-w-full overflow-hidden bg-slate-950/50 pb-16 sm:pb-0">
-                <div className="flex-1 h-full min-h-0 w-full max-w-full flex flex-col p-1 sm:p-8 overflow-hidden">
-                  <div className="w-full max-w-full sm:max-w-5xl flex-1 h-full min-h-0 sm:aspect-[16/9] bg-white rounded-xl shadow-2xl shadow-emerald-900/10 overflow-hidden relative border border-slate-800 mx-auto">
-                    <SlideEditor
-                      slide={currentSlide}
-                      updateSlide={updateSlide}
-                      deleteSlide={deleteSlide}
-                      slideIndex={currentSlideIndex}
-                      onSelectComponent={handleSelectComponent}
-                      selectedComponentId={editingComponentId}
-                      className="h-full"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Right sidebar - Unified Inspector/Library */}
-              {!isMobile && (
-                isLibraryCollapsed ? (
-                  <div className="w-12 border-l border-slate-800 flex flex-col items-center py-4 gap-4 bg-[#1e293b]/30 backdrop-blur-sm transition-all duration-300">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsLibraryCollapsed(false)}
-                      className="text-slate-400 hover:text-emerald-400 hover:bg-slate-800 h-9 w-9 rounded-lg"
-                      title="Expand Component Library"
-                    >
-                      <PanelRightOpen className="w-5 h-5" />
-                    </Button>
-                    <div className="w-8 h-[1px] bg-slate-800/80 my-1" />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsLibraryCollapsed(false)}
-                      className="text-slate-500 hover:text-emerald-400 hover:bg-slate-800 h-9 w-9 rounded-lg"
-                      title="Component Library"
-                    >
-                      <Blocks className="w-5 h-5" />
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="w-[480px] border-l border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm transition-all duration-300">
-                    {isInspectorOpen && editingComponent ? (
-                      <ComponentEditor
-                        component={editingComponent}
-                        updateComponent={(props) => updateComponent(editingComponent.id, props)}
-                        onClose={handleCloseInspector}
-                        lessonId={currentLessonId || lesson.id}
-                      />
-                    ) : (
-                      <div className="flex flex-col h-full overflow-hidden">
-                        <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
-                          <h3 className="font-semibold text-emerald-400">Component Library</h3>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setIsLibraryCollapsed(true)}
-                            className="h-7 w-7 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-md"
-                            title="Collapse Component Library"
-                          >
-                            <PanelRightClose className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        <ScrollArea className="flex-1">
-                          <ComponentLibrary addComponent={addComponent} />
-                        </ScrollArea>
-                      </div>
-                    )}
-                  </div>
-                )
-              )}
-
-              {/* Mobile Sheet for Inspector */}
-              {isMobile && isInspectorOpen && editingComponent && (
-                <Sheet open={isInspectorOpen} onOpenChange={(open) => !open && handleCloseInspector()}>
-                  <SheetContent side="bottom" className="h-[85vh] p-0 bg-[#0F172A] border-t border-slate-800">
-                    <ComponentEditor
-                      component={editingComponent}
-                      updateComponent={(props) => updateComponent(editingComponent.id, props)}
-                      onClose={handleCloseInspector}
-                      isMobile={true}
-                      lessonId={currentLessonId || lesson.id}
-                    />
-                  </SheetContent>
-                </Sheet>
-              )}
-
-              {/* Mobile Sheet for Component Library */}
-              {isMobile && !isInspectorOpen && (
-                <Sheet open={sidebarOpen && activeSidebar === "components"} onOpenChange={setSidebarOpen}>
-                  <SheetContent side="bottom" className="h-[70vh] p-0 bg-[#0F172A] border-t border-slate-800">
-                    <div className="flex flex-col h-full overflow-hidden">
-                      <div className="p-4 border-b border-slate-800 bg-slate-900/50">
-                        <h3 className="font-semibold text-emerald-400">Component Library</h3>
-                      </div>
+                <>
+                  {/* Far left - Slide Navigator */}
+                  {!isMobile && (
+                    <div className="w-[260px] border-r border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm">
                       <ScrollArea className="flex-1">
-                        <ComponentLibrary addComponent={addComponent} />
+                        <SlideNavigator
+                          slides={lesson.slides}
+                          currentSlideIndex={currentSlideIndex}
+                          setCurrentSlideIndex={setCurrentSlideIndex}
+                          addSlide={handleAddSlide}
+                          deleteSlide={handleDeleteSlide}
+                          reorderSlides={reorderSlides}
+                          slideResults={masterReport.slideResults}
+                        />
                       </ScrollArea>
                     </div>
-                  </SheetContent>
-                </Sheet>
-              )}
-              </>
-              )}
-            </div>
+                  )}
 
-          {/* Mobile Bottom Action Bar — Fixed to bottom of viewport */}
-          {isMobile && !previewMode && (
-            <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-2 py-2 border-t border-slate-800 bg-[#0F172A]/95 backdrop-blur-lg shadow-2xl shrink-0">
-              <button
-                onClick={() => setSlidesSheetOpen(true)}
-                className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 transition-all"
-              >
-                <LayoutGrid className="w-5 h-5" />
-                <span className="text-[10px] font-bold tracking-wider">Slides</span>
-              </button>
-              <button
-                onClick={() => { setActiveSidebar("components"); setSidebarOpen(true); }}
-                className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 transition-all"
-              >
-                <Blocks className="w-5 h-5" />
-                <span className="text-[10px] font-bold tracking-wider">Library</span>
-              </button>
-              <button
-                onClick={handleAddSlide}
-                className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all"
-              >
-                <Plus className="w-5 h-5" />
-                <span className="text-[10px] font-bold tracking-wider">Add Slide</span>
-              </button>
-              <button
-                onClick={() => handleSetPreviewMode(!previewMode)}
-                className={`flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-all ${previewMode
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                  : "text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60"
-                  }`}
-              >
-                {previewMode ? <Pencil className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                <span className="text-[10px] font-bold tracking-wider">{previewMode ? "Edit" : "Preview"}</span>
-              </button>
-            </div>
-          )}
-
-          {/* Mobile Slides Navigator Sheet */}
-          {isMobile && (
-            <Sheet open={slidesSheetOpen} onOpenChange={setSlidesSheetOpen}>
-              <SheetContent side="bottom" className="h-[80vh] p-0 bg-[#0F172A] border-t border-slate-800">
-                <div className="flex flex-col h-full overflow-hidden">
-                  <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-900/50">
-                    <h3 className="font-bold text-emerald-400 text-sm uppercase tracking-wider">Slides</h3>
-                    <span className="text-xs text-slate-500">{lesson.slides.length} slide{lesson.slides.length !== 1 ? "s" : ""}</span>
+                  {/* Main content area (Stage) */}
+                  <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full max-w-full overflow-hidden bg-slate-950/50 pb-16 sm:pb-0">
+                    <div className="flex-1 h-full min-h-0 w-full max-w-full flex flex-col p-1 sm:p-8 overflow-hidden">
+                      <div className="w-full max-w-full sm:max-w-5xl flex-1 h-full min-h-0 sm:aspect-[16/9] bg-white rounded-xl shadow-2xl shadow-emerald-900/10 overflow-hidden relative border border-slate-800 mx-auto">
+                        <SlideEditor
+                          slide={currentSlide}
+                          updateSlide={updateSlide}
+                          deleteSlide={deleteSlide}
+                          slideIndex={currentSlideIndex}
+                          onSelectComponent={handleSelectComponent}
+                          selectedComponentId={editingComponentId}
+                          className="h-full"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <ScrollArea className="flex-1">
-                    <SlideNavigator
-                      slides={lesson.slides}
-                      currentSlideIndex={currentSlideIndex}
-                      setCurrentSlideIndex={(idx) => { setCurrentSlideIndex(idx); setSlidesSheetOpen(false); }}
-                      addSlide={async () => { await handleAddSlide(); setSlidesSheetOpen(false); }}
-                      deleteSlide={handleDeleteSlide}
-                      reorderSlides={reorderSlides}
-                      slideResults={masterReport.slideResults}
-                    />
-                  </ScrollArea>
-                </div>
-              </SheetContent>
-            </Sheet>
-          )}
 
-          {/* Top-to-Bottom Verification Overlay on Load */}
-          <LessonVerificationOverlay
-            isVisible={isVerifyingLesson}
-            lessonTitle={lesson.title}
-          />
+                  {/* Right sidebar - Unified Inspector/Library */}
+                  {!isMobile && (
+                    isLibraryCollapsed ? (
+                      <div className="w-12 border-l border-slate-800 flex flex-col items-center py-4 gap-4 bg-[#1e293b]/30 backdrop-blur-sm transition-all duration-300">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsLibraryCollapsed(false)}
+                          className="text-slate-400 hover:text-emerald-400 hover:bg-slate-800 h-9 w-9 rounded-lg"
+                          title="Expand Component Library"
+                        >
+                          <PanelRightOpen className="w-5 h-5" />
+                        </Button>
+                        <div className="w-8 h-[1px] bg-slate-800/80 my-1" />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setIsLibraryCollapsed(false)}
+                          className="text-slate-500 hover:text-emerald-400 hover:bg-slate-800 h-9 w-9 rounded-lg"
+                          title="Component Library"
+                        >
+                          <Blocks className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="w-[480px] border-l border-slate-800 flex flex-col h-full bg-[#1e293b]/30 backdrop-blur-sm transition-all duration-300">
+                        {isInspectorOpen && editingComponent ? (
+                          <ComponentEditor
+                            component={editingComponent}
+                            updateComponent={(props) => updateComponent(editingComponent.id, props)}
+                            onClose={handleCloseInspector}
+                            lessonId={currentLessonId || lesson.id}
+                          />
+                        ) : (
+                          <div className="flex flex-col h-full overflow-hidden">
+                            <div className="p-4 border-b border-slate-800 bg-slate-900/50 flex items-center justify-between">
+                              <h3 className="font-semibold text-emerald-400">Component Library</h3>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setIsLibraryCollapsed(true)}
+                                className="h-7 w-7 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-md"
+                                title="Collapse Component Library"
+                              >
+                                <PanelRightClose className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            <ScrollArea className="flex-1">
+                              <ComponentLibrary addComponent={addComponent} />
+                            </ScrollArea>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  )}
+
+                  {/* Mobile Sheet for Inspector */}
+                  {isMobile && isInspectorOpen && editingComponent && (
+                    <Sheet open={isInspectorOpen} onOpenChange={(open) => !open && handleCloseInspector()}>
+                      <SheetContent side="bottom" className="h-[85vh] p-0 bg-[#0F172A] border-t border-slate-800">
+                        <ComponentEditor
+                          component={editingComponent}
+                          updateComponent={(props) => updateComponent(editingComponent.id, props)}
+                          onClose={handleCloseInspector}
+                          isMobile={true}
+                          lessonId={currentLessonId || lesson.id}
+                        />
+                      </SheetContent>
+                    </Sheet>
+                  )}
+
+                  {/* Mobile Sheet for Component Library */}
+                  {isMobile && !isInspectorOpen && (
+                    <Sheet open={sidebarOpen && activeSidebar === "components"} onOpenChange={setSidebarOpen}>
+                      <SheetContent side="bottom" className="h-[70vh] p-0 bg-[#0F172A] border-t border-slate-800">
+                        <div className="flex flex-col h-full overflow-hidden">
+                          <div className="p-4 border-b border-slate-800 bg-slate-900/50">
+                            <h3 className="font-semibold text-emerald-400">Component Library</h3>
+                          </div>
+                          <ScrollArea className="flex-1">
+                            <ComponentLibrary addComponent={addComponent} />
+                          </ScrollArea>
+                        </div>
+                      </SheetContent>
+                    </Sheet>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Mobile Bottom Action Bar — Fixed to bottom of viewport */}
+            {isMobile && !previewMode && (
+              <div className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around px-2 py-2 border-t border-slate-800 bg-[#0F172A]/95 backdrop-blur-lg shadow-2xl shrink-0">
+                <button
+                  onClick={() => setSlidesSheetOpen(true)}
+                  className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 transition-all"
+                >
+                  <LayoutGrid className="w-5 h-5" />
+                  <span className="text-[10px] font-bold tracking-wider">Slides</span>
+                </button>
+                <button
+                  onClick={() => { setActiveSidebar("components"); setSidebarOpen(true); }}
+                  className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 transition-all"
+                >
+                  <Blocks className="w-5 h-5" />
+                  <span className="text-[10px] font-bold tracking-wider">Library</span>
+                </button>
+                <button
+                  onClick={handleAddSlide}
+                  className="flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-all"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span className="text-[10px] font-bold tracking-wider">Add Slide</span>
+                </button>
+                <button
+                  onClick={() => handleSetPreviewMode(!previewMode)}
+                  className={`flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-all ${previewMode
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                    : "text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60"
+                    }`}
+                >
+                  {previewMode ? <Pencil className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                  <span className="text-[10px] font-bold tracking-wider">{previewMode ? "Edit" : "Preview"}</span>
+                </button>
+              </div>
+            )}
+
+            {/* Mobile Slides Navigator Sheet */}
+            {isMobile && (
+              <Sheet open={slidesSheetOpen} onOpenChange={setSlidesSheetOpen}>
+                <SheetContent side="bottom" className="h-[80vh] p-0 bg-[#0F172A] border-t border-slate-800">
+                  <div className="flex flex-col h-full overflow-hidden">
+                    <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800 bg-slate-900/50">
+                      <h3 className="font-bold text-emerald-400 text-sm uppercase tracking-wider">Slides</h3>
+                      <span className="text-xs text-slate-500">{lesson.slides.length} slide{lesson.slides.length !== 1 ? "s" : ""}</span>
+                    </div>
+                    <ScrollArea className="flex-1">
+                      <SlideNavigator
+                        slides={lesson.slides}
+                        currentSlideIndex={currentSlideIndex}
+                        setCurrentSlideIndex={(idx) => { setCurrentSlideIndex(idx); setSlidesSheetOpen(false); }}
+                        addSlide={async () => { await handleAddSlide(); setSlidesSheetOpen(false); }}
+                        deleteSlide={handleDeleteSlide}
+                        reorderSlides={reorderSlides}
+                        slideResults={masterReport.slideResults}
+                      />
+                    </ScrollArea>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
+
+            {/* Top-to-Bottom Verification Overlay on Load */}
+            <LessonVerificationOverlay
+              isVisible={isVerifyingLesson}
+              lessonTitle={lesson.title}
+            />
           </div>
         </CustomDndProvider>
       </ScoringProvider>

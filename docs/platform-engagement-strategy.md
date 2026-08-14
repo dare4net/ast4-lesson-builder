@@ -62,6 +62,7 @@ Points only motivate when they connect to something the learner values. Currentl
 4. **Personal best + improvement** — celebrate beating yourself, not only others
 5. **Completion credentials** — lesson → module → course complete (Udemy energy)
 6. **Retry with purpose** — wrong answers feed a "needs review" queue
+7. **Attempt Efficiency ("Personal Best Attempts")** — in practice mode (where points are 0), track attempts to clear an activity (e.g. 3 attempts → 1 attempt). Students actively compete against their own attempt records!
 
 **Bad score utility (Duolingo trap):**
 - Points with no spend/unlock purpose
@@ -74,6 +75,7 @@ Points only motivate when they connect to something the learner values. Currentl
 - [ ] Points tied to mastery progression
 - [ ] Visible course/module completion states
 - [ ] "Most improved this week" alongside top performers
+- [ ] Standardized `attempts` tracking and "Personal Best Attempts" badge in Practice Mode
 
 ---
 
@@ -121,7 +123,7 @@ Same engine, less gamified tone. Not current priority.
 - Lessons are **not template-locked** — free-form JSON, any slide order, any component mix
 - Nothing forces grammar tables, 10-slide academic depth, or assessment finales
 - A creative teacher **can** build child-friendly lessons with strategic component choice
-- The viewer's **one-component-at-a-time** model actually rewards "one fun activity per slide" design
+- The viewer's **one-component-at-a-time** model rewards **mixed read → do sequences** per slide — multiple components are fine when each Next tap earns its place; passive-only stacks are the problem
 
 ### What IS built into defaults / ecosystem (creates friction)
 

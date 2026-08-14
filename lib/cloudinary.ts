@@ -1,10 +1,14 @@
 import { v2 as cloudinary } from 'cloudinary'
 
 // Configure Cloudinary with environment variables (or fallbacks)
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    throw new Error('[Cloudinary] Missing required environment variables: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET')
+}
+
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'rwjtoqiy',
-    api_key: process.env.CLOUDINARY_API_KEY || '431677943928628',
-    api_secret: process.env.CLOUDINARY_API_SECRET || 'S1MeiLS39dDREEfHz4xTGhNTzQU',
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
     secure: true,
 })
 
@@ -23,7 +27,11 @@ const IMAGE_MAX_DIMENSION: Record<ImageUploadVariant, number> = {
 function getOptimizedImageUploadOptions(variant: ImageUploadVariant) {
     const max = IMAGE_MAX_DIMENSION[variant]
     return {
-        transformation: `c_limit,w_${max},h_${max}/q_auto:good/f_auto/fl_strip_profile`,
+        transformation: [
+            { crop: 'limit', width: max, height: max },
+            { quality: 'auto:good' },
+            { fetch_format: 'auto', flags: 'strip_profile' },
+        ],
     }
 }
 
