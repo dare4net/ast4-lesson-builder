@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { apiClient } from "@/lib/api-client"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, Compass, Sparkles, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw, X } from "lucide-react"
+import { BookOpen, Compass, Zap, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
@@ -199,7 +199,7 @@ export default function CatalogPage() {
                                 <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
                                 <>
-                                    <Sparkles className="w-4 h-4" />
+                                    <Zap className="w-4 h-4" />
                                     <span>Enroll in Course</span>
                                 </>
                             )}

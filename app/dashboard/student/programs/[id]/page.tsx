@@ -10,7 +10,7 @@ import {
     Folder,
     ChevronRight,
     Loader2,
-    Sparkles,
+    Zap,
     Trash2
 } from "lucide-react"
 import { motion } from "framer-motion"
@@ -163,7 +163,7 @@ export default function StudentCourseDetailPage() {
             <Card className="p-8 md:p-10 rounded-3xl bg-white border-2 border-slate-200 shadow-sm flex flex-col md:flex-row gap-8 justify-between items-center">
                 <div className="space-y-3 text-center md:text-left">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#58CC02]/20 bg-[#58CC02]/10 w-fit mx-auto md:mx-0">
-                        <Sparkles className="w-3.5 h-3.5 text-[#58CC02]" />
+                        <Zap className="w-3.5 h-3.5 text-[#58CC02]" />
                         <span className="text-xs font-extrabold text-[#58CC02]">Enrolled Course</span>
                     </div>
                     <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">

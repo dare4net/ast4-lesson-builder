@@ -62,6 +62,8 @@ function hasLessonDataChanged(newData: any, cachedData: any) {
         return (
             lesson.lessonId !== cached.lessonId ||
             lesson.progress !== cached.progress ||
+            lesson.thumbnail !== cached.thumbnail ||
+            lesson.lastUpdated !== cached.lastUpdated ||
             JSON.stringify(lesson.lessonState) !== JSON.stringify(cached.lessonState)
         );
     });

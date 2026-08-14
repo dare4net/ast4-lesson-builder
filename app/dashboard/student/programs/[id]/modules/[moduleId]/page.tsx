@@ -16,7 +16,6 @@ import {
     Info,
     Award,
     Layers,
-    Sparkles,
     Zap,
     RotateCcw,
     ChevronRight,
