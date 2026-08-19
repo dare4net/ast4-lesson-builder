@@ -136,6 +136,9 @@ Only use components from `skills/lesson-json/SKILL.md`. This tier list governs *
 ### Tier 3 — Use Sparingly (Year 5 Only, With Support)
 | Component | Primary Role | Notes |
 |---|---|---|
+| `shortAnswer` | Open response / drawing prompt | Always set `"markingMode": "tutor-mark"` for Primary so responses are saved for tutor review |
+| `accordion` | Multi-panel glossary / facts | Use 2–3 short panels max with clean headings |
+| `annotateImage` | Visual diagram labeling | Keep to 2–3 clear label targets max |
 | `fillInTheBlank` | One blank only | Single word answer; no typing sentences |
 | `flashcardQuiz` | 1 question only | `"mode": "practice"` |
 | `timeline` | 3 events max | `"interactive": true`; simple year labels |
@@ -147,13 +150,10 @@ Only use components from `skills/lesson-json/SKILL.md`. This tier list governs *
 |---|---|
 | `multiSelectQuiz` | Too complex; "select all" confuses young learners |
 | `fillInTheBlank` (multi-blank) | Typing + reading overload |
-| `shortAnswer` | Requires writing sentences |
 | `codeEditor` | Not age-appropriate |
 | `wordCloud` | Needs typing; better for group/teacher-led |
 | `scaleSlider` | Abstract self-rating |
-| `annotateImage` | Fine motor + label precision too hard |
 | `table` | Wall of text for non-readers |
-| `accordion` | Hidden text = skipped text |
 | `quote` | Literary framing lost on most Year 4–5 |
 | Live mode (`"mode": "live"`) | Timers cause anxiety |
 | `hotspot` (`behavior: "quiz"`) | OK for Year 5 only; never timed |
@@ -372,7 +372,7 @@ Before submitting a primary lesson JSON:
 - [ ] No slide opens with a component that autoplays audio — use `heading` or other non-autoplay content first
 - [ ] Every component on the slide earns its place (learning first, novelty second)
 - [ ] No `fillInTheBlank` with more than 1 blank
-- [ ] No `multiSelectQuiz`, `shortAnswer`, or `codeEditor`
+- [ ] No `multiSelectQuiz` or `codeEditor`
 - [ ] No `"mode": "live"` anywhere
 - [ ] No `timeLimit` set on any component
 - [ ] All quiz questions have ≤2 options for Year 4; ≤3 for Year 5

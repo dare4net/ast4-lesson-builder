@@ -337,6 +337,57 @@ Highlighted quote block.
 | `author` | `string` | Plain string | `"Author Name"` |
 | `align` | `string` | `"left"` `"center"` `"right"` | `"left"` |
 
+#### `callout`
+Highlighted alert box for notes, tips, warnings, and key takeaways.
+
+```json
+{
+  "id": "callout-<ts>",
+  "type": "callout",
+  "props": {
+    "variant": "note",
+    "title": "Important Note",
+    "content": "Add key insights, warnings, or tips here..."
+  },
+  "state": "active",
+  "status": "uncompleted"
+}
+```
+
+| Prop | Type | Allowed Values | Default |
+|---|---|---|---|
+| `variant` | `string` | `"note"` `"tip"` `"warning"` `"important"` | `"note"` |
+| `title` | `string` | Plain title | `"Important Note"` |
+| `content` | `string` | Rich text / plain string | `"Add key insights..."` |
+
+---
+
+#### `accordion`
+Collapsible expandable panels for glossaries and FAQ lists.
+
+```json
+{
+  "id": "accordion-<ts>",
+  "type": "accordion",
+  "props": {
+    "title": "Key Definitions",
+    "items": [
+      { "id": "acc-1", "title": "What is this concept?", "content": "Detailed explanation goes here.", "audioUrl": "" },
+      { "id": "acc-2", "title": "Why is it important?", "content": "Key significance and context.", "audioUrl": "" }
+    ],
+    "allowMultiple": false
+  },
+  "state": "active",
+  "status": "uncompleted"
+}
+```
+
+| Prop | Type | Allowed Values | Default |
+|---|---|---|---|
+| `title` | `string` | Section header | `"Key Definitions"` |
+| `items` | `AccordionItem[]` | Array of items | Min 1 item |
+| `allowMultiple` | `boolean` | `true` `false` | `false` |
+
 ---
 
 ### 4.2 Interactive Components (category: `"interactive"`)
@@ -346,6 +397,7 @@ Highlighted quote block.
 > - `"live"` — Submission is scored and tracked. Used in assessments.
 
 ---
+
 
 #### `quiz`
 Multiple-choice questions.
@@ -616,14 +668,14 @@ Interactive coding sandbox with test cases.
 ---
 
 #### `hotspot`
-Interactive visual diagram with clickable target regions. Essential for visual exploration, diagram labeling, spatial identification (e.g. cell parts, ecosystem maps, states of matter scenes, circuit components).
+Interactive visual diagram with clickable target regions. Supports both free-play inspection ("explore") and target-finding challenge ("discover") with optional decoy pins and tutor marking.
 
 ```json
 {
   "id": "hotspot-<ts>",
   "type": "hotspot",
   "props": {
-    "title": "Interactive Scene: Click items to investigate if they are Matter!",
+    "title": "Interactive Scene: Find all real Matter!",
     "image": "/placeholder.svg?height=400&width=600",
     "hotspots": [
       {
@@ -631,31 +683,74 @@ Interactive visual diagram with clickable target regions. Essential for visual e
         "x": 0.2,
         "y": 0.3,
         "label": "Sunlight ☀️",
-        "content": "NOT MATTER! Light is energy. It has no mass and doesn't take up physical space."
+        "content": "NOT MATTER! Light is energy with no mass.",
+        "isCorrect": false
       },
       {
         "id": "hs2",
         "x": 0.5,
         "y": 0.5,
         "label": "Wooden Desk 🪵",
-        "content": "MATTER! Wood has mass and takes up volume in the room."
-      },
-      {
-        "id": "hs3",
-        "x": 0.8,
-        "y": 0.3,
-        "label": "Shadow on Wall 👥",
-        "content": "NOT MATTER! A shadow is just the absence of light. You can't weigh a shadow!"
-      },
-      {
-        "id": "hs4",
-        "x": 0.3,
-        "y": 0.7,
-        "label": "Water Bottle 💧",
-        "content": "MATTER! Liquid water has mass and takes up volume."
+        "content": "MATTER! Wood has mass and takes up volume.",
+        "isCorrect": true
       }
     ],
-    "behavior": "discovery",
+    "behavior": "discover",
+    "markingMode": "self-mark",
+    "maxClicks": 5,
+    "showNumbers": false,
+    "points": 10,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Allowed Values | Default / Notes |
+|---|---|---|---|
+| `title` | `string` | Plain string | Header prompt |
+| `image` | `string` (URL) | URL | Background diagram image asset |
+| `hotspots` | `HotspotNode[]` | Minimum 1 target | Array of target pin objects |
+| `behavior` | `string` | `"explore"` `"discover"` | `explore` = info popups; `discover` = scored click targets |
+| `markingMode` | `string` | `"self-mark"` `"tutor-mark"` | Default `"self-mark"` |
+| `maxClicks` | `number` | 1–50 | Maximum clicks allowed in discover mode |
+| `showNumbers` | `boolean` | `true` `false` | Show numeric pin labels |
+| `points` | `number` | 0–100 | Points awarded in discover mode |
+| `mode` | `"practice" \| "live"` | | |
+| `state` | `"active" \| "disabled"` | | |
+
+**HotspotNode object:**
+```json
+{
+  "id": "hs1",
+  "x": 0.2,
+  "y": 0.3,
+  "label": "Pin Title Label",
+  "content": "Explanation popup content",
+  "isCorrect": true
+}
+```
+> **Rules**:
+> - `x` and `y` are decimal relative coordinates (`0.0`–`1.0`) relative to image dimensions.
+> - `isCorrect`: Set `true` for correct targets, `false` for decoy pins in discover mode.
+
+---
+
+#### `trueFalse`
+Rapid-fire binary True/False statement challenge.
+
+```json
+{
+  "id": "trueFalse-<ts>",
+  "type": "trueFalse",
+  "props": {
+    "statement": "The Earth revolves around the sun.",
+    "isTrue": true,
+    "explanation": "Earth takes 365.25 days to complete an orbit around the Sun.",
+    "points": 10,
     "mode": "practice",
     "state": "active"
   },
@@ -667,28 +762,272 @@ Interactive visual diagram with clickable target regions. Essential for visual e
 
 | Prop | Type | Allowed Values | Notes |
 |---|---|---|---|
-| `title` | `string` | | Instruction prompt shown above the image |
-| `image` | `string` | URL | Background diagram / photo asset URL |
-| `hotspots` | `Hotspot[]` | | Array of interactive target markers (minimum 1) |
-| `behavior` | `string` | `"discovery"` `"quiz"` | `discovery` = click to inspect popups; `quiz` = click target hotspots to complete challenge |
-| `mode` | `"practice" \| "live"` | | |
-| `state` | `"active" \| "disabled"` | | |
-| `timeLimit` | `number` | | Seconds for live mode countdown timer |
-
-**Hotspot object:**
-```json
-{
-  "id": "hs1",
-  "x": 0.2,
-  "y": 0.3,
-  "label": "Sunlight ☀️",
-  "content": "Explanation popup content"
-}
-```
-> **Coordinates Rule**: `x` and `y` are decimal fractions (`0.0`–`1.0`) representing relative percentage coordinates across image width and height. Top-left is `(0.0, 0.0)`, bottom-right is `(1.0, 1.0)`.
-> **Pedagogical Recommendation**: Use `behavior: "discovery"` on introductory slides to let students explore visual diagrams at their own pace, and `behavior: "quiz"` on assessment slides.
+| `statement` | `string` | Plain question string | Main statement prompt |
+| `isTrue` | `boolean` | `true` `false` | Correct answer |
+| `explanation` | `string` | Plain string | Explanation shown after submit |
+| `points` | `number` | 0–100 | Default `10` |
 
 ---
+
+#### `shortAnswer`
+Open-ended text response with keyword auto-grading or tutor manual review.
+
+```json
+{
+  "id": "shortAnswer-<ts>",
+  "type": "shortAnswer",
+  "props": {
+    "title": "Open Response",
+    "question": "Explain why ecosystems depend on primary producers:",
+    "placeholder": "Write your answer here...",
+    "correctKeywords": ["energy", "photosynthesis", "food chain"],
+    "markingMode": "self-mark",
+    "points": 10,
+    "mode": "practice",
+    "state": "active",
+    "timeLimit": 30
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Allowed Values | Notes |
+|---|---|---|---|
+| `question` | `string` | Plain prompt text | Question prompt |
+| `placeholder` | `string` | Plain string | Textarea placeholder |
+| `correctKeywords` | `string[]` | Array of strings | Keywords checked in self-mark mode |
+| `markingMode` | `string` | `"self-mark"` `"tutor-mark"` | `self-mark` checks keywords; `tutor-mark` holds for review |
+| `points` | `number` | 0–100 | Default `10` |
+
+---
+
+#### `annotateImage`
+Diagram labeling challenge — place target text badges onto diagram image coordinates.
+
+```json
+{
+  "id": "annotateImage-<ts>",
+  "type": "annotateImage",
+  "props": {
+    "title": "Label the Cell Diagram",
+    "image": "/placeholder.svg?height=400&width=600",
+    "labels": [
+      { "id": "l1", "text": "Nucleus", "x": 0.5, "y": 0.4 },
+      { "id": "l2", "text": "Mitochondria", "x": 0.2, "y": 0.7 }
+    ],
+    "points": 15,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Notes |
+|---|---|---|
+| `title` | `string` | Activity title |
+| `image` | `string` (URL) | Diagram image asset URL |
+| `labels` | `LabelNode[]` | Target label text and relative `x`, `y` coordinates (`0.0`–`1.0`) |
+| `points` | `number` | Total points for full diagram accuracy |
+
+---
+
+#### `categorise`
+Sort items into matching bucket categories or columns.
+
+```json
+{
+  "id": "categorise-<ts>",
+  "type": "categorise",
+  "props": {
+    "title": "Categorise Energy Sources",
+    "categories": [
+      { "id": "c1", "title": "Renewable Energy" },
+      { "id": "c2", "title": "Non-Renewable Energy" }
+    ],
+    "items": [
+      { "id": "i1", "text": "Solar Power", "categoryId": "c1" },
+      { "id": "i2", "text": "Coal", "categoryId": "c2" },
+      { "id": "i3", "text": "Wind Turbines", "categoryId": "c1" }
+    ],
+    "points": 20,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Notes |
+|---|---|---|
+| `categories` | `Category[]` | Bucket headers (`id`, `title`) |
+| `items` | `Item[]` | Items to place (`id`, `text`, `categoryId` target match) |
+| `points` | `number` | Total points for categorisation |
+
+---
+
+#### `timeline`
+Chronological event ordering line.
+
+```json
+{
+  "id": "timeline-<ts>",
+  "type": "timeline",
+  "props": {
+    "title": "Historical Timeline",
+    "events": [
+      { "id": "e1", "year": "1969", "title": "Moon Landing", "description": "Apollo 11 touches down." },
+      { "id": "e2", "year": "1989", "title": "World Wide Web", "description": "Tim Berners-Lee proposes WWW." }
+    ],
+    "interactive": true,
+    "points": 15
+  },
+  "state": "active",
+  "status": "uncompleted"
+}
+```
+
+---
+
+#### `wordScramble`
+Tap tile puzzle to unscramble target word.
+
+```json
+{
+  "id": "wordScramble-<ts>",
+  "type": "wordScramble",
+  "props": {
+    "title": "Unscramble the Word",
+    "word": "PHOTOSYNTHESIS",
+    "hint": "Process plants use to make food",
+    "points": 15,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+---
+
+#### `memoryGrid`
+Concentration memory matching game.
+
+```json
+{
+  "id": "memoryGrid-<ts>",
+  "type": "memoryGrid",
+  "props": {
+    "title": "Memory Card Pairs",
+    "pairs": [
+      { "id": "p1", "term": "Photosynthesis", "definition": "Plants convert light to energy" },
+      { "id": "p2", "term": "Respiration", "definition": "Cells release energy from glucose" }
+    ],
+    "points": 20,
+    "mode": "practice",
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+---
+
+#### `wordCloud`
+Interactive live word submission cloud.
+
+```json
+{
+  "id": "wordCloud-<ts>",
+  "type": "wordCloud",
+  "props": {
+    "title": "Live Word Cloud",
+    "question": "Type key terms related to today's topic:",
+    "placeholder": "Type a word...",
+    "maxWords": 30,
+    "points": 10,
+    "mode": "practice",
+    "state": "active",
+    "timeLimit": 20
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+---
+
+#### `scaleSlider`
+Opinion spectrum / confidence slider component.
+
+```json
+{
+  "id": "scaleSlider-<ts>",
+  "type": "scaleSlider",
+  "props": {
+    "title": "Opinion Spectrum",
+    "prompt": "Rate your confidence level:",
+    "minLabel": "Strongly Disagree",
+    "maxLabel": "Strongly Agree",
+    "min": 1,
+    "max": 10,
+    "step": 1,
+    "defaultValue": 5,
+    "points": 10,
+    "mode": "practice",
+    "state": "active",
+    "timeLimit": 15
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+---
+
+#### `spinTheWheel`
+Gamified spinning wheel quiz engine.
+
+```json
+{
+  "id": "spinTheWheel-<ts>",
+  "type": "spinTheWheel",
+  "props": {
+    "title": "Spin the Wheel Quiz",
+    "requiredSpins": 3,
+    "points": 20,
+    "mode": "practice",
+    "state": "active",
+    "questions": [
+      {
+        "id": "wq1",
+        "question": "What state of matter is steam?",
+        "options": ["Solid", "Liquid", "Gas"],
+        "correctAnswer": 2,
+        "explanation": "Steam is water vapor in gas state."
+      }
+    ]
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+---
+
 
 #### `poll`
 Opinion poll — students pick one option and see live percentage bars. **No live/practice mode distinction** — polls are always open voting.
@@ -1088,17 +1427,17 @@ Before submitting a lesson JSON for loading:
 - [ ] `slides` array has at least 1 slide
 - [ ] Every slide has a unique `id`
 - [ ] Every component has a unique `id`
-- [ ] Only implemented component types are used — no `slideTitle`, `lessonIntro`, `lessonSummary`, `lessonComplete`, `quote`
+- [ ] Only implemented component types are used — no unknown types outside the registered catalog
 - [ ] Each `quiz` has at least 1 question with exactly 1 `isCorrect: true` option
 - [ ] Each `multiSelectQuiz` question has at least 1 `isCorrect: true` option and uses the fixed colour palette in positional order
 - [ ] `flashcardQuiz` questions use `correctAnswer` as a zero-based index, not an ID
 - [ ] `poll` options have no `isCorrect` field — polls are unscored
 - [ ] `fillInTheBlank` has `{{blank}}` count matching `blanks.length`
 - [ ] `dragDrop` items have `correctIndex` values forming 0-based sequence with no gaps
-- [ ] `hotspot.x` and `hotspot.y` are between 0.0 and 1.0
-- [ ] Interactive components (`quiz`, `dragDrop`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `hotspot`, `flashcardQuiz`, `multiSelectQuiz`) have `mode` set at **both** component root AND inside `props`
+- [ ] `hotspot.x` and `hotspot.y` are decimal numbers between 0.0 and 1.0
+- [ ] Interactive components (`quiz`, `dragDrop`, `flashcards`, `fillInTheBlank`, `matchingPairs`, `hotspot`, `flashcardQuiz`, `multiSelectQuiz`, `shortAnswer`, `annotateImage`, `categorise`, `timeline`, `wordScramble`, `memoryGrid`, `wordCloud`, `scaleSlider`, `spinTheWheel`, `trueFalse`) have `mode` set at **both** component root AND inside `props`
 - [ ] `poll` does NOT have a `mode` field — it is always open voting
-- [ ] Live mode activities set explicit `"timeLimit"` in `props` if the 15s default is too short
+- [ ] Live mode activities set explicit `"timeLimit"` in `props` if default timer is insufficient
 - [ ] All IDs within lesson are globally unique (no duplicates across slides or components)
 
 ---
@@ -1118,6 +1457,7 @@ Before submitting a lesson JSON for loading:
 | `accordion` | content | — | ✗ | ✗ |
 | `slideTitle` | content | — | ✗ | ✗ |
 | `quiz` | interactive | practice/live | ✅ | ✅ |
+| `shortAnswer` | interactive | practice/live | ✅ (self/tutor) | ✅ |
 | `flashcards` | interactive | practice/live | ✗ | ✗ |
 | `fillInTheBlank` | interactive | practice/live | ✅ | ✅ |
 | `matchingPairs` | interactive | practice/live | ✅ | ✅ |
@@ -1136,3 +1476,4 @@ Before submitting a lesson JSON for loading:
 | `trueFalse` | interactive | practice/live | ✅ | ✅ |
 | `wordScramble` | interactive | practice/live | ✅ | ✅ |
 | `timeline` | interactive | practice/live | ✅ | ✅ |
+
