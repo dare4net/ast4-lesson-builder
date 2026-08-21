@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { useTypingAnimation } from "@/hooks/use-typing-animation"
 import { Play, Pause, CheckCircle2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useNavigationLock } from "@/context/navigation-lock-context"
 
 interface HeadingRendererProps {
   content: string
@@ -23,12 +23,17 @@ export function HeadingRenderer({
   setComponentState,
   id = "heading-renderer"
 }: HeadingRendererProps) {
-  const [hasStarted, setHasStarted] = useState(false)
-
+  const [hasStarted, setHasStarted] = useState(true)
   const isPreviouslyCompleted = savedState?.status === "completed"
 
-  // If editing, always show content fully
-  // If previously completed, consider it "started" and "done" (hook handles "alreadyCompleted")
+  const navLock = (() => {
+    try {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      return useNavigationLock()
+    } catch {
+      return null
+    }
+  })()
 
   const {
     displayedContent,
@@ -43,14 +48,20 @@ export function HeadingRenderer({
     componentId: id,
     isEditing,
     alreadyCompleted: isPreviouslyCompleted,
-    // Only start typing if we have explicitly started or it's not previously completed but we triggered it? 
-    // Actually hook starts on mount. We need to conditionally render the hook or control it?
-    // The hook has no "autoStart" prop, but we can just inhibit it by not rendering it? 
-    // No, that remounts. 
-    // Let's assume we render the "TypingView" only when hasStarted is true.
     startDelay: 0,
-    autoStart: hasStarted
+    autoStart: true
   })
+
+  // Lock navigation until heading typing is completed
+  useEffect(() => {
+    if (isEditing || !navLock) return
+    if (!isCompleted) {
+      navLock.registerLock(id)
+      return () => navLock.unregisterLock(id)
+    } else {
+      navLock.unregisterLock(id)
+    }
+  }, [id, isCompleted, isEditing, navLock])
 
   // Sync completion to parent
   useEffect(() => {

@@ -1,0 +1,632 @@
+{
+    "id": "lesson-word-detectives-ch3",
+    "title": "Word Detectives: Chapter 3 — The Chameleon Prefixes",
+    "description": "Uncover the Prefix Bandit's Chameleon Secret! Learn why 'in-' changes into 'im-', 'il-', and 'ir-' to match the starting letter of root words.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch3-s1",
+            "title": "🕵️ Scene 1: The Printing Shop Incident",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch3-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 3: The Chameleon Prefixes",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch3-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Printing Shop Incident",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch3-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Rain continues to fall as you arrive at the Town Printing Shop. The typesetter points nervously at a box of metal lead letters that were reorganized overnight...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch3-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Crime Scene Report #003",
+                        "content": "The Bandit left four new words on the printing press: 'incorrect', 'impossible', 'illegal', and 'irresponsible'. All four mean NOT!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch3-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Chameleon Prefix Shift",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch3-1",
+                                "title": "in- (Default)",
+                                "content": "Used before most letters: 'in-' + 'correct' = 'incorrect'."
+                            },
+                            {
+                                "id": "acc-ch3-2",
+                                "title": "im- (Before P / M)",
+                                "content": "'in-' turns into 'im-' before P or M: 'im-' + 'possible' = 'impossible', 'im-' + 'mature' = 'immature'."
+                            },
+                            {
+                                "id": "acc-ch3-3",
+                                "title": "il- (Before L)",
+                                "content": "'in-' turns into 'il-' before L: 'il-' + 'legal' = 'illegal'."
+                            },
+                            {
+                                "id": "acc-ch3-4",
+                                "title": "ir- (Before R)",
+                                "content": "'in-' turns into 'ir-' before R: 'ir-' + 'responsible' = 'irresponsible'."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch3-s2",
+            "title": "🔍 Scene 2: Why Do Prefixes Change Shape?",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch3-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Phonetic Secret of the Chameleon",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch3-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A close-up view of a Victorian printing press tray with lead typography blocks. Four compartments are highlighted: 'IN-' next to 'C', 'IM-' next to 'P/M', 'IL-' next to 'L', and 'IR-' next to 'R'. A magnifying glass reveals that saying 'in-possible' stumbles on the tongue, whereas 'impossible' flows smoothly!",
+                        "caption": "Language Efficiency: 'in-' morphs so words are easier to pronounce!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch3-s2",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Detective Rule of Harmony",
+                        "content": "Try saying 'in-possible' out loud. Your lips get stuck! Changing 'in-' to 'im-' makes the word smooth to say!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-ch3-s2",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "The prefix 'in-' changes into 'im-' before words starting with P because it makes pronunciation smoother.",
+                        "isTrue": true,
+                        "explanation": "Correct! 'im-' blends seamlessly with the lip movement for 'p' and 'm'!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "hotspot-ch3-s2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Investigate the Printing Press Type Trays 🔍",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "behavior": "explore",
+                        "markingMode": "self-mark",
+                        "showNumbers": true,
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.2,
+                                "y": 0.3,
+                                "label": "The 'IM-' Tray (P & M)",
+                                "content": "Before P or M, 'in-' becomes 'im-': impossible, immature, imperfect!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.5,
+                                "y": 0.4,
+                                "label": "The 'IL-' Tray (L)",
+                                "content": "Before L, 'in-' turns into 'il-': legal → illegal, logical → illogical!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.8,
+                                "y": 0.3,
+                                "label": "The 'IR-' Tray (R)",
+                                "content": "Before R, 'in-' turns into 'ir-': regular → irregular, responsible → irresponsible!",
+                                "isCorrect": true
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch3-s3",
+            "title": "🧩 Scene 3: Matching Chameleon Rules",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch3-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Mastering the Chameleon Rules",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch3-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Match each root word to its correct chameleon prefix based on its starting letter!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch3-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Root Words to their Chameleon Prefix",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "possible (starts with P)",
+                                "right": "im- (impossible)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "legal (starts with L)",
+                                "right": "il- (illegal)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "responsible (starts with R)",
+                                "right": "ir- (irresponsible)"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "correct (starts with C)",
+                                "right": "in- (incorrect)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "flashcards-ch3-s3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Chameleon Prefix Mastery Cards 🃏",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "IN- + Possible → ?",
+                                "back": "IMPOSSIBLE (in- changes to im- before P)"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "IN- + Legal → ?",
+                                "back": "ILLEGAL (in- changes to il- before L)"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "IN- + Regular → ?",
+                                "back": "IRREGULAR (in- changes to ir- before R)"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch3-s3",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify Root Words by Chameleon Prefix",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "Use IM- (before P/M)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "Use IL- (before L)"
+                            },
+                            {
+                                "id": "c3",
+                                "title": "Use IR- (before R)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Patient (p)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Logical (l)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Regular (r)",
+                                "categoryId": "c3"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Polite (p)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Replaceable (r)",
+                                "categoryId": "c3"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Legible (l)",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch3-s4",
+            "title": "📜 Scene 4: The Printing Press Note",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch3-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #3 at the Printing Press",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch3-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Underneath the lead letter tray for 'IL-', you discover another handwritten scrap parchment...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch3-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A parchment scrap resting beside lead typeface letters inside a dark wooden printing tray. The note reads in elegant cursive: 'Words should sound like music to the ear, not rocks in the mouth. — C.' Next to the note is a small diagram of a clock.",
+                        "caption": "Continuity Scrap #3: The Bandit explains why chameleon prefixes exist.",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch3-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "According to Note #3, why did the Bandit change 'in-' to 'il-' for 'legal'?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "To make the word sound smooth like music to the ear",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "To hide the root word completely",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "To confuse the Detective Agency",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Chameleon prefixes adjust sound so words flow naturally!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-ch3-s4",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Chameleon Prefix Evidence Log #3",
+                        "text": "The printing press evidence shows chameleon shifts: 'in-' + 'possible' becomes '{{blank}}possible', 'in-' + 'legal' becomes '{{blank}}legal', and 'in-' + 'responsible' becomes '{{blank}}responsible'.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "im"
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "il"
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "ir"
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch3-s5",
+            "title": "📋 Scene 5: Detective Field Journal #3",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch3-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording the Chameleon Rule",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch3-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Document the chameleon prefix rules in your Agency Field Journal before continuing your pursuit.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch3-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Chameleon Word",
+                        "word": "IMPOSSIBLE",
+                        "hint": "Prefix 'IM-' + Root 'POSSIBLE' (Opposite of possible)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch3-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #3",
+                        "question": "State the rule for when 'in-' changes into 'im-', 'il-', or 'ir-':",
+                        "placeholder": "e.g. 'in-' becomes 'im-' before P/M, 'il-' before L, and 'ir-' before R...",
+                        "correctKeywords": [
+                            "before",
+                            "im",
+                            "il",
+                            "ir",
+                            "p",
+                            "m",
+                            "l",
+                            "r"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch3-s6",
+            "title": "⏰ Scene 6: Pursuit to the Railway Station",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch3-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Bandit Flees to the Station",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch3-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A breath of cold air rushes past. You catch a glimpse of a dark cloak turning the corner toward the Railway Station!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch3-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "warning",
+                        "title": "Station Notice Board Altered",
+                        "content": "On the station platform, a sign reading 'VIEW TRAIN TIMES' now has 'PRE-' attached: 'PREVIEW TRAIN TIMES'! And 'BUILD PLATFORM' has 'RE-' attached: 'REBUILD PLATFORM'!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch3-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Are you ready to crack the Clock Keys ('re-' & 'pre-') at the Railway Station in Chapter 4?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🚂 Yes! Rush to the Railway Station!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "📜 Double-check my chameleon notes first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch3-s7",
+            "title": "🎉 Scene 7: Chapter 3 Debrief",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch3-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 3 Complete: Chameleon Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch3-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "'in-' is a chameleon prefix that changes shape based on starting letters",
+                            "'in-' becomes 'im-' before P and M (*impossible*)",
+                            "'in-' becomes 'il-' before L (*illegal*)",
+                            "'in-' becomes 'ir-' before R (*irresponsible*)",
+                            "Next Chapter: Crack the Clock Keys ('re-' & 'pre-') at the Railway Station!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch3-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready for Chapter 4: The Clock Keys?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "⏰ Onward to Chapter 4!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect case file summary!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

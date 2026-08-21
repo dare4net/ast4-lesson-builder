@@ -1,0 +1,576 @@
+{
+    "id": "lesson-word-detectives-ch2",
+    "title": "Word Detectives: Chapter 2 — The Negation Keys",
+    "description": "Crack the Prefix Bandit's Negation Keys ('un-' and 'dis-')! Master real vs. fake prefix traps and decode mysterious messages at the Town Clocktower.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch2-s1",
+            "title": "🕵️ Scene 1: Opening the Clocktower Vault",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch2-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 2: The Negation Keys",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch2-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Inside the Clocktower Vault",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch2-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You follow the damp footprints from Scene 1 up the winding spiral stairs of the Grand Clocktower. Tucked behind the brass gears is an iron vault door engraved with stencil markings...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch2-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Detective Rule of Negation",
+                        "content": "The Prefix Bandit's first two keys are 'un-' and 'dis-'. Both mean 'NOT' or 'OPPOSITE OF'!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch2-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Negation Key Specs",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch2-1",
+                                "title": "Key #1: 'un-' (Not)",
+                                "content": "'un-' + 'happy' = 'unhappy' (not happy). 'un-' + 'lock' = 'unlock' (opposite of lock)."
+                            },
+                            {
+                                "id": "acc-ch2-2",
+                                "title": "Key #2: 'dis-' (Not / Away)",
+                                "content": "'dis-' + 'agree' = 'disagree' (not agree). 'dis-' + 'appear' = 'disappear' (opposite of appear)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch2-s2",
+            "title": "🔍 Scene 2: The Decoy Prefix Trap",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch2-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Beware the Decoy Words!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch2-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "An antique oak detective table lit by a brass desk lamp. On top of a green felt pad sit two stacks of paper strips: one labeled 'REAL PREFIXES' (unhappy, disagree) and one labeled 'DECOY WORDS' (uncle, distance, ink). A magnifying glass rests over the word 'uncle', highlighting that 'cle' is not a real root word!",
+                        "caption": "The Bandit's Trap: Not every word starting with 'un-' or 'dis-' is a prefix word!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch2-s2",
+                    "type": "callout",
+                    "props": {
+                        "variant": "warning",
+                        "title": "Decoy Discrimination Test",
+                        "content": "If you remove 'un-' from 'uncle', you are left with 'cle' — which is NOT a real root word! Therefore, 'uncle' is a decoy, NOT a prefix word!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch2-s2",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Separate Real Prefixes from Decoys",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "Real Prefix (Root Exists)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "Decoy Word (No Root)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Unhappy (un + happy)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Uncle (cle is not a root)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Disagree (dis + agree)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Distance (tance is not a root)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Unlock (un + lock)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Dish (h is not a root)",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "annotateImage-ch2-s2",
+                    "type": "annotateImage",
+                    "props": {
+                        "title": "Label the Decoy vs Real Prefix Evidence Diagram 🏷️",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "points": 15,
+                        "mode": "practice",
+                        "labels": [
+                            {
+                                "id": "lbl1",
+                                "text": "Real Prefix: UN- + HAPPY",
+                                "x": 0.25,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl2",
+                                "text": "Decoy Word: UNCLE (no root)",
+                                "x": 0.75,
+                                "y": 0.4
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch2-s3",
+            "title": "🧩 Scene 3: Codebreaking the Vault Lock",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch2-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Cracking the Bandit's Vault Lock",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch2-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The iron vault door requires you to assemble root words and negation prefixes to unlock the tumblers!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch2-s3",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Negation Word",
+                        "word": "UNAFRAID",
+                        "hint": "Opposite of afraid (Prefix 'UN-' + Root 'AFRAID')",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "memoryGrid-ch2-s3",
+                    "type": "memoryGrid",
+                    "props": {
+                        "title": "Match Root Words to their Negation Forms",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "term": "Happy 😊",
+                                "definition": "Unhappy 🙁"
+                            },
+                            {
+                                "id": "p2",
+                                "term": "Agree 🤝",
+                                "definition": "Disagree 🙅"
+                            },
+                            {
+                                "id": "p3",
+                                "term": "Like 👍",
+                                "definition": "Dislike 👎"
+                            },
+                            {
+                                "id": "p4",
+                                "term": "Lock 🔒",
+                                "definition": "Unlock 🔓"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch2-s4",
+            "title": "📜 Scene 4: The Bandit's Scrap Note",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch2-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Clue Inside the Vault",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch2-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The vault door clicks open! Inside rests a single leather folder containing an unusual handwritten scrap...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch2-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A close-up view of a yellowed parchment note laying inside a dark velvet lined iron vault. The note is written in elegant ink script: 'Language must grow when feelings change. Sorry for the mess. — C.' Beside the note is a small brass stamp with the letters 'RE-'.",
+                        "caption": "Continuity Scrap #2: The Bandit leaves a polite note signed '- C.'",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-ch2-s4",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "The note author claims that prefixes are used to help language grow when feelings change.",
+                        "isTrue": true,
+                        "explanation": "Correct! The mystery author '- C.' claims prefixes are tools for language growth!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-ch2-s4",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Crime Scene Evidence Log #2",
+                        "text": "The suspect altered the signs by taking the root word 'happy' and writing '{{blank}}happy'. They also took 'agree' and wrote '{{blank}}agree'.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "un"
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "dis"
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch2-s5",
+            "title": "📋 Scene 5: Detective Journal Entry",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch2-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Negation Rules",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch2-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Record your findings on 'un-' and 'dis-' in your official Agency Field Journal before continuing the pursuit.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch2-s5",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What happens when you add 'dis-' to the root word 'obey'?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "It makes 'disobey', which means 'not obey'",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "It destroys the word 'obey' completely",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "It changes the word into an action verb",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! 'disobey' means not obeying!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch2-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #2",
+                        "question": "Explain how you check if a word starting with 'un-' is a real prefix or a decoy word:",
+                        "placeholder": "e.g. I remove 'un-' and check if the remaining letters form a real root word...",
+                        "correctKeywords": [
+                            "remove",
+                            "root",
+                            "word",
+                            "real",
+                            "check",
+                            "remaining"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch2-s6",
+            "title": "⏰ Scene 6: The Bandit's New Trick",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch2-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "A Non-Negation Prefix Spotted!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch2-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "As you leave the Clocktower, you spot the Prefix Bandit near the Town Railway Station! But this time, he isn't reversing words...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch2-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "New Observation at the Station",
+                        "content": "The Bandit just stamped 'RE-' onto 'BUILD' to form 'REBUILD', and 'PRE-' onto 'VIEW' to form 'PREVIEW'! These do NOT mean 'not'!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch2-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "What do you think 're-' and 'pre-' have in common?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "⏰ They are connected to TIME and SEQUENCE!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🚫 They mean 'not' just like un- and dis-"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "🎨 They describe colors and shapes"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch2-s7",
+            "title": "🎉 Scene 7: Chapter 2 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch2-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 2 Complete: Negation Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch2-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Keys 'un-' and 'dis-' mean 'NOT' or 'OPPOSITE OF'",
+                            "Decoy test: Always check if the root word exists without the prefix",
+                            "The Bandit left a scrap note signed '- C.' mentioning language growth",
+                            "Next Mission: Pursue the Bandit to the Railway Station to crack the Clock Keys ('re-' & 'pre-')!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch2-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to investigate the Clock Keys in Chapter 3?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🚂 All aboard! Lead me to the Railway Station!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Review my negation field notes first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

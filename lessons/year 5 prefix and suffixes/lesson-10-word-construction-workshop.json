@@ -1,0 +1,539 @@
+{
+    "id": "lesson-word-detectives-ch10",
+    "title": "Word Detectives: Chapter 10 — Word Construction Workshop",
+    "description": "Step inside the Guild's Master Laboratory! Assemble multi-affix words combining PREFIX + ROOT + SUFFIX to build complex terms like 'UN-CON-STRUCT-ION-AL'.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch10-s1",
+            "title": "🕵️ Scene 1: The Master Laboratory",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch10-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 10: Word Construction Workshop",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch10-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Inside the Master Laboratory",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch10-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Corvin and Wren lead you into a glowing glass-domed workshop filled with brass gear assemblies, conveyor belts, and mortar-and-pestle stations. Here, prefixes, roots, and suffixes are assembled into complex master words...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch10-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Multi-Affix Assembly Dossier",
+                        "content": "A single root word can take BOTH a prefix at the front AND a suffix at the end! PREFIX + ROOT + SUFFIX = SUPER-WORD!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch10-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect Multi-Affix Word Blueprints",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch10-1",
+                                "title": "Blueprint #1: 'UNHELPFUL'",
+                                "content": "Prefix 'UN-' (not) + Root 'HELP' (aid) + Suffix '-FUL' (full of) = 'unhelpful' (not full of help)."
+                            },
+                            {
+                                "id": "acc-ch10-2",
+                                "title": "Blueprint #2: 'RECONSTRUCTION'",
+                                "content": "Prefix 'RE-' (again) + Prefix 'CON-' (together) + Root 'STRUCT' (build) + Suffix '-TION' (process) = 'reconstruction' (the process of building together again)."
+                            },
+                            {
+                                "id": "acc-ch10-3",
+                                "title": "Blueprint #3: 'DISRESPECTFUL'",
+                                "content": "Prefix 'DIS-' (opposite of) + Root 'RESPECT' (regard) + Suffix '-FUL' (full of) = 'disrespectful' (full of no respect)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch10-s2",
+            "title": "🔍 Scene 2: The Multi-Affix Conveyor",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch10-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Word Assembly Line",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch10-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A three-tier brass conveyor system inside the Guild Laboratory. Box 1 holds glowing blue prefix blocks ('UN-', 'RE-', 'DIS-'). Box 2 holds silver root cylinders ('HELP', 'STRUCT', 'COVER'). Box 3 holds gold suffix stamps ('-FUL', '-TION', '-ABLE'). On the central assembly rail, 'UN-' + 'HELP' + '-FUL' lock together with a click.",
+                        "caption": "Multi-Affix Assembly: Combining Prefix + Root + Suffix in exact order!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-ch10-s2",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Assemble Multi-Affix Words",
+                        "targetZones": [
+                            {
+                                "id": "z1",
+                                "title": "UNHELPFUL"
+                            },
+                            {
+                                "id": "z2",
+                                "title": "RECONSTRUCTION"
+                            },
+                            {
+                                "id": "z3",
+                                "title": "DISCOVERABLE"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "UN- + HELP + -FUL",
+                                "targetZoneId": "z1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "RE- + CON- + STRUCT + -TION",
+                                "targetZoneId": "z2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "DIS- + COVER + -ABLE",
+                                "targetZoneId": "z3"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "annotateImage-ch10-s2",
+                    "type": "annotateImage",
+                    "props": {
+                        "title": "Label the Multi-Affix Word Assembly Line 🏷️",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "points": 15,
+                        "mode": "practice",
+                        "labels": [
+                            {
+                                "id": "lbl1",
+                                "text": "Prefix Block (UN-)",
+                                "x": 0.25,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl2",
+                                "text": "Root Cylinder (HELP)",
+                                "x": 0.5,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl3",
+                                "text": "Suffix Stamp (-FUL)",
+                                "x": 0.75,
+                                "y": 0.4
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch10-s3",
+            "title": "🧩 Scene 3: Deconstructing Complex Words",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch10-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Deconstructing Master Words",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch10-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Break each complex word down into its prefix, root, and suffix components!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch10-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Complex Words to Component Formulas",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "UNPREDICTABLE",
+                                "right": "UN- + PRE- + DICT + -ABLE"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "INVISIBILITY",
+                                "right": "IN- + VIS + -IBILITY"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "DISAGREEABLE",
+                                "right": "DIS- + AGREE + -ABLE"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "REPLACEMENT",
+                                "right": "RE- + PLACE + -MENT"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-ch10-s3",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "In the word 'uncomfortable', 'un-' is the prefix, 'comfort' is the root, and '-able' is the suffix.",
+                        "isTrue": true,
+                        "explanation": "Correct! Three distinct morphemes working together!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch10-s4",
+            "title": "📜 Scene 4: Note #10 — The Master Word Engine",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch10-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #10: The Master Engine Diagram",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch10-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Wren points to a colossal brass mechanism at the center of the room. Note #10 is attached to its pressure gauge...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch10-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A giant clockwork sphere suspended over a stone pedestal. Note #10 attached to the control panel reads: 'The Master Word Engine powers the town's printing presses, schools, and archives. When Mayor Vane removed the key gears 50 years ago, vocabulary stagnated. Together, we are reinstalling the gears! — Corvin & Wren.'",
+                        "caption": "Continuity Scrap #10: Reinstalling the word gears restores vocabulary to the town!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch10-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What happens when the Master Word Engine is fully restored?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The town's vocabulary and language capability will be completely restored!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "The clocktower will turn into a rocket",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "All books will erase themselves",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Reinstalling the word gears restores full language mastery to the entire town!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch10-s5",
+            "title": "📋 Scene 5: Detective Field Journal #10",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch10-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Multi-Affix Formulas",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch10-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log multi-affix word assembly in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch10-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Complex Multi-Affix Word",
+                        "word": "UNPREDICTABLE",
+                        "hint": "Prefix 'UN-' + 'PRE-' + Root 'DICT' + Suffix '-ABLE'",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch10-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #10",
+                        "question": "Deconstruct the word 'disrespectful' into its prefix, root, and suffix, explaining each part:",
+                        "placeholder": "e.g. 'dis-' is the prefix meaning not/opposite, 'respect' is the root, and '-ful' is the suffix meaning full of...",
+                        "correctKeywords": [
+                            "dis",
+                            "respect",
+                            "ful",
+                            "prefix",
+                            "root",
+                            "suffix",
+                            "meaning"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch10-s6",
+            "title": "⏰ Scene 6: Preparing for the Final Trial",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch10-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Final Assembly Test",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch10-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Corvin hands you the Master Key of Morphology. Only two trials remain before the Master Engine is fully re-activated.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch10-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Climax Approaching",
+                        "content": "In Chapter 11, you will face the Grand Trial of Morphology! In Chapter 12, the Master Word Engine will ignite!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch10-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Are you ready to enter Chapter 11: The Grand Trial of Morphology?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "⚡ Yes! I'm ready for the ultimate trial!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "⚙️ Review my multi-affix formulas first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch10-s7",
+            "title": "🎉 Scene 7: Chapter 10 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch10-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 10 Complete: Assembly Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch10-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Mastered multi-affix word construction (*PREFIX + ROOT + SUFFIX*)",
+                            "Assembled complex words (*unpredictable*, *reconstruction*, *disrespectful*)",
+                            "Discovered Note #10 detailing the Master Word Engine's restoration",
+                            "Next Mission: Chapter 11 — The Grand Trial of Morphology (The Ultimate Challenge)!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch10-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to face Chapter 11: The Grand Trial of Morphology?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🏆 Enter the Grand Trial!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect case file summary!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

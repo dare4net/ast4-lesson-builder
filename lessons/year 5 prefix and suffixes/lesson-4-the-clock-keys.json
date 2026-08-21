@@ -1,0 +1,569 @@
+{
+    "id": "lesson-word-detectives-ch4",
+    "title": "Word Detectives: Chapter 4 — The Clock Keys",
+    "description": "Crack the Prefix Bandit's Time Tools ('re-' and 'pre-') at the Town Railway Station! Master time sequence ordering and uncover a mysterious advance newspaper.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch4-s1",
+            "title": "🕵️ Scene 1: Arrival at the Railway Station",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch4-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 4: The Clock Keys",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch4-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Railway Station Clock",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch4-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Steam rises from the iron tracks of the Town Railway Station. You step onto Platform 1 where the station master points to the grand departures chalkboard...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch4-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Station Master Case Report",
+                        "content": "The Bandit manipulated time words! 'VIEW' became 'PREVIEW', 'BUILD' became 'REBUILD', and 'READ' became 'REREAD'!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch4-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Clock Key Rules",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch4-1",
+                                "title": "Key #1: 'pre-' (BEFORE)",
+                                "content": "'pre-' means BEFORE. 'pre-' + 'view' = 'preview' (view before the main show). 'pre-' + 'heat' = 'preheat' (heat before cooking)."
+                            },
+                            {
+                                "id": "acc-ch4-2",
+                                "title": "Key #2: 're-' (AGAIN)",
+                                "content": "'re-' means AGAIN. 're-' + 'read' = 'reread' (read again). 're-' + 'build' = 'rebuild' (build again)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch4-s2",
+            "title": "🔍 Scene 2: The Timeline of Words",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch4-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Sequencing Time with Prefixes",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch4-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A brass railway station clock with a three-stage timeline drawn beneath it: Stage 1 shows a movie reel labeled 'PREVIEW (Before)', Stage 2 shows a theater screen labeled 'VIEW (During)', and Stage 3 shows a newspaper review labeled 'REVIEW (After)'. Glowing blue letters 'PRE-' and 'RE-' flank the center root word 'VIEW'.",
+                        "caption": "Time Sequence: 'pre-' (Before) → Root (Now) → 're-' (Again / After)",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "timeline-ch4-s2",
+                    "type": "timeline",
+                    "props": {
+                        "title": "The Time Sequence of 'VIEW'",
+                        "interactive": true,
+                        "events": [
+                            {
+                                "id": "t1",
+                                "year": "Step 1",
+                                "title": "Stage 1: PREVIEW",
+                                "description": "Watch BEFORE the main release (Prefix 'PRE-')"
+                            },
+                            {
+                                "id": "t2",
+                                "year": "Step 2",
+                                "title": "Stage 2: VIEW",
+                                "description": "Watch NOW during the main release (Root Word)"
+                            },
+                            {
+                                "id": "t3",
+                                "year": "Step 3",
+                                "title": "Stage 3: REVIEW",
+                                "description": "Look back AGAIN after watching (Prefix 'RE-')"
+                            }
+                        ],
+                        "points": 15
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch4-s3",
+            "title": "🧩 Scene 3: Clock Key Puzzles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch4-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Cracking the Clock Key Sequences",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch4-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Sort each word by its time meaning: does it mean BEFORE or AGAIN?",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch4-s3",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Sort Words by Time Meaning",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "PRE- (Happens BEFORE)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "RE- (Happens AGAIN)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Preview (View before)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Reread (Read again)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Preheat (Heat before)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Rebuild (Build again)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Pretest (Test before)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Replay (Play again)",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "flashcards-ch4-s3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Time & Order Prefix Drill Cards 🃏",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "PRE- means...",
+                                "back": "BEFORE in time (e.g. Preview, Preheat)"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "RE- means...",
+                                "back": "AGAIN or BACK (e.g. Reread, Rebuild)"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "PRE- + VIEW vs RE- + VIEW",
+                                "back": "Preview = see BEFORE; Review = see AGAIN!"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-ch4-s3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Sequence the Story Order",
+                        "targetZones": [
+                            {
+                                "id": "z1",
+                                "title": "Step 1: Before (PRE-)"
+                            },
+                            {
+                                "id": "z2",
+                                "title": "Step 2: During (Root)"
+                            },
+                            {
+                                "id": "z3",
+                                "title": "Step 3: Again (RE-)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "d1",
+                                "text": "PREHEAT the oven before baking",
+                                "targetZoneId": "z1",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "d2",
+                                "text": "BAKE the cake now",
+                                "targetZoneId": "z2",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "d3",
+                                "text": "REBAKE if the center is still wet",
+                                "targetZoneId": "z3",
+                                "correctIndex": 2
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch4-s4",
+            "title": "📜 Scene 4: The Tomorrow Newspaper Clue",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch4-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Newspaper Dated Tomorrow!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch4-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "On a bench at Platform 1, you find a freshly printed edition of the Town Chronicle. But when you look at the date at the top...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch4-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A folded vintage newspaper resting on a dark mahogany bench at a train station. The header reads 'THE TOWN CHRONICLE — TOMORROW'S EDITION'. The front-page article is titled 'PREVIEW OF TOMORROW'S WEATHER' and bears a handwritten note in the margin: 'Not everything sealed away is a lesson learned. — C.'",
+                        "caption": "Continuity Scrap #4: The Bandit leaves an advance newspaper dated tomorrow!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch4-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Why was the newspaper article called a 'PREVIEW'?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Because it reported the weather BEFORE it actually happened!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "Because it reported yesterday's news again",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "Because the newspaper was printed with no prefixes",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! 'preview' means viewing something BEFORE it happens!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch4-s5",
+            "title": "📋 Scene 5: Detective Journal Entry #4",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch4-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Clock Key Findings",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch4-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Record your discoveries about time prefixes in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch4-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Clock Key Word",
+                        "word": "PREVENT",
+                        "hint": "Prefix 'PRE-' + Root 'VENT' (Act before something happens)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch4-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #4",
+                        "question": "Explain the difference between the prefix 'pre-' and the prefix 're-':",
+                        "placeholder": "e.g. 'pre-' means before, while 're-' means again...",
+                        "correctKeywords": [
+                            "before",
+                            "again",
+                            "pre",
+                            "re",
+                            "time",
+                            "meaning"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch4-s6",
+            "title": "🎭 Scene 6: Sighting at the Printing Press!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch4-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "A Second Suspect at the Word's End!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch4-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A shadow glides across the platform. You follow the tracks to the old Town Telegraph Office. Standing by the telegraph key is a second masked figure...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch4-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "warning",
+                        "title": "New Crime Scene Discovery",
+                        "content": "The second figure isn't touching the FRONT of words! She is attaching tools like '-MENT' and '-TION' to the END of words! It's the Suffix Sidekick!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch4-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "What do you think the Suffix Sidekick does to words?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🎭 She changes what a word DOES (turns verbs into nouns)!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🚫 She reverses words just like the Prefix Bandit"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "🎨 She erases root words completely"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch4-s7",
+            "title": "🎉 Scene 7: Chapter 4 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch4-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 4 Complete: Clock Keys Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch4-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "'pre-' means BEFORE (*preview*, *preheat*)",
+                            "'re-' means AGAIN (*rebuild*, *reread*)",
+                            "Discovered a newspaper dated TOMORROW with Note #4 signed '- C.'",
+                            "Spotted Suspect #2 (The Suffix Sidekick) striking at the END of words!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch4-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to investigate Misdirection & Overreach in Chapter 5?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🕵️ Yes! Lead me to Chapter 5!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect my Clock Key field notes!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

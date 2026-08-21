@@ -1,0 +1,575 @@
+{
+    "id": "lesson-word-detectives-ch12",
+    "title": "Word Detectives: Chapter 12 — Ignition of the Word Engine",
+    "description": "The Grand Campaign Finale! Mount the Golden Master Gear, align the 12 morphology dials, ignite the Master Word Engine, and receive your Lexicon Guild Master Detective Badge!",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 30,
+    "settings": {
+        "duration": 30,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch12-s1",
+            "title": "🌅 Scene 1: Dawn at the Clocktower",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch12-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 12: Ignition of the Word Engine",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch12-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Grand Finale: Dawn at the Engine Room",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch12-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Golden morning light floods through the clockface glass as you stand on the high gallery overlooking the Master Word Engine. Corvin, Wren, and the Mayor's chief archivist gather around the central pedestal...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch12-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Final Ignition Mission",
+                        "content": "Mount the Golden Master Gear, execute the 12-dial alignment sequence, and pull the Master Ignition Lever to restore vocabulary across the realm!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch12-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Master Engine Components",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch12-1",
+                                "title": "Gear Socket 1: Prefix Transmission",
+                                "content": "Requires alignment of negation, chameleon, time, and degree prefixes."
+                            },
+                            {
+                                "id": "acc-ch12-2",
+                                "title": "Gear Socket 2: Suffix Converter",
+                                "content": "Requires alignment of noun, adjective, and 3 golden spelling rule tumblers."
+                            },
+                            {
+                                "id": "acc-ch12-3",
+                                "title": "Gear Socket 3: Classical Root Generator",
+                                "content": "Requires alignment of Greek & Latin roots (struct, vis, aud, tract, dict)."
+                            },
+                            {
+                                "id": "acc-ch12-4",
+                                "title": "Gear Socket 4: The Golden Master Gear",
+                                "content": "Locks all 12 modules into a single harmonious morphological engine!"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch12-s2",
+            "title": "🔍 Scene 2: Placing the Golden Gear",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch12-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Mounting the Golden Master Gear",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch12-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A dramatic wide shot inside the brass-and-copper Clocktower Engine Room at sunrise. The detective's hands carefully lower the polished Golden Master Gear into the central drive spindle. Rays of emerald and sapphire light beam out from the gear teeth as steam pressure rises smoothly to 100%.",
+                        "caption": "The Golden Master Gear locks into place: The Master Word Engine is ready for alignment!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-ch12-s2",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "The Golden Master Gear connects prefix transmissions, suffix converters, and classical root generators into one unified engine.",
+                        "isTrue": true,
+                        "explanation": "Correct! All 12 lessons unite into one master system of word morphology!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch12-s3",
+            "title": "🧩 Scene 3: The 12-Dial Ignition Sequence",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch12-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Master Alignment Sequence",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch12-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Align each key concept from the 12-chapter campaign to activate the engine!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-ch12-s3",
+                    "type": "dragDrop",
+                    "props": {
+                        "title": "Align the Morphological Engine Dials",
+                        "targetZones": [
+                            {
+                                "id": "z1",
+                                "title": "PREFIX ENGINE"
+                            },
+                            {
+                                "id": "z2",
+                                "title": "SUFFIX ENGINE"
+                            },
+                            {
+                                "id": "z3",
+                                "title": "ROOT ENGINE"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Negation (UN-, DIS-, IM-) & Time (RE-, PRE-)",
+                                "targetZoneId": "z1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Noun-Formers (-MENT, -TION, -NESS) & Golden Rules (Y→I, Drop E, CVC)",
+                                "targetZoneId": "z2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Classical Anchors (STRUCT, VIS, AUD, TRACT, DICT)",
+                                "targetZoneId": "z3"
+                            }
+                        ],
+                        "points": 30,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "matchingPairs-ch12-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Final Campaign Mastery Check",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Chameleon Prefix",
+                                "right": "IM- / IL- / IR- (adjusts to root start)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "3 Golden Suffix Rules",
+                                "right": "Y to I, Drop Silent E, Double CVC"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Classical Root",
+                                "right": "STRUCT (Build), VIS (See), DICT (Say)"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "Multi-Affix Word",
+                                "right": "RECONSTRUCTION (Re- + Con- + Struct + -tion)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch12-s4",
+            "title": "📜 Scene 4: Note #12 — The Lexicon Guild Proclamation",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch12-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #12: The Guild Proclamation",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch12-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "As steam whistles and the engine hums to life, Corvin hands you the final continuity scrap, signed by the Town Mayor and the Guild...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch12-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A gold-embossed scroll bearing the town seal alongside the Lexicon Guild emblem of quill and key. Note #12 reads: 'By proclamation of the Town Council and the Lexicon Guild: Language belongs to all who seek knowledge. The Word Engine is hereby ignited forever. — Mayor Vane, Corvin, & Wren.'",
+                        "caption": "Continuity Scrap #12: The final proclamation restoring word morphology forever!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch12-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What is the core message of the Lexicon Guild's final proclamation?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "That language is not static; it belongs to everyone who learns how words are built!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "That all dictionaries should be locked in a vault",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "That detectives should only investigate missing socks",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Word morphology empowers everyone to create, expand, and master language!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch12-s5",
+            "title": "📋 Scene 5: Final Detective Field Journal #12",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch12-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Final Journal Entry: Master Word Detective",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch12-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log your final reflections in your Agency Field Journal to complete your campaign portfolio.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch12-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble Your Master Title",
+                        "word": "WORDDETECTIVE",
+                        "hint": "A scholar who unlocks the secrets of Prefixes, Suffixes, and Classical Roots",
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch12-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #12 (Final Summary)",
+                        "question": "Reflect on your journey from Chapter 1 to Chapter 12: How has understanding prefixes, suffixes, and roots changed how you read and decode new words?",
+                        "placeholder": "e.g. In Chapter 1, I thought words were just random spellings. Now I see that every word is built from prefixes, roots, and suffixes. When I see an unfamiliar word, I break it down...",
+                        "correctKeywords": [
+                            "prefix",
+                            "suffix",
+                            "root",
+                            "decode",
+                            "meaning",
+                            "morphology",
+                            "word"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-ch12-s5",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Master Word Engine Final Ignition Log #12",
+                        "text": "Complete the grand multi-affix word construction: '{{blank}}' (Prefix: Again) + 'con' (Prefix: Together) + '{{blank}}' (Latin Root: Build) + '{{blank}}' (Suffix: Process) = RECONSTRUCTION!",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "re"
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "struct"
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "-tion"
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch12-s6",
+            "title": "⏰ Scene 6: Ignition of the Engine",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch12-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "Ignition! The Engine Revives the Town",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch12-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You grab the brass Master Ignition Lever and pull it downward. Golden steam erupts from the pipes, and thousands of glowing letters swirl into the sky above the town!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch12-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Lexicon Guild Master Detective Badge Awarded!",
+                        "content": "CONGRATULATIONS DETECTIVE! You have solved the 12-chapter mystery, exonerated Corvin & Wren, and restored word morphology to the entire town!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "timeline-ch12-s6",
+                    "type": "timeline",
+                    "props": {
+                        "title": "Full 12-Chapter Master Case Timeline 📜",
+                        "events": [
+                            {
+                                "id": "ev1",
+                                "year": "Act I (Ch 1-3)",
+                                "title": "The Prefix Bandit & Chameleon Keys",
+                                "description": "Tracked Corvin, mastered un-, dis-, re-, im-, il-, ir-."
+                            },
+                            {
+                                "id": "ev2",
+                                "year": "Act II (Ch 4-6)",
+                                "title": "Time Keys & Suffix Sidekick",
+                                "description": "Met Wren, decoded pre-, re-, mis-, over-, -ful, -less, -able."
+                            },
+                            {
+                                "id": "ev3",
+                                "year": "Act III (Ch 7-9)",
+                                "title": "Town Hall & Classical Roots",
+                                "description": "Mastered noun suffixes, 3 Golden Rules, and Greek/Latin root families."
+                            },
+                            {
+                                "id": "ev4",
+                                "year": "Act IV (Ch 10-12)",
+                                "title": "Master Engine & Ignition",
+                                "description": "Assembled multi-affix words, passed Grand Trial, and ignited the Word Engine!"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch12-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "How do you feel after completing the 12-Chapter Lexicon Guild Campaign?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🎓 Triumphant! I am a Master Word Detective!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Empowered! Ready to decode any word I meet!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch12-s7",
+            "title": "🎉 Scene 7: Graduation & Campaign Complete",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch12-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Campaign Graduation: Master Word Detective!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch12-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Completed all 12 Word Detective Chapters",
+                            "Mastered 10+ Prefixes, 8+ Suffixes, and 5 Classical Root Families",
+                            "Mastered the 3 Golden Suffix Spelling Rules (Y to I, Drop E, CVC Doubling)",
+                            "Exonerated the Lexicon Guild & Ignited the Master Word Engine",
+                            "Earned the Lexicon Guild Master Detective Badge!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch12-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Return to the Student Dashboard or review campaign notes?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🏆 Return to Student Dashboard with 100% Completion!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "📜 Re-read my Field Journal entries!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

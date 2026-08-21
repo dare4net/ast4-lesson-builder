@@ -18,7 +18,7 @@ interface VideoRendererProps {
 export function extractYouTubeVideoId(inputUrl?: string): string | null {
     if (!inputUrl) return null
     const trimmed = inputUrl.trim()
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/
     const match = trimmed.match(regExp)
 
     if (match && match[2].length === 11) {

@@ -1,0 +1,580 @@
+{
+    "id": "lesson-word-detectives-ch11",
+    "title": "Word Detectives: Chapter 11 — The Grand Trial of Morphology",
+    "description": "Prove your mastery in the Guild's Grand Trial Chamber! Face 4 comprehensive challenges testing prefixes, chameleon prefixes, suffix transformations, spelling rules, and root analysis.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch11-s1",
+            "title": "🕵️ Scene 1: Entering the Grand Chamber",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch11-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 11: The Grand Trial of Morphology",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch11-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Trial of Four Seals",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch11-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Corvin and Wren lead you into an amphitheater illuminated by four massive stone seals embedded in the archway. To unlock the final Master Word Engine gear, you must pass all four Seals of Mastery...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch11-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "The 4 Seals of Morphology",
+                        "content": "Seal 1: Prefix Operations. Seal 2: Suffix Transformations & Spelling. Seal 3: Classical Root Families. Seal 4: Multi-Affix Synthesis!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch11-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Four Seals of Mastery",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch11-1",
+                                "title": "Seal 1: Prefix Operations",
+                                "content": "Decoding negation (un-, dis-, im-), time (pre-, re-), and degree (mis-, over-)."
+                            },
+                            {
+                                "id": "acc-ch11-2",
+                                "title": "Seal 2: Suffix Transformations",
+                                "content": "Noun suffixes (-ment, -tion, -ness) and the 3 Golden Rules (Y to I, Drop E, Double Consonant)."
+                            },
+                            {
+                                "id": "acc-ch11-3",
+                                "title": "Seal 3: Classical Root Families",
+                                "content": "Decoding core meanings of Greek & Latin roots (struct, vis, aud, tract, dict)."
+                            },
+                            {
+                                "id": "acc-ch11-4",
+                                "title": "Seal 4: Multi-Affix Synthesis",
+                                "content": "Deconstructing complex super-words combining prefixes, roots, and suffixes."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch11-s2",
+            "title": "🔍 Scene 2: Seal 1 & 2 Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch11-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Trial Stage 1 & 2: Prefixes & Suffixes",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch11-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A circular stone trial pedestal with two glowing seals. Seal 1 flares gold as prefix blocks 'MIS-', 'RE-', and 'IM-' line up. Seal 2 flares silver as suffix stamps '-NESS', '-TION', and '-ABLE' lock into position. Floating runes verify correct morphological matches.",
+                        "caption": "Trial Pedestal: Unlocking Seals 1 and 2 through prefix and suffix precision!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch11-s2",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Seal 1 & 2: Classify Affix Functions",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "Negation/Time Prefix (un-, dis-, re-)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "Noun/Adjective Suffix (-ness, -tion, -ful)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Disagree (dis- = opposite)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Happiness (happy → happi + ness)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Rebuild (re- = again)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Creation (create → creat + ion)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Impossible (im- = not)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Careful (care + ful = full of care)",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "hotspot-ch11-s2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Inspect the Grand Trial Pedestal Seals 🔍",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "behavior": "explore",
+                        "markingMode": "self-mark",
+                        "showNumbers": true,
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.3,
+                                "y": 0.35,
+                                "label": "Seal #1: Prefix Locks",
+                                "content": "Verifies prefix operations: negation (un-/dis-), time (pre-/re-), and degree (mis-/over-)!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.7,
+                                "y": 0.35,
+                                "label": "Seal #2: Suffix Stamps",
+                                "content": "Verifies suffix transformations (-ment, -tion, -ness) and the 3 Golden Spelling Rules!",
+                                "isCorrect": true
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch11-s3",
+            "title": "🧩 Scene 3: Seal 3 & 4 Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch11-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Trial Stage 3 & 4: Roots & Synthesis",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch11-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Match complex words to their morphological breakdowns!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch11-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Seal 3 & 4: Match Words to Analysis",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "DESTRUCTION",
+                                "right": "DE- (down) + STRUCT (build) + -TION (noun)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "INAUDIBLE",
+                                "right": "IN- (not) + AUD (hear) + -IBLE (able to be)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "PREDICTION",
+                                "right": "PRE- (before) + DICT (say) + -TION (noun)"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "ATTRACTION",
+                                "right": "AT- (toward) + TRACT (pull) + -TION (noun)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-ch11-s3",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "The word 'unreadable' contains prefix 'un-', root 'read', and suffix '-able'.",
+                        "isTrue": true,
+                        "explanation": "Correct! Seal 4 passed: Multi-affix word successfully deconstructed!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "flashcards-ch11-s3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Grand Trial Review Flashcards 🃏",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "Seal 1: Prefix Rule",
+                                "back": "Prefixes attach to FRONT and change meaning (un-, dis-, re-, mis-)"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "Seal 2: Suffix Rule",
+                                "back": "Suffixes attach to END and change word class (-ment, -tion, -ness)"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "Seal 3 & 4: Roots & Multi-Affix",
+                                "back": "Classical roots anchor families; multi-affix = PREFIX + ROOT + SUFFIX!"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch11-s4",
+            "title": "📜 Scene 4: Note #11 — The Master Gear Unlocked",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch11-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #11: The Final Gear Key",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch11-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "As the fourth stone seal glows bright green, a hidden compartment opens in the altar, revealing Note #11 and the Golden Master Gear...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch11-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A heavy golden gear resting in velvet lining inside a stone pedestal. Note #11 resting atop it reads: 'You have passed the Grand Trial with full honors! Take this Golden Master Gear to the Clocktower Engine Room at dawn. — Corvin, Wren, & The Lexicon Guild.'",
+                        "caption": "Continuity Scrap #11: Golden Master Gear unlocked for the Campaign Finale!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch11-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What reward did you unlock by passing the Grand Trial of Morphology?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "The Golden Master Gear to activate the Master Word Engine!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "A box of chocolate coins",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "A bus ticket out of town",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! The Golden Master Gear is the final piece needed to ignite the engine!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch11-s5",
+            "title": "📋 Scene 5: Detective Field Journal #11",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch11-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Master Credentials",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch11-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Record your final Trial summary in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch11-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Trial Master Title",
+                        "word": "MORPHOLOGY",
+                        "hint": "The study of word structure and formation (Prefixes + Roots + Suffixes)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch11-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #11",
+                        "question": "Synthesize what you have learned across the 4 Seals of Morphology:",
+                        "placeholder": "e.g. I learned how prefixes change front meanings, suffixes alter word class and end meanings, spelling rules handle letter shifts, and classical roots anchor word families...",
+                        "correctKeywords": [
+                            "prefix",
+                            "suffix",
+                            "root",
+                            "meaning",
+                            "spelling",
+                            "morphology"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch11-s6",
+            "title": "⏰ Scene 6: Preparing for Dawn",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch11-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Grand Finale Awaits!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch11-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Corvin and Wren hand you the ignition lever. The sky outside the clocktower glass begins to turn gold with dawn...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch11-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Campaign Finale Next!",
+                        "content": "In Chapter 12: Ignition of the Word Engine, you will place the Golden Master Gear, ignite the engine, and receive your Lexicon Guild Master Detective Badge!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch11-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Are you ready for the Grand Finale in Chapter 12?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "⚙️ YES! Let's ignite the Master Word Engine!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect my journal entries first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch11-s7",
+            "title": "🎉 Scene 7: Chapter 11 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch11-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 11 Complete: Grand Trial Passed!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch11-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Passed Seal 1: Prefix Operations",
+                            "Passed Seal 2: Suffix Transformations & 3 Golden Rules",
+                            "Passed Seal 3: Classical Root Family Analysis",
+                            "Passed Seal 4: Multi-Affix Word Synthesis",
+                            "Unlocked the Golden Master Gear",
+                            "Next Mission: Chapter 12 — Ignition of the Word Engine (The Grand Campaign Finale)!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch11-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready for Chapter 12: Ignition of the Word Engine?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🌅 Ignite the Engine!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Review case evidence!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

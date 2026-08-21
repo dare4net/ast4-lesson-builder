@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Layers, Plus, Trash2, Tag, FolderPlus } from "lucide-react"
+import { Layers, Plus, Trash2, Tag, FolderPlus, ArrowUp, ArrowDown, Shuffle } from "lucide-react"
 
 export interface Category {
     id: string
@@ -104,6 +104,26 @@ export function CategoriseEditor({
         }
     }
 
+    const handleMoveItem = (index: number, direction: 'up' | 'down') => {
+        const targetIdx = direction === 'up' ? index - 1 : index + 1
+        if (targetIdx < 0 || targetIdx >= items.length) return
+        const nextItems = [...items]
+        const temp = nextItems[index]
+        nextItems[index] = nextItems[targetIdx]
+        nextItems[targetIdx] = temp
+        if (onItemsChange) {
+            onItemsChange(nextItems)
+        }
+    }
+
+    const handleShuffleItems = () => {
+        if (items.length <= 1) return
+        const shuffled = [...items].sort(() => Math.random() - 0.5)
+        if (onItemsChange) {
+            onItemsChange(shuffled)
+        }
+    }
+
     return (
         <div className="space-y-6 w-full min-w-0 overflow-x-hidden">
             {/* Title Header */}
@@ -174,14 +194,27 @@ export function CategoriseEditor({
                         <Tag className="w-4 h-4 text-purple-400 shrink-0" />
                         Classifiable Items ({items.length})
                     </Label>
-                    <Button
-                        type="button"
-                        onClick={handleAddItem}
-                        className="bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs h-8 px-2.5 rounded-xl shadow-sm shrink-0"
-                    >
-                        <Plus className="w-3.5 h-3.5 mr-1" />
-                        Add Item
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        {items.length > 1 && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleShuffleItems}
+                                className="border-purple-500/30 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 text-xs font-bold h-8 px-2.5 rounded-xl shrink-0"
+                            >
+                                <Shuffle className="w-3.5 h-3.5 mr-1" />
+                                Shuffle
+                            </Button>
+                        )}
+                        <Button
+                            type="button"
+                            onClick={handleAddItem}
+                            className="bg-purple-500 hover:bg-purple-400 text-white font-bold text-xs h-8 px-2.5 rounded-xl shadow-sm shrink-0"
+                        >
+                            <Plus className="w-3.5 h-3.5 mr-1" />
+                            Add Item
+                        </Button>
+                    </div>
                 </div>
 
                 {items.length === 0 ? (
@@ -203,7 +236,7 @@ export function CategoriseEditor({
                                 key={it.id || idx}
                                 className="p-3 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2.5 w-full min-w-0"
                             >
-                                {/* Header row: badge + delete */}
+                                {/* Header row: badge + move controls + delete */}
                                 <div className="flex items-center justify-between w-full min-w-0">
                                     <div className="flex items-center gap-1.5 min-w-0">
                                         <span className="w-5 h-5 rounded-md bg-purple-500/20 text-purple-400 font-black text-[10px] flex items-center justify-center shrink-0">
@@ -213,15 +246,40 @@ export function CategoriseEditor({
                                             Item Tag #{idx + 1}
                                         </span>
                                     </div>
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => handleDeleteItem(it.id)}
-                                        className="h-7 w-7 text-rose-400 hover:bg-rose-500/10 rounded-lg shrink-0"
-                                    >
-                                        <Trash2 className="w-3.5 h-3.5" />
-                                    </Button>
+                                    <div className="flex items-center gap-1">
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            disabled={idx === 0}
+                                            onClick={() => handleMoveItem(idx, 'up')}
+                                            className="h-7 w-7 text-slate-400 hover:text-purple-300 hover:bg-slate-800 rounded-lg shrink-0 disabled:opacity-30"
+                                            title="Move Item Up"
+                                        >
+                                            <ArrowUp className="w-3.5 h-3.5" />
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            disabled={idx === items.length - 1}
+                                            onClick={() => handleMoveItem(idx, 'down')}
+                                            className="h-7 w-7 text-slate-400 hover:text-purple-300 hover:bg-slate-800 rounded-lg shrink-0 disabled:opacity-30"
+                                            title="Move Item Down"
+                                        >
+                                            <ArrowDown className="w-3.5 h-3.5" />
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleDeleteItem(it.id)}
+                                            className="h-7 w-7 text-rose-400 hover:bg-rose-500/10 rounded-lg shrink-0"
+                                            title="Delete Item"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </Button>
+                                    </div>
                                 </div>
 
                                 {/* Item text input */}

@@ -2,7 +2,7 @@
 
 import React from "react"
 import { cn } from "@/lib/utils"
-import { Type, HelpCircle, RefreshCw, Delete } from "lucide-react"
+import { Type, HelpCircle, RefreshCw, Delete, Shuffle } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import type { Component } from "@/types/lesson"
@@ -46,7 +46,7 @@ function createScrambledLetters(targetWord: string): LetterTile[] {
     const shuffled = [...letters]
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
-        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
     if (shuffled.map(l => l.letter).join("") === targetWord && targetWord.length > 1) {
         shuffled.reverse()
@@ -95,6 +95,30 @@ function WordScrambleContent({
         setState(prev => ({
             ...prev,
             selectedLetterIds: prev.selectedLetterIds.slice(0, -1),
+        }))
+        playFeedback("click", { sound: true })
+    }
+
+    const handleReshuffleRemaining = () => {
+        if (submitted || isEditing || disabled) return
+        const unused = scrambledLetters.filter(l => !selectedLetterIds.includes(l.id))
+        if (unused.length <= 1) return
+
+        const shuffledUnused = [...unused]
+        for (let i = shuffledUnused.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+                ;[shuffledUnused[i], shuffledUnused[j]] = [shuffledUnused[j], shuffledUnused[i]]
+        }
+
+        let unusedIdx = 0
+        const nextScrambled = scrambledLetters.map(l => {
+            if (selectedLetterIds.includes(l.id)) return l
+            return shuffledUnused[unusedIdx++]
+        })
+
+        setState(prev => ({
+            ...prev,
+            scrambledLetters: nextScrambled,
         }))
         playFeedback("click", { sound: true })
     }
@@ -197,8 +221,14 @@ function WordScrambleContent({
                         )
                     })}
                     <button type="button" onClick={handleBackspace} disabled={selectedLetterIds.length === 0 || isEditing || disabled}
-                        className="w-11 h-11 rounded-xl border-2 border-b-4 bg-white hover:bg-rose-50 border-slate-200 border-b-slate-300 hover:border-[#FF4B4B] text-slate-600 flex items-center justify-center transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shadow-sm">
+                        className="w-11 h-11 rounded-xl border-2 border-b-4 bg-white hover:bg-rose-50 border-slate-200 border-b-slate-300 hover:border-[#FF4B4B] text-slate-600 flex items-center justify-center transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        title="Backspace">
                         <Delete className="w-4 h-4" />
+                    </button>
+                    <button type="button" onClick={handleReshuffleRemaining} disabled={scrambledLetters.filter(l => !selectedLetterIds.includes(l.id)).length <= 1 || isEditing || disabled}
+                        className="w-11 h-11 rounded-xl border-2 border-b-4 bg-white hover:bg-sky-50 border-slate-200 border-b-slate-300 hover:border-[#1CB0F6] text-[#1CB0F6] flex items-center justify-center transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        title="Reshuffle Remaining Letters">
+                        <Shuffle className="w-4 h-4" />
                     </button>
                 </div>
             )}

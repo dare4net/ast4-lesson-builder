@@ -1,0 +1,690 @@
+{
+    "id": "lesson-word-detectives-ch9",
+    "title": "Word Detectives: Chapter 9 — The Great Root Revival",
+    "description": "Descend into the Sealed Guild Archives! Uncover the classical anchors of language: Greek and Latin root families ('struct', 'vis/vid', 'aud', 'tract', 'dict').",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch9-s1",
+            "title": "🕵️ Scene 1: Entering the Guild Vaults",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch9-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 9: The Great Root Revival",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch9-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Subterranean Guild Archives",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch9-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "At midnight, you push open a heavy iron grate hidden beneath the Town Clocktower. Cobwebbed stone stairs lead down into a vast vaulted chamber filled with thousands of glowing stone tablets...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch9-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Classical Anchors Dossier",
+                        "content": "Prefixes and suffixes need a sturdy anchor to attach to! Classical Greek and Latin roots provide the core meanings for thousands of English words!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch9-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the 5 Classical Root Families",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch9-1",
+                                "title": "Root #1: STRUCT (Build)",
+                                "content": "Latin 'struct' means TO BUILD: 'con-struct' (build together), 'in-struct' (build knowledge into), 'de-struct-ion' (un-building)."
+                            },
+                            {
+                                "id": "acc-ch9-2",
+                                "title": "Root #2: VIS / VID (See)",
+                                "content": "Latin 'vis/vid' means TO SEE: 'vis-ion' (the act of seeing), 'in-vis-ible' (not able to be seen), 'vid-eo' (recorded sight)."
+                            },
+                            {
+                                "id": "acc-ch9-3",
+                                "title": "Root #3: AUD (Hear)",
+                                "content": "Latin 'aud' means TO HEAR: 'aud-io' (sound), 'aud-ience' (group of listeners), 'in-aud-ible' (not able to be heard)."
+                            },
+                            {
+                                "id": "acc-ch9-4",
+                                "title": "Root #4: TRACT (Pull / Drag)",
+                                "content": "Latin 'tract' means TO PULL: 'at-tract' (pull toward), 'dis-tract' (pull away), 'trac-tor' (pulling machine)."
+                            },
+                            {
+                                "id": "acc-ch9-5",
+                                "title": "Root #5: DICT (Speak / Say)",
+                                "content": "Latin 'dict' means TO SPEAK: 'dict-ate' (speak words for writing), 'pre-dict' (say before), 'dict-ion-ary' (book of spoken words)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch9-s2",
+            "title": "🔍 Scene 2: The Tree of Language",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch9-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Root Tree Mechanism",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch9-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A glowing blue holographic tree projected inside a dark stone vault. The massive trunk is labeled 'STRUCT (To Build)'. Branches spread outward bearing word fruits: 'CONSTRUCT', 'INSTRUCTION', 'DESTRUCTION', and 'STRUCTURE'. Standing beside the hologram, Corvin and Wren welcome you to the Lexicon Guild sanctuary.",
+                        "caption": "Language Tree: One classical root generates an entire family of expanded words!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch9-s2",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Classical Roots to Core Meanings",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "STRUCT",
+                                "right": "To Build 🏗️"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "VIS / VID",
+                                "right": "To See 👁️"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "AUD",
+                                "right": "To Hear 👂"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "TRACT",
+                                "right": "To Pull / Drag 🚜"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "hotspot-ch9-s2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Investigate the Tree of Language Hologram 🔍",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "behavior": "explore",
+                        "markingMode": "self-mark",
+                        "showNumbers": true,
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.3,
+                                "y": 0.4,
+                                "label": "Branch 1: STRUCT (Build)",
+                                "content": "Roots build word families: con-struct (build together), de-struct-ion (un-building)!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.5,
+                                "y": 0.3,
+                                "label": "Branch 2: VIS (See)",
+                                "content": "Roots anchor sight words: vis-ion (sight), in-vis-ible (not able to be seen)!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.7,
+                                "y": 0.4,
+                                "label": "Branch 3: AUD (Hear)",
+                                "content": "Roots anchor sound words: aud-io (sound), aud-ience (listeners)!",
+                                "isCorrect": true
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch9-s3",
+            "title": "🧩 Scene 3: Root Family Classification",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch9-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Sorting Words by Classical Root",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch9-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Classify each complex word into its correct classical root family!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch9-s3",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify Words by Root Family",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "STRUCT (Build)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "VIS / VID (See)"
+                            },
+                            {
+                                "id": "c3",
+                                "title": "AUD (Hear)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Construction",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Invisible",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Audience",
+                                "categoryId": "c3"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Instructor",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Visionary",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Audible",
+                                "categoryId": "c3"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "flashcards-ch9-s3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Classical Root Family Cards 🃏",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "STRUCT root means...",
+                                "back": "TO BUILD (e.g. structure, construct, destroy)"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "VIS / VID root means...",
+                                "back": "TO SEE (e.g. vision, visible, video)"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "AUD root means...",
+                                "back": "TO HEAR (e.g. audio, audience, audible)"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-ch9-s3",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "The word 'predict' contains the root 'dict', which means 'to speak or say'.",
+                        "isTrue": true,
+                        "explanation": "Correct! 'pre-' (before) + 'dict' (say) = say something before it happens!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch9-s4",
+            "title": "📜 Scene 4: Note #9 — The Guild Founders' Secret",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch9-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #9: The Founders' Mandate",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch9-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Corvin hands you a leather-bound book containing Note #9...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch9-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A thick leather ledger resting on a stone altar in the Guild Archives. The note reads: 'Words are not static rocks; they are living seeds. When you know the root, no unknown word can intimidate you. — Corvin & Wren.' Beside the book rests a glowing brass key marked 'MORPHOLOGY'.",
+                        "caption": "Continuity Scrap #9: Corvin & Wren reveal the ultimate power of root analysis!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch9-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Why does knowing classical roots empower a detective?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Because knowing one root allows you to decode dozens of unfamiliar words!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "Because roots allow you to spell words backward",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "Because roots are only used in dictionary contests",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Root analysis unlocks the hidden meanings of thousands of words!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "spinTheWheel-ch9-s4",
+                    "type": "spinTheWheel",
+                    "props": {
+                        "title": "Classical Root Wheel of Knowledge 🎡",
+                        "requiredSpins": 3,
+                        "questions": [
+                            {
+                                "id": "sq1",
+                                "text": "What does the root STRUCT mean?",
+                                "options": [
+                                    "To build",
+                                    "To hear",
+                                    "To see"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "sq2",
+                                "text": "What does the root VIS / VID mean?",
+                                "options": [
+                                    "To build",
+                                    "To see",
+                                    "To say"
+                                ],
+                                "correctAnswer": 1
+                            },
+                            {
+                                "id": "sq3",
+                                "text": "What does the root AUD mean?",
+                                "options": [
+                                    "To speak",
+                                    "To write",
+                                    "To hear"
+                                ],
+                                "correctAnswer": 2
+                            },
+                            {
+                                "id": "sq4",
+                                "text": "Which word combines PRE- (before) + DICT (say)?",
+                                "options": [
+                                    "Predict",
+                                    "Contradict",
+                                    "Dictator"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "sq5",
+                                "text": "Which word combines DE- (down) + STRUCT (build) + -TION (noun)?",
+                                "options": [
+                                    "Construction",
+                                    "Destruction",
+                                    "Instruction"
+                                ],
+                                "correctAnswer": 1
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch9-s5",
+            "title": "📋 Scene 5: Detective Field Journal #9",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch9-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Classical Root Families",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch9-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log the 5 Classical Root Families in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch9-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Root Word",
+                        "word": "INSTRUCTION",
+                        "hint": "Prefix 'IN-' + Root 'STRUCT' + Suffix '-TION' (Building knowledge into someone)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch9-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #9",
+                        "question": "Explain how breaking down 'invisible' ('in-' + 'vis' + '-ible') reveals its full meaning:",
+                        "placeholder": "e.g. 'in-' means not, 'vis' means see, and '-ible' means able to be, so 'invisible' means not able to be seen...",
+                        "correctKeywords": [
+                            "not",
+                            "see",
+                            "able",
+                            "in",
+                            "vis",
+                            "ible",
+                            "meaning"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch9-s6",
+            "title": "⏰ Scene 6: Corvin's Alliance Proposal",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch9-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "An Alliance Offered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch9-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Corvin steps forward and offers you the Lexicon Guild's Master Badge.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch9-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Guild Master Invitation",
+                        "content": "You have decoded all our clues and mastered prefixes, suffixes, and roots. Join us in rebuilding the Master Word Engine!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "timeline-ch9-s6",
+                    "type": "timeline",
+                    "props": {
+                        "title": "Act III Classical Roots Evidence Timeline 📜",
+                        "events": [
+                            {
+                                "id": "ev1",
+                                "year": "Chapter 7",
+                                "title": "Town Hall Archives",
+                                "description": "Discovered noun suffixes (-ment, -tion, -ness)."
+                            },
+                            {
+                                "id": "ev2",
+                                "year": "Chapter 8",
+                                "title": "Spelling Workshop",
+                                "description": "Mastered 3 Golden Rules (Y to I, Drop E, CVC doubling)."
+                            },
+                            {
+                                "id": "ev3",
+                                "year": "Chapter 9",
+                                "title": "Tree of Language",
+                                "description": "Unlocked Classical Roots (STRUCT, VIS, AUD, TRACT, DICT)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch9-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Do you accept Corvin & Wren's alliance to restore the Lexicon Guild?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🤝 Yes! I stand with the Lexicon Guild Scholars!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "📜 I accept, but we must present our findings to the town council!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch9-s7",
+            "title": "🎉 Scene 7: Chapter 9 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch9-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 9 Complete: Classical Roots Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch9-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "STRUCT = Build (*construct*, *instruction*)",
+                            "VIS / VID = See (*vision*, *invisible*)",
+                            "AUD = Hear (*audio*, *audience*)",
+                            "TRACT = Pull (*attract*, *distract*)",
+                            "DICT = Speak / Say (*predict*, *dictionary*)",
+                            "Formed an official alliance with Corvin & Wren in the subterranean archives",
+                            "Next Mission: Chapter 10 — Word Construction Workshop in the Guild Laboratory!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch9-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to enter the Guild Laboratory in Chapter 10?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "⚙️ Onward to the Master Laboratory!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect case file summary!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

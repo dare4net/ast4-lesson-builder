@@ -1,0 +1,644 @@
+{
+    "id": "lesson-word-detectives-ch5",
+    "title": "Word Detectives: Chapter 5 — Misdirection & Overreach",
+    "description": "Investigate the Prefix Bandit's Degree Tools ('mis-' and 'over-') at the Town Library! Uncover mistakes, excess, and a cryptic prophecy about the town's history.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch5-s1",
+            "title": "🕵️ Scene 1: The Town Library Archives",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch5-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 5: Misdirection & Overreach",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch5-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Inside the Town Library Archives",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch5-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Dust motes float in the beam of your lantern as you enter the Town Library Archives. The chief archivist points to a shelf of old town ledgers...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch5-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Archivist Case Docket",
+                        "content": "The Bandit applied two new prefix keys: 'mis-' (WRONGLY / BADLY) and 'over-' (TOO MUCH / EXCESS)!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch5-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Misdirection & Overreach Keys",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch5-1",
+                                "title": "Key #1: 'mis-' (WRONGLY / BADLY)",
+                                "content": "'mis-' + 'understand' = 'misunderstand' (understand wrongly). 'mis-' + 'lead' = 'mislead' (lead badly/wrongly)."
+                            },
+                            {
+                                "id": "acc-ch5-2",
+                                "title": "Key #2: 'over-' (TOO MUCH / EXCESS)",
+                                "content": "'over-' + 'load' = 'overload' (load too much). 'over-' + 'cook' = 'overcook' (cook too much)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch5-s2",
+            "title": "🔍 Scene 2: The Intensity Spectrum",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch5-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Measuring Degree & Intensity",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch5-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "An antique brass balance scale resting on a green velvet library desk. On the left pan sits a stone labeled 'UNDERCOOK (Too Little)'. In the center rests 'COOK (Just Right)'. On the right pan sits a heavy glowing stone labeled 'OVERCOOK (Too Much)'. Glowing blue stencil letters 'MIS-' and 'OVER-' hover above a stack of leather library scrolls.",
+                        "caption": "Degree & Mistake Spectrum: 'mis-' = wrongly done, 'over-' = done to excess.",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "scaleSlider-ch5-s2",
+                    "type": "scaleSlider",
+                    "props": {
+                        "title": "Rate the Intensity of 'COOK'",
+                        "min": 1,
+                        "max": 5,
+                        "step": 1,
+                        "minLabel": "Undercooked ❄️",
+                        "maxLabel": "Overcooked 🔥",
+                        "defaultValue": 3
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch5-s2",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Detective Insight #5",
+                        "content": "Notice how 'mis-' indicates a MISTAKE (wrongly done), whereas 'over-' indicates EXCESS (too much of something)!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-ch5-s2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Inspect the Intensity Scale Weights 🔍",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "behavior": "explore",
+                        "markingMode": "self-mark",
+                        "showNumbers": true,
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.25,
+                                "y": 0.35,
+                                "label": "The 'MIS-' Counterweight",
+                                "content": "'MIS-' means WRONGLY or BADLY: lead → mislead, understand → misunderstand!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.75,
+                                "y": 0.35,
+                                "label": "The 'OVER-' Heavy Weight",
+                                "content": "'OVER-' means EXCESS or TOO MUCH: react → overreact, cook → overcook!",
+                                "isCorrect": true
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch5-s3",
+            "title": "🧩 Scene 3: Prefix Classification Puzzles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch5-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Sorting Mistakes from Excess",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch5-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Classify each altered word based on whether it describes a MISTAKE ('mis-') or EXCESS ('over-')!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch5-s3",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify Misdirection vs. Overreach",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "MIS- (Done WRONGLY / Mistake)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "OVER- (Done TOO MUCH / Excess)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Misunderstand (understand wrongly)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Overload (load too much)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Misplace (place in wrong spot)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Overcrowd (crowd too much)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Misread (read wrongly)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Overheat (heat too much)",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "spinTheWheel-ch5-s3",
+                    "type": "spinTheWheel",
+                    "props": {
+                        "title": "Misdirection & Overreach Spin Challenge 🎡",
+                        "requiredSpins": 3,
+                        "questions": [
+                            {
+                                "id": "sq1",
+                                "text": "What does MIS- mean when added to 'understand'?",
+                                "options": [
+                                    "Understand wrongly",
+                                    "Understand completely",
+                                    "Understand before"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "sq2",
+                                "text": "What does OVER- mean when added to 'heat'?",
+                                "options": [
+                                    "Heat slightly",
+                                    "Heat too much / excessively",
+                                    "Not heat at all"
+                                ],
+                                "correctAnswer": 1
+                            },
+                            {
+                                "id": "sq3",
+                                "text": "Which word means to place something in the WRONG location?",
+                                "options": [
+                                    "Preplace",
+                                    "Overplace",
+                                    "Misplace"
+                                ],
+                                "correctAnswer": 2
+                            },
+                            {
+                                "id": "sq4",
+                                "text": "If a room is OVERCROWDED, what happened?",
+                                "options": [
+                                    "Too many people gathered",
+                                    "Not enough people gathered",
+                                    "People left early"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "sq5",
+                                "text": "If you MISREAD a clue, what did you do?",
+                                "options": [
+                                    "Read it perfectly",
+                                    "Read it wrongly",
+                                    "Read it twice"
+                                ],
+                                "correctAnswer": 1
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch5-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Root Words to Prefix Meanings",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "mislead",
+                                "right": "Lead in the wrong direction"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "overflow",
+                                "right": "Flow over the top (too much)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "misspell",
+                                "right": "Spell with a mistake"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "overpay",
+                                "right": "Pay too much money"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch5-s4",
+            "title": "📜 Scene 4: Note #5 — The Cryptic Prophecy",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch5-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Cryptic Scrap in the Town Ledger",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch5-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Tucked inside the 100-year-old Town Ledger, you discover Note #5 written in the Bandit's recognizable script...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch5-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A thick leather-bound historical town ledger open on a wooden podium. Resting across the page is Note #5 written in dark iron gall ink: 'When a town forgets how to say new things, it misjudges those who remind them. The Guild has never stolen. — C.' Beside the note sits a small brass seal with a quill and key.",
+                        "caption": "Continuity Scrap #5: The Bandit claims the Lexicon Guild never stole anything!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch5-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What does Note #5 claim about the mystery order ('The Guild')?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "That the Guild has never stolen anything from the town!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "That the Guild intends to erase all words",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "That the Prefix Bandit is working alone",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Corvin ('C.') claims the Guild has never stolen anything!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch5-s5",
+            "title": "📋 Scene 5: Detective Journal Entry #5",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch5-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Degree & Mistake Rules",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch5-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log your observations about 'mis-' and 'over-' in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch5-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Prefix Word",
+                        "word": "OVERCAME",
+                        "hint": "Prefix 'OVER-' + Root 'CAME' (Surpassed an obstacle)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch5-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #5",
+                        "question": "Explain the difference between 'misunderstand' and 'overreact':",
+                        "placeholder": "e.g. 'misunderstand' means understanding wrongly, while 'overreact' means reacting too much...",
+                        "correctKeywords": [
+                            "wrongly",
+                            "too much",
+                            "mistake",
+                            "excess",
+                            "mis",
+                            "over"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-ch5-s5",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Misdirection & Overreach Audit Report #5",
+                        "text": "The archivist log shows that the Bandit changed 'lead' into '{{blank}}lead' (guided wrongly) and changed 'cook' into '{{blank}}cook' (cooked to excess).",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "mis"
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "over"
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch5-s6",
+            "title": "🎭 Scene 6: The Suffix Sidekick's Next Move",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch5-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "Wren at the Printing Press!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch5-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A messenger from the Town Printing Press bursts into the archives: the Suffix Sidekick (Wren) has been spotted applying suffix tools to town documents!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch5-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "warning",
+                        "title": "Suffix Strike Alert",
+                        "content": "She is using '-FUL' (full of), '-LESS' (without), and '-ABLE' (able to be) on town records! She isn't fleeing — she is proofreading her work!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch5-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Why do you think a 'criminal' would stay to proofread her work?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🕵️ Because she cares about precision and clarity, not destruction!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🚫 Because she dropped her tools by mistake"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "🎨 Because she wants to be caught by the town police"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch5-s7",
+            "title": "🎉 Scene 7: Chapter 5 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch5-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 5 Complete: Prefix Arc Concluded!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch5-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "'mis-' means WRONGLY or MISTAKE (*misunderstand*, *misplace*)",
+                            "'over-' means TOO MUCH or EXCESS (*overload*, *overheat*)",
+                            "Note #5 reveals the order's name: 'The Guild' and claims they never stole!",
+                            "Next Mission: Chapter 6 — Meet Wren (The Suffix Sidekick) at the Town Printing Press!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch5-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to enter Act III and investigate the Suffix Sidekick in Chapter 6?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🎭 Yes! Lead me to Chapter 6!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Review my prefix master log first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

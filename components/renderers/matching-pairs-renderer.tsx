@@ -409,14 +409,17 @@ function MatchingPairsContent({
               return (
                 <button
                   key={`left-${item.id}`}
+                  style={{
+                    backgroundColor: isMatched && (!isChecking || item.id === match.rightId) ? match.color : undefined
+                  }}
                   className={cn(
-                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white overflow-hidden shadow-sm',
+                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 text-slate-900 overflow-hidden shadow-sm',
                     isSelected && 'border-emerald-500 bg-emerald-50 scale-[1.02] shadow-emerald-500/10',
-                    isMatched && !isChecking && 'border-emerald-100 bg-emerald-50/50 opacity-20',
+                    isMatched && !isChecking && 'border-emerald-300 shadow-md font-bold',
                     isChecking && isMatched && (
                       item.id === match.rightId
-                        ? 'bg-emerald-500 border-emerald-600 text-white shadow-lg shadow-emerald-500/20'
-                        : 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10'
+                        ? 'border-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/20 font-bold'
+                        : 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10 font-bold'
                     ),
                     (isMatched || isChecking || disabledProp) && 'cursor-not-allowed',
                     !isMatched && !isChecking && !disabledProp && 'hover:border-emerald-500/50 hover:bg-emerald-50/20 hover:shadow-md'
@@ -428,7 +431,7 @@ function MatchingPairsContent({
                     <span className="font-bold text-xs md:text-sm tracking-tight">{item.left}</span>
                     {isChecking && isMatched && (
                       item.id === match.rightId
-                        ? <CheckCircle2 className="w-4 h-4 text-white stroke-[3] animate-in zoom-in-50" />
+                        ? <CheckCircle2 className="w-4 h-4 text-emerald-700 stroke-[3] animate-in zoom-in-50" />
                         : <XCircle className="w-4 h-4 text-rose-600 stroke-[3] animate-in shake" />
                     )}
                   </div>
@@ -449,14 +452,17 @@ function MatchingPairsContent({
               return (
                 <button
                   key={`right-${item.id}`}
+                  style={{
+                    backgroundColor: isMatched && match && (!isChecking || matchEntry?.[0] === item.id) ? match.color : undefined
+                  }}
                   className={cn(
-                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 bg-white overflow-hidden shadow-sm',
+                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 text-slate-900 overflow-hidden shadow-sm',
                     isSelected && 'border-emerald-500 bg-emerald-50 scale-[1.02] shadow-emerald-500/10',
-                    isMatched && !isChecking && 'border-emerald-100 bg-emerald-50/50 opacity-20',
+                    isMatched && !isChecking && 'border-emerald-300 shadow-md font-bold',
                     isChecking && isMatched && (
                       matchEntry?.[0] === item.id
-                        ? 'bg-emerald-500 border-emerald-600 text-white shadow-lg shadow-emerald-500/20'
-                        : 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10'
+                        ? 'border-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/20 font-bold'
+                        : 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10 font-bold'
                     ),
                     (isMatched || isChecking || disabledProp) && 'cursor-not-allowed',
                     !isMatched && !isChecking && !disabledProp && 'hover:border-emerald-500/50 hover:bg-emerald-50/20 hover:shadow-md'
@@ -468,7 +474,7 @@ function MatchingPairsContent({
                     <span className="font-bold text-xs md:text-sm tracking-tight">{item.right}</span>
                     {isChecking && isMatched && (
                       matchEntry?.[0] === item.id
-                        ? <CheckCircle2 className="w-4 h-4 text-white stroke-[3] animate-in zoom-in-50" />
+                        ? <CheckCircle2 className="w-4 h-4 text-emerald-700 stroke-[3] animate-in zoom-in-50" />
                         : <XCircle className="w-4 h-4 text-rose-600 stroke-[3] animate-in shake" />
                     )}
                   </div>

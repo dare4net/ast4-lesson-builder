@@ -152,12 +152,13 @@ export const videoValidator: ComponentValidator = {
     type: 'video',
     validate: (component) => {
         const res = createResult(component.id, component.type);
-        const { src, caption } = component.props || {};
+        const { src, url, caption } = component.props || {};
+        const videoLink = url || src;
 
-        if (typeof src !== 'string' || src.trim() === '') {
-            addError(res, 'MISSING_VIDEO_SRC', 'props.src', 'Video source URL is required.');
-        } else if (src.includes('/placeholder.')) {
-            addWarning(res, 'PLACEHOLDER_VIDEO_USED', 'props.src', 'Video is using a placeholder source.');
+        if (typeof videoLink !== 'string' || videoLink.trim() === '') {
+            addError(res, 'MISSING_VIDEO_SRC', 'props.url', 'Video source URL is required.');
+        } else if (videoLink.includes('/placeholder.')) {
+            addWarning(res, 'PLACEHOLDER_VIDEO_USED', 'props.url', 'Video is using a placeholder source.');
         }
 
         if (!caption || typeof caption !== 'string' || caption.trim() === '') {

@@ -1,0 +1,567 @@
+{
+    "id": "lesson-word-detectives-ch1",
+    "title": "Word Detectives: Chapter 1 — The Midnight Alterations",
+    "description": "Join the Word Detective Agency! Investigating mysterious overnight word alterations across town, inspecting crime scene clues, and taking the Detective's Oath.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch1-s1",
+            "title": "🕵️ Scene 1: An Urgent Letter",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch1-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 1: The Midnight Alterations",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch1-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "An Urgent Letter at Dawn",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch1-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Rain taps against the glass of the Word Detective Agency. A wax-sealed envelope slides under your door. Inside is an urgent memo from the Town Mayor...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch1-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Official Agency Case Docket #001",
+                        "content": "Emergency! Four signs in town were altered overnight. Words have been transformed! Report to the crime scene immediately."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch1-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect Initial Case Files",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-1",
+                                "title": "Case File A: The Bakery Sign",
+                                "content": "The sign originally read 'THE HAPPY BAKER'. This morning, it reads 'THE UNHAPPY BAKER'. Who added 'UN-'?"
+                            },
+                            {
+                                "id": "acc-2",
+                                "title": "Case File B: The Library Door",
+                                "content": "The sign originally read 'PLEASE APPEAR INSIDE'. It now reads 'PLEASE DISAPPEAR INSIDE'."
+                            },
+                            {
+                                "id": "acc-3",
+                                "title": "Case File C: The Clocktower",
+                                "content": "The clock notice read 'PLAY THE CHIMES'. It now reads 'REPLAY THE CHIMES'."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch1-s2",
+            "title": "🔍 Scene 2: Inspecting the Crime Scene",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch1-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Inspecting the Rain-Slicked Street",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch1-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A moody, rain-slicked Victorian alleyway at midnight, lit by the warm amber glow of a streetlamp. On a cobblestone wall, a vintage brass plaque for 'THE HAPPY BAKER' has neon blue, glowing stencil letters reading 'UN-' freshly stamped in front of 'HAPPY', casting soft reflections in rain puddles.",
+                        "caption": "Crime Scene #1: The stenciled letters 'UN-' glow faintly on the bakery plaque.",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-ch1-s2",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Click the interactive pins to investigate evidence",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "behavior": "explore",
+                        "markingMode": "self-mark",
+                        "showNumbers": true,
+                        "hotspots": [
+                            {
+                                "id": "hs1",
+                                "x": 0.25,
+                                "y": 0.35,
+                                "label": "The 'UN-' Stamp 🔍",
+                                "content": "The letters 'UN-' were added to 'HAPPY'. Notice that the root word 'HAPPY' was not damaged at all!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs2",
+                                "x": 0.65,
+                                "y": 0.5,
+                                "label": "Footprints in Mud 👣",
+                                "content": "Small, light footprints leading toward the town clocktower. The suspect left no broken glass or debris!",
+                                "isCorrect": true
+                            },
+                            {
+                                "id": "hs3",
+                                "x": 0.8,
+                                "y": 0.25,
+                                "label": "The Stencil Tool 🖌️",
+                                "content": "A metallic brass clip tool left behind. It holds stencil blocks that clamp onto the start of words!",
+                                "isCorrect": true
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch1-s3",
+            "title": "📜 Scene 3: The Detective's First Observation",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch1-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Pattern of the Alterations",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch1-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You examine your magnifying glass. Something strange catches your attention about all four altered signs...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch1-s3",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Detective Insight #1",
+                        "content": "Notice that nothing was broken or stolen! 'HAPPY' became 'UNHAPPY'. The original root word is still inside!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-ch1-s3",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "The mystery suspect destroyed the original word 'HAPPY' completely.",
+                        "isTrue": false,
+                        "explanation": "Correct! The suspect added letters to the FRONT of 'HAPPY', creating a new meaning while keeping the original root intact!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "categorise-ch1-s3",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify the Altered Words",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "Original Root Word"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "Altered Word"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Happy",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Unhappy",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Appear",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Disappear",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch1-s4",
+            "title": "🧩 Scene 4: The Suspect Profiles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch1-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Two Masked Suspects",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch1-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Eyewitnesses report seeing two quiet figures near the town square late last night...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-ch1-s4",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Suspect Dossier",
+                        "cards": [
+                            {
+                                "id": "card1",
+                                "front": "Suspect #1: The Prefix Bandit 🦹‍♂️",
+                                "back": "Strikes at the FRONT (start) of words. Uses tools called Prefixes like 'un-', 'dis-', and 're-'."
+                            },
+                            {
+                                "id": "card2",
+                                "front": "Suspect #2: The Suffix Sidekick 🎭",
+                                "back": "Strikes at the END of words. Uses tools called Suffixes like '-ful', '-less', and '-tion'."
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "matchingPairs-ch1-s4",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match the Suspect to their Strike Zone",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "Prefix Bandit",
+                                "right": "Strikes at the FRONT of words"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "Suffix Sidekick",
+                                "right": "Strikes at the END of words"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "Root Word",
+                                "right": "The original base word being modified"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch1-s5",
+            "title": "📋 Scene 5: Swearing the Detective's Oath",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch1-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Your Official Detective Badge",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch1-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Before heading to the Grand Clocktower for your first field mission, you must register your detective profile.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch1-s5",
+                    "type": "poll",
+                    "props": {
+                        "question": "Which detective tool will you rely on most during this investigation?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🔍 Magnifying Glass (Finding root words)"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "📜 Case Logbook (Tracking prefix notes)"
+                            },
+                            {
+                                "id": "opt3",
+                                "text": "🧩 Decoding Wheel (Cracking codes)"
+                            },
+                            {
+                                "id": "opt4",
+                                "text": "🔦 Night Lantern (Exploring crime scenes)"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-ch1-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal",
+                        "question": "Write 1 sentence summarizing what you observed about how the Prefix Bandit changes words:",
+                        "placeholder": "e.g. The Prefix Bandit adds letters to the start of root words to change their meaning...",
+                        "correctKeywords": [
+                            "front",
+                            "start",
+                            "root",
+                            "prefix",
+                            "meaning",
+                            "add"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch1-s6",
+            "title": "⏰ Scene 6: The Trail Leads to the Clocktower",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch1-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "Fresh Clues at the Clocktower",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch1-s6",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A dramatic night scene showing the tall gothic Grand Clocktower against a moonlit sky. At the base of the clocktower door, an old iron notice board reading 'PLEASE DO NOT PLAY CHIMES' has a glowing blue brass plate 'RE-' clipped onto 'PLAY'. Next to it on the cobblestone rests a tiny folded parchment note.",
+                        "caption": "Clocktower Crime Scene: 'PLAY' has been transformed into 'REPLAY'.",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch1-s6",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What prefix was attached to the root word 'PLAY' on the Clocktower sign?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "un-",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "re-",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "dis-",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! 're-' was attached to the front of 'PLAY' to form 'REPLAY'!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "callout-ch1-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "note",
+                        "title": "Continuity Clue Discovered!",
+                        "content": "Tucked into the iron hinges of the clocktower door is a tiny scrap of parchment. In neat, elegant handwriting, it reads: 'Sorry for the mess — C.'"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch1-s7",
+            "title": "🎉 Scene 7: Chapter 1 Debrief",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch1-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Case Update: Clue #1 Unlocked!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch1-s7",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Great work, Detective! You've verified that the Prefix Bandit adds letters to the start of root words, leaving original root words completely intact.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch1-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Prefixes attach to the FRONT of root words",
+                            "The original root word is never destroyed",
+                            "Suspect #1 left a mysterious note signed '- C.'"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch1-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Are you ready to crack the Bandit's Three Keys in Chapter 2?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🕵️ Yes! Lead me to Chapter 2!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Double-check my evidence log first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

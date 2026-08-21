@@ -1,0 +1,582 @@
+{
+    "id": "lesson-word-detectives-ch8",
+    "title": "Word Detectives: Chapter 8 — The Great Suffix Rules",
+    "description": "Investigate the Town Schoolhouse! Master the 3 golden spelling rules when adding suffixes: Change Y to I, Drop Silent E, and Double the Final Consonant.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch8-s1",
+            "title": "🕵️ Scene 1: The Town Schoolhouse Blackboard",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch8-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 8: The Great Suffix Rules",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch8-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "At the Town Schoolhouse",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch8-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Sunlight streams through the tall windows of the Town Schoolhouse. On the large slate blackboard, someone has written three golden rules of spelling...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch8-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "The 3 Golden Suffix Spelling Rules",
+                        "content": "When attaching suffixes, root words sometimes change shape! You must master: 1. Change Y to I, 2. Drop Silent E, and 3. Double the Final Consonant!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch8-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the 3 Golden Rules",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch8-1",
+                                "title": "Rule #1: Change Y to I",
+                                "content": "If a word ends in a consonant + Y, change Y to I before adding the suffix: 'happy' + '-ness' = 'happiness', 'beauty' + '-ful' = 'beautiful'."
+                            },
+                            {
+                                "id": "acc-ch8-2",
+                                "title": "Rule #2: Drop Silent E",
+                                "content": "If a word ends in silent E, drop E before a vowel suffix: 'create' + '-tion' = 'creation', 'make' + '-ing' = 'making'."
+                            },
+                            {
+                                "id": "acc-ch8-3",
+                                "title": "Rule #3: Double Final Consonant",
+                                "content": "For 1-syllable CVC words (Consonant-Vowel-Consonant), double the final consonant before a vowel suffix: 'run' + '-ing' = 'running', 'hop' + '-ed' = 'hopped'."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch8-s2",
+            "title": "🔍 Scene 2: The Spelling Workshop",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch8-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Visualizing the Base Word Shift",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch8-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A wooden schoolhouse desk with three small brass letter presses. Press 1 shows 'HAPPY' losing its 'Y' and replacing it with an 'I' to spell 'HAPPINESS'. Press 2 shows 'MAKE' dropping its final silent 'E' to take '-ING' forming 'MAKING'. Press 3 shows 'RUN' adding an extra 'N' to take '-ING' forming 'RUNNING'. Glowing chalk lines highlight the letter swaps!",
+                        "caption": "Spelling Shift Workshop: Y → I, Drop E, and 1-Syllable CVC Doubling!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch8-s2",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify Words by Spelling Rule Used",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "Rule 1: Change Y to I"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "Rule 2: Drop Silent E"
+                            },
+                            {
+                                "id": "c3",
+                                "title": "Rule 3: Double Consonant"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Happiness (happy → happi + ness)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Creation (create → creat + ion)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Running (run → runn + ing)",
+                                "categoryId": "c3"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Beautiful (beauty → beauti + ful)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Writing (write → writ + ing)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Hopping (hop → hopp + ing)",
+                                "categoryId": "c3"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "annotateImage-ch8-s2",
+                    "type": "annotateImage",
+                    "props": {
+                        "title": "Label the 3 Golden Spelling Rule Transformations 🏷️",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "points": 15,
+                        "mode": "practice",
+                        "labels": [
+                            {
+                                "id": "lbl1",
+                                "text": "Rule 1: Y → I (happy → happi + ness)",
+                                "x": 0.2,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl2",
+                                "text": "Rule 2: Drop E (make → mak + ing)",
+                                "x": 0.5,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl3",
+                                "text": "Rule 3: Double CVC (run → runn + ing)",
+                                "x": 0.8,
+                                "y": 0.4
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch8-s3",
+            "title": "🧩 Scene 3: Spelling Rule Practice",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch8-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Mastering the Spelling Tumblers",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch8-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Test your knowledge of the 3 Golden Suffix Rules!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch8-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Root + Suffix to Correct Spelling",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "heavy + -ness",
+                                "right": "heaviness (Y to I)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "drive + -ing",
+                                "right": "driving (Drop E)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "swim + -er",
+                                "right": "swimmer (Double M)"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "plenty + -ful",
+                                "right": "plentiful (Y to I)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-ch8-s3",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "When adding '-ful' to 'play', you change Y to I because 'play' ends in a consonant + Y.",
+                        "isTrue": false,
+                        "explanation": "False! 'play' ends in a VOWEL + Y (a + y), so Y does NOT change to I: 'playful'!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch8-s4",
+            "title": "📜 Scene 4: Note #8 — The Headmaster's Confession",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch8-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #8 in the School Record",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch8-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Hidden inside an old attendance register on the Headmaster's desk, you find Note #8...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch8-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "An open vintage school register showing names from 50 years ago. Tucked between pages is Note #8 written in bold black ink: 'Mayor Vane ordered us to remove the Lexicon Guild's spelling manual from the curriculum. They called it 'too empowering for children'. But language belongs to those who learn it. — Wren.'",
+                        "caption": "Continuity Scrap #8: Wren reveals Mayor Vane banned Guild spelling manuals for being 'too empowering'!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch8-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "Why did Mayor Vane ban the Lexicon Guild's spelling manual 50 years ago?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "Because he believed that teaching children how words are built was 'too empowering'!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "Because the manual contained spelling mistakes",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "Because the school ran out of chalk",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Mayor Vane feared that understanding word construction empowered students too much!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-ch8-s4",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Schoolhouse Spelling Warrant #8",
+                        "text": "Apply the 3 Golden Spelling Rules: 'happy' + '-ness' = 'happ{{blank}}ness' (Y to I), 'make' + '-ing' = 'mak{{blank}}' (Drop E), and 'run' + '-ing' = 'ru{{blank}}ing' (Double CVC).",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "i"
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "ing"
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "nn"
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch8-s5",
+            "title": "📋 Scene 5: Detective Field Journal #8",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch8-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording the 3 Golden Rules",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch8-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log the 3 Golden Suffix Rules in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch8-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Correctly Spelled Word",
+                        "word": "HAPPINESS",
+                        "hint": "Root 'HAPPY' + Suffix '-NESS' (Y changes to I)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch8-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #8",
+                        "question": "Explain why 'make' + '-ing' becomes 'making' instead of 'makeing':",
+                        "placeholder": "e.g. Because 'make' ends in a silent E, and we drop the silent E before adding a vowel suffix like '-ing'...",
+                        "correctKeywords": [
+                            "silent",
+                            "e",
+                            "drop",
+                            "vowel",
+                            "suffix",
+                            "making"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch8-s6",
+            "title": "⏰ Scene 6: Corvin & Wren's Next Destination",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch8-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "Heading to the Guild Vaults!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch8-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A chalk drawing of a key appears on the blackboard. Beneath it is a date: 'TONIGHT AT MIDNIGHT'.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch8-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Final Arc Preview",
+                        "content": "Corvin and Wren are heading to the Sealed Guild Archives beneath the Town Clocktower to unlock the Master Word Engine!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch8-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Are you ready to join Corvin & Wren in the Guild Vaults for Chapter 9?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🗝️ Yes! Lead me to the Sealed Archives!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "📜 Review my 3 Golden Rules first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch8-s7",
+            "title": "🎉 Scene 7: Chapter 8 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch8-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 8 Complete: Suffix Rules Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch8-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Rule 1: Consonant + Y changes to I (*happy* → *happiness*)",
+                            "Rule 2: Drop silent E before vowel suffixes (*create* → *creation*)",
+                            "Rule 3: Double final consonant on 1-syllable CVC words (*run* → *running*)",
+                            "Discovered Note #8: Mayor Vane banned the Guild manual for being 'too empowering'",
+                            "Next Mission: Chapter 9 — The Great Root Revival (Greek & Latin Roots) in the Sealed Archives!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch8-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready for Chapter 9: The Great Root Revival?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🏛️ Enter the Sealed Archives!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect case file summary!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

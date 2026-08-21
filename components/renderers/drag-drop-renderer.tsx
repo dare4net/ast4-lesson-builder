@@ -107,14 +107,18 @@ function DragDropContent({
   useEffect(() => {
     if (!mounted) return
 
-    const needsInit = dragItems.length > 0 && !dragItems[0].color
+    const needsInit = dragItems.length > 0 && (!dragItems[0].color || dragItems.some(i => i.correctIndex === undefined))
 
     if (needsInit) {
-      const withColor = (arr: DragItem[]) => arr.map(item => ({ ...item, color: generatePastelColor() }))
+      const withColor = (arr: DragItem[]) => arr.map((item, idx) => ({
+        ...item,
+        correctIndex: typeof item.correctIndex === 'number' ? item.correctIndex : idx,
+        color: generatePastelColor()
+      }))
       let newItems: DragItem[] = []
 
       if (isEditing) {
-        newItems = withColor([...dragItems].sort((a, b) => a.correctIndex - b.correctIndex))
+        newItems = withColor([...dragItems].sort((a, b) => (a.correctIndex ?? 0) - (b.correctIndex ?? 0)))
       } else {
         newItems = withColor([...dragItems])
         if (shuffled) {

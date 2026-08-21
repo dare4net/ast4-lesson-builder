@@ -1,0 +1,582 @@
+{
+    "id": "lesson-word-detectives-ch6",
+    "title": "Word Detectives: Chapter 6 — The Suffix Sidekick",
+    "description": "Confront the Suffix Sidekick (Wren) at the Town Printing Press! Discover how suffixes attach to the END of root words to alter their meaning and grammatical function.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch6-s1",
+            "title": "🕵️ Scene 1: Confronting Wren at the Press",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch6-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 6: The Suffix Sidekick",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch6-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Meeting the Suffix Sidekick",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch6-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You step into the humming Town Printing Press. Standing beside a spinning wooden printing frame is a young woman wearing silver magnifying spectacles and holding a velvet tool roll marked with suffix stamps...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch6-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Suspect Profile #2 — Wren (The Suffix Sidekick)",
+                        "content": "Wren works at the END of words! While the Prefix Bandit alters FRONT meanings, Wren changes what words CAN DO!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch6-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect Wren's Suffix Stamps",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch6-1",
+                                "title": "Stamp #1: '-ful' (FULL OF)",
+                                "content": "'care' + '-ful' = 'careful' (full of care). 'help' + '-ful' = 'helpful' (full of help)."
+                            },
+                            {
+                                "id": "acc-ch6-2",
+                                "title": "Stamp #2: '-less' (WITHOUT)",
+                                "content": "'care' + '-less' = 'careless' (without care). 'help' + '-less' = 'helpless' (without help)."
+                            },
+                            {
+                                "id": "acc-ch6-3",
+                                "title": "Stamp #3: '-able' (ABLE TO BE)",
+                                "content": "'wash' + '-able' = 'washable' (able to be washed). 'read' + '-able' = 'readable' (able to be read)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch6-s2",
+            "title": "🔍 Scene 2: The Suffix Shift",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch6-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "Antagonists or Guardians?",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch6-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A lit workbench inside a Victorian printing workshop. On the desk is an open ledger showing how root words transform when suffixes attach: 'CARE' (Noun) + '-FUL' = 'CAREFUL' (Adjective), and 'CARE' + '-LESS' = 'CARELESS' (Adjective). Standing nearby, Wren sets down her ink roller and gestures calmly to a brass badge bearing the emblem of a quill and key.",
+                        "caption": "Wren's Demonstration: Suffixes attach to the END of root words, often turning nouns into adjectives!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-ch6-s2",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "Unlike prefixes which attach to the front, suffixes attach to the END of a root word.",
+                        "isTrue": true,
+                        "explanation": "Correct! Suffixes are tail-end word modifiers!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "annotateImage-ch6-s2",
+                    "type": "annotateImage",
+                    "props": {
+                        "title": "Label the Suffix Shift Diagram 🏷️",
+                        "image": "/placeholder.svg?height=400&width=600",
+                        "points": 15,
+                        "mode": "practice",
+                        "labels": [
+                            {
+                                "id": "lbl1",
+                                "text": "Base Root (CARE)",
+                                "x": 0.2,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl2",
+                                "text": "Suffix Tag (-FUL)",
+                                "x": 0.5,
+                                "y": 0.4
+                            },
+                            {
+                                "id": "lbl3",
+                                "text": "New Word Class (Adjective: CAREFUL)",
+                                "x": 0.8,
+                                "y": 0.4
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch6-s3",
+            "title": "🧩 Scene 3: Suffix Matching & Classification",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch6-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Matching Suffix Meanings",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch6-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Match each root word and suffix combination to its correct meaning!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch6-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Root + Suffix to Meaning",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "fearful",
+                                "right": "Full of fear"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "fearless",
+                                "right": "Without fear"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "breakable",
+                                "right": "Able to be broken"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "joyful",
+                                "right": "Full of joy"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "categorise-ch6-s3",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify Suffix Meanings",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "-FUL (Full of)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "-LESS (Without)"
+                            },
+                            {
+                                "id": "c3",
+                                "title": "-ABLE (Able to be)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Hopeful",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Hopeless",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Acceptable",
+                                "categoryId": "c3"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Painful",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Painless",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Adaptable",
+                                "categoryId": "c3"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch6-s4",
+            "title": "📜 Scene 4: Wren's Explanation & Scrap #6",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch6-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Wren's Message: Scrap Note #6",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch6-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Wren hand-delivers a parchment scrap to you before pulling a lever on the printing press...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch6-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A fine parchment note held in gloved hands. The text reads: 'We do not vandalize language; we expand it. Look at the town archive vaults if you seek the truth about who locked the Guild away. — Wren & Corvin.' A small silver key silhouette is stamped in the bottom corner.",
+                        "caption": "Continuity Scrap #6: Wren reveals that she and Corvin are restoring suppressed Guild knowledge!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch6-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "According to Wren, why are she and Corvin altering words around town?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "To expand language and restore suppressed Guild knowledge!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "To destroy all books in the town library",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "To win a contest against the Detective Agency",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! Wren explains their mission is expansion and restoration, not destruction!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch6-s5",
+            "title": "📋 Scene 5: Detective Field Journal #6",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch6-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Suffix Fundamentals",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch6-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log your findings about '-ful', '-less', and '-able' in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch6-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Suffix Word",
+                        "word": "REMARKABLE",
+                        "hint": "Root 'REMARK' + Suffix '-ABLE' (Able to be remarked upon)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch6-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #6",
+                        "question": "Explain how adding '-ful' vs '-less' changes the meaning of the root word 'care':",
+                        "placeholder": "e.g. 'careful' means full of care, whereas 'careless' means without care...",
+                        "correctKeywords": [
+                            "full",
+                            "without",
+                            "careful",
+                            "careless",
+                            "care",
+                            "meaning"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch6-s6",
+            "title": "⏰ Scene 6: The Mystery Deepens",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch6-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "A Shift in Perspective",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch6-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Wren steps into the steam of the press room, leaving the door unlocked. You realize the 'vandals' are actually master scholars...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch6-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "tip",
+                        "title": "Detective Case Breakthrough",
+                        "content": "Corvin and Wren aren't criminals destroying town property — they are Lexicon Guild Scholars proving that root words can be expanded with prefixes and suffixes!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "timeline-ch6-s6",
+                    "type": "timeline",
+                    "props": {
+                        "title": "Act II Case Evidence Timeline 📜",
+                        "events": [
+                            {
+                                "id": "ev1",
+                                "year": "Chapter 4",
+                                "title": "Clocktower Clock Keys",
+                                "description": "Found PRE- (before) and RE- (again) time keys."
+                            },
+                            {
+                                "id": "ev2",
+                                "year": "Chapter 5",
+                                "title": "Intensity Balances",
+                                "description": "Uncovered MIS- (wrong) and OVER- (excess) counterweights."
+                            },
+                            {
+                                "id": "ev3",
+                                "year": "Chapter 6",
+                                "title": "Town Printing Press",
+                                "description": "Met Wren and discovered suffix stamps (-ful, -less, -able)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch6-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "How do you view the Lexicon Guild now?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "📜 They are misunderstood scholars expanding language!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🕵️ I still need to see more evidence before deciding"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch6-s7",
+            "title": "🎉 Scene 7: Chapter 6 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch6-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 6 Complete: Act II Concluded!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch6-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "Met Wren (The Suffix Sidekick) at the Town Printing Press",
+                            "Suffixes attach to the END of root words (*-ful*, *-less*, *-able*)",
+                            "Discovered Note #6 revealing the Guild's noble mission of language expansion",
+                            "Next Mission: Chapter 7 — Action & State Suffixes (-ment, -tion, -ness) at the Town Hall!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch6-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to enter Act III in Chapter 7?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🏛️ Onward to the Town Hall!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Review my suffix notes!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

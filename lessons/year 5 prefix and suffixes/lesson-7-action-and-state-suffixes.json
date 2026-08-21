@@ -1,0 +1,571 @@
+{
+    "id": "lesson-word-detectives-ch7",
+    "title": "Word Detectives: Chapter 7 — Action & State Suffixes",
+    "description": "Investigate the Town Hall archives! Master how '-ment', '-tion', and '-ness' transform verbs and adjectives into powerful abstract nouns.",
+    "author": "Lexicon Guild Archives",
+    "level": "Year 4–5",
+    "duration": 25,
+    "settings": {
+        "duration": 25,
+        "level": "Year 4–5",
+        "theme": "detective"
+    },
+    "createdAt": "2026-08-19T00:00:00.000Z",
+    "updatedAt": "2026-08-19T00:00:00.000Z",
+    "slides": [
+        {
+            "id": "slide-ch7-s1",
+            "title": "🕵️ Scene 1: The Town Hall Records Room",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "slideTitle-ch7-s1",
+                    "type": "slideTitle",
+                    "props": {
+                        "content": "Chapter 7: Action & State Suffixes",
+                        "align": "center",
+                        "color": "#0f172a",
+                        "backgroundColor": "transparent"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "heading-ch7-s1",
+                    "type": "heading",
+                    "props": {
+                        "content": "Inside the Town Hall Records Room",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch7-s1",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Grand oak cabinets line the walls of the Town Hall Records Room. The Mayor's secretary leads you to the founding charters where words like 'GOVERN' have been turned into 'GOVERNMENT'...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch7-s1",
+                    "type": "callout",
+                    "props": {
+                        "variant": "important",
+                        "title": "Noun-Forming Suffix Dossier",
+                        "content": "'-ment', '-tion', and '-ness' turn verbs (actions) or adjectives (qualities) into NOUNS (states, actions, or concepts)!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "accordion-ch7-s1",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect the Noun-Forming Suffixes",
+                        "allowMultiple": false,
+                        "items": [
+                            {
+                                "id": "acc-ch7-1",
+                                "title": "'-ment' (Action or Result)",
+                                "content": "'govern' (verb) + '-ment' = 'government' (noun - the act or group of governing)."
+                            },
+                            {
+                                "id": "acc-ch7-2",
+                                "title": "'-tion' / '-sion' (Process or State)",
+                                "content": "'invent' (verb) + '-tion' = 'invention' (noun - the result of inventing)."
+                            },
+                            {
+                                "id": "acc-ch7-3",
+                                "title": "'-ness' (State or Quality)",
+                                "content": "'kind' (adjective) + '-ness' = 'kindness' (noun - the quality of being kind)."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch7-s2",
+            "title": "🔍 Scene 2: The Parts of Speech Transformer",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch7-s2",
+                    "type": "heading",
+                    "props": {
+                        "content": "The Part-of-Speech Transmuter",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch7-s2",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A heavy brass Victorian machine standing inside the Town Hall records room. On the left funnel, wooden block letters spelling 'ENJOY' (Verb) and 'DARK' (Adjective) enter. Inside the gear chamber, suffix dies '-MENT' and '-NESS' stamp down. On the right output tray, polished brass plaques emerge reading 'ENJOYMENT' (Noun) and 'DARKNESS' (Noun).",
+                        "caption": "Parts-of-Speech Shift: Suffixes turn verbs and adjectives into abstract nouns!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-ch7-s2",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Classify Noun Suffixes by Base Word Type",
+                        "categories": [
+                            {
+                                "id": "c1",
+                                "title": "Verb + Suffix = Noun (-ment/-tion)"
+                            },
+                            {
+                                "id": "c2",
+                                "title": "Adjective + Suffix = Noun (-ness)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "i1",
+                                "text": "Enjoyment (enjoy + ment)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i2",
+                                "text": "Kindness (kind + ness)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i3",
+                                "text": "Invention (invent + tion)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i4",
+                                "text": "Darkness (dark + ness)",
+                                "categoryId": "c2"
+                            },
+                            {
+                                "id": "i5",
+                                "text": "Movement (move + ment)",
+                                "categoryId": "c1"
+                            },
+                            {
+                                "id": "i6",
+                                "text": "Softness (soft + ness)",
+                                "categoryId": "c2"
+                            }
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch7-s3",
+            "title": "🧩 Scene 3: Noun-Building Puzzles",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch7-s3",
+                    "type": "heading",
+                    "props": {
+                        "content": "Building Nouns from Actions & States",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch7-s3",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Match each base word to its noun-forming suffix!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-ch7-s3",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Base Words to Noun Suffixes",
+                        "pairs": [
+                            {
+                                "id": "p1",
+                                "left": "punish (verb)",
+                                "right": "-ment (punishment)"
+                            },
+                            {
+                                "id": "p2",
+                                "left": "educate (verb)",
+                                "right": "-tion (education)"
+                            },
+                            {
+                                "id": "p3",
+                                "left": "happy (adj)",
+                                "right": "-ness (happiness)"
+                            },
+                            {
+                                "id": "p4",
+                                "left": "excite (verb)",
+                                "right": "-ment (excitement)"
+                            }
+                        ],
+                        "shuffled": true,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-ch7-s3",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "Adding '-ness' to an adjective like 'bright' turns it into a noun ('brightness').",
+                        "isTrue": true,
+                        "explanation": "Correct! 'brightness' is the noun representing the state of being bright!",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "flashcards-ch7-s3",
+                    "type": "flashcards",
+                    "props": {
+                        "title": "Noun Suffix Mastery Cards 🃏",
+                        "cards": [
+                            {
+                                "id": "fc1",
+                                "front": "-MENT suffix creates...",
+                                "back": "Nouns of action or result (e.g. punish → punishment, excite → excitement)"
+                            },
+                            {
+                                "id": "fc2",
+                                "front": "-TION suffix creates...",
+                                "back": "Nouns of state or condition (e.g. educate → education, create → creation)"
+                            },
+                            {
+                                "id": "fc3",
+                                "front": "-NESS suffix creates...",
+                                "back": "Nouns from adjectives (e.g. happy → happiness, bright → brightness)"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch7-s4",
+            "title": "📜 Scene 4: Note #7 — The Guild Charter",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch7-s4",
+                    "type": "heading",
+                    "props": {
+                        "content": "Scrap Note #7: The Suppressed Guild Charter",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch7-s4",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Behind a framed painting of the first Town Mayor, you find Note #7 taped to a parchment copy of the Guild Charter...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-ch7-s4",
+                    "type": "image",
+                    "props": {
+                        "src": "/placeholder.svg?height=400&width=600",
+                        "alt": "A yellowed founding charter laid out under a velvet rope. Note #7 reads: 'The Guild gave this town its government, its education, and its fairness. Yet fifty years ago, Mayor Vane silenced the Guild to claim sole authorship of the charter. — Corvin.' A red wax seal bears the Guild emblem.",
+                        "caption": "Continuity Scrap #7: Corvin reveals Mayor Vane suppressed the Guild 50 years ago!",
+                        "width": "100%"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-ch7-s4",
+                    "type": "quiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "q1",
+                                "question": "What historical truth does Note #7 reveal about the Town Charter?",
+                                "options": [
+                                    {
+                                        "id": "opt1",
+                                        "text": "That the Guild built the town's government and education before being suppressed by Mayor Vane!",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt2",
+                                        "text": "That the charter was written by a dragon",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt3",
+                                        "text": "That suffixes were invented last week",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Correct! The Guild founded the town's key institutions 50 years ago!"
+                            }
+                        ],
+                        "showExplanation": true,
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "fillInTheBlank-ch7-s4",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Town Charter Transcript Audit #7",
+                        "text": "The founding charter shows how suffixes build nouns: 'govern' + '{{blank}}' = government, 'invent' + '{{blank}}' = invention, and 'kind' + '{{blank}}' = kindness.",
+                        "blanks": [
+                            {
+                                "id": "b1",
+                                "answer": "-ment"
+                            },
+                            {
+                                "id": "b2",
+                                "answer": "-tion"
+                            },
+                            {
+                                "id": "b3",
+                                "answer": "-ness"
+                            }
+                        ],
+                        "caseSensitive": false,
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch7-s5",
+            "title": "📋 Scene 5: Detective Field Journal #7",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch7-s5",
+                    "type": "heading",
+                    "props": {
+                        "content": "Recording Noun Suffix Rules",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch7-s5",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Log your findings on '-ment', '-tion', and '-ness' in your Agency Field Journal.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-ch7-s5",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Unscramble the Noun Suffix Word",
+                        "word": "GOVERNMENT",
+                        "hint": "Verb 'GOVERN' + Suffix '-MENT' (System of governing)",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-ch7-s5",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Agency Field Journal #7",
+                        "question": "Explain how adding '-ness' changes the word 'kind' into a noun:",
+                        "placeholder": "e.g. 'kind' is an adjective, and adding '-ness' turns it into 'kindness', which is the noun representing the quality...",
+                        "correctKeywords": [
+                            "adjective",
+                            "noun",
+                            "kindness",
+                            "quality",
+                            "state",
+                            "ness"
+                        ],
+                        "markingMode": "tutor-mark",
+                        "points": 10,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch7-s6",
+            "title": "⏰ Scene 6: Spelling Rules Alert!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch7-s6",
+                    "type": "heading",
+                    "props": {
+                        "content": "Spelling Traps Ahead!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-ch7-s6",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "As you review your journal, the archivists warn you that attaching suffixes isn't always a simple join...",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-ch7-s6",
+                    "type": "callout",
+                    "props": {
+                        "variant": "warning",
+                        "title": "Spelling Change Preview",
+                        "content": "When 'happy' (ends in Y) takes '-ness', Y turns to I ('happiness')! When 'create' (ends in E) takes '-tion', drop E ('creation')!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch7-s6",
+                    "type": "poll",
+                    "props": {
+                        "question": "Are you ready to tackle the Suffix Spelling Rules (Y to I, Drop E, Double Consonant) in Chapter 8?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "✍️ Yes! Bring on the spelling rules!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Review my noun suffix rules first!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-ch7-s7",
+            "title": "🎉 Scene 7: Chapter 7 Summary & Handoff",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-ch7-s7",
+                    "type": "heading",
+                    "props": {
+                        "content": "Chapter 7 Complete: Noun Suffixes Mastered!",
+                        "level": 2,
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-ch7-s7",
+                    "type": "bulletList",
+                    "props": {
+                        "type": "unordered",
+                        "items": [
+                            "'-ment' turns verbs into nouns (*enjoyment*, *movement*)",
+                            "'-tion' turns verbs into nouns (*invention*, *education*)",
+                            "'-ness' turns adjectives into nouns (*kindness*, *darkness*)",
+                            "Discovered Note #7: Mayor Vane suppressed the Lexicon Guild 50 years ago!",
+                            "Next Mission: Chapter 8 — The Great Suffix Rules (Y to I, Drop E, Double Consonant) at the Town Schoolhouse!"
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-ch7-s7",
+                    "type": "poll",
+                    "props": {
+                        "question": "Ready to investigate the Schoolhouse in Chapter 8?",
+                        "options": [
+                            {
+                                "id": "opt1",
+                                "text": "🏫 Onward to the Schoolhouse!"
+                            },
+                            {
+                                "id": "opt2",
+                                "text": "🔍 Inspect case file summary!"
+                            }
+                        ],
+                        "points": 5
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}
