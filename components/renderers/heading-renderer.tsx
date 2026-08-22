@@ -52,16 +52,17 @@ export function HeadingRenderer({
     autoStart: true
   })
 
+  const registerLock = navLock?.registerLock
+  const unregisterLock = navLock?.unregisterLock
+
   // Lock navigation until heading typing is completed
   useEffect(() => {
-    if (isEditing || !navLock) return
+    if (isEditing || !registerLock || !unregisterLock) return
     if (!isCompleted) {
-      navLock.registerLock(id)
-      return () => navLock.unregisterLock(id)
-    } else {
-      navLock.unregisterLock(id)
+      registerLock(id)
+      return () => unregisterLock(id)
     }
-  }, [id, isCompleted, isEditing, navLock])
+  }, [id, isCompleted, isEditing, registerLock, unregisterLock])
 
   // Sync completion to parent
   useEffect(() => {

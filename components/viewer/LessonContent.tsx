@@ -362,12 +362,12 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 relative overflow-y-auto bg-slate-50 dark:bg-slate-950 z-10 flex flex-col">
-          <div className="w-full min-h-full flex-1 flex flex-col">
+        <main className="flex-1 min-h-0 relative overflow-hidden bg-slate-50 dark:bg-slate-950 z-10 flex flex-col">
+          <div className="w-full flex-1 min-h-0 flex flex-col">
             {activeComponent && (
               <div
                 key={`${currentSlideIndex}-${innerStepIndex}`}
-                className="w-full flex-1 flex flex-col animate-in fade-in duration-300"
+                className="w-full flex-1 min-h-0 flex flex-col overflow-hidden animate-in fade-in duration-300"
               >
                 <ComponentRenderer
                   component={activeComponent}
@@ -383,27 +383,27 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
         {/* Overall Lesson Starting Cue Overlay */}
         {!suppressCues && (
-        <LessonIntroCueOverlay
-          isVisible={showIntroCue}
-          lessonData={lesson}
-          moduleTitle={(lesson as any).moduleTitle || "Course Module"}
-          lessonNumber={(lesson as any).lessonNumber || 1}
-          onBegin={() => setShowIntroCue(false)}
-        />
+          <LessonIntroCueOverlay
+            isVisible={showIntroCue}
+            lessonData={lesson}
+            moduleTitle={(lesson as any).moduleTitle || "Course Module"}
+            lessonNumber={(lesson as any).lessonNumber || 1}
+            onBegin={() => setShowIntroCue(false)}
+          />
         )}
 
         {/* Slide Transition Overlay */}
         {!suppressCues && (
-        <SlideTransitionOverlay
-          isVisible={showOverlay}
-          lessonId={lesson.id}
-          lessonTitle={lesson.title}
-          slideIndex={currentSlideIndex}
-          slideTitle={lesson.slides[currentSlideIndex]?.title || `Slide ${currentSlideIndex + 1}`}
-          titleAudioUrl={lesson.slides[currentSlideIndex]?.titleAudioUrl}
-          totalSlides={lesson.slides.length}
-          onBegin={() => setShowOverlay(false)}
-        />
+          <SlideTransitionOverlay
+            isVisible={showOverlay}
+            lessonId={lesson.id}
+            lessonTitle={lesson.title}
+            slideIndex={currentSlideIndex}
+            slideTitle={lesson.slides[currentSlideIndex]?.title || `Slide ${currentSlideIndex + 1}`}
+            titleAudioUrl={lesson.slides[currentSlideIndex]?.titleAudioUrl}
+            totalSlides={lesson.slides.length}
+            onBegin={() => setShowOverlay(false)}
+          />
         )}
 
         {/* Footer Navigation */}
@@ -464,37 +464,37 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
         {/* Lesson Completion Celebration Overlay */}
         {!previewMode && (
-        <>
-        <LessonCompletionOverlay
-          isVisible={showCompletionOverlay}
-          lessonId={lesson.id}
-          lessonTitle={lesson.title}
-          completedSlidesCount={completedSlidesCount}
-          totalSlidesCount={lesson.slides.length}
-          score={score}
-          totalPossibleScore={totalPossible}
-          onReview={() => setShowCompletionOverlay(false)}
-          onEndLesson={() => {
-            if (onEndLesson) onEndLesson();
-          }}
-          nextLesson={nextLesson}
-          onNextLesson={onNextLesson ? () => {
-            const id = nextLesson?.id;
-            if (id) onNextLesson(id);
-          } : undefined}
-        />
+          <>
+            <LessonCompletionOverlay
+              isVisible={showCompletionOverlay}
+              lessonId={lesson.id}
+              lessonTitle={lesson.title}
+              completedSlidesCount={completedSlidesCount}
+              totalSlidesCount={lesson.slides.length}
+              score={score}
+              totalPossibleScore={totalPossible}
+              onReview={() => setShowCompletionOverlay(false)}
+              onEndLesson={() => {
+                if (onEndLesson) onEndLesson();
+              }}
+              nextLesson={nextLesson}
+              onNextLesson={onNextLesson ? () => {
+                const id = nextLesson?.id;
+                if (id) onNextLesson(id);
+              } : undefined}
+            />
 
-        <IncompleteLessonModal
-          isOpen={showIncompleteModal}
-          completedSlidesCount={completedSlidesCount}
-          totalSlidesCount={lesson.slides.length}
-          onKeepLearning={() => setShowIncompleteModal(false)}
-          onEndAnyway={() => {
-            setShowIncompleteModal(false);
-            if (onEndLesson) onEndLesson();
-          }}
-        />
-        </>
+            <IncompleteLessonModal
+              isOpen={showIncompleteModal}
+              completedSlidesCount={completedSlidesCount}
+              totalSlidesCount={lesson.slides.length}
+              onKeepLearning={() => setShowIncompleteModal(false)}
+              onEndAnyway={() => {
+                setShowIncompleteModal(false);
+                if (onEndLesson) onEndLesson();
+              }}
+            />
+          </>
         )}
       </div>
     );

@@ -17,6 +17,7 @@ export function NavigationLockProvider({ children }: { children: React.ReactNode
 
     const registerLock = useCallback((id: string) => {
         setActiveLocks((prev) => {
+            if (prev.has(id)) return prev
             const newSet = new Set(prev)
             newSet.add(id)
             return newSet
@@ -25,6 +26,7 @@ export function NavigationLockProvider({ children }: { children: React.ReactNode
 
     const unregisterLock = useCallback((id: string) => {
         setActiveLocks((prev) => {
+            if (!prev.has(id)) return prev
             const newSet = new Set(prev)
             newSet.delete(id)
             return newSet
@@ -42,8 +44,15 @@ export function NavigationLockProvider({ children }: { children: React.ReactNode
 
     const isLocked = activeLocks.size > 0
 
+    const value = React.useMemo(() => ({
+        isLocked,
+        setLocked,
+        registerLock,
+        unregisterLock
+    }), [isLocked, setLocked, registerLock, unregisterLock])
+
     return (
-        <NavigationLockContext.Provider value={{ isLocked, setLocked, registerLock, unregisterLock }}>
+        <NavigationLockContext.Provider value={value}>
             {children}
         </NavigationLockContext.Provider>
     )

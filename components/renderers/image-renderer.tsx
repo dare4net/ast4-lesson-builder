@@ -42,7 +42,7 @@ export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isE
   }
 
   return (
-    <figure className="my-2 group/image space-y-3 animate-in fade-in duration-700 w-full h-full flex flex-col items-center justify-center overflow-hidden p-2">
+    <figure className="group/image space-y-2 animate-in fade-in duration-700 w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden p-2 min-h-0">
       {hasAudio && (
         <div className="w-full max-w-2xl flex justify-end shrink-0">
           <ListenButton
@@ -57,7 +57,7 @@ export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isE
 
       <div
         className={cn(
-          "w-full max-h-[55vh] flex justify-center items-center overflow-hidden transition-all duration-500",
+          "w-full flex-1 min-h-0 flex justify-center items-center overflow-hidden transition-all duration-500",
           !isRevealed && "blur-md grayscale opacity-30",
           isRevealed && "animate-in fade-in slide-in-from-bottom-2 duration-500"
         )}
@@ -66,12 +66,12 @@ export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isE
         <img
           src={src || "/placeholder.svg"}
           alt={alt}
-          className="max-h-[52vh] max-w-full w-auto h-auto object-contain rounded-2xl shadow-md transition-transform duration-700 group-hover/image:scale-[1.01]"
+          className="max-h-full max-w-full w-auto h-auto object-contain rounded-2xl shadow-md transition-transform duration-700 group-hover/image:scale-[1.01]"
         />
       </div>
 
       {!isRevealed && !isEditing && (
-        <div className="flex justify-center flex-col items-center gap-2 shrink-0">
+        <div className="flex justify-center flex-col items-center gap-2 shrink-0 pt-1">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Tap to reveal the image</p>
           <button
             onClick={handleAcknowledge}
@@ -83,9 +83,9 @@ export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isE
       )}
 
       {isRevealed && caption && (
-        <figcaption className="text-center mt-2 animate-in fade-in slide-in-from-top-2 duration-700 shrink-0">
-          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-1">Image Caption</span>
-          <span className="text-slate-900 text-sm font-black italic tracking-tight">
+        <figcaption className="text-center mt-1 animate-in fade-in slide-in-from-top-2 duration-700 shrink-0">
+          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-0.5">Image Caption</span>
+          <span className="text-slate-900 text-xs font-black italic tracking-tight">
             {caption}
           </span>
         </figcaption>

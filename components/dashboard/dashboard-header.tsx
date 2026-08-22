@@ -22,13 +22,20 @@ const TUTOR_NAV = [
     { label: "Students", href: "/dashboard/tutor/students", icon: Users },
 ]
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+    sidebarIsCollapsed?: boolean
+}
+
+export function DashboardHeader({ sidebarIsCollapsed = true }: DashboardHeaderProps) {
     const { user, logout } = useAuth()
     const pathname = usePathname()
     const isTutor = user?.role === 'tutor'
 
     return (
-        <header className="fixed top-0 inset-x-0 z-50 bg-white border-b-2 border-slate-100 shadow-sm">
+        <header className={cn(
+            "fixed top-0 right-0 z-30 bg-white dark:bg-slate-900 border-b-2 border-slate-100 dark:border-slate-800 shadow-sm transition-[left] duration-300 ease-in-out",
+            sidebarIsCollapsed ? "left-0 md:left-[72px]" : "left-0 md:left-[240px]"
+        )}>
             <div className="px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
                 {/* Brand */}
                 <Link href={isTutor ? "/dashboard/tutor" : "/dashboard/student"} className="flex items-center gap-2.5 group shrink-0">

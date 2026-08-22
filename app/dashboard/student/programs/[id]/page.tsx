@@ -193,10 +193,11 @@ export default function StudentCourseDetailPage() {
                     <span>Course Modules ({program.modules?.length || 0})</span>
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {program.modules?.map((mod: any, idx: number) => {
                         const moduleTitle = getModuleTitle(mod, idx)
                         const lessonCount = getModuleLessonCount(mod)
+                        const modThumbnail = mod.thumbnail || mod.image_url || mod.cover_image || program.image_url || program.cover_image || "/logo.webp"
 
                         return (
                             <motion.div
@@ -205,49 +206,66 @@ export default function StudentCourseDetailPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: idx * 0.05 }}
                             >
-                                <Card
+                                <div
                                     onClick={() => handleOpenModule(mod._id)}
-                                    className="p-6 rounded-3xl bg-white border-2 border-slate-200 shadow-sm hover:border-[#1CB0F6] transition-all cursor-pointer group flex flex-col justify-between h-full space-y-5"
+                                    className="group relative h-full cursor-pointer"
                                 >
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-start">
-                                            <div className="w-11 h-11 rounded-2xl bg-[#1CB0F6]/10 text-[#1CB0F6] flex items-center justify-center font-bold text-xs">
-                                                <Folder className="w-5.5 h-5.5" />
-                                            </div>
-                                            <span className="text-xs font-extrabold text-[#1CB0F6] bg-[#1CB0F6]/10 px-2.5 py-0.5 rounded-full border border-[#1CB0F6]/20">
-                                                Module {idx + 1}
-                                            </span>
-                                        </div>
-
+                                    <div className="relative h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-200 hover:border-[#1CB0F6]/50 hover:-translate-y-0.5 hover:shadow-md shadow-sm flex flex-col justify-between">
                                         <div>
-                                            <h3 className="text-base font-extrabold text-slate-800 group-hover:text-[#1CB0F6] transition-colors">
-                                                {moduleTitle}
-                                            </h3>
-                                            <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed font-medium">
-                                                {mod.description || "Click to view detailed interactive lessons in this module."}
-                                            </p>
+                                            {/* Header Thumbnail Cover Image */}
+                                            <div className="h-32 sm:h-36 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80">
+                                                <img
+                                                    src={modThumbnail}
+                                                    alt={moduleTitle}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).src = "/logo.webp"
+                                                    }}
+                                                />
+
+                                                {/* Module Number Badge */}
+                                                <div className="absolute top-2.5 right-2.5 flex items-center justify-end pointer-events-none">
+                                                    <span className="text-[10px] font-bold text-white bg-[#1CB0F6] px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+                                                        Module {idx + 1}
+                                                    </span>
+                                                </div>
+
+                                                {/* Lesson Count Pill */}
+                                                <div className="absolute bottom-2 left-2.5 text-[10px] font-semibold text-white/90 bg-slate-950/70 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
+                                                    <BookOpen className="w-3 h-3 text-slate-300" />
+                                                    <span>{lessonCount} {lessonCount === 1 ? 'Lesson' : 'Lessons'}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Module Body */}
+                                            <div className="p-4 sm:p-5 space-y-2">
+                                                <h3 className="text-base font-extrabold text-slate-800 dark:text-white group-hover:text-[#1CB0F6] transition-colors line-clamp-1 leading-snug">
+                                                    {moduleTitle}
+                                                </h3>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
+                                                    {mod.description || "Click to view detailed interactive lessons in this module."}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {/* Card Footer */}
+                                        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                                            <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-[#1CB0F6] transition-colors">
+                                                Explore Module
+                                            </span>
+                                            <div className="flex items-center gap-1 text-xs font-extrabold text-[#1CB0F6] group-hover:translate-x-1 transition-transform">
+                                                {openingModuleId === mod._id ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin text-[#1CB0F6]" />
+                                                ) : (
+                                                    <>
+                                                        <span>Open</span>
+                                                        <ChevronRight className="w-4 h-4" />
+                                                    </>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                                        <span className="text-slate-400 font-bold">
-                                            {lessonCount} {lessonCount === 1 ? 'Lesson' : 'Lessons'}
-                                        </span>
-                                        <button
-                                            disabled={openingModuleId === mod._id}
-                                            className="h-9 px-4 rounded-xl bg-slate-50 group-hover:bg-[#1CB0F6] group-hover:text-white border-2 border-slate-200 group-hover:border-[#1899D6] text-slate-700 text-xs font-extrabold flex items-center gap-1.5 transition-all"
-                                        >
-                                            {openingModuleId === mod._id ? (
-                                                <Loader2 className="w-4 h-4 animate-spin" />
-                                            ) : (
-                                                <>
-                                                    <span>Open Module</span>
-                                                    <ChevronRight className="w-4 h-4" />
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </Card>
+                                </div>
                             </motion.div>
                         )
                     })}

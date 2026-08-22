@@ -595,7 +595,7 @@ function HotspotContent({
                 </div>
             </div>
 
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-hidden py-1">
                 <div className="flex items-center justify-center w-full h-full my-auto">
                     {/* Outer wrapper: overflow-visible so tooltips/panels aren't clipped */}
                     <div
@@ -613,7 +613,7 @@ function HotspotContent({
                                 ref={imageRef}
                                 src={image || "/placeholder.svg?height=300&width=400"}
                                 alt={title}
-                                className="max-h-[42vh] w-auto h-auto object-contain block select-none bg-white"
+                                className="max-h-[48vh] md:max-h-[52vh] w-auto h-auto object-contain block select-none bg-white"
                                 draggable={false}
                             />
                         </div>

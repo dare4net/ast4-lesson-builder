@@ -178,7 +178,7 @@ export default function StudentModuleDetailPage() {
                         <p className="text-xs text-slate-400 font-semibold">Check back soon for new learning content in this module.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {lessons.map((lesson, idx) => {
                             const lessonTitle = getLessonTitle(lesson, idx)
                             const isCompleted = lesson.completed

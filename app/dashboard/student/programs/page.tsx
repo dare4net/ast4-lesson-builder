@@ -95,66 +95,88 @@ export default function StudentProgramsListPage() {
                     </Button>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {programs.map((prog, idx) => {
                         const progressValue = calculateProgress(prog)
-                        const palette = CARD_PALETTES[idx % CARD_PALETTES.length]
+                        const imageUrl = prog.image_url || prog.cover_image || prog.thumbnailUrl || prog.thumbnail || "/logo.webp"
 
                         return (
                             <motion.div
                                 key={prog._id || idx}
-                                initial={{ opacity: 0, scale: 0.97 }}
-                                animate={{ opacity: 1, scale: 1 }}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: idx * 0.05 }}
                             >
-                                <Card
+                                <div
                                     onClick={() => router.push(`/dashboard/student/programs/${prog.program_id || prog._id}`)}
-                                    className="p-6 rounded-3xl bg-white border-2 border-slate-200 hover:border-slate-300 transition-all cursor-pointer group h-full flex flex-col justify-between shadow-sm"
+                                    className="group relative h-full cursor-pointer"
                                 >
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between items-start">
-                                            <div className={`w-11 h-11 rounded-2xl ${palette.bg} border ${palette.border} flex items-center justify-center ${palette.text}`}>
-                                                <BookOpen className="w-5.5 h-5.5" />
-                                            </div>
-                                            <span className={`text-xs font-bold ${palette.text} ${palette.badgeBg} px-2.5 py-0.5 rounded-full border ${palette.badgeBorder}`}>
-                                                Active
-                                            </span>
-                                        </div>
-
+                                    <div className="relative h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-200 hover:border-[#1CB0F6]/50 hover:-translate-y-0.5 hover:shadow-md shadow-sm flex flex-col justify-between">
                                         <div>
-                                            <h3 className={`text-base font-extrabold text-slate-800 mb-1 group-hover:${palette.text} transition-colors`}>
-                                                {prog.program_name || prog.name || prog.title || "Untitled Course"}
-                                            </h3>
-                                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium">
-                                                {prog.description || "Interactive learning course."}
-                                            </p>
-                                        </div>
-
-                                        <div className="space-y-1.5">
-                                            <div className="flex justify-between items-center text-xs">
-                                                <span className="text-slate-400 font-bold uppercase tracking-wider">Progress</span>
-                                                <span className={`font-extrabold ${palette.text}`}>{progressValue}%</span>
-                                            </div>
-                                            <div className="h-1.5 w-full bg-slate-100 border border-slate-200 rounded-full overflow-hidden">
-                                                <div
-                                                    className={`h-full ${palette.bar} transition-all duration-500`}
-                                                    style={{ width: `${progressValue}%` }}
+                                            {/* Header Thumbnail Cover Image */}
+                                            <div className="h-32 sm:h-36 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80">
+                                                <img
+                                                    src={imageUrl}
+                                                    alt={prog.program_name || prog.name || "Course cover"}
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    onError={(e) => {
+                                                        (e.target as HTMLImageElement).src = "/logo.webp"
+                                                    }}
                                                 />
+
+                                                {/* Top Right Badge */}
+                                                <div className="absolute top-2.5 right-2.5 flex items-center justify-end pointer-events-none">
+                                                    <span className="text-[10px] font-bold text-white bg-[#1CB0F6] px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+                                                        Active
+                                                    </span>
+                                                </div>
+
+                                                {/* Module Count Pill */}
+                                                <div className="absolute bottom-2 left-2.5 text-[10px] font-semibold text-white/90 bg-slate-950/70 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
+                                                    <Layers className="w-3 h-3 text-slate-300" />
+                                                    <span>{prog.moduleCount || prog.modules?.length || 0} Modules</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Card Body */}
+                                            <div className="p-4 sm:p-5 space-y-3">
+                                                <div>
+                                                    <h3 className="text-base font-extrabold text-slate-800 dark:text-white group-hover:text-[#1CB0F6] transition-colors line-clamp-1 leading-snug">
+                                                        {prog.program_name || prog.name || prog.title || "Untitled Course"}
+                                                    </h3>
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium mt-1">
+                                                        {prog.description || "Interactive learning course program."}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Card Footer with Progress & Action Link */}
+                                        <div className="px-4 sm:px-5 pb-4 sm:pb-5 space-y-2.5 pt-3 border-t border-slate-100 dark:border-slate-800">
+                                            <div className="space-y-1">
+                                                <div className="flex justify-between items-center text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                                                    <span>Progress</span>
+                                                    <span className="text-[#1CB0F6] font-bold">{progressValue}%</span>
+                                                </div>
+                                                <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-[#1CB0F6] rounded-full transition-all duration-500"
+                                                        style={{ width: `${progressValue}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between pt-1">
+                                                <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-[#1CB0F6] transition-colors">
+                                                    Continue Learning
+                                                </span>
+                                                <div className="flex items-center gap-1 text-xs font-extrabold text-[#1CB0F6] group-hover:translate-x-1 transition-transform">
+                                                    <ChevronRight className="w-4 h-4" />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="mt-5 flex items-center justify-between pt-4 border-t border-slate-100 text-xs">
-                                        <span className="text-slate-400 font-bold flex items-center gap-1">
-                                            <Layers className="w-3.5 h-3.5" />
-                                            {prog.moduleCount || prog.modules?.length || 0} Modules
-                                        </span>
-                                        <div className={`flex items-center gap-1 ${palette.text} font-extrabold group-hover:translate-x-0.5 transition-transform`}>
-                                            <span>Open</span>
-                                            <ChevronRight className="w-4 h-4" />
-                                        </div>
-                                    </div>
-                                </Card>
+                                </div>
                             </motion.div>
                         )
                     })}

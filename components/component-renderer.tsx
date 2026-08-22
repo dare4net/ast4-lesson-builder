@@ -169,7 +169,7 @@ const DiscoveryWrapper = ({
   }
 
   return (
-    <div className="relative flex-1 flex flex-col w-full">
+    <div className="relative flex-1 min-h-0 flex flex-col w-full">
       {isLive && timeLeft !== null && (
         <div className="absolute -top-12 right-0 flex items-center gap-3 px-4 py-2 bg-rose-50 border-2 border-rose-500 rounded-full animate-in slide-in-from-right-4">
           <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
@@ -179,7 +179,7 @@ const DiscoveryWrapper = ({
         </div>
       )}
       <div className={cn(
-        "flex-1 flex flex-col w-full transition-all duration-500",
+        "flex-1 min-h-0 flex flex-col w-full transition-all duration-500",
         timeLeft === 0 && "opacity-50 pointer-events-none grayscale"
       )}>
         {children}
@@ -198,10 +198,10 @@ const DiscoveryWrapper = ({
 
 // Wrapper component for disabled state
 const DisabledWrapper = ({ isDisabled, isTutorView, children }: { isDisabled: boolean, isTutorView?: boolean, children: React.ReactNode }) => {
-  if (!isDisabled || isTutorView) return <div className="flex-1 flex flex-col w-full">{children}</div>;
+  if (!isDisabled || isTutorView) return <div className="flex-1 min-h-0 flex flex-col w-full">{children}</div>;
 
   return (
-    <div className="relative group flex-1 flex flex-col w-full">
+    <div className="relative group flex-1 min-h-0 flex flex-col w-full">
       {children}
       <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] pointer-events-auto cursor-not-allowed">
         <div className="absolute inset-0 opacity-5 bg-slate-900"></div>
@@ -231,7 +231,7 @@ const ComponentRendererBase = function ComponentRenderer({
         setComponentState={setComponentState}
       >
         <div className={cn(
-          "flex-1 flex flex-col w-full transition-opacity",
+          "flex-1 min-h-0 flex flex-col w-full transition-opacity overflow-hidden",
           isDisabled && !isTutorView && "opacity-75"
         )}>
           <Renderer {...props} />

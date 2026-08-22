@@ -5,14 +5,13 @@ import { LessonCard } from "@/components/dashboard/student/lesson-card"
 import { useAuth } from "@/context/auth-context"
 import { lessonsListSync } from "@/lib/lesson-data-sync"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle } from "lucide-react"
+import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
-type FilterTab = 'all' | 'in_progress' | 'completed';
-const RECENT_LESSONS_LIMIT = 6;
+type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
 export default function StudentDashboardPage() {
     const { user, token } = useAuth()
@@ -20,6 +19,7 @@ export default function StudentDashboardPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState<FilterTab>('all')
+    const [visibleCount, setVisibleCount] = useState<number>(8)
     const router = useRouter()
 
     useEffect(() => {
@@ -45,6 +45,11 @@ export default function StudentDashboardPage() {
         router.push(`/viewer/${lessonId}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}`)
     }
 
+    const handleTabChange = (tab: FilterTab) => {
+        setActiveTab(tab)
+        setVisibleCount(8)
+    }
+
     // Sorted lessons: newest to oldest by last activity/update timestamp
     const sortedLessons = useMemo(() => {
         return [...lessons].sort((a, b) => {
@@ -56,6 +61,7 @@ export default function StudentDashboardPage() {
 
     // Real statistics derived from actual interaction data
     const activeLessonsCount = lessons.length
+    const newLessonsCount = useMemo(() => lessons.filter(l => !l.progress || l.progress === 0).length, [lessons])
     const completedLessonsCount = useMemo(() => lessons.filter(l => l.progress === 100).length, [lessons])
     const inProgressCount = useMemo(() => lessons.filter(l => l.progress > 0 && l.progress < 100).length, [lessons])
 
@@ -66,16 +72,23 @@ export default function StudentDashboardPage() {
         return ongoing || sortedLessons[0];
     }, [sortedLessons]);
 
-    // Filter and limit lessons for dashboard display (Top 6 most recent)
-    const displayedLessons = useMemo(() => {
+    // Filter lessons based on active tab
+    const filteredLessons = useMemo(() => {
         let filtered = sortedLessons;
-        if (activeTab === 'in_progress') {
+        if (activeTab === 'new') {
+            filtered = sortedLessons.filter(l => !l.progress || l.progress === 0);
+        } else if (activeTab === 'in_progress') {
             filtered = sortedLessons.filter(l => l.progress > 0 && l.progress < 100);
         } else if (activeTab === 'completed') {
             filtered = sortedLessons.filter(l => l.progress === 100);
         }
-        return filtered.slice(0, RECENT_LESSONS_LIMIT);
+        return filtered;
     }, [sortedLessons, activeTab]);
+
+    // Slice for progressive "See More" pagination
+    const displayedLessons = useMemo(() => {
+        return filteredLessons.slice(0, visibleCount);
+    }, [filteredLessons, visibleCount]);
 
     const displayName = user?.email?.split('@')[0] || 'Learner'
 
@@ -133,7 +146,7 @@ export default function StudentDashboardPage() {
                             <button
                                 type="button"
                                 onClick={() => handleLessonRedirect(currentOngoingLesson.lessonId)}
-                                className="w-full py-2 px-3 rounded-lg bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+                                className="w-full py-2 px-3 rounded-lg bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
                             >
                                 <span>{currentOngoingLesson.progress > 0 ? "Continue Lesson" : "Start Lesson"}</span>
                                 <ArrowRight className="w-3.5 h-3.5" />
@@ -189,9 +202,9 @@ export default function StudentDashboardPage() {
                         <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-900 p-1 rounded-xl border border-slate-200 dark:border-slate-800">
                             <button
                                 type="button"
-                                onClick={() => setActiveTab('all')}
+                                onClick={() => handleTabChange('all')}
                                 className={cn(
-                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all",
+                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer",
                                     activeTab === 'all'
                                         ? "bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm"
                                         : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -202,9 +215,22 @@ export default function StudentDashboardPage() {
 
                             <button
                                 type="button"
-                                onClick={() => setActiveTab('in_progress')}
+                                onClick={() => handleTabChange('new')}
                                 className={cn(
-                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all",
+                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                                    activeTab === 'new'
+                                        ? "bg-amber-500 text-white shadow-sm"
+                                        : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                                )}
+                            >
+                                New ({newLessonsCount})
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => handleTabChange('in_progress')}
+                                className={cn(
+                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer",
                                     activeTab === 'in_progress'
                                         ? "bg-[#58CC02] text-white shadow-sm"
                                         : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -215,9 +241,9 @@ export default function StudentDashboardPage() {
 
                             <button
                                 type="button"
-                                onClick={() => setActiveTab('completed')}
+                                onClick={() => handleTabChange('completed')}
                                 className={cn(
-                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all",
+                                    "px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer",
                                     activeTab === 'completed'
                                         ? "bg-[#1CB0F6] text-white shadow-sm"
                                         : "text-slate-500 hover:text-slate-900 dark:hover:text-white"
@@ -226,14 +252,6 @@ export default function StudentDashboardPage() {
                                 Done ({completedLessonsCount})
                             </button>
                         </div>
-
-                        {sortedLessons.length > RECENT_LESSONS_LIMIT && (
-                            <Link href="/dashboard/student/programs">
-                                <span className="text-xs font-bold text-[#58CC02] hover:underline flex items-center gap-1">
-                                    View All <ArrowRight className="w-3.5 h-3.5" />
-                                </span>
-                            </Link>
-                        )}
                     </div>
                 </div>
 
@@ -250,51 +268,67 @@ export default function StudentDashboardPage() {
                         </Button>
                     </div>
                 ) : (
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                        <AnimatePresence mode="popLayout">
-                            {displayedLessons.length > 0 ? (
-                                displayedLessons.map((lesson, idx) => (
-                                    <motion.div
-                                        key={lesson.id || lesson.lessonId || idx}
-                                        initial={{ opacity: 0, y: 8 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: idx * 0.04 }}
-                                    >
-                                        <LessonCard
-                                            lesson={{
-                                                id: lesson.lessonId,
-                                                title: lesson.title || "Lesson",
-                                                description: lesson.module || lesson.program,
-                                                moduleName: lesson.module,
-                                                programName: lesson.program,
-                                                thumbnail: lesson.thumbnail,
-                                                progress: lesson.progress || 0,
-                                                duration: lesson.duration ? String(lesson.duration) : undefined,
-                                            }}
-                                            onClick={() => handleLessonRedirect(lesson.lessonId)}
-                                        />
-                                    </motion.div>
-                                ))
-                            ) : (
-                                <div className="col-span-full p-10 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 text-center bg-white dark:bg-slate-900/40 space-y-2.5">
-                                    <Compass className="w-10 h-10 text-slate-400 mx-auto" />
-                                    <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                                        {activeTab === 'in_progress' ? "No lessons currently in progress" : activeTab === 'completed' ? "No completed lessons yet" : "No active courses yet"}
-                                    </h3>
-                                    <p className="text-slate-500 text-xs font-medium max-w-sm mx-auto">
-                                        Explore the course catalog to discover and enroll in your next learning module.
-                                    </p>
-                                    <Link href="/dashboard/student/catalog">
-                                        <button
-                                            type="button"
-                                            className="mt-2 px-4 py-2 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors"
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+                            <AnimatePresence mode="popLayout">
+                                {displayedLessons.length > 0 ? (
+                                    displayedLessons.map((lesson, idx) => (
+                                        <motion.div
+                                            key={lesson.id || lesson.lessonId || idx}
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: idx * 0.04 }}
                                         >
-                                            Explore Catalog
-                                        </button>
-                                    </Link>
-                                </div>
-                            )}
-                        </AnimatePresence>
+                                            <LessonCard
+                                                lesson={{
+                                                    id: lesson.lessonId,
+                                                    title: lesson.title || "Lesson",
+                                                    description: lesson.module || lesson.program,
+                                                    moduleName: lesson.module,
+                                                    programName: lesson.program,
+                                                    thumbnail: lesson.thumbnail,
+                                                    progress: lesson.progress || 0,
+                                                    duration: lesson.duration ? String(lesson.duration) : undefined,
+                                                }}
+                                                onClick={() => handleLessonRedirect(lesson.lessonId)}
+                                            />
+                                        </motion.div>
+                                    ))
+                                ) : (
+                                    <div className="col-span-full p-10 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 text-center bg-white dark:bg-slate-900/40 space-y-2.5">
+                                        <Compass className="w-10 h-10 text-slate-400 mx-auto" />
+                                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                                            {activeTab === 'new' ? "No new unstarted lessons" : activeTab === 'in_progress' ? "No lessons currently in progress" : activeTab === 'completed' ? "No completed lessons yet" : "No active courses yet"}
+                                        </h3>
+                                        <p className="text-slate-500 text-xs font-medium max-w-sm mx-auto">
+                                            Explore the course catalog to discover and enroll in your next learning module.
+                                        </p>
+                                        <Link href="/dashboard/student/catalog">
+                                            <button
+                                                type="button"
+                                                className="mt-2 px-4 py-2 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors cursor-pointer"
+                                            >
+                                                Explore Catalog
+                                            </button>
+                                        </Link>
+                                    </div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Progressive See More Lessons Button */}
+                        {visibleCount < filteredLessons.length && (
+                            <div className="flex justify-center pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setVisibleCount(prev => prev + 8)}
+                                    className="px-6 py-2.5 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-extrabold transition-all shadow-sm flex items-center gap-2 cursor-pointer hover:scale-[1.02]"
+                                >
+                                    <span>See More Lessons ({filteredLessons.length - visibleCount} remaining)</span>
+                                    <ChevronDown className="w-4 h-4" />
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

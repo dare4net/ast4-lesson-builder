@@ -1,26 +1,32 @@
 "use client"
 
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 import { StudentSidebar } from "@/components/dashboard/sidebar/student-sidebar"
 import { StudentMobileNav } from "@/components/dashboard/sidebar/student-mobile-nav"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { motion, AnimatePresence } from "framer-motion"
+import { cn } from "@/lib/utils"
 
 interface StudentDashboardLayoutProps {
     children: ReactNode
 }
 
 export default function StudentDashboardLayout({ children }: StudentDashboardLayoutProps) {
+    const [isCollapsed, setIsCollapsed] = useState(true)
+
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-sans">
             {/* Navigation */}
-            <StudentSidebar />
+            <StudentSidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
             <StudentMobileNav />
 
-            {/* Main Content Area */}
-            <main className="relative flex flex-col min-h-screen md:pl-[260px] transition-[padding] duration-300">
-                <DashboardHeader />
-                <div className="flex-1 w-full max-w-7xl mx-auto pt-20 pb-20 md:pb-8 px-4 md:px-8">
+            {/* Main Content Area - dynamically expands when sidebar is collapsed */}
+            <main className={cn(
+                "relative flex flex-col min-h-screen transition-[padding] duration-300 ease-in-out",
+                isCollapsed ? "md:pl-[72px]" : "md:pl-[240px]"
+            )}>
+                <DashboardHeader sidebarIsCollapsed={isCollapsed} />
+                <div className="flex-1 w-full pt-20 pb-20 md:pb-8 px-3 sm:px-6">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key="page-transition"

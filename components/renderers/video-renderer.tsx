@@ -64,8 +64,8 @@ export function VideoRenderer({
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`
 
     return (
-        <figure className="my-2 space-y-2 max-w-3xl mx-auto w-full h-full flex flex-col items-center justify-center overflow-hidden group/video">
-            <div className={cn("relative w-full max-h-[52vh] rounded-2xl overflow-hidden bg-slate-950 shadow-xl border border-slate-800/80", aspectClass)}>
+        <figure className="space-y-2 max-w-5xl mx-auto w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden min-h-0 p-2 group/video">
+            <div className={cn("relative w-full flex-1 min-h-0 max-h-[56vh] md:max-h-[62vh] rounded-2xl overflow-hidden bg-slate-950 shadow-xl border border-slate-800/80", aspectClass)}>
                 {!isPlaying ? (
                     <div
                         onClick={() => setIsPlaying(true)}
