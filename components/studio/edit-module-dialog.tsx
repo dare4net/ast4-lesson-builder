@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2 } from "lucide-react"
 import { generateArtisticThumbnail } from "@/lib/thumbnail-generator"
+import { compressImageFile } from "@/lib/image-compressor"
 import { VoiceSelector } from "@/components/ui/voice-selector"
 import { getVoiceById } from "@/lib/voices"
 
@@ -64,16 +65,15 @@ export function EditModuleDialog({ isOpen, onClose, programVoice, module, onSave
         setImageUrl(autoThumbnail)
     }
 
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (!file) return
-        const reader = new FileReader()
-        reader.onload = (event) => {
-            if (event.target?.result) {
-                setImageUrl(event.target.result as string)
-            }
+        try {
+            const compressed = await compressImageFile(file)
+            setImageUrl(compressed)
+        } catch (err) {
+            console.error("Failed to process image file:", err)
         }
-        reader.readAsDataURL(file)
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
