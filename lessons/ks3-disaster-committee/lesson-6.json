@@ -1,0 +1,326 @@
+{
+    "id": "lesson-ks3-disaster-committee-06",
+    "title": "Lesson 6: The Emergency Broadcast",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Adapt persuasive writing across media formats under strict word limits to write a live emergency radio broadcast that routes citizens safely to Bunker 7.",
+    "slides": [
+        {
+            "id": "slide-1787430006100",
+            "title": "Scene 1: The High Street Floods",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430006101",
+                    "type": "heading",
+                    "props": {
+                        "content": "📻 Scene 1: The High Street Floods",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430006102",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Floodwaters rising on High Street as emergency loudspeaker tower flashes red",
+                        "caption": "Seawater surges down High Street, washing away the main bridge and isolating the town hall."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-1787430006103",
+                    "type": "quote",
+                    "props": {
+                        "text": "The main bridge is gone! Officer, speak to the town through the broadcast microphone! Guide them along the higher ridge path before panic causes a stampede!",
+                        "author": "Captain Milly Bluster"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430006104",
+                    "type": "callout",
+                    "props": {
+                        "title": "Broadcast Mission Objective",
+                        "content": "Write a 3-sentence emergency broadcast script that remains calm, uses precise imperative directions, and guides 50 citizens safely along the ridge path into Bunker 7.",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430006200",
+            "title": "Scene 2: Medium & Audience Matrix",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430006201",
+                    "type": "heading",
+                    "props": {
+                        "content": "📱 Scene 2: Medium & Audience Matrix",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1787430006203",
+                    "type": "matchingPairs",
+                    "props": {
+                        "pairs": [
+                            {
+                                "id": "p-1",
+                                "left": "Live Radio Broadcast",
+                                "right": "Short imperative verbs, audio cues, and clear spoken repetition"
+                            },
+                            {
+                                "id": "p-2",
+                                "left": "Official Print Notice",
+                                "right": "Detailed evidence, formal background facts, and legal sign-offs"
+                            },
+                            {
+                                "id": "p-3",
+                                "left": "SMS Emergency Alert",
+                                "right": "Ultra-concise text under 160 characters with direct action links"
+                            },
+                            {
+                                "id": "p-4",
+                                "left": "Digital Billboard",
+                                "right": "High-impact bold hooks visible to passing drivers"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430006300",
+            "title": "Scene 3: Unlocking Emergency Codes",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430006301",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ Scene 3: Unlocking Emergency Codes",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-1787430006303",
+                    "type": "wordScramble",
+                    "props": {
+                        "word": "EVACUATE",
+                        "hint": "Primary 8-letter command to clear citizens from dangerous low-lying areas.",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-1787430006304",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "In a crisis broadcast, using terrifying loaded words like 'TSUNAMI' and 'CATASTROPHE' helps keep citizens calm.",
+                        "isTrue": false,
+                        "explanation": "False! Terrifying loaded words induce mob panic and stampedes. Effective emergency broadcasts use calm, authoritative imperative commands like 'PROCEED UPHILL' and 'STAY CALM'.",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430006400",
+            "title": "Scene 4: Broadcast Script Editing",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430006401",
+                    "type": "heading",
+                    "props": {
+                        "content": "⏱️ Scene 4: Broadcast Script Editing",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-1787430006403",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "text": "Attention Wittling citizens! {{blank}} High Street immediately. {{blank}} along the north ridge path toward Bunker 7. Do not cross the lower harbour bridge. {{blank}} in orderly groups.",
+                        "blanks": [
+                            {
+                                "id": "b-1",
+                                "answer": "Evacuate"
+                            },
+                            {
+                                "id": "b-2",
+                                "answer": "Proceed"
+                            },
+                            {
+                                "id": "b-3",
+                                "answer": "Move"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430006500",
+            "title": "Scene 5: Broadcast Live!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430006501",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎙️ Scene 5: Broadcast Live!",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430006502",
+                    "type": "callout",
+                    "props": {
+                        "title": "Broadcast Rubric",
+                        "content": "Sentence 1 (Hook): Urgent, calm opening hook addressing all citizens.\nSentence 2 (Direction): Imperative instructions directing traffic along the north ridge path.\nSentence 3 (Reassurance): Strong closing reassurance promising safety inside Bunker 7.",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430006503",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Emergency Broadcast Script Submission",
+                        "question": "Write your 3-sentence live radio alert script. Sentence 1: Urgent calm hook. Sentence 2: Clear imperative instructions using ridge path. Sentence 3: Reassuring closing statement.",
+                        "placeholder": "Attention Wittling residents, this is an official emergency update from the Disaster Committee. Leave High Street immediately and proceed in orderly lines along the north ridge path. Bunker 7 is open, secure, and ready to receive everyone safely.",
+                        "maxLength": 350,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "Attention",
+                            "emergency",
+                            "Leave",
+                            "Proceed",
+                            "ridge",
+                            "path",
+                            "Bunker",
+                            "secure",
+                            "safely"
+                        ],
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430006600",
+            "title": "Scene 6: Trapped inside Bunker 7!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430006601",
+                    "type": "heading",
+                    "props": {
+                        "content": "🚨 Scene 6: Trapped inside Bunker 7!",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430006603",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Inside subterranean Bunker 7 as 50 citizens stare terrified at rusted iron chains connected to the Grandfather Relief Valve",
+                        "caption": "Inside Bunker 7, 50 citizens freeze in fear as the heavy rusted chains of the Grandfather Relief Valve groan under massive water pressure."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430006604",
+                    "type": "callout",
+                    "props": {
+                        "title": "⚡ Hard Cliffhanger!",
+                        "content": "The vault is sealed, but outside, storm water is rising fast against the relief valve chamber doors! The citizens are terrified and refuse to touch the freezing iron chains. If you cannot deliver one final capstone speech to unite the entire town, Bunker 7 will flood!",
+                        "variant": "important"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430006605",
+                    "type": "poll",
+                    "props": {
+                        "question": "What is the most critical key to rallying a frightened crowd in a capstone speech?",
+                        "options": [
+                            {
+                                "id": "opt-p1",
+                                "text": "Uniting Ethos, Pathos, and Logos for shared survival"
+                            },
+                            {
+                                "id": "opt-p2",
+                                "text": "Shouting louder than the creaking chains"
+                            },
+                            {
+                                "id": "opt-p3",
+                                "text": "Blaming Mayor Flump for not building a better seawall"
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}

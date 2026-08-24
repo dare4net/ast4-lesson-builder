@@ -89,7 +89,7 @@ export function ArrayItemEditor<T extends { id: string }>({
 
                 <div className="space-y-4">
                     {items.map((item, index) => (
-                        <div key={item.id} className="rounded-xl border border-slate-800 bg-slate-950/30 overflow-hidden shadow-sm">
+                        <div key={item.id || `item-${index}`} className="rounded-xl border border-slate-800 bg-slate-950/30 overflow-hidden shadow-sm">
                             <div className="flex items-center justify-between px-4 py-2 bg-slate-900/60 border-b border-slate-800">
                                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                     {getItemLabel(item, index)}
@@ -151,7 +151,7 @@ export function ArrayItemEditor<T extends { id: string }>({
                             <TabsList className="h-9 bg-transparent p-0 flex gap-1">
                                 {items.map((item, index) => (
                                     <TabsTrigger
-                                        key={item.id}
+                                        key={item.id || `tab-trigger-${index}`}
                                         value={index.toString()}
                                         className={cn(
                                             "px-4 h-8 rounded-lg text-[10px] uppercase font-black transition-all duration-200 whitespace-nowrap flex-shrink-0",
@@ -169,7 +169,7 @@ export function ArrayItemEditor<T extends { id: string }>({
 
 
                 {items.map((item, index) => (
-                    <TabsContent key={item.id} value={index.toString()} className="m-0 focus-visible:outline-none focus-visible:ring-0">
+                    <TabsContent key={item.id || `tab-content-${index}`} value={index.toString()} className="m-0 focus-visible:outline-none focus-visible:ring-0">
                         <div className="rounded-2xl border border-slate-800 bg-slate-900/40 shadow-xl overflow-hidden backdrop-blur-md">
                             <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800 bg-slate-950/30">
                                 <h4 className="text-[10px] font-black text-emerald-400 uppercase tracking-widest flex items-center gap-2">

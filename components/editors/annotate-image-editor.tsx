@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Image as ImageIcon, MapPin, Plus, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { ImageUploader } from "@/components/renderers/image-uploader"
 
 export interface AnnotationLabel {
     id: string
@@ -21,6 +22,8 @@ export interface AnnotateImageEditorProps {
     onImageChange?: (val: string) => void
     labels?: AnnotationLabel[]
     onLabelsChange?: (labels: AnnotationLabel[]) => void
+    lessonId?: string
+    componentId?: string
 }
 
 export function AnnotateImageEditor({
@@ -30,6 +33,8 @@ export function AnnotateImageEditor({
     onImageChange,
     labels = [],
     onLabelsChange,
+    lessonId,
+    componentId,
 }: AnnotateImageEditorProps) {
     const imageRef = useRef<HTMLImageElement>(null)
     const [isPlacingPin, setIsPlacingPin] = useState(false)
@@ -128,14 +133,14 @@ export function AnnotateImageEditor({
                 />
             </div>
 
-            {/* Image URL */}
+            {/* Image URL & File Upload */}
             <div className="space-y-2">
-                <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide">Diagram Image URL</Label>
-                <Input
+                <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide">Diagram Image</Label>
+                <ImageUploader
                     value={image}
-                    onChange={e => onImageChange?.(e.target.value)}
-                    placeholder="https://example.com/diagram.png"
-                    className="bg-slate-950/60 border-slate-800 h-10 text-xs font-bold placeholder:text-slate-700 rounded-xl w-full"
+                    onChange={(val) => onImageChange?.(val)}
+                    lessonId={lessonId}
+                    componentId={componentId}
                 />
             </div>
 

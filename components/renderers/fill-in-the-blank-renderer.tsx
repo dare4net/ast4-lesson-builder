@@ -130,8 +130,8 @@ function FillInTheBlankContent({
     }))
   }
 
-  const checkAnswer = (blank: Blank, userAnswer: string): boolean => {
-    if (!userAnswer) return false
+  const checkAnswer = (blank: Blank | undefined, userAnswer: string): boolean => {
+    if (!blank || !blank.answer || !userAnswer) return false
 
     const checkAgainst = (answer: string) => {
       return caseSensitive ? userAnswer === answer : userAnswer.toLowerCase() === answer.toLowerCase()
@@ -140,7 +140,7 @@ function FillInTheBlankContent({
     if (checkAgainst(blank.answer)) return true
 
     if (blank.alternatives && blank.alternatives.length > 0) {
-      return blank.alternatives.some((alt) => checkAgainst(alt))
+      return blank.alternatives.some((alt) => alt && checkAgainst(alt))
     }
 
     return false
@@ -152,9 +152,10 @@ function FillInTheBlankContent({
     const results: Record<string, boolean> = {}
     let correctCount = 0
 
-    blanks.forEach((blank) => {
-      const isCorrect = checkAnswer(blank, userAnswers[blank.id] ? userAnswers[blank.id].trim() : "")
-      results[blank.id] = isCorrect
+    blanks.forEach((blank, idx) => {
+      const key = blank.id || `blank-${idx}`
+      const isCorrect = checkAnswer(blank, userAnswers[key] ? userAnswers[key].trim() : "")
+      results[key] = isCorrect
       if (isCorrect) correctCount++
     })
 
@@ -185,8 +186,9 @@ function FillInTheBlankContent({
   const onLocalRetry = () => {
     handleRetry()
     const initialAnswers: Record<string, string> = {}
-    blanks.forEach((blank) => {
-      initialAnswers[blank.id] = ""
+    blanks.forEach((blank, idx) => {
+      const key = blank.id || `blank-${idx}`
+      initialAnswers[key] = ""
     })
 
     setState(prev => ({
@@ -256,18 +258,21 @@ function FillInTheBlankContent({
         <div className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight my-auto">
           {parts.map((part, index) => {
             const blank = blanks[index];
-            const savedCorrect = (state as any)?.correctAnswers?.[blank?.id];
-            const isBlankCorrect = savedCorrect !== undefined
-              ? Boolean(savedCorrect)
-              : (correctAnswers[blank?.id] ?? checkAnswer(blank, userAnswers[blank?.id] || ""));
+            const blankKey = blank?.id || `blank-${index}`;
+            const savedCorrect = blank ? (state as any)?.correctAnswers?.[blankKey] : undefined;
+            const isBlankCorrect = blank
+              ? (savedCorrect !== undefined
+                ? Boolean(savedCorrect)
+                : (correctAnswers[blankKey] ?? checkAnswer(blank, userAnswers[blankKey] || "")))
+              : false;
             return (
               <React.Fragment key={index}>
                 {part}
-                {index < blanks.length && (
+                {index < blanks.length && blank && (
                   <span className="inline-flex relative mx-1.5 group/input align-middle">
                     <Input
-                      value={userAnswers[blank.id] || ""}
-                      onChange={(e) => handleAnswerChange(blank.id, e.target.value)}
+                      value={userAnswers[blankKey] || ""}
+                      onChange={(e) => handleAnswerChange(blankKey, e.target.value)}
                       disabled={inputsLocked}
                       placeholder="..."
                       className={cn(
@@ -420,8 +425,9 @@ export function FillInTheBlankRenderer(props: FillInTheBlankRendererProps) {
   } as Component
 
   const initialAnswers: Record<string, string> = {}
-  blanks.forEach((blank) => {
-    initialAnswers[blank.id] = ""
+  blanks.forEach((blank, idx) => {
+    const key = blank?.id || `blank-${idx}`
+    initialAnswers[key] = ""
   })
 
   const initialState: FillInTheBlankState = {

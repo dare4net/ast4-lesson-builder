@@ -341,7 +341,7 @@ export function QuizRenderer(props: QuizRendererProps) {
 
                     return (
                       <button
-                        key={option.id}
+                        key={option.id || `option-${idx}`}
                         className={cn(
                           'group/opt w-full p-3.5 text-left text-slate-900 transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
                           'border-b-4 active:border-b-0 active:translate-y-[2px]',

@@ -166,11 +166,11 @@ function CategoriseContent({
             <h3 className="text-lg font-black mb-3 text-slate-900 tracking-tight shrink-0">{title}</h3>
 
             {!submitted && (
-                <div className="mb-4 p-3 rounded-2xl bg-slate-50/80 border-2 border-slate-200 border-b-4 shrink-0">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-2">
+                <div className="mb-3 p-2.5 rounded-2xl bg-slate-50/80 border-2 border-slate-200 border-b-4 shrink-0 max-h-[120px] overflow-y-auto">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-1.5">
                         Tap an item card below, then tap a category bucket:
                     </span>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5">
                         {unassignedItems.map(it => (
                             <button
                                 key={it.id}
@@ -178,7 +178,7 @@ function CategoriseContent({
                                 onClick={() => handleSelectItem(it.id)}
                                 disabled={isEditing || disabled}
                                 className={cn(
-                                    "flex items-center gap-1.5 px-3 py-2 rounded-xl border-2 border-b-4 font-black text-xs transition-all duration-200 cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
+                                    "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-b-4 font-black text-xs transition-all duration-200 cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
                                     selectedItemId === it.id
                                         ? "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-105"
                                         : "bg-white hover:bg-purple-50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-purple-300"
@@ -197,13 +197,13 @@ function CategoriseContent({
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 min-h-0 overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 flex-1 min-h-0 overflow-y-auto pr-0.5 pb-2">
                 {categories.map((cat, idx) => {
                     const palette = PALETTES[idx % PALETTES.length]
                     const assignedItems = items.filter(it => assignments[it.id] === cat.id)
 
                     return (
-                        <div key={cat.id} className="flex flex-col gap-1 w-full min-h-0">
+                        <div key={cat.id} className="flex flex-col gap-1 w-full shrink-0 sm:shrink min-h-[160px] sm:min-h-0">
                             <div className="flex items-center justify-between px-1">
                                 <span className={cn("text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg border shadow-xs", palette.badgeBg)}>
                                     {assignedItems.length} item{assignedItems.length === 1 ? "" : "s"}
@@ -221,7 +221,7 @@ function CategoriseContent({
                                 <div className={cn("p-2.5 flex items-center justify-between border-b border-black/10 shrink-0", palette.headerBg)}>
                                     <h4 className="font-black text-xs uppercase tracking-wider drop-shadow-sm">{cat.title}</h4>
                                 </div>
-                                <div className="p-2.5 flex-1 space-y-1.5 overflow-y-auto">
+                                <div className="p-2.5 flex-1 space-y-1.5 overflow-y-auto min-h-[80px]">
                                     {assignedItems.map(it => {
                                         const isCorrect = submitted && it.categoryId === cat.id
                                         const isIncorrect = submitted && it.categoryId !== cat.id
@@ -243,7 +243,7 @@ function CategoriseContent({
                                         )
                                     })}
                                     {assignedItems.length === 0 && (
-                                        <div className="h-full min-h-[60px] flex items-center justify-center p-3 border-2 border-dashed border-slate-300/60 rounded-xl">
+                                        <div className="h-full min-h-[50px] flex items-center justify-center p-3 border-2 border-dashed border-slate-300/60 rounded-xl">
                                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
                                                 Tap item above to assign here
                                             </span>

@@ -1,0 +1,378 @@
+{
+    "id": "lesson-ks3-disaster-committee-07",
+    "title": "Lesson 7: The Grand Debate & Town Charter",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Synthesize all persuasive and argumentative techniques across the curriculum to write the Wittling Rescue Declaration and save the town.",
+    "slides": [
+        {
+            "id": "slide-1787430007100",
+            "title": "Scene 1: Panic in Bunker 7",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007101",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏰 Scene 1: Panic in Bunker 7",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430007102",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Citizens hesitating in fear before the frozen iron chains of Bunker 7",
+                        "caption": "Inside Bunker 7, 50 citizens freeze in fear as storm water leaks around the sealed vault doors."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430007103",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Outside, the storm surge is battering the vault doors. Inside, 50 citizens are arguing and hesitating to touch the freezing iron chains connected to the rusted Grandfather Relief Valve. You step onto the valve platform to deliver the ultimate persuasive speech that will unite everyone!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430007104",
+                    "type": "callout",
+                    "props": {
+                        "title": "Capstone Goal",
+                        "content": "Synthesize Ethos, Pathos, Logos, Hooks, Concessions, Triads, and Peroration into the Wittling Rescue Declaration to rally 50 citizens and save the town!",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430007200",
+            "title": "Scene 2: The Persuasive Master Review",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007201",
+                    "type": "heading",
+                    "props": {
+                        "content": "🧠 Scene 2: The Persuasive Master Review",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcardQuiz-1787430007202",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq-1",
+                                "question": "Which pillar of persuasion establishes authority and official credibility?",
+                                "options": [
+                                    "Ethos",
+                                    "Pathos",
+                                    "Logos"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "fq-2",
+                                "question": "Which transitional word introduces a concessive counter-argument clause?",
+                                "options": [
+                                    "Although",
+                                    "Therefore",
+                                    "Because"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "fq-3",
+                                "question": "What is the primary rhetorical benefit of combining Anaphora and Rule of Three?",
+                                "options": [
+                                    "Creates a memorable, rhythmic speech momentum that moves listeners to action",
+                                    "Makes the speech as long as possible",
+                                    "Confuses the opposing speaker"
+                                ],
+                                "correctAnswer": 0
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430007300",
+            "title": "Scene 3: Deconstruct the Master Declaration",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007301",
+                    "type": "heading",
+                    "props": {
+                        "content": "🧩 Scene 3: Deconstruct the Master Declaration",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430007302",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Examine the draft sentences for the Wittling Rescue Declaration. Categorize each sentence into its core persuasive building block!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-1787430007303",
+                    "type": "categorise",
+                    "props": {
+                        "categories": [
+                            {
+                                "id": "cat-hook",
+                                "title": "Opening Hook"
+                            },
+                            {
+                                "id": "cat-concession",
+                                "title": "Concessive Rebuttal"
+                            },
+                            {
+                                "id": "cat-peroration",
+                                "title": "Peroration Call to Action"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "it-1",
+                                "text": "Citizens of Wittling, will we surrender to the storm or stand together?",
+                                "categoryId": "cat-hook"
+                            },
+                            {
+                                "id": "it-2",
+                                "text": "While the chains are freezing, delay guarantees total destruction.",
+                                "categoryId": "cat-concession"
+                            },
+                            {
+                                "id": "it-3",
+                                "text": "Grab the chains, pull together, and save our home right now!",
+                                "categoryId": "cat-peroration"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430007400",
+            "title": "Scene 4: Rhetorical Technique Matching",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007401",
+                    "type": "heading",
+                    "props": {
+                        "content": "🃏 Scene 4: Rhetorical Technique Matching",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "memoryGrid-1787430007402",
+                    "type": "memoryGrid",
+                    "props": {
+                        "pairs": [
+                            {
+                                "id": "mg-1",
+                                "card1": "Anaphora",
+                                "card2": "Repeating opening phrases for momentum"
+                            },
+                            {
+                                "id": "mg-2",
+                                "card1": "Rule of Three",
+                                "card2": "Grouping three rhythmic words or clauses"
+                            },
+                            {
+                                "id": "mg-3",
+                                "card1": "Concession",
+                                "card2": "Acknowledging opposing views before rebutting"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430007500",
+            "title": "Scene 5: Write the Wittling Rescue Declaration",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007501",
+                    "type": "heading",
+                    "props": {
+                        "content": "📜 Scene 5: Write the Wittling Rescue Declaration",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430007502",
+                    "type": "callout",
+                    "props": {
+                        "title": "Master Declaration Rubric",
+                        "content": "Sentence 1 (Hook): Rhetorical Question addressing citizens.\nSentence 2 (Logos/Ethos): Fact establishing urgency ('Spindle's data proves...').\nSentence 3 (Concession): 'While the chains are cold...'\nSentence 4 (Triad): Rule of Three ('We need strength, courage, and unity!').\nSentence 5 (Peroration): High-rhythm command to heave the chains together!",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430007503",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Wittling Rescue Declaration Submission",
+                        "question": "Draft your 5-sentence capstone address. Sentence 1: Hook question. Sentence 2: Logos data. Sentence 3: Concession. Sentence 4: Triad. Sentence 5: Peroration command.",
+                        "placeholder": "Citizens of Wittling, will we let the ocean destroy everything we love? Professor Spindle's sensors prove the seawall has collapsed and relief water must be drained now. While the iron chains are freezing, our shared courage is stronger than cold metal. We need strength, we need courage, and we need unity right now. Grab the chains, pull together, and open the relief valve!",
+                        "maxLength": 450,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "Citizens",
+                            "Spindle",
+                            "seawall",
+                            "While",
+                            "chains",
+                            "strength",
+                            "courage",
+                            "unity",
+                            "Grab",
+                            "valve"
+                        ],
+                        "points": 25,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430007600",
+            "title": "Scene 6: The Great Relief!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007601",
+                    "type": "heading",
+                    "props": {
+                        "content": "⛵ Scene 6: The Great Relief!",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430007602",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Inspired by your speech, Captain Bluster, Engineer Vane, Guard Vance, Gerald Nibbs, and all 50 citizens rush forward! Together, 100 hands grab the freezing iron chains. With a thunderous metallic groan, the rusted Grandfather Relief Valve spins open, draining the storm surge safely into the lower reservoir!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430007603",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "50 citizens and committee members pulling iron chains together as the brass Grandfather Relief Valve spins open and floodwaters drain",
+                        "caption": "Captain Bluster, Engineer Vane, Guard Vance, Gerald Nibbs, and 50 citizens heave the iron chains together, opening the Grandfather Relief Valve and saving Wittling-on-Sea!"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430007700",
+            "title": "Scene 7: Graduation & Silver Clipboard Award",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430007701",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏆 Scene 7: Graduation & Silver Clipboard Award",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430007702",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "As the storm clears and the sun breaks through over Wittling-on-Sea, Captain Bluster steps forward on dry ground and presents you with the official Wittling Silver Clipboard!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430007703",
+                    "type": "callout",
+                    "props": {
+                        "title": "🏆 Master Officer Graduation & Silver Clipboard Award",
+                        "content": "Congratulations, Chief Communications Officer! You saved Wittling-on-Sea using the ultimate power of structured persuasive writing.\n\nFinal Officer Challenge: Safe on dry ground, Captain Bluster hands you the Silver Clipboard: 'You saved our town with your words. Now... how are you going to persuade Mayor Flump to pay for the new seawall?'",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

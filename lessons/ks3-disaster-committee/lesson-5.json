@@ -1,0 +1,403 @@
+{
+    "id": "lesson-ks3-disaster-committee-05",
+    "title": "Lesson 5: Crafting the Persuasive Speech",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Master 5-part classical speech structure and high-urgency modal verbs to convince Captain Bluster to override Mayor Flump and authorize the town evacuation.",
+    "slides": [
+        {
+            "id": "slide-1787430005100",
+            "title": "Scene 1: Call from Tenerife",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430005101",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏝️ Scene 1: Call from Tenerife",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430005102",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Mayor Flump waving dismissively from a video screen while sunbathing in Tenerife",
+                        "caption": "Mayor Flump video-calling from his sunlounger in Tenerife, dismissing the Category 3 storm as 'seaside drizzle'."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430005103",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Mayor Flump sips a tropical drink on the screen: 'Do not panic the tourists! Cancel the alert and go home!' Captain Bluster hesitates, afraid to disobey the Mayor. You must step forward with a formal persuasive speech to prove the committee must act immediately!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430005104",
+                    "type": "callout",
+                    "props": {
+                        "title": "Officer's Mission",
+                        "content": "Write a 5-part persuasive speech that overrides Mayor Flump's negligence and convinces Captain Bluster to sound the town evacuation siren!",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430005200",
+            "title": "Scene 2: The 5-Part Speech Framework",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430005201",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏛️ Scene 2: The 5-Part Speech Framework",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430005202",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Professor Spindle hands you the Officer's Speech Blueprint: 'Classical speeches follow 5 precise sections to move an audience from attention to immediate action!'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "timeline-1787430005203",
+                    "type": "timeline",
+                    "props": {
+                        "events": [
+                            {
+                                "id": "ev-1",
+                                "title": "1. Exordium (Hook)",
+                                "description": "Grab instant attention with a shocking fact or question.",
+                                "date": "Opening"
+                            },
+                            {
+                                "id": "ev-2",
+                                "title": "2. Narration (Background)",
+                                "description": "Explain the facts of the storm and sea wall erosion.",
+                                "date": "Context"
+                            },
+                            {
+                                "id": "ev-3",
+                                "title": "3. Argument (Core Proof)",
+                                "description": "Deploy Ethos and Logos evidence to prove danger.",
+                                "date": "Evidence"
+                            },
+                            {
+                                "id": "ev-4",
+                                "title": "4. Refutation (Rebuttal)",
+                                "description": "Dismantle Mayor Flump's claims of 'seaside drizzle'.",
+                                "date": "Counter"
+                            },
+                            {
+                                "id": "ev-5",
+                                "title": "5. Peroration (Climax)",
+                                "description": "Deliver a high-rhythm call to action using Rule of Three.",
+                                "date": "Closing"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430005300",
+            "title": "Scene 3: Power Verbs & Discourse Markers",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430005301",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ Scene 3: Power Verbs & Discourse Markers",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1787430005302",
+                    "type": "quiz",
+                    "props": {
+                        "title": "Selecting High-Urgency Modal Verbs",
+                        "questions": [
+                            {
+                                "id": "q-1",
+                                "question": "Which modal verb creates the strongest sense of legal and moral obligation in a speech?",
+                                "explanation": "'Must' expresses an imperative, non-negotiable obligation, whereas 'might' or 'should' sound optional.",
+                                "options": [
+                                    {
+                                        "text": "We MUST authorize the evacuation immediately.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "text": "We might consider looking at the evacuation plan.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "text": "We could perhaps suggest people move uphill.",
+                                        "isCorrect": false
+                                    }
+                                ]
+                            },
+                            {
+                                "id": "q-2",
+                                "question": "Which discourse marker introduces a decisive logical conclusion?",
+                                "explanation": "'Therefore' logically connects evidence to an undeniable conclusion.",
+                                "options": [
+                                    {
+                                        "text": "Therefore, delay is no longer an option.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "text": "Anyway, it might rain later.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "text": "By the way, the biscuits are nice.",
+                                        "isCorrect": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430005400",
+            "title": "Scene 4: Speech Rehearsal Workshop",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430005401",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎙️ Scene 4: Speech Rehearsal Workshop",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430005402",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Captain Bluster watches as you test draft speech excerpts. Evaluate which sentences contain strong discourse markers and modal verbs.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-1787430005403",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "msq-1",
+                                "question": "Select the TWO sentences that use modal verbs of urgency and formal discourse markers effectively:",
+                                "explanation": "Options 1 and 3 use high-urgency modal verbs ('must', 'shall') combined with formal discourse markers ('Furthermore', 'Consequently') to establish authority.",
+                                "options": [
+                                    {
+                                        "id": "opt-1",
+                                        "text": "Furthermore, we must evacuate the harbour before the 12:00 PM tide.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-2",
+                                        "text": "I guess we could check if anyone wants to leave.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-3",
+                                        "text": "Consequently, we shall override the Mayor to protect human life.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-4",
+                                        "text": "Maybe the Mayor knows best about the weather in Tenerife.",
+                                        "isCorrect": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430005500",
+            "title": "Scene 5: Deliver the Evacuation Speech",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430005501",
+                    "type": "heading",
+                    "props": {
+                        "content": "📣 Scene 5: Deliver the Evacuation Speech",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430005502",
+                    "type": "callout",
+                    "props": {
+                        "title": "Speech Rubric",
+                        "content": "Sentence 1 (Hook): Rhetorical Question addressing the committee.\nSentence 2 (Argument): Use 'must' or 'shall' with Spindle's data.\nSentence 3 (Refutation): Rebut Mayor Flump using 'Although...'.\nSentence 4 (Peroration): Call to action ordering evacuation to Bunker 7!",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430005503",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Evacuation Speech Submission",
+                        "question": "Draft your 4-sentence speech to Captain Bluster. Sentence 1: Hook addressing committee. Sentence 2: Modal verb 'must' with data. Sentence 3: Rebut Mayor Flump. Sentence 4: Call to action.",
+                        "placeholder": "Captain Bluster, can we truly stay silent while sea levels rise 1.2 metres? Professor Spindle's data proves we must evacuate the low-lying harbour immediately. Although Mayor Flump dismisses this storm from Tenerife, leadership requires action over comfort. Sound the sirens now and direct all citizens to Bunker 7!",
+                        "maxLength": 400,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "Captain",
+                            "Bluster",
+                            "must",
+                            "shall",
+                            "evacuate",
+                            "Spindle",
+                            "Although",
+                            "Mayor",
+                            "sirens",
+                            "Bunker"
+                        ],
+                        "points": 20,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430005600",
+            "title": "Scene 6: The North Pier Breach",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430005601",
+                    "type": "heading",
+                    "props": {
+                        "content": "🌊 Scene 6: The North Pier Breach",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430005602",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Captain Bluster slams her wooden gavel onto the table: 'The Mayor is wrong! Officer, sound the evacuation sirens!' Loud sirens echo across Wittling-on-Sea!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430005603",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Storm surge breaching North Pier wall and flooding High Street with seawater",
+                        "caption": "Seawater breaches the North Pier wall, flooding High Street and cutting off the main bridge to Bunker 7."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430005604",
+                    "type": "callout",
+                    "props": {
+                        "title": "🚨 Emergency Reversal!",
+                        "content": "Just as the sirens blare, Professor Spindle checks her monitors: 'The North Pier mortar has dissolved! Seawater is flooding High Street and cutting off the main bridge! We need an immediate live radio broadcast to redirect citizens to the higher ridge path!'",
+                        "variant": "important"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430005605",
+                    "type": "poll",
+                    "props": {
+                        "question": "What tone should the live emergency radio broadcast use?",
+                        "options": [
+                            {
+                                "id": "opt-p1",
+                                "text": "Calm, clear, and action-oriented using short imperatives"
+                            },
+                            {
+                                "id": "opt-p2",
+                                "text": "Loud, panicked, and shouting about tidal waves"
+                            },
+                            {
+                                "id": "opt-p3",
+                                "text": "Formal, academic, and reading 40-page report statistics"
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}

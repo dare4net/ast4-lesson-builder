@@ -1,0 +1,539 @@
+{
+    "id": "lesson-1787430000001",
+    "title": "Lesson 1: The Biscuit Tin Dilemma",
+    "description": "Step into Wittling Town Hall during a Category 3 coastal storm. Learn Aristotle's Persuasive Triad (Ethos, Pathos, Logos) to convince Captain Bluster to declare a Yellow Alert.",
+    "author": "Instructor Studio",
+    "level": "KS3 (Year 7-9)",
+    "duration": 30,
+    "slides": [
+        {
+            "id": "slide-1787430001101",
+            "title": "Scene 1: Emergency Committee Assembly",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430001102",
+                    "type": "heading",
+                    "props": {
+                        "content": "🌧️ Scene 1: Emergency Committee Assembly",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430001103",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A Category 3 gale is battering Wittling-on-Sea. Windows rattle, rain pours through ceiling cracks, and sea level gauges are rising fast. But inside Room 4B, the Town Emergency Committee has spent 3 hours debating font sizes on tea menus! You have just arrived as the new Junior Persuasion Officer. Your mission: make this committee act before the sea wall breaches!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-1787430001104",
+                    "type": "hotspot",
+                    "props": {
+                        "title": "Room 4B Committee Visual Map",
+                        "image": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1200&q=80",
+                        "behavior": "discovery",
+                        "hotspots": [
+                            {
+                                "id": "hs-c1",
+                                "x": 0.30,
+                                "y": 0.40,
+                                "title": "Captain Milly Bluster",
+                                "content": "Committee Chair in charge of emergency operations at Wittling Town Hall. A retired coastguard captain obsessed with formal meeting protocol."
+                            },
+                            {
+                                "id": "hs-c2",
+                                "x": 0.60,
+                                "y": 0.50,
+                                "title": "Gerald Nibbs",
+                                "content": "Self-appointed disaster expert and secretive council member who insists the Category 3 storm is just a mild drizzle."
+                            },
+                            {
+                                "id": "hs-c3",
+                                "x": 0.80,
+                                "y": 0.45,
+                                "title": "Professor Agatha Spindle",
+                                "content": "Town Archivist and weather data specialist who holds all the barometric flood evidence but struggles to explain it simply."
+                            }
+                        ],
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "accordion-1787430001105",
+                    "type": "accordion",
+                    "props": {
+                        "title": "Inspect Committee Character Stances & Dossiers",
+                        "items": [
+                            {
+                                "id": "acc-1",
+                                "title": "Captain Milly Bluster — Stance & Motivation",
+                                "content": "Role: Committee Chair. Personality: Pompous & procedural. Current Stance: Stalling evacuation notices to debate tea menu font sizes. 'Procedure must be followed!'"
+                            },
+                            {
+                                "id": "acc-2",
+                                "title": "Gerald Nibbs — Stance & Motivation",
+                                "content": "Role: Council Member. Personality: Secretive & evasive. Current Stance: Dismissive of danger, claiming his seaweed string predicts fine weather. 'No need for panic!'"
+                            },
+                            {
+                                "id": "acc-3",
+                                "title": "Professor Agatha Spindle — Stance & Motivation",
+                                "content": "Role: Data Specialist. Personality: Nervous & technical. Current Stance: Overwhelmed by isobaric pressure data that nobody else understands. '14.7 millibars gradient!'"
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430001105",
+                    "type": "poll",
+                    "props": {
+                        "question": "Who is currently causing the biggest delay in declaring an emergency?",
+                        "options": [
+                            {
+                                "id": "p1",
+                                "text": "Captain Bluster (obsession with tea procedure)"
+                            },
+                            {
+                                "id": "p2",
+                                "text": "Gerald Nibbs (fake seaweed barometer)"
+                            },
+                            {
+                                "id": "p3",
+                                "text": "Professor Spindle (confusing technical jargon)"
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430001200",
+            "title": "Scene 2: The Persuasive Triad (Ethos, Pathos, Logos)",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430001201",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Scene 2: The Persuasive Triad (Ethos, Pathos, Logos)",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430001202",
+                    "type": "callout",
+                    "props": {
+                        "title": "📘 Officer's Field Handbook: Aristotle's 3 Pillars",
+                        "content": "To persuade stubborn people, Aristotle proved you need 3 distinct pillars:\n1. ETHOS: Appeal to authority, reputation, and trust.\n2. PATHOS: Appeal to emotion, care, and human story.\n3. LOGOS: Appeal to logic, facts, and hard evidence.",
+                        "variant": "important"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430001203",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Agatha Spindle whispers to you: 'Captain Bluster respects authority (Ethos). Gerald Nibbs fears public outrage (Pathos). I have sea level measurements (Logos). If you combine all three pillars into one appeal, they cannot refuse!'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1787430001204",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Rhetoric Pillars to Committee Dialogue",
+                        "pairs": [
+                            {
+                                "id": "mp1",
+                                "left": "ETHOS (Authority & Trust)",
+                                "right": "'As certified Senior Coastguard Officer, I command your attention!'"
+                            },
+                            {
+                                "id": "mp2",
+                                "left": "PATHOS (Emotion & Care)",
+                                "right": "'Think of the frightened families waiting down at the flooded harbour!'"
+                            },
+                            {
+                                "id": "mp3",
+                                "left": "LOGOS (Logic & Hard Facts)",
+                                "right": "'Water gauges confirm the tide has risen 1.8 metres in 20 minutes.'"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-1787430001205",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "An argument built purely on emotional stories (Pathos) is called Logos.",
+                        "isTrue": false,
+                        "explanation": "False! Emotional appeals are Pathos. Logos relies strictly on logic, facts, and verifiable data.",
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430001300",
+            "title": "Scene 3: Analyzing Committee Arguments",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430001301",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔍 Scene 3: Analyzing Committee Arguments",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430001302",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You pull out the committee meeting transcript. Professor Agatha Spindle asks you to categorize past committee statements into Ethos, Pathos, or Logos so you can identify why their previous attempts failed.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-1787430001303",
+                    "type": "categorise",
+                    "props": {
+                        "title": "Sort Meeting Transcript Statements",
+                        "categories": [
+                            {
+                                "id": "cat-ethos",
+                                "title": "ETHOS (Authority)"
+                            },
+                            {
+                                "id": "cat-pathos",
+                                "title": "PATHOS (Emotion)"
+                            },
+                            {
+                                "id": "cat-logos",
+                                "title": "LOGOS (Facts)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "it-1",
+                                "text": "'As head archivist, I have reviewed 50 years of flood logs.'",
+                                "categoryId": "cat-ethos"
+                            },
+                            {
+                                "id": "it-2",
+                                "text": "'Imagine the panic of shopkeepers losing their life savings!'",
+                                "categoryId": "cat-pathos"
+                            },
+                            {
+                                "id": "it-3",
+                                "text": "'Barometric pressure dropped by 30 millibars in one hour.'",
+                                "categoryId": "cat-logos"
+                            },
+                            {
+                                "id": "it-4",
+                                "text": "'Captain Bluster has 30 years of maritime command experience.'",
+                                "categoryId": "cat-ethos"
+                            },
+                            {
+                                "id": "it-5",
+                                "text": "'The terrified children at East Pier need our help immediately!'",
+                                "categoryId": "cat-pathos"
+                            },
+                            {
+                                "id": "it-6",
+                                "text": "'Satellite radar shows storm surge velocity reaching 45 knots.'",
+                                "categoryId": "cat-logos"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "quiz-1787430001304",
+                    "type": "quiz",
+                    "props": {
+                        "title": "Evaluate Flawed Speeches",
+                        "questions": [
+                            {
+                                "id": "q-1",
+                                "question": "Why did Gerald Nibbs' argument ('The sea looks fine to me!') fail completely?",
+                                "options": [
+                                    {
+                                        "text": "It relied on zero facts (Logos) and zero legitimate authority (Ethos)",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "text": "It contained too many scientific statistics",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "text": "It was delivered with too much emotional panic",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Gerald's argument failed because personal anecdotes with seaweed provide zero logical proof (Logos) or true expertise (Ethos)."
+                            }
+                        ],
+                        "points": 10,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430001400",
+            "title": "Scene 4: Crafting the Yellow Alert Memo",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430001401",
+                    "type": "heading",
+                    "props": {
+                        "content": "🗣️ Scene 4: Crafting the Yellow Alert Memo",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430001402",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Captain Bluster slams his tea cup down: 'If you want me to sign a Yellow Alert order, you must present an official memo combining authority, facts, and urgency!'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-1787430001403",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "title": "Assemble the Triad Persuasive Memo",
+                        "text": "As Junior Persuasion Officer, I formally report that sea level sensors confirm a {{blank}} metre storm surge. If we delay, vulnerable harbour families will face {{blank}} flooding. Therefore, the committee must declare an {{blank}} Yellow Alert.",
+                        "blanks": [
+                            {
+                                "answer": "1.8"
+                            },
+                            {
+                                "answer": "catastrophic"
+                            },
+                            {
+                                "answer": "immediate"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "bulletList-1787430001404",
+                    "type": "bulletList",
+                    "props": {
+                        "title": "Deconstruct Your Triad Sentences:",
+                        "items": [
+                            "Sentence 1 (Ethos & Logos): 'Junior Persuasion Officer' establishes Ethos; '1.8 metre surge' provides hard Logos evidence.",
+                            "Sentence 2 (Pathos): 'Vulnerable harbour families' and 'catastrophic flooding' trigger emotional empathy.",
+                            "Sentence 3 (Call to Action): 'Immediate Yellow Alert' provides clear decisive command."
+                        ],
+                        "showNumbers": false
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430001500",
+            "title": "Scene 5: Deliver Your Address to Captain Bluster",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430001501",
+                    "type": "heading",
+                    "props": {
+                        "content": "📜 Scene 5: Deliver Your Address to Captain Bluster",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430001502",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Captain Bluster turns to you. The room falls silent except for the howling wind. 'Alright, Officer! Stand up and convince this room right now why I should sign the Yellow Alert order!'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430001503",
+                    "type": "callout",
+                    "props": {
+                        "title": "🎯 Speech Requirements Checklist:",
+                        "content": "Sentence 1 (Ethos): State your authority or duty as Officer.\nSentence 2 (Logos): Include a specific fact about the 1.8m storm surge.\nSentence 3 (Pathos): Mention protecting the people of Wittling.",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430001504",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Deliver Your Persuasive Address",
+                        "question": "Write a 3-sentence speech persuading Captain Bluster to sign the Yellow Alert emergency order. Use Ethos in sentence 1, Logos in sentence 2, and Pathos in sentence 3.",
+                        "placeholder": "As Junior Persuasion Officer, it is my duty...",
+                        "maxLength": 600,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "Officer",
+                            "surge",
+                            "families",
+                            "Wittling",
+                            "Yellow Alert",
+                            "duty"
+                        ],
+                        "points": 25,
+                        "mode": "practice",
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430001600",
+            "title": "Scene 6: Yellow Alert Activated!",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430001601",
+                    "type": "heading",
+                    "props": {
+                        "content": "🚨 Scene 6: Yellow Alert Activated!",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430001602",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Captain Bluster stares at your speech, nods slowly, and slams the shortbread tin gavel down! 'By Jove! The Officer is right! Yellow Alert is declared!' The committee cheers and begins opening emergency lockers.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430001603",
+                    "type": "callout",
+                    "props": {
+                        "title": "⚠️ Unexplained Tremor Beneath Room 4B",
+                        "content": "As Captain Bluster agrees to put the committee on yellow alert, a sudden shudder rattles the windowpanes. But the sound didn't come from the ocean outside. It came from deep underground, right beneath the town hall floorboards... and it smelled faintly of warm yeast and butter.",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430001604",
+                    "type": "poll",
+                    "props": {
+                        "question": "What do you suspect is causing the shudder beneath the town hall floor?",
+                        "options": [
+                            {
+                                "id": "p1",
+                                "text": "An ancient underground yeast fault line"
+                            },
+                            {
+                                "id": "p2",
+                                "text": "Gerald Nibbs' secret subterranean bakery machine"
+                            },
+                            {
+                                "id": "p3",
+                                "text": "A collapsing storm drainage tunnel"
+                            }
+                        ],
+                        "points": 5,
+                        "state": "active"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ],
+    "settings": {
+        "duration": 30,
+        "level": "KS3 (Year 7-9)"
+    },
+    "createdAt": "2026-08-24T10:10:00.000Z",
+    "updatedAt": "2026-08-24T10:10:00.000Z"
+}

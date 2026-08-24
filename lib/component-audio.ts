@@ -149,7 +149,7 @@ export function collectIntroAudioItem(lesson: Lesson, lessonId: string): {
 } {
     const cleanTitle = lesson.title?.trim() || ""
     const cleanDesc = lesson.description?.trim() || ""
-    const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`
+    const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `${cleanDesc}` : ""}`
     const speechText = normalizeTextForSpeech(welcomeText)
     if (!speechText) return { item: null, isSkipped: false }
 

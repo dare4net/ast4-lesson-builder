@@ -1,0 +1,398 @@
+{
+    "id": "lesson-ks3-disaster-committee-03",
+    "title": "Lesson 3: Deconstructing Counter-Arguments & Conceding Points",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Learn to identify opponent counter-arguments, employ concessive transition structures ('While...', 'Although...'), and dismantle objections with irrefutable evidence.",
+    "slides": [
+        {
+            "id": "slide-1787430003100",
+            "title": "Scene 1: The Skeptic's Challenge",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430003101",
+                    "type": "heading",
+                    "props": {
+                        "content": "💥 Scene 1: The Skeptic's Challenge",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430003102",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Chief Engineer Barnaby Vane slamming blueprints onto the committee table",
+                        "caption": "Chief Engineer Barnaby Vane storms into the Emergency Assembly with sea wall blueprints."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-1787430003103",
+                    "type": "quote",
+                    "props": {
+                        "text": "This committee is creating public hysteria! Our 1880 granite sea wall has stood proud for 140 years. Spending 50,000 pounds on a Yellow Alert for a minor tidal splash is financial madness!",
+                        "author": "Chief Engineer Barnaby Vane"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "trueFalse-1787430003104",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "In persuasive debate, completely ignoring your opponent's objection is more effective than acknowledging and refuting it.",
+                        "isTrue": false,
+                        "explanation": "False! Completely ignoring a strong counter-argument makes you look defensive or uninformed. Great communicators acknowledge valid points first, then dismantle the main objection with hard facts!",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430003200",
+            "title": "Scene 2: Inspecting Vane's Faulty Blueprint",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430003201",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔍 Scene 2: Inspecting Vane's Faulty Blueprint",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "annotateImage-1787430003202",
+                    "type": "annotateImage",
+                    "props": {
+                        "image": "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80",
+                        "labels": [
+                            {
+                                "id": "lbl-1",
+                                "text": "Dissolved Mortar Base",
+                                "x": 0.25,
+                                "y": 0.65
+                            },
+                            {
+                                "id": "lbl-2",
+                                "text": "Surge Exceeds Wall +40cm",
+                                "x": 0.55,
+                                "y": 0.30
+                            },
+                            {
+                                "id": "lbl-3",
+                                "text": "Drainage Valve Rusted Shut",
+                                "x": 0.80,
+                                "y": 0.75
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "bulletList-1787430003203",
+                    "type": "bulletList",
+                    "props": {
+                        "title": "Technical Audit Contrasts:",
+                        "items": [
+                            "Vane's Claim: 'The wall is solid granite.' ↔ Fact: Missing mortar allows water to seep between blocks.",
+                            "Vane's Claim: 'The wall height is sufficient.' ↔ Fact: Predicted surge exceeds wall crest by 40cm.",
+                            "Vane's Claim: 'Drainage will handle overflow.' ↔ Fact: Relief valves have been rusted shut since 2018."
+                        ],
+                        "showNumbers": false
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430003300",
+            "title": "Scene 3: The Power of Concession",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430003301",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Scene 3: The Power of Concession",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430003302",
+                    "type": "callout",
+                    "props": {
+                        "title": "Officer's Handbook: Why Concede First?",
+                        "content": "Acknowledging a valid part of your opponent's concern (such as municipal budget limits) shows fairness and intelligence. Once the audience trusts your honesty, your counter-evidence hits twice as hard!",
+                        "variant": "important"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1787430003303",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Objections to Concessive Rebuttals",
+                        "pairs": [
+                            {
+                                "id": "p-1",
+                                "left": "Vane: 'Yellow Alert costs 50,000 pounds!'",
+                                "right": "Rebuttal: 'While municipal funds are limited, repairing flood damage will cost 2 million pounds.'"
+                            },
+                            {
+                                "id": "p-2",
+                                "left": "Vane: 'The wall hasn't failed in 140 years!'",
+                                "right": "Rebuttal: 'Although the wall has a proud history, today's 1.8m surge is unprecedented.'"
+                            },
+                            {
+                                "id": "p-3",
+                                "left": "Vane: 'Citizens might panic needlessly!'",
+                                "right": "Rebuttal: 'Granted, panic must be avoided, but clear emergency instructions create calm order.'"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430003400",
+            "title": "Scene 4: Shutting Down Vane's Argument",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430003401",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚔️ Scene 4: Shutting Down Vane's Argument",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430003402",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Engineer Vane steps to the lectern: 'You cannot prove that spending 50,000 pounds today saves anything!' You have 4 evidence statements prepared. You must select the 2 statements that combine a respectful concession with irrefutable proof.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-1787430003403",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "msq-1",
+                                "question": "Select the TWO strongest refutations combining a respectful concession with killer evidence against Engineer Vane:",
+                                "explanation": "Options 1 and 3 combine respectful concessions ('While...', 'Although...') with hard scientific data (sensors, rusted valves), disarming Vane without insulting him.",
+                                "options": [
+                                    {
+                                        "id": "msq-opt-1",
+                                        "text": "While 50,000 pounds is a significant investment, sensors confirm water is overtopping North Pier by 15cm.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "msq-opt-2",
+                                        "text": "Engineer Vane is completely wrong and knows nothing about modern coastal engineering.",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "msq-opt-3",
+                                        "text": "Although the 1880 granite wall was built well, rusted drainage valves currently prevent harbor water from receding.",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "msq-opt-4",
+                                        "text": "We should spend whatever money we want because safety is very important.",
+                                        "isCorrect": false
+                                    }
+                                ]
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "callout-1787430003404",
+                    "type": "callout",
+                    "props": {
+                        "title": "Vane's Speechless Pause",
+                        "content": "Engineer Vane opens his mouth to dispute the figures, but Professor Spindle holds up the salt-corrosion lab report. Vane's face turns pale. He has no answer to the evidence.",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430003500",
+            "title": "Scene 5: Draft Your Concessive Rebuttal",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430003501",
+                    "type": "heading",
+                    "props": {
+                        "content": "📜 Scene 5: Draft Your Concessive Rebuttal",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430003502",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Captain Bluster passes you the official committee minute book: 'Officer, record our formal rebuttal for the public record! Make sure it starts with a concession, pivots cleanly, and finishes with an undeniable fact.'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "wordScramble-1787430003503",
+                    "type": "wordScramble",
+                    "props": {
+                        "title": "Vocabulary Primer",
+                        "word": "CONCESSION",
+                        "hint": "The act of acknowledging a valid point from your opponent before delivering your counter-argument.",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "shortAnswer-1787430003504",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Official Rebuttal Entry",
+                        "question": "Draft a 2-sentence formal rebuttal to Engineer Vane. Begin Sentence 1 with a concessive transition ('While...', 'Although...', 'Granted...'). Use Sentence 2 to present hard evidence.",
+                        "placeholder": "While Engineer Vane rightly highlights municipal budget limits, emergency sensors confirm sea water level has breached the North Wall by 15cm...",
+                        "maxLength": 300,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "While",
+                            "Although",
+                            "Granted",
+                            "sensor",
+                            "surge",
+                            "water",
+                            "wall"
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430003600",
+            "title": "Scene 6: The Brass Key",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430003601",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔑 Scene 6: The Brass Key",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430003602",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The committee votes unanimously to declare a Yellow Alert! Engineer Vane furiously gathers his blueprints, his hands trembling with rage as Professor Spindle archives the decision.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430003603",
+                    "type": "callout",
+                    "props": {
+                        "title": "⚡ The Fallen Key",
+                        "content": "Engineer Vane angrily smashes his blueprints shut, but as he turns to leave, a heavy brass key drops from his coat pocket onto the council floor—engraved with 'BUNKER 7: DOUGH-DOME ARCHIVE'. Before anyone can react, Vane snatches it up and locks himself inside the East Corridor!",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430003604",
+                    "type": "poll",
+                    "props": {
+                        "question": "What do you suspect is locked behind Bunker 7?",
+                        "options": [
+                            {
+                                "id": "opt-p1",
+                                "text": "Vane knew about the sea wall risk for months"
+                            },
+                            {
+                                "id": "opt-p2",
+                                "text": "Gerald Nibbs' secret stash of emergency pastries"
+                            },
+                            {
+                                "id": "opt-p3",
+                                "text": "The control valve for sea wall drainage"
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}

@@ -95,7 +95,7 @@ export function HotspotEditor({ image, hotspots, onChange, behavior: rawBehavior
         <div className="relative border border-slate-800 rounded-[2rem] overflow-hidden bg-slate-950/40 shadow-2xl group/stage">
           <img
             ref={imageRef}
-            src={image}
+            src={image || undefined}
             alt="Hotspot base"
             className={cn(
               "w-full h-auto transition-all duration-700",

@@ -1,0 +1,467 @@
+{
+    "id": "lesson-ks3-disaster-committee-08",
+    "title": "Lesson 8: Final Assessment — Persuasive & Argumentative Writing",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Comprehensive, live-mode academic assessment evaluating student mastery across all persuasive writing modules (Lessons 1–7).",
+    "slides": [
+        {
+            "id": "slide-1787430008100",
+            "title": "Module 1: Rhetorical Foundations",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008101",
+                    "type": "heading",
+                    "props": {
+                        "content": "📋 Module 1: Rhetorical Foundations (Ethos, Pathos, Logos)",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430008102",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Part 1 evaluates your understanding of the three primary modes of persuasion. Select the single best answer for each question under live exam conditions.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quiz-1787430008103",
+                    "type": "quiz",
+                    "props": {
+                        "timeLimit": 40,
+                        "questions": [
+                            {
+                                "id": "q-1",
+                                "question": "Which persuasive pillar relies primarily on verified empirical data, official statistics, and logical evidence?",
+                                "options": [
+                                    {
+                                        "id": "opt-1a",
+                                        "text": "Logos",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-1b",
+                                        "text": "Ethos",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-1c",
+                                        "text": "Pathos",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Logos appeals directly to logic, empirical data, and factual evidence."
+                            },
+                            {
+                                "id": "q-2",
+                                "question": "A speaker states: 'As Chief Security Guard with 20 years of vault maintenance, I guarantee this lock will hold.' Which appeal is being used?",
+                                "options": [
+                                    {
+                                        "id": "opt-2a",
+                                        "text": "Ethos",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-2b",
+                                        "text": "Pathos",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-2c",
+                                        "text": "Logos",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Ethos establishes authority, official status, and professional credibility."
+                            },
+                            {
+                                "id": "q-3",
+                                "question": "What is the primary function of Pathos in persuasive speechwriting?",
+                                "options": [
+                                    {
+                                        "id": "opt-3a",
+                                        "text": "To evoke emotional connection, shared values, and moral urgency in the audience",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-3b",
+                                        "text": "To list chemical formulas and geological timelines",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-3c",
+                                        "text": "To state legal credentials and rank",
+                                        "isCorrect": false
+                                    }
+                                ],
+                                "explanation": "Pathos targets emotions, empathy, and audience values to inspire active commitment."
+                            }
+                        ],
+                        "points": 30,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430008200",
+            "title": "Module 2: Opening Hooks & AFOREST Devices",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008201",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎣 Module 2: Opening Hooks & AFOREST Devices",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430008202",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Part 2 tests your ability to classify opening hook types and identify specific AFOREST rhetorical structures.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-1787430008203",
+                    "type": "categorise",
+                    "props": {
+                        "timeLimit": 47,
+                        "categories": [
+                            {
+                                "id": "cat-qhook",
+                                "title": "Question Hook"
+                            },
+                            {
+                                "id": "cat-stathook",
+                                "title": "Statistic Hook"
+                            },
+                            {
+                                "id": "cat-anaphora",
+                                "title": "Anaphora"
+                            },
+                            {
+                                "id": "cat-triad",
+                                "title": "Rule of Three (Triad)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "it-1",
+                                "text": "Will we sit in silence while seawater swallows High Street?",
+                                "categoryId": "cat-qhook"
+                            },
+                            {
+                                "id": "it-2",
+                                "text": "Over 78% of Wittling sea wall mortar has degraded.",
+                                "categoryId": "cat-stathook"
+                            },
+                            {
+                                "id": "it-3",
+                                "text": "We will fight for our homes; we will fight for our families; we will fight for our future.",
+                                "categoryId": "cat-anaphora"
+                            },
+                            {
+                                "id": "it-4",
+                                "text": "We must act with speed, precision, and absolute unity.",
+                                "categoryId": "cat-triad"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430008300",
+            "title": "Module 3: Fact vs. Opinion & Concessive Rebuttals",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008301",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Module 3: Fact vs. Opinion & Concessive Rebuttals",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1787430008302",
+                    "type": "matchingPairs",
+                    "props": {
+                        "timeLimit": 40,
+                        "pairs": [
+                            {
+                                "id": "p-1",
+                                "left": "While the vault chains are freezing cold,",
+                                "right": "delay guarantees structural failure within twenty minutes."
+                            },
+                            {
+                                "id": "p-2",
+                                "left": "Although Mayor Flump claims the storm is minor,",
+                                "right": "oceanographic gauge readings confirm a Category 4 surge."
+                            },
+                            {
+                                "id": "p-3",
+                                "left": "Despite the high cost of emergency repairs,",
+                                "right": "inaction will destroy three hundred coastal homes."
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                },
+                {
+                    "id": "trueFalse-1787430008303",
+                    "type": "trueFalse",
+                    "props": {
+                        "timeLimit": 20,
+                        "statement": "An objective fact can be independently verified using scientific measurement, whereas an opinion reflects personal judgment or subjective belief.",
+                        "isTrue": true,
+                        "explanation": "True! Facts can be audited against empirical evidence, while opinions express subjective feelings.",
+                        "points": 15,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430008400",
+            "title": "Module 4: Speech Structure & Modal Verbs",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008401",
+                    "type": "heading",
+                    "props": {
+                        "content": "🏛️ Module 4: Speech Structure & Modal Verbs",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-1787430008402",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "timeLimit": 60,
+                        "text": "A classical speech opens with the {{blank}} to gain attention. In the main body, speakers {{blank}} use high-urgency modal verbs to command action. The final section, known as the {{blank}}, delivers a powerful call to action.",
+                        "blanks": [
+                            {
+                                "id": "b-1",
+                                "answer": "Exordium"
+                            },
+                            {
+                                "id": "b-2",
+                                "answer": "must"
+                            },
+                            {
+                                "id": "b-3",
+                                "answer": "Peroration"
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430008500",
+            "title": "Module 5: Audience Adaptation & Media Formats",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008501",
+                    "type": "heading",
+                    "props": {
+                        "content": "📻 Module 5: Audience Adaptation & Media Formats",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "multiSelectQuiz-1787430008502",
+                    "type": "multiSelectQuiz",
+                    "props": {
+                        "timeLimit": 44,
+                        "questions": [
+                            {
+                                "id": "msq-1",
+                                "question": "Which of the following are essential rules for writing a live emergency radio broadcast? (Select all that apply)",
+                                "options": [
+                                    {
+                                        "id": "opt-ms1",
+                                        "text": "Use direct imperative action verbs",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-ms2",
+                                        "text": "Keep sentence length concise to avoid panic",
+                                        "isCorrect": true
+                                    },
+                                    {
+                                        "id": "opt-ms3",
+                                        "text": "Include 500 words of background historical trivia",
+                                        "isCorrect": false
+                                    },
+                                    {
+                                        "id": "opt-ms4",
+                                        "text": "Provide clear, unambiguous directional instructions",
+                                        "isCorrect": true
+                                    }
+                                ],
+                                "explanation": "Live radio broadcasts require concise, imperative, clear direction to guide listeners efficiently."
+                            }
+                        ],
+                        "points": 20,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430008600",
+            "title": "Module 6: Live Formal Speech Writing",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008601",
+                    "type": "heading",
+                    "props": {
+                        "content": "✍️ Module 6: Live Formal Speech Writing (Tutor Marked)",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430008602",
+                    "type": "callout",
+                    "props": {
+                        "title": "Exam Conditions Writing Rubric",
+                        "content": "Compose a 5-sentence formal persuasive speech addressing a public committee.\n• Sentence 1 (Exordium Hook): Opening rhetorical question.\n• Sentence 2 (Logos/Ethos): Factual evidence establishing urgency.\n• Sentence 3 (Concession): 'Although/While...' concessive rebuttal.\n• Sentence 4 (Triad): Rule of Three clause.\n• Sentence 5 (Peroration): Imperative call to action.",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430008603",
+                    "type": "shortAnswer",
+                    "props": {
+                        "timeLimit": 120,
+                        "title": "Final Persuasive Speech Submission",
+                        "question": "Write your complete 5-sentence formal persuasive speech under exam conditions. Ensure exact compliance with the 5-part rubric.",
+                        "placeholder": "Members of the committee, will we permit complacency to destroy our town's safety? Sensor logs prove that sea wall erosion has exceeded safety margins by forty percent. While emergency repairs require immediate investment, failure to act guarantees total devastation. We must demand action, mandate funding, and protect our citizens today. Vote yes on Emergency Bill 7 and secure our coast immediately.",
+                        "maxLength": 450,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "committee",
+                            "prove",
+                            "erosion",
+                            "While",
+                            "repair",
+                            "must",
+                            "demand",
+                            "mandate",
+                            "protect",
+                            "Vote"
+                        ],
+                        "points": 30,
+                        "mode": "live"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "live"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430008700",
+            "title": "Module 7: Assessment Submission",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430008701",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎓 Module 7: Final Assessment Submission",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430008702",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "You have completed all 6 assessment modules of the KS3 Persuasive & Argumentative Writing Curriculum! All live responses have been locked and submitted for formal tutor evaluation and module certification.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430008703",
+                    "type": "callout",
+                    "props": {
+                        "title": "✅ Live Assessment Complete",
+                        "content": "Assessment Status: SUBMITTED (Live Mode)\nYour auto-scored components and tutor-marked speech draft have been locked and transmitted to the instructor dashboard.",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        }
+    ]
+}

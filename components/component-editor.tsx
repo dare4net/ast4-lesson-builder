@@ -194,6 +194,8 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
             onImageChange={(val) => handleChange("image", val)}
             labels={props.labels || []}
             onLabelsChange={(labels) => handleChange("labels", labels)}
+            lessonId={lessonId}
+            componentId={component.id}
           />
         ) : component.type === "wordCloud" ? (
           <WordCloudEditor

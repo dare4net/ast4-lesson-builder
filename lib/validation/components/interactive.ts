@@ -89,6 +89,12 @@ export const dragDropValidator: ComponentValidator = {
                 addWarning(res, 'FEW_ITEMS', 'props.items', 'Drag and drop works best with 3 or more items to arrange.');
             }
 
+            items.forEach((it: any, iIdx: number) => {
+                if (!it.text || typeof it.text !== 'string' || it.text.trim() === '') {
+                    addError(res, 'EMPTY_DRAG_DROP_ITEM_TEXT', `props.items[${iIdx}].text`, `Drag drop item ${iIdx + 1} must have a non-empty 'text' property.`);
+                }
+            });
+
             const indices = items.map((it: any) => it.correctIndex).sort((a: number, b: number) => a - b);
             const isSequential = indices.every((val, idx) => val === idx);
 
@@ -364,6 +370,20 @@ export const annotateImageValidator: ComponentValidator = {
         }
         if (!Array.isArray(labels) || labels.length === 0) {
             addError(res, 'NO_ANNOTATE_LABELS', 'props.labels', 'Annotate image requires at least 1 label tag target.');
+        } else {
+            labels.forEach((lbl: any, idx: number) => {
+                const textVal = lbl.text || lbl.content || '';
+                if (!textVal || typeof textVal !== 'string' || textVal.trim() === '') {
+                    addError(res, 'EMPTY_ANNOTATE_LABEL', `props.labels[${idx}].text`, `Annotate label ${idx + 1} text cannot be empty.`);
+                } else if (textVal.length > 45) {
+                    addWarning(
+                        res,
+                        'LONG_ANNOTATE_LABEL',
+                        `props.labels[${idx}].text`,
+                        `Annotate image label ${idx + 1} is over 45 characters (${textVal.length} chars). Annotation tags must be concise (1-5 words).`
+                    );
+                }
+            });
         }
         return res;
     }
@@ -379,9 +399,27 @@ export const categoriseValidator: ComponentValidator = {
         const { categories, items } = component.props || {};
         if (!Array.isArray(categories) || categories.length < 2) {
             addError(res, 'INSUFFICIENT_CATEGORIES', 'props.categories', 'Categorise component requires at least 2 categories.');
+        } else {
+            categories.forEach((cat: any, cIdx: number) => {
+                if (!cat.title || typeof cat.title !== 'string' || cat.title.trim() === '') {
+                    addError(res, 'EMPTY_CATEGORY_TITLE', `props.categories[${cIdx}].title`, `Category ${cIdx + 1} title cannot be empty.`);
+                }
+            });
         }
+
         if (!Array.isArray(items) || items.length < 2) {
             addError(res, 'INSUFFICIENT_ITEMS', 'props.items', 'Categorise component requires at least 2 items to sort.');
+        } else {
+            const validCatIds = new Set((categories || []).map((c: any) => c.id));
+            items.forEach((it: any, iIdx: number) => {
+                const textVal = it.text || it.content; // support text (preferred) or warn
+                if (!it.text || typeof it.text !== 'string' || it.text.trim() === '') {
+                    addError(res, 'EMPTY_CATEGORISE_ITEM_TEXT', `props.items[${iIdx}].text`, `Categorise item ${iIdx + 1} must have a non-empty 'text' property.`);
+                }
+                if (!it.categoryId || !validCatIds.has(it.categoryId)) {
+                    addError(res, 'INVALID_ITEM_CATEGORY_ID', `props.items[${iIdx}].categoryId`, `Categorise item ${iIdx + 1} categoryId must match a valid category id.`);
+                }
+            });
         }
         return res;
     }

@@ -1,0 +1,414 @@
+{
+    "id": "lesson-ks3-disaster-committee-04",
+    "title": "Lesson 4: The Infiltration of Bunker 7",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Master Rhetorical Triads (Rule of Three) and Anaphora to deliver a high-stakes persuasive speech that unlocks Bunker 7.",
+    "slides": [
+        {
+            "id": "slide-1787430004100",
+            "title": "Scene 1: Outside Bunker 7",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430004101",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔒 Scene 1: Outside Bunker 7",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430004102",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Guard Martha Vance standing outside reinforced iron vault door of Bunker 7",
+                        "caption": "Chief Security Guard Martha Vance blocks the reinforced entrance of Bunker 7."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "hotspot-1787430004103",
+                    "type": "hotspot",
+                    "props": {
+                        "image": "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80",
+                        "behavior": "explore",
+                        "hotspots": [
+                            {
+                                "id": "hs-1",
+                                "label": "Iron Vault Door",
+                                "x": 0.30,
+                                "y": 0.40,
+                                "content": "Reinforced 4-inch steel door. Cannot be forced open without master security authorization."
+                            },
+                            {
+                                "id": "hs-2",
+                                "label": "Guard Martha Vance",
+                                "x": 0.60,
+                                "y": 0.50,
+                                "content": "Duty Officer Martha Vance. Bound strictly by municipal protocol code 4B."
+                            },
+                            {
+                                "id": "hs-3",
+                                "label": "Pressure Gauge 3",
+                                "x": 0.85,
+                                "y": 0.30,
+                                "content": "Hydraulic pressure rising fast! Only 15 minutes before sea wall backup fails completely."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430004104",
+                    "type": "callout",
+                    "props": {
+                        "title": "Guard Vance's Refusal",
+                        "content": "No one enters Bunker 7 without written authorization from Mayor Flump himself! Protocol is protocol, Officer!",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430004200",
+            "title": "Scene 2: Rhetorical Power Tools",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430004201",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ Scene 2: Rhetorical Power Tools",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430004202",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Professor Spindle whispers: 'To persuade someone bound by duty, simple logic isn't enough. You need rhythm, momentum, and emotion! We use two master tools: Rule of Three (triads of powerful words) and Anaphora (repeating opening phrases).'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcardQuiz-1787430004203",
+                    "type": "flashcardQuiz",
+                    "props": {
+                        "questions": [
+                            {
+                                "id": "fq-1",
+                                "question": "'We need courage, we need speed, and we need unity!' Which rhetorical devices are used here?",
+                                "options": [
+                                    "Anaphora & Rule of Three",
+                                    "Rhetorical Question",
+                                    "Passive Voice"
+                                ],
+                                "correctAnswer": 0
+                            },
+                            {
+                                "id": "fq-2",
+                                "question": "Why is the Rule of Three so effective in persuasive speeches?",
+                                "options": [
+                                    "Creates a memorable, rhythmic pattern that feels complete",
+                                    "Makes sentences longer and harder to read",
+                                    "Confuses the listener"
+                                ],
+                                "correctAnswer": 0
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430004300",
+            "title": "Scene 3: Deconstructing the Vault Speech",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430004301",
+                    "type": "heading",
+                    "props": {
+                        "content": "📜 Scene 3: Deconstructing the Vault Speech",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-1787430004302",
+                    "type": "quote",
+                    "props": {
+                        "text": "Guard Vance, look at the tide. We stand together, we act together, or we drown together! Rules were made to protect life—not to destroy it!",
+                        "author": "Speech Model"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "fillInTheBlank-1787430004303",
+                    "type": "fillInTheBlank",
+                    "props": {
+                        "text": "Guard Vance, this town requires {{blank}}, it requires {{blank}}, and it requires action right now!",
+                        "blanks": [
+                            {
+                                "id": "b-1",
+                                "answer": "courage"
+                            },
+                            {
+                                "id": "b-2",
+                                "answer": "leadership"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430004400",
+            "title": "Scene 4: Unlocking Guard Vance's Resolve",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430004401",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚖️ Scene 4: Unlocking Guard Vance's Resolve",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430004402",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Guard Vance hesitates, her hand hovering over the keycard scanner: 'Give me one valid reason that justifies breaking protocol!' You must combine Authority (Ethos), Emotion (Pathos), and Logic (Logos) to overcome her hesitation.",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-1787430004403",
+                    "type": "categorise",
+                    "props": {
+                        "categories": [
+                            {
+                                "id": "cat-ethos",
+                                "title": "Ethos (Authority & Duty)"
+                            },
+                            {
+                                "id": "cat-pathos",
+                                "title": "Pathos (Emotion & Protection)"
+                            },
+                            {
+                                "id": "cat-logos",
+                                "title": "Logos (Logic & Facts)"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "it-1",
+                                "text": "As Committee Officers, we take full legal responsibility.",
+                                "categoryId": "cat-ethos"
+                            },
+                            {
+                                "id": "it-2",
+                                "text": "Think of the sleeping families who will lose their homes!",
+                                "categoryId": "cat-pathos"
+                            },
+                            {
+                                "id": "it-3",
+                                "text": "Gauge 3 reads 95%—the wall will breach in 12 minutes.",
+                                "categoryId": "cat-logos"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-1787430004404",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "Anaphora is the deliberate repetition of a phrase at the END of consecutive sentences.",
+                        "isTrue": false,
+                        "explanation": "False! Anaphora is the repetition of a word or phrase at the BEGINNING of consecutive clauses or sentences ('We stand together, we act together, we prevail together').",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430004500",
+            "title": "Scene 5: Deliver Your Vault Speech",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430004501",
+                    "type": "heading",
+                    "props": {
+                        "content": "✍️ Scene 5: Deliver Your Vault Speech",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430004502",
+                    "type": "callout",
+                    "props": {
+                        "title": "Speechwriting Checklist",
+                        "content": "Sentence 1: Use Anaphora ('We cannot... We cannot...').\nSentence 2: Use a Rule of Three triad ('We need speed, courage, and action!').\nSentence 3: End with a high-urgency command to unlock the vault.",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430004503",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Vault Door Speech Entry",
+                        "question": "Draft a 3-sentence persuasive speech to Guard Martha Vance. Sentence 1 must use Anaphora. Sentence 2 must use a Rule of Three triad. Sentence 3 must command her to swipe the keycard.",
+                        "placeholder": "We cannot wait for permission while the sea rises. We cannot stand idle while our town floods. We need courage, we need speed, and we need action right now—swipe that keycard!",
+                        "maxLength": 350,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "We",
+                            "cannot",
+                            "stand",
+                            "courage",
+                            "speed",
+                            "action",
+                            "swipe",
+                            "keycard",
+                            "unlock"
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430004600",
+            "title": "Scene 6: Inside Bunker 7",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430004601",
+                    "type": "heading",
+                    "props": {
+                        "content": "🔓 Scene 6: Inside Bunker 7",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430004602",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Guard Vance swipes her master card! The heavy steel vault door grinds open with a loud metallic hiss. 'Go,' she whispers. 'Save our town.'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430004603",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Inside Bunker 7 showing massive rusted brass wheel valve labeled GRANDFATHER OVERRIDE 1922",
+                        "caption": "Engineer Vane straining with all his strength against the jammed emergency wheel valve inside Bunker 7."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430004604",
+                    "type": "callout",
+                    "props": {
+                        "title": "⚡ The Hidden Truth",
+                        "content": "As you step into the damp shadows, Engineer Vane is not sabotaging the town—he is straining with all his strength against a massive brass wheel valve labeled 'GRANDFATHER OVERRIDE 1922'! Tears stream down his face: 'I wasn't hiding a conspiracy... I was trying to open the emergency relief valve, but it's jammed solid! I need the whole committee to turn it together!'",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430004605",
+                    "type": "poll",
+                    "props": {
+                        "question": "How should the committee mobilize the town for the final evacuation?",
+                        "options": [
+                            {
+                                "id": "opt-p1",
+                                "text": "Deliver a unified town hall speech calling everyone to arms"
+                            },
+                            {
+                                "id": "opt-p2",
+                                "text": "Send Captain Bluster with a megaphone down High Street"
+                            },
+                            {
+                                "id": "opt-p3",
+                                "text": "Broadcast digital billboard emergency instructions"
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}

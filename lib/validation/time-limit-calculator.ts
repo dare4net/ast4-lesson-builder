@@ -1,6 +1,6 @@
 /**
  * SKILL-Based Time Limit Calculator & Recommendation Matrix
- * Derived strictly from skills/curriculum-lesson-generator/SKILL.md Section 3.
+ * Derived strictly from skills/curriculum-lesson-generator/SKILL.md Section 5.
  */
 
 import { resolveHotspotComponentProps } from '@/lib/hotspot-utils';
@@ -19,6 +19,16 @@ export function calculateRecommendedTimeLimit(
 
     switch (type) {
         case 'quiz': {
+            const qCount = Array.isArray(props.questions) ? props.questions.length : 1;
+            const rec = 10 + 10 * Math.max(1, qCount);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 20,
+                explanation: `${qCount} question${qCount > 1 ? 's' : ''} (10s setup + 10s per question)`
+            };
+        }
+
+        case 'trueFalse': {
             const qCount = Array.isArray(props.questions) ? props.questions.length : 1;
             const rec = 10 + 10 * Math.max(1, qCount);
             return {
@@ -68,6 +78,16 @@ export function calculateRecommendedTimeLimit(
             };
         }
 
+        case 'spinTheWheel': {
+            const spins = typeof props.requiredSpins === 'number' ? props.requiredSpins : (Array.isArray(props.items) ? props.items.length : 3);
+            const rec = 15 + 12 * Math.max(1, spins);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 35,
+                explanation: `${spins} required wheel spin${spins > 1 ? 's' : ''} (15s setup + 12s per spin)`
+            };
+        }
+
         case 'multiSelectQuiz': {
             let totalOptions = 0;
             if (Array.isArray(props.questions)) {
@@ -81,6 +101,56 @@ export function calculateRecommendedTimeLimit(
                 recommendedSeconds: rec,
                 minimumSeconds: 30,
                 explanation: `${totalOptions} option cards to evaluate (12s setup + 8s per option)`
+            };
+        }
+
+        case 'categorise': {
+            const iCount = Array.isArray(props.items) ? props.items.length : 1;
+            const rec = 15 + 8 * Math.max(1, iCount);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 35,
+                explanation: `${iCount} item${iCount > 1 ? 's' : ''} to sort (15s setup + 8s per item)`
+            };
+        }
+
+        case 'annotateImage': {
+            const lCount = Array.isArray(props.labels) ? props.labels.length : 1;
+            const rec = 15 + 10 * Math.max(1, lCount);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 35,
+                explanation: `${lCount} label node${lCount > 1 ? 's' : ''} (15s setup + 10s per label)`
+            };
+        }
+
+        case 'wordScramble': {
+            const wCount = Array.isArray(props.words) ? props.words.length : 1;
+            const rec = 15 + 15 * Math.max(1, wCount);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 30,
+                explanation: `${wCount} word${wCount > 1 ? 's' : ''} to unscramble (15s setup + 15s per word)`
+            };
+        }
+
+        case 'memoryGrid': {
+            const pCount = Array.isArray(props.pairs) ? props.pairs.length : 1;
+            const rec = 15 + 10 * Math.max(1, pCount);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 35,
+                explanation: `${pCount} pair${pCount > 1 ? 's' : ''} to match (15s setup + 10s per pair)`
+            };
+        }
+
+        case 'timeline': {
+            const eCount = Array.isArray(props.events) ? props.events.length : 1;
+            const rec = 15 + 10 * Math.max(1, eCount);
+            return {
+                recommendedSeconds: rec,
+                minimumSeconds: 35,
+                explanation: `${eCount} event${eCount > 1 ? 's' : ''} to order (15s setup + 10s per event)`
             };
         }
 

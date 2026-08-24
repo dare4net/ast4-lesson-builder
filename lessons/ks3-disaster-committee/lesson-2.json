@@ -1,0 +1,427 @@
+{
+    "id": "lesson-ks3-disaster-committee-02",
+    "title": "Lesson 2: The Art of the Opening Hook",
+    "subject": "English Language",
+    "ageGroup": "KS3 (Year 8)",
+    "description": "Transform dull administrative council notices into high-impact digital billboard hooks using the 4 Hook Engines.",
+    "slides": [
+        {
+            "id": "slide-1787430002100",
+            "title": "Scene 1: The Ignored Bulletins",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430002101",
+                    "type": "heading",
+                    "props": {
+                        "content": "📢 Scene 1: The Ignored Bulletins",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430002102",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1572949645841-094f3a9c4c94?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Rain-soaked town square notice board in Wittling",
+                        "caption": "Wittling Town Square notice board, wet with rain and completely ignored by walking citizens."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "quote-1787430002103",
+                    "type": "quote",
+                    "props": {
+                        "text": "Attention citizens! Read Notice 4B! But nobody turns around. Walking locals toss our official disaster warnings straight into the recycling bins!",
+                        "author": "Captain Bluster"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "flashcards-1787430002104",
+                    "type": "flashcards",
+                    "props": {
+                        "cards": [
+                            {
+                                "front": "Notice 4B: 'Notice 4B regarding sea level variance.'",
+                                "back": "Flaw: Dull administrative opening causes walking pedestrians to skip reading."
+                            },
+                            {
+                                "front": "Notice 7C: 'Residents should consider bringing umbrellas.'",
+                                "back": "Flaw: Passive tone creates zero urgency during an approaching Category 3 storm."
+                            },
+                            {
+                                "front": "Notice 12A: 'Committee meeting minutes attached.'",
+                                "back": "Flaw: Cluttered bureaucracy hides critical emergency warnings in wordy text."
+                            },
+                            {
+                                "front": "Notice 15F: 'Attention all local residents.'",
+                                "back": "Flaw: Generic greeting fails to grab immediate attention from busy pedestrians."
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430002200",
+            "title": "Scene 2: The 4 Hook Engines",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430002201",
+                    "type": "heading",
+                    "props": {
+                        "content": "⚡ Scene 2: The 4 Hook Engines",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430002202",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "Professor Spindle opens the Officer's Field Manual: 'A hook isn't random guesswork—it uses 4 distinct engine types to force a busy reader to freeze in their tracks. Sort these candidate headlines into their correct Hook Engine categories!'",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "categorise-1787430002203",
+                    "type": "categorise",
+                    "props": {
+                        "categories": [
+                            {
+                                "id": "cat-q",
+                                "title": "Rhetorical Question"
+                            },
+                            {
+                                "id": "cat-f",
+                                "title": "Shocking Fact"
+                            }
+                        ],
+                        "items": [
+                            {
+                                "id": "item-c1",
+                                "text": "Could your home survive a 6-foot wave?",
+                                "categoryId": "cat-q"
+                            },
+                            {
+                                "id": "item-c2",
+                                "text": "Will Wittling be underwater before tea time?",
+                                "categoryId": "cat-q"
+                            },
+                            {
+                                "id": "item-c3",
+                                "text": "Over 80% of our sea wall mortar has dissolved!",
+                                "categoryId": "cat-f"
+                            },
+                            {
+                                "id": "item-c4",
+                                "text": "Category 3 winds breached North Pier by 1.5m!",
+                                "categoryId": "cat-f"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430002300",
+            "title": "Scene 3: Headline Transformation Workshop",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430002301",
+                    "type": "heading",
+                    "props": {
+                        "content": "🎯 Scene 3: Headline Transformation Workshop",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "annotateImage-1787430002302",
+                    "type": "annotateImage",
+                    "props": {
+                        "image": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=1200&q=80",
+                        "labels": [
+                            {
+                                "id": "lbl-1",
+                                "text": "Dull Header: Notice 4B",
+                                "x": 0.20,
+                                "y": 0.20
+                            },
+                            {
+                                "id": "lbl-2",
+                                "text": "Passive Words: Sea level variance",
+                                "x": 0.50,
+                                "y": 0.50
+                            },
+                            {
+                                "id": "lbl-3",
+                                "text": "Zero Call to Action",
+                                "x": 0.75,
+                                "y": 0.80
+                            }
+                        ]
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "matchingPairs-1787430002303",
+                    "type": "matchingPairs",
+                    "props": {
+                        "title": "Match Dull Announcements to High-Impact Hooks",
+                        "pairs": [
+                            {
+                                "id": "pair-1",
+                                "left": "Dull: 'Sea levels are increasing rapidly.'",
+                                "right": "Hook: 'Is your doorstep ready for a 2-metre storm surge?'"
+                            },
+                            {
+                                "id": "pair-2",
+                                "left": "Dull: 'Citizens should pack belongings.'",
+                                "right": "Hook: 'Pack your essentials now before the tide cuts off East Pier!'"
+                            },
+                            {
+                                "id": "pair-3",
+                                "left": "Dull: 'The weather is very severe today.'",
+                                "right": "Hook: 'Category 3 winds are battering our coast right now!'"
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430002400",
+            "title": "Scene 4: Digital Billboard Assembly",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430002401",
+                    "type": "heading",
+                    "props": {
+                        "content": "🖥️ Scene 4: Digital Billboard Assembly",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430002402",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "A complete digital billboard message requires 3 parts in exact sequence: 1) Hook (Grabs attention), 2) Context (Explains the danger), 3) Call to Action (Directs immediate action). Sequence these message blocks into their correct order!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "dragDrop-1787430002403",
+                    "type": "dragDrop",
+                    "props": {
+                        "items": [
+                            {
+                                "id": "item-dd1",
+                                "text": "Could your home survive a 6-foot ocean surge tonight?",
+                                "correctIndex": 0
+                            },
+                            {
+                                "id": "item-dd2",
+                                "text": "Category 3 gale winds have breached our outer sea wall by 1.5 metres.",
+                                "correctIndex": 1
+                            },
+                            {
+                                "id": "item-dd3",
+                                "text": "Evacuate lower harbour immediately and report to Wittling Town Hill!",
+                                "correctIndex": 2
+                            }
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                },
+                {
+                    "id": "trueFalse-1787430002404",
+                    "type": "trueFalse",
+                    "props": {
+                        "statement": "In a digital billboard notice, putting the Call to Action BEFORE the Hook is the best way to get pedestrians to read.",
+                        "isTrue": false,
+                        "explanation": "False! Without a Hook first, busy pedestrians will walk right past the notice without ever reading your Call to Action!",
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430002500",
+            "title": "Scene 5: Draft Your High Street Hook",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430002501",
+                    "type": "heading",
+                    "props": {
+                        "content": "✍️ Scene 5: Draft Your High Street Hook",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430002502",
+                    "type": "callout",
+                    "props": {
+                        "title": "Console Instructions",
+                        "content": "Sentence 1: Use a Rhetorical Question or Shocking Fact (Hook Engine).\nSentence 2: Use direct address ('you'/'your') and an imperative command verb ('Evacuate'/'Proceed') (Call to Action).",
+                        "variant": "tip"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "shortAnswer-1787430002503",
+                    "type": "shortAnswer",
+                    "props": {
+                        "title": "Digital Billboard Headline Entry",
+                        "question": "Draft a 2-sentence digital billboard notice for Wittling High Street. Sentence 1 must use a Hook Engine (Rhetorical Question or Shocking Fact). Sentence 2 must deliver an urgent Call to Action.",
+                        "placeholder": "Could your home survive a 6-foot wave tonight? Evacuate lower harbour immediately and head to Town Hill!",
+                        "maxLength": 300,
+                        "markingMode": "tutor-mark",
+                        "correctKeywords": [
+                            "Could",
+                            "Would",
+                            "wave",
+                            "surge",
+                            "water",
+                            "Evacuate",
+                            "Proceed",
+                            "Report"
+                        ],
+                        "points": 15,
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        },
+        {
+            "id": "slide-1787430002600",
+            "title": "Scene 6: The Secret Note",
+            "status": "uncompleted",
+            "state": "active",
+            "components": [
+                {
+                    "id": "heading-1787430002601",
+                    "type": "heading",
+                    "props": {
+                        "content": "🤐 Scene 6: The Secret Note",
+                        "level": 1,
+                        "align": "center"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "paragraph-1787430002602",
+                    "type": "paragraph",
+                    "props": {
+                        "content": "The new digital billboard blares to life across Wittling High Street! Pedestrians stop mid-stride, gasp at your headline, and instantly begin moving toward safety. Captain Bluster cheers!",
+                        "align": "left"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "image-1787430002603",
+                    "type": "image",
+                    "props": {
+                        "src": "https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=1200&q=80",
+                        "alt": "Gerald Nibbs kicking a secret note under a radiator",
+                        "caption": "Gerald Nibbs hurriedly kicking a folded yellow council document into the shadows."
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "callout-1787430002604",
+                    "type": "callout",
+                    "props": {
+                        "title": "📜 A Fallen Document",
+                        "content": "As the billboard lights up, Gerald Nibbs accidentally drops his leather briefcase! Out rolls a folded handwritten note on official council paper: 'Project Dough-Dome: DO NOT LEAK TO PUBLIC.' Gerald quickly kicks it under a radiator before you can read the rest.",
+                        "variant": "warning"
+                    },
+                    "state": "active",
+                    "status": "uncompleted"
+                },
+                {
+                    "id": "poll-1787430002605",
+                    "type": "poll",
+                    "props": {
+                        "question": "What do you suspect 'Project Dough-Dome' refers to?",
+                        "options": [
+                            {
+                                "id": "opt-p1",
+                                "text": "Secret plan for a baking dome over Wittling"
+                            },
+                            {
+                                "id": "opt-p2",
+                                "text": "Illegal underground sourdough storage"
+                            },
+                            {
+                                "id": "opt-p3",
+                                "text": "Gerald Nibbs' fake disaster bunker scheme"
+                            }
+                        ],
+                        "mode": "practice"
+                    },
+                    "state": "active",
+                    "status": "uncompleted",
+                    "mode": "practice"
+                }
+            ]
+        }
+    ]
+}
