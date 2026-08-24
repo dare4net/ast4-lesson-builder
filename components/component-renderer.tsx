@@ -22,6 +22,7 @@ const componentRenderers: ComponentRenderers = {
   image: dynamic(() => import("@/components/renderers/image-renderer").then((mod) => mod.ImageRenderer)),
   table: dynamic(() => import("@/components/renderers/table-renderer").then((mod) => mod.TableRenderer)),
   video: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
+  videoClip: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
   codeBlock: dynamic(() => import("@/components/renderers/code-block-renderer").then((mod) => mod.CodeBlockRenderer)),
   quote: dynamic(() => import("@/components/renderers/quote-renderer").then((mod) => mod.QuoteRenderer)),
   callout: dynamic(() => import("@/components/renderers/callout-renderer").then((mod) => mod.CalloutRenderer)),

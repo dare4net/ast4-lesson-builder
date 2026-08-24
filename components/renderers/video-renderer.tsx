@@ -74,12 +74,12 @@ export function VideoRenderer({
                         <img
                             src={thumbnailSrc}
                             alt={caption || "Video thumbnail"}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover/poster:scale-[1.02] opacity-90 group-hover/poster:opacity-100"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover/poster:scale-[1.02] opacity-90 group-hover/poster:opacity-100"
                             onError={(e) => {
                                 (e.target as HTMLImageElement).src = defaultThumbnail
                             }}
                         />
-                        <div className="absolute inset-0 bg-slate-950/30 group-hover/poster:bg-slate-950/10 transition-colors" />
+                        <div className="absolute inset-0 bg-slate-950/30 group-hover/poster:bg-slate-950/10 transition-colors z-0" />
                         <div className="relative z-10 w-14 h-14 rounded-2xl bg-red-600/90 text-white flex items-center justify-center shadow-xl shadow-red-600/30 group-hover/poster:scale-110 transition-all duration-300 border border-white/20">
                             <Play className="w-7 h-7 fill-white translate-x-0.5" />
                         </div>
