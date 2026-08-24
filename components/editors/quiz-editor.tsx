@@ -156,7 +156,7 @@ export function QuizEditor({
 
               <div className="space-y-3">
                 {question.options.map((option, oIndex) => (
-                  <div key={option.id} className="flex items-center gap-3 group/option">
+                  <div key={option.id || `opt-${oIndex}`} className="flex items-center gap-3 group/option">
                     <Button
                       variant="ghost"
                       size="icon"

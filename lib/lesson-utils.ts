@@ -93,21 +93,68 @@ export function isInteractiveComponent(type: ComponentType | string): boolean {
 }
 
 /**
+ * Normalize individual component props to ensure all interactive elements (quizzes, polls, etc.)
+ * have valid, deterministic IDs for options.
+ */
+export function normalizeComponent(comp: any): any {
+    if (!comp || !comp.props) return comp
+    const cloned = { ...comp, props: { ...comp.props } }
+
+    // Normalize quiz and multiSelectQuiz questions and options
+    if (cloned.type === 'quiz' || cloned.type === 'multiSelectQuiz') {
+        if (Array.isArray(cloned.props.questions)) {
+            cloned.props.questions = cloned.props.questions.map((q: any, qIdx: number) => {
+                if (!q) return q
+                const qCloned = { ...q }
+                if (Array.isArray(qCloned.options)) {
+                    qCloned.options = qCloned.options.map((opt: any, oIdx: number) => {
+                        if (!opt) return opt
+                        return {
+                            ...opt,
+                            id: opt.id || `opt-${qIdx + 1}-${oIdx + 1}`
+                        }
+                    })
+                }
+                return qCloned
+            })
+        }
+    }
+
+    // Normalize poll options
+    if (cloned.type === 'poll') {
+        if (Array.isArray(cloned.props.options)) {
+            cloned.props.options = cloned.props.options.map((opt: any, oIdx: number) => {
+                if (!opt) return opt
+                return {
+                    ...opt,
+                    id: opt.id || `opt-${oIdx + 1}`
+                }
+            })
+        }
+    }
+
+    return cloned
+}
+
+/**
  * Normalize slide objects to ensure all required fields exist with robust fallbacks.
- * Guarantees slide.title is never missing, undefined, or empty.
+ * Guarantees slide.title is never missing, undefined, or empty, and all component options have valid IDs.
  */
 export function normalizeSlides(slides: any[]): import("@/types/lesson").Slide[] {
     if (!Array.isArray(slides)) return []
 
     return slides.map((slide, index) => {
         const title = slide.title || slide.name || slide.header || `Slide ${index + 1}`
+        const rawComponents = Array.isArray(slide.components) ? slide.components : []
+        const components = rawComponents.map(normalizeComponent)
+
         return {
             ...slide,
             id: slide.id || slide._id || `slide-${index + 1}`,
             title: typeof title === 'string' && title.trim() ? title.trim() : `Slide ${index + 1}`,
             status: (slide.status as import("@/types/lesson").SlideStatus) || "uncompleted",
             state: (slide.state as import("@/types/lesson").SlideState) || "active",
-            components: Array.isArray(slide.components) ? slide.components : [],
+            components,
         }
     })
 }

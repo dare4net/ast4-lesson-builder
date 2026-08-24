@@ -154,7 +154,7 @@ const DiscoveryWrapper = ({
             />
             <button
               onClick={() => {
-                if (passwordInput === component.encryptionPassword) {
+                if (passwordInput === compAny.encryptionPassword) {
                   setUnlocked(true);
                   if (setComponentState) setComponentState({ ...savedState, unlocked: true });
                 }
@@ -256,7 +256,7 @@ const ComponentRendererBase = function ComponentRenderer({
 
   if (usesInteractiveRendererProps(component.type)) {
     const resolvedProps = component.type === "hotspot"
-      ? resolveHotspotComponentProps(component)
+      ? resolveHotspotComponentProps(component as any)
       : component.props
 
     return renderComponent({
