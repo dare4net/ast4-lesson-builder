@@ -81,11 +81,25 @@ export function QuizRenderer(props: QuizRendererProps) {
 
   useEffect(() => {
     if (!mounted) return
-    if (!shouldShuffle || !questions || questions.length === 0) {
-      setProcessedQuestions(questions)
+    if (!questions || questions.length === 0) {
+      setProcessedQuestions([])
       return
     }
-    setProcessedQuestions(questions.map(q => {
+
+    const normalized = questions.map((q, qIdx) => ({
+      ...q,
+      options: (q.options || []).map((opt, optIdx) => ({
+        ...opt,
+        id: opt.id || `opt-${qIdx}-${optIdx}`
+      }))
+    }))
+
+    if (!shouldShuffle) {
+      setProcessedQuestions(normalized)
+      return
+    }
+
+    setProcessedQuestions(normalized.map(q => {
       if (!q.options || q.options.length <= 1) return q
       return { ...q, options: [...q.options].sort(() => Math.random() - 0.5) }
     }))
@@ -157,17 +171,10 @@ export function QuizRenderer(props: QuizRendererProps) {
         }
 
         const onTimeout = () => {
-          // Auto submit whatever is selected, or nothing
           if (!state.isAnswered) {
-            // If nothing selected, maybe mark incorrect? Or just submit.
-            // handleCheckAnswer requires selection or skips?
-            // Logic: Force a "Timeout" state.
-            // We'll simulate an incorrect answer or just mark complete.
             playFeedback('incorrect')
             setState(prev => ({ ...prev, isComplete: true, status: 'completed' }))
-            // We should also probably trigger handlePoints(0) if not triggered.
           } else if (state.isAnswered && !state.isComplete) {
-            // If answered but check not clicked? (Quiz usually requires check)
             handleCheckAnswer()
           }
         }
@@ -188,9 +195,9 @@ export function QuizRenderer(props: QuizRendererProps) {
 
           if (isLive) {
             // Live Mode: Tapping an option picks it immediately, eliminating the 'Check Answer' step!
-            const selectedOption = questions[currentQuestion].options.find(opt => opt.id === optionId)
+            const selectedOption = processedQuestions[currentQuestion].options.find(opt => opt.id === optionId)
             const isCorrect = selectedOption?.isCorrect ?? false
-            const isLastQuestion = currentQuestion === questions.length - 1
+            const isLastQuestion = currentQuestion === processedQuestions.length - 1
             const newScore = isCorrect ? score + 1 : score
 
             const newState = {
@@ -224,7 +231,7 @@ export function QuizRenderer(props: QuizRendererProps) {
           const effectiveDisabled = isDisabled || state.isComplete
           if (selectedAnswer === null || isAnswered || effectiveDisabled) return
 
-          const selectedOption = questions[currentQuestion].options.find(opt => opt.id === selectedAnswer)
+          const selectedOption = processedQuestions[currentQuestion].options.find(opt => opt.id === selectedAnswer)
           const isCorrect = selectedOption?.isCorrect ?? false
           const isLastQuestion = currentQuestion === questions.length - 1
           const newScore = isCorrect ? score + 1 : score
