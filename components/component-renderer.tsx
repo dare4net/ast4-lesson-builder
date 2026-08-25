@@ -232,7 +232,7 @@ const ComponentRendererBase = function ComponentRenderer({
         setComponentState={setComponentState}
       >
         <div className={cn(
-          "flex-1 min-h-0 flex flex-col w-full transition-opacity overflow-hidden",
+          "flex-1 min-h-0 flex flex-col w-full transition-opacity overflow-hidden motion-cascade",
           isDisabled && !isTutorView && "opacity-75"
         )}>
           <Renderer {...props} />

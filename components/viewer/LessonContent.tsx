@@ -318,6 +318,22 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       });
     }, [currentSlideIndex, lessonRef]);
 
+    const [isContentReadingDelayActive, setIsContentReadingDelayActive] = useState(false);
+
+    useEffect(() => {
+      if (!activeComponent) return;
+      const isInteractive = isInteractiveComponent(activeComponent.type);
+      if (!isInteractive && !previewMode) {
+        setIsContentReadingDelayActive(true);
+        const timer = setTimeout(() => {
+          setIsContentReadingDelayActive(false);
+        }, 1200);
+        return () => clearTimeout(timer);
+      } else {
+        setIsContentReadingDelayActive(false);
+      }
+    }, [currentSlideIndex, innerStepIndex, activeComponent, previewMode]);
+
     return (
       <div className="flex flex-col h-full relative bg-white dark:bg-slate-950 overflow-hidden font-sans">
         {/* Header */}
@@ -407,60 +423,73 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
         )}
 
         {/* Footer Navigation */}
-        <footer className="shrink-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30 py-3.5 px-6 shadow-sm">
-          <div className="max-w-md mx-auto flex items-center justify-center gap-3">
-            <Button
-              variant="outline"
-              className="h-10 px-5 w-full rounded-xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs flex items-center justify-center"
-              onClick={handleRecall}
-              disabled={!canGoPrev || isNavigating}
-            >
-              {isNavigating ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <ChevronLeft className="h-4 w-4 mr-1.5" />}
-              Previous
-            </Button>
+        {(() => {
+          const isInteractive = activeComponent && isInteractiveComponent(activeComponent.type);
+          const shouldHideFooter = !previewMode && (
+            (isInteractive && !isCurrentComponentCompleted) ||
+            (!isInteractive && isContentReadingDelayActive)
+          );
 
-            {currentSlideIndex === lesson.slides.length - 1 && innerStepIndex >= (processedComponents.length - 1) ? (
-              <Button
-                variant="default"
-                className="h-10 px-5 w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider shadow-md shadow-rose-600/20 flex items-center justify-center gap-1.5 transition-all"
-                onClick={() => {
-                  playFeedback('uiClick');
-                  handleEndLessonTrigger();
-                }}
-                disabled={isNavigating || (!previewMode && !isCurrentComponentCompleted)}
-              >
-                {isNavigating ? <Loader2 className="h-3.5 w-3.5 animate-spin ml-1" /> : <LogOut className="h-3.5 w-3.5 ml-1" />}
-                {previewMode ? "Back to Editor" : "End Lesson"}
-              </Button>
-            ) : (() => {
-              // Detect if we are on the last component of the current slide (not the last slide)
-              const isLastComponentOfSlide =
-                innerStepIndex >= processedComponents.length - 1 &&
-                currentSlideIndex < lesson.slides.length - 1;
-              const nextSlideTheme = isLastComponentOfSlide
-                ? getSlideTheme(currentSlideIndex + 1)
-                : null;
-              return (
+          return (
+            <footer className={cn(
+              "shrink-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30 py-3.5 px-6 transition-all duration-500",
+              shouldHideFooter ? "motion-nav-hidden" : "motion-nav-visible shadow-2xl"
+            )}>
+              <div className="max-w-md mx-auto flex items-center justify-center gap-3">
                 <Button
-                  variant="default"
-                  className={cn(
-                    "h-10 px-5 w-full rounded-xl font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center transition-all duration-200",
-                    !isLastComponentOfSlide && "bg-green-600 hover:bg-green-500 text-white"
-                  )}
-                  style={isLastComponentOfSlide && nextSlideTheme ? {
-                    backgroundColor: nextSlideTheme.btnBgHex,
-                    color: nextSlideTheme.btnTextHex,
-                  } : undefined}
-                  onClick={handleAdvance}
-                  disabled={!canGoNext || isNavigating}
+                  variant="outline"
+                  className="h-10 px-5 w-full rounded-xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs flex items-center justify-center"
+                  onClick={handleRecall}
+                  disabled={!canGoPrev || isNavigating}
                 >
-                  {isLastComponentOfSlide ? "Next Slide" : "Next"}
-                  {isNavigating ? <Loader2 className="h-4 w-4 ml-1.5 animate-spin" /> : <ChevronRight className="h-4 w-4 ml-1.5" />}
+                  {isNavigating ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <ChevronLeft className="h-4 w-4 mr-1.5" />}
+                  Previous
                 </Button>
-              );
-            })()}
-          </div>
-        </footer>
+
+                {currentSlideIndex === lesson.slides.length - 1 && innerStepIndex >= (processedComponents.length - 1) ? (
+                  <Button
+                    variant="default"
+                    className="h-10 px-5 w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider shadow-md shadow-rose-600/20 flex items-center justify-center gap-1.5 transition-all"
+                    onClick={() => {
+                      playFeedback('uiClick');
+                      handleEndLessonTrigger();
+                    }}
+                    disabled={isNavigating || (!previewMode && !isCurrentComponentCompleted)}
+                  >
+                    {isNavigating ? <Loader2 className="h-3.5 w-3.5 animate-spin ml-1" /> : <LogOut className="h-3.5 w-3.5 ml-1" />}
+                    {previewMode ? "Back to Editor" : "End Lesson"}
+                  </Button>
+                ) : (() => {
+                  // Detect if we are on the last component of the current slide (not the last slide)
+                  const isLastComponentOfSlide =
+                    innerStepIndex >= processedComponents.length - 1 &&
+                    currentSlideIndex < lesson.slides.length - 1;
+                  const nextSlideTheme = isLastComponentOfSlide
+                    ? getSlideTheme(currentSlideIndex + 1)
+                    : null;
+                  return (
+                    <Button
+                      variant="default"
+                      className={cn(
+                        "h-10 px-5 w-full rounded-xl font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center transition-all duration-200",
+                        !isLastComponentOfSlide && "bg-green-600 hover:bg-green-500 text-white"
+                      )}
+                      style={isLastComponentOfSlide && nextSlideTheme ? {
+                        backgroundColor: nextSlideTheme.btnBgHex,
+                        color: nextSlideTheme.btnTextHex,
+                      } : undefined}
+                      onClick={handleAdvance}
+                      disabled={!canGoNext || isNavigating}
+                    >
+                      {isLastComponentOfSlide ? "Next Slide" : "Next"}
+                      {isNavigating ? <Loader2 className="h-4 w-4 ml-1.5 animate-spin" /> : <ChevronRight className="h-4 w-4 ml-1.5" />}
+                    </Button>
+                  );
+                })()}
+              </div>
+            </footer>
+          );
+        })()}
 
         {/* Lesson Completion Celebration Overlay */}
         {!previewMode && (
