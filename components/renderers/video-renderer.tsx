@@ -64,8 +64,8 @@ export function VideoRenderer({
     const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`
 
     return (
-        <figure className="space-y-2 max-w-5xl mx-auto w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden min-h-0 p-2 group/video">
-            <div className={cn("relative w-full flex-1 min-h-0 max-h-[56vh] md:max-h-[62vh] rounded-2xl overflow-hidden bg-slate-950 shadow-xl border border-slate-800/80", aspectClass)}>
+        <figure className="space-y-3 max-w-5xl mx-auto w-full h-full flex-1 flex flex-col items-center justify-center overflow-hidden min-h-0 p-0 group/video">
+            <div className={cn("relative w-full flex-1 min-h-0 max-h-[58vh] md:max-h-[64vh] rounded-2xl overflow-hidden bg-slate-950/80 backdrop-blur-sm", aspectClass)}>
                 {!isPlaying ? (
                     <div
                         onClick={() => setIsPlaying(true)}
@@ -79,8 +79,8 @@ export function VideoRenderer({
                                 (e.target as HTMLImageElement).src = defaultThumbnail
                             }}
                         />
-                        <div className="absolute inset-0 bg-slate-950/30 group-hover/poster:bg-slate-950/10 transition-colors z-0" />
-                        <div className="relative z-10 w-14 h-14 rounded-2xl bg-red-600/90 text-white flex items-center justify-center shadow-xl shadow-red-600/30 group-hover/poster:scale-110 transition-all duration-300 border border-white/20">
+                        <div className="absolute inset-0 bg-slate-950/20 group-hover/poster:bg-slate-950/10 transition-colors z-0" />
+                        <div className="relative z-10 w-14 h-14 rounded-2xl bg-red-600/90 text-white flex items-center justify-center shadow-lg shadow-red-600/30 group-hover/poster:scale-110 transition-all duration-300">
                             <Play className="w-7 h-7 fill-white translate-x-0.5" />
                         </div>
                     </div>
@@ -97,8 +97,7 @@ export function VideoRenderer({
 
             {caption && (
                 <figcaption className="text-center mt-1 shrink-0">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] block mb-0.5">Video Caption</span>
-                    <span className="text-slate-900 dark:text-slate-200 text-xs font-bold italic tracking-tight">
+                    <span className="text-slate-700 dark:text-slate-300 text-xs font-semibold italic tracking-tight">
                         {caption}
                     </span>
                 </figcaption>

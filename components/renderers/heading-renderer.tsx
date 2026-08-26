@@ -105,26 +105,20 @@ export function HeadingRenderer({
 
   return (
     <div className={cn(
-      "relative group/heading transition-all duration-500 flex flex-col",
-      // Force full height/centering
-      "flex-1 w-full h-full min-h-[20vh] justify-center",
-      finalAlign === "center" ? "items-center" : "items-start",
-      level <= 2 && "mb-6"
+      "relative group/heading transition-all duration-500 flex flex-col justify-center items-center flex-1 w-full h-full min-h-[15vh]",
+      level <= 2 && "mb-4"
     )}>
 
-      {/* Typing Content */}
+      {/* Typing Content (Unboxed Editorial Typography) */}
       <div
         onClick={togglePause}
-        className={cn(
-          "relative cursor-pointer select-none rounded-xl p-2 -m-2 transition-colors hover:bg-slate-100/50",
-          finalAlign === "center" ? "text-center" : "text-left"
-        )}
+        className="relative cursor-pointer select-none text-center p-2"
       >
         <HeadingTag
           className={cn(
             fontSizeClass, // Dynamic sizing from hook
-            "font-black tracking-tight text-slate-900 leading-tight",
-            level === 1 && "bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"
+            "font-black tracking-tight text-slate-900 dark:text-slate-100 leading-tight",
+            level === 1 && "bg-gradient-to-r from-emerald-600 via-teal-500 to-cyan-500 bg-clip-text text-transparent"
           )}
         >
           {displayedContent}
@@ -136,21 +130,11 @@ export function HeadingRenderer({
 
         {/* Pause Indicator Overlay */}
         {isPaused && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px]">
+          <div className="absolute inset-0 flex items-center justify-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-[1px]">
             <Pause className="h-8 w-8 text-emerald-600 animate-pulse" />
           </div>
         )}
       </div>
-
-      {/* Completion Badge */}
-      {isCompleted && !isEditing && (
-        <div className="mt-4 flex animate-in slide-in-from-bottom-2 fade-in duration-700">
-          <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">Nice work! ✓</span>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

@@ -28,45 +28,39 @@ export function QuoteRenderer({
     }
 
     return (
-        <div className="w-full my-4 relative p-6 md:p-8 rounded-2xl border-2 border-slate-200 border-b-4 bg-white shadow-sm overflow-hidden group transition-all">
-            {/* Visual Emerald Accent Strip */}
-            <div className="absolute top-0 left-0 w-2 h-full bg-[#58CC02]" />
-
-            {/* Decorative Quote Icon Background */}
-            <div className="absolute -right-4 -bottom-4 text-emerald-500/10 pointer-events-none group-hover:scale-110 transition-transform duration-500">
-                <Quote className="w-36 h-36" />
+        <div className="w-full h-full flex-1 flex flex-col items-center justify-center text-center px-6 sm:px-10 md:px-12 py-4 my-auto relative min-h-0">
+            {/* Centered Decorative Background Quote Icon */}
+            <div className="absolute inset-0 flex items-center justify-center text-emerald-500/10 dark:text-emerald-400/15 pointer-events-none group-hover:scale-105 transition-transform duration-500 z-0">
+                <Quote className="w-64 h-64" />
             </div>
 
-            <div className="relative space-y-4 pl-2">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <Quote className="w-6 h-6 text-[#58CC02]" />
-                        <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Inspirational Quote</span>
-                    </div>
-
+            <div className="relative z-10 space-y-5 max-w-4xl text-center flex flex-col items-center my-auto">
+                <div className="flex items-center gap-2 justify-center">
+                    <Quote className="w-5 h-5 text-[#58CC02]" />
+                    <span className="text-[9px] font-black text-emerald-600/70 dark:text-emerald-400/70 uppercase tracking-[0.2em]">Inspirational Quote</span>
                     {hasAudio && (
                         <ListenButton
                             hasAudio={hasAudio}
                             isPlaying={isPlaying}
                             onClick={handleSpeak}
                             showLabel={false}
-                            className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#58CC02] border-2 border-emerald-200 border-b-3 active:border-b-2 active:translate-y-[1px]"
-                            iconClassName="w-4 h-4"
+                            className="p-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-[#58CC02] border-2 border-emerald-200 dark:border-emerald-800 border-b-4 active:border-b-2 active:translate-y-[1px]"
+                            iconClassName="w-3.5 h-3.5"
                         />
                     )}
                 </div>
 
-                <blockquote className="text-base md:text-xl font-black text-slate-900 italic leading-relaxed tracking-tight">
+                <blockquote className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 italic leading-relaxed tracking-tight text-center">
                     "{text}"
                 </blockquote>
 
                 {(author || source) && (
-                    <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-[#58CC02] text-xs font-black uppercase tracking-wider">
+                    <div className="flex items-center justify-center gap-2 pt-2 text-center">
+                        <span className="text-slate-500 dark:text-slate-400 font-black text-xs uppercase tracking-widest">
                             — {author}
                         </span>
                         {source && (
-                            <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <span className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-wider">
                                 ({source})
                             </span>
                         )}

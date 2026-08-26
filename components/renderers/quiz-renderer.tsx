@@ -285,7 +285,7 @@ export function QuizRenderer(props: QuizRendererProps) {
 
         return (
           <div className={cn(
-            "w-full h-full flex-1 flex flex-col bg-white text-slate-900 overflow-hidden transition-all duration-300 px-6",
+            "w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-2",
             animationClass
           )}>
             {/* TOP SECTION: Meta & Title */}
@@ -293,7 +293,7 @@ export function QuizRenderer(props: QuizRendererProps) {
               <div className="relative flex items-center justify-between">
                 <div className="space-y-0.5">
                   <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Activity</span>
-                  <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+                  <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">{title}</h3>
                 </div>
                 <div className="flex items-center gap-2">
                   {isLive && (
@@ -306,7 +306,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                     </div>
                   )}
                   {isDisabled && (
-                    <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
+                    <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700">
                       <Lock className="h-2.5 w-2.5" />
                       <span>Locked</span>
                     </div>
@@ -319,7 +319,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                   <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Quiz Progress</span>
                   <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
                 </div>
-                <div className="h-1.5 w-full bg-emerald-50 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-emerald-50 dark:bg-slate-800 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 ease-out"
                     style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
@@ -328,18 +328,18 @@ export function QuizRenderer(props: QuizRendererProps) {
               </div>
             </div>
 
-            {/* CENTER SECTION: Interactive Content */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
-              <div className="relative space-y-3 my-auto">
+            {/* CENTER SECTION: Interactive Content (Unboxed & Full Width) */}
+            <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+              <div className="relative space-y-4 my-auto w-full">
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
                     <div className="h-px w-8 bg-emerald-500 rounded-full" />
-                    <span className="text-[8px] font-black text-emerald-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length}</span>
+                    <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length}</span>
                   </div>
-                  <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight">{question.question}</h2>
+                  <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{question.question}</h2>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
                   {question.options.map((option, idx) => {
                     const isSelected = selectedAnswer === option.id
                     const isCorrectAnswer = option.isCorrect
@@ -350,7 +350,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                       <button
                         key={option.id || `option-${idx}`}
                         className={cn(
-                          'group/opt w-full p-3.5 text-left text-slate-900 transition-all duration-200 relative rounded-2xl border-2 border-slate-200 bg-white shadow-sm overflow-hidden',
+                          'group/opt w-full p-4 text-left text-slate-900 dark:text-slate-100 transition-all duration-200 relative rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm',
                           'border-b-4 active:border-b-0 active:translate-y-[2px]',
                           isSelected && !isAnswered && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
                           showCorrect && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',

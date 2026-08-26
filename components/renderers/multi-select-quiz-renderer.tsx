@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Check, CheckCircle2, ChevronRight, XCircle } from "lucide-react"
+import { Check, CheckCircle2, ChevronRight, RefreshCw, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
@@ -61,6 +61,7 @@ function MultiSelectContent({
     setState,
     handleScore,
     handlePoints,
+    handleRetry,
     isDisabled,
     isLive,
     id,
@@ -139,13 +140,14 @@ function MultiSelectContent({
         const newScores = [...(state.scores || [])]
         newScores[currentQuestion] = questionScore
 
-        const allDone = newAnswered.every(Boolean)
-
         if (isPerfect) {
-            await playFeedback('quizSuccess', { animation: false })
+            await playFeedback('quizSuccess')
         } else {
             await playFeedback('incorrect')
         }
+
+        const allDone = currentQuestion === questions.length - 1
+        handleScore(isPerfect)
 
         setState(prev => {
             const nextShowResult = [...prev.showResultByQuestion]
@@ -170,6 +172,20 @@ function MultiSelectContent({
         if (currentQuestion < questions.length - 1) {
             setState(prev => ({ ...prev, currentQuestion: prev.currentQuestion + 1 }))
         }
+    }
+
+    const handleReset = () => {
+        handleRetry()
+        setState({
+            currentQuestion: 0,
+            questionsAnswered: questions.map(() => false),
+            questionsCorrect: questions.map(() => false),
+            scores: questions.map(() => 0),
+            selectedOptionsByQuestion: questions.map(() => []),
+            showResultByQuestion: questions.map(() => false),
+            isComplete: false,
+            status: 'active',
+        })
     }
 
     const handleTimeout = () => {
@@ -197,54 +213,6 @@ function MultiSelectContent({
 
     if (!question) return null
 
-    // ── Option styling ─────────────────────────────────────────────────────────
-    const getOptionStyle = (option: MultiSelectOption) => {
-        const isSelected = selectedOptions.includes(option.id)
-
-        if (!showResult) {
-            return isSelected
-                ? "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-[1.02]"
-                : "bg-white hover:bg-violet-50/50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-violet-300"
-        }
-        if (isSelected && option.isCorrect) return "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950"
-        if (isSelected && !option.isCorrect) return "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950 opacity-80"
-        if (!isSelected && option.isCorrect) return "bg-emerald-50/60 border-emerald-300 border-b-emerald-400 text-emerald-900"
-        return "bg-slate-50 border-slate-200 border-b-slate-200 text-slate-400 opacity-50"
-    }
-
-    const getCheckIndicator = (option: MultiSelectOption) => {
-        const isSelected = selectedOptions.includes(option.id)
-
-        if (!showResult) {
-            return (
-                <div className={cn(
-                    "w-6 h-6 rounded-lg border-2 border-b-4 flex items-center justify-center transition-all shadow-sm",
-                    isSelected
-                        ? "bg-white border-white border-b-slate-200 text-[#1CB0F6]"
-                        : "bg-slate-50 border-slate-200 border-b-slate-300 text-transparent"
-                )}>
-                    <Check className={cn("w-3.5 h-3.5 stroke-[3]", isSelected ? "text-[#1CB0F6]" : "text-transparent")} />
-                </div>
-            )
-        }
-
-        if ((isSelected && option.isCorrect) || (!isSelected && option.isCorrect)) {
-            return (
-                <div className="w-6 h-6 rounded-lg bg-[#58CC02] border-2 border-[#58CC02] border-b-[#3B8C00] flex items-center justify-center text-white shadow-sm">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
-                </div>
-            )
-        }
-        if (isSelected && !option.isCorrect) {
-            return (
-                <div className="w-6 h-6 rounded-lg bg-[#FF4B4B] border-2 border-[#FF4B4B] border-b-[#CC3C3C] flex items-center justify-center text-white font-black text-xs shadow-sm">
-                    ✕
-                </div>
-            )
-        }
-        return <div className="w-6 h-6 rounded-lg border-2 border-slate-200 border-b-slate-300 bg-slate-100" />
-    }
-
     // ── Result analysis ────────────────────────────────────────────────────────
     const correctIds = question.options.filter(o => o.isCorrect).map(o => o.id)
     const correctSelections = selectedOptions.filter(id => correctIds.includes(id))
@@ -252,13 +220,13 @@ function MultiSelectContent({
     const isPerfect = showResult && correctSelections.length === correctIds.length && incorrectSelections.length === 0
 
     return (
-        <div className="w-full h-full flex-1 flex flex-col bg-white text-slate-900 overflow-hidden transition-all duration-300 px-6">
+        <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-2">
             {/* TOP SECTION: Meta & Title */}
             <div className="shrink-0 space-y-3 pt-2">
                 <div className="relative flex items-center justify-between">
                     <div className="space-y-0.5">
                         <span className="text-[8px] font-black text-violet-600/60 uppercase tracking-[0.2em]">Activity</span>
-                        <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">Multi-Select Quiz</h3>
+                        <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">Multi-Select Quiz</h3>
                     </div>
                     <div className="flex items-center gap-2">
                         {isLive && (
@@ -276,7 +244,7 @@ function MultiSelectContent({
                         <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Quiz Progress</span>
                         <span className="text-[8px] font-black text-violet-600 uppercase tracking-tighter">{Math.round(((currentQuestion + 1) / questions.length) * 100)}%</span>
                     </div>
-                    <div className="h-1.5 w-full bg-violet-50 rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-violet-50 dark:bg-slate-800 rounded-full overflow-hidden">
                         <div
                             className="h-full bg-gradient-to-r from-violet-500 to-indigo-400 transition-all duration-500 ease-out"
                             style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
@@ -285,18 +253,18 @@ function MultiSelectContent({
                 </div>
             </div>
 
-            {/* CENTER SECTION: Question + Options */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
-                <div className="relative space-y-3 my-auto">
+            {/* CENTER SECTION: Question + Options (Full Canvas Width) */}
+            <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+                <div className="relative space-y-4 my-auto w-full">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">
                             <div className="h-px w-8 bg-violet-500 rounded-full" />
-                            <span className="text-[8px] font-black text-violet-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length} · Select all correct</span>
+                            <span className="text-[9px] font-black text-violet-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length} · Select all correct</span>
                         </div>
-                        <h2 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight">{question.question}</h2>
+                        <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{question.question}</h2>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
                         {question.options.map((option, idx) => {
                             const isSelected = selectedOptions.includes(option.id)
                             const isCorrectOpt = option.isCorrect
@@ -309,30 +277,34 @@ function MultiSelectContent({
                                     disabled={showResult || isDisabled || isComplete}
                                     onClick={() => handleToggle(option.id)}
                                     className={cn(
-                                        'group/opt w-full p-3.5 text-left text-slate-900 transition-all duration-200 relative rounded-2xl border-2 bg-white shadow-sm overflow-hidden',
+                                        'group/opt w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 shadow-sm',
                                         'border-b-4 active:border-b-0 active:translate-y-[2px]',
-                                        isSelected && !showResult && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
-                                        !isSelected && !showResult && 'border-slate-200 hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 hover:shadow-md cursor-pointer',
-                                        showCorrect && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg',
-                                        showIncorrect && 'bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]',
-                                        showResult && !isSelected && !isCorrectOpt && 'opacity-40 cursor-not-allowed',
-                                        showResult && !isSelected && isCorrectOpt && 'border-[#58CC02] bg-[#58CC02]/10 cursor-not-allowed'
+                                        isSelected && !showResult && 'border-[#1CB0F6] bg-[#1CB0F6]/10 border-b-[#0090CC] text-[#0070A3] dark:text-[#38BDF8] font-black',
+                                        !isSelected && !showResult && 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 hover:shadow-md cursor-pointer',
+                                        showCorrect && isSelected && 'bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg font-black',
+                                        showCorrect && !isSelected && 'bg-emerald-100 dark:bg-emerald-950 border-[#58CC02] border-b-[#3B8C00] text-emerald-950 dark:text-emerald-200 font-extrabold shadow-sm',
+                                        showIncorrect && 'bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B] font-black',
+                                        showResult && !isSelected && !isCorrectOpt && 'opacity-40 cursor-not-allowed bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'
                                     )}
                                 >
                                     <div className="flex items-center justify-between relative z-10">
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-3.5">
+                                            {/* Circular Checkbox Indicator */}
                                             <span className={cn(
-                                                "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 transition-colors shrink-0",
-                                                isSelected && !showResult ? "bg-[#1CB0F6] text-white border-[#1CB0F6]" :
-                                                    showCorrect ? "bg-white/30 text-white border-white/30" :
-                                                        showIncorrect ? "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30" :
-                                                            "bg-slate-50 text-slate-400 border-slate-200 group-hover/opt:border-[#1CB0F6]/50 group-hover/opt:text-[#1CB0F6]"
+                                                "w-6 h-6 rounded-full flex items-center justify-center text-xs font-black border-2 border-b-4 transition-colors shrink-0",
+                                                isSelected && !showResult ? "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC]" :
+                                                    showCorrect && isSelected ? "bg-white text-[#58CC02] border-white border-b-slate-200" :
+                                                        showCorrect && !isSelected ? "bg-[#58CC02] text-white border-[#58CC02] border-b-[#3B8C00]" :
+                                                            showIncorrect ? "bg-[#FF4B4B] text-white border-[#FF4B4B] border-b-[#CC3C3C]" :
+                                                                "bg-slate-100 dark:bg-slate-800 text-transparent border-slate-300 dark:border-slate-700 border-b-slate-400 group-hover/opt:border-[#1CB0F6]"
                                             )}>
-                                                {String.fromCharCode(65 + idx)}
+                                                {(isSelected || showCorrect) && !showIncorrect && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                                                {showIncorrect && <span className="font-black text-xs">✕</span>}
                                             </span>
                                             <span className="font-bold text-sm tracking-tight text-inherit">{option.text}</span>
                                         </div>
-                                        {showCorrect && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                        {showCorrect && isSelected && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                        {showCorrect && !isSelected && <CheckCircle2 className="w-5 h-5 text-[#58CC02] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                                         {showIncorrect && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                                     </div>
                                 </button>
@@ -342,53 +314,47 @@ function MultiSelectContent({
                 </div>
             </div>
 
-            {/* BOTTOM SECTION: Jump-proof feedback slot + action button */}
-            <div className="shrink-0 space-y-3 pb-4 pt-1">
-                <div className="min-h-[52px] flex flex-col justify-end">
-                    {showResult && (
-                        <div className={cn(
-                            'p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm',
-                            isPerfect
-                                ? 'bg-emerald-50/50 border-emerald-500/20 shadow-emerald-500/5'
-                                : 'bg-amber-50/50 border-amber-400/20 shadow-amber-500/5'
-                        )}>
-                            {isPerfect ? (
-                                <>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">Perfect score!</span>
-                                    </div>
-                                    <p className="text-sm font-black text-slate-900 leading-tight italic">You got every correct answer!</p>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="text-[8px] font-black text-amber-600 uppercase tracking-widest">
-                                            {correctSelections.length} of {correctIds.length} correct
-                                        </span>
-                                    </div>
-                                    <p className="text-sm font-black text-slate-900 leading-tight">Not bad — keep going!</p>
-                                </>
-                            )}
-                            {question.explanation && (
-                                <p className="text-xs font-bold text-slate-600 leading-tight mt-1">{question.explanation}</p>
-                            )}
-                        </div>
-                    )}
-                </div>
+            {/* BOTTOM SECTION: Reserved Footer Height to Prevent Layout Jump */}
+            <div className="shrink-0 space-y-3 pb-4 pt-1 min-h-[56px] flex flex-col justify-center items-center">
+                {showResult && (
+                    <div className={cn(
+                        'p-3.5 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm w-full max-w-md text-center',
+                        isPerfect
+                            ? 'bg-emerald-50/50 border-emerald-500/20'
+                            : 'bg-amber-50/50 border-amber-400/20'
+                    )}>
+                        {isPerfect ? (
+                            <div className="space-y-0.5">
+                                <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest block">Perfect score!</span>
+                                <p className="text-xs font-black text-slate-900 dark:text-slate-100 italic">You got every correct answer!</p>
+                            </div>
+                        ) : (
+                            <div className="space-y-0.5">
+                                <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest block">
+                                    {correctSelections.length} of {correctIds.length} correct
+                                </span>
+                                <p className="text-xs font-black text-slate-900 dark:text-slate-100">Not bad — keep going!</p>
+                            </div>
+                        )}
+                        {question.explanation && (
+                            <p className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1">{question.explanation}</p>
+                        )}
+                    </div>
+                )}
 
-                <div className="w-full">
+                <div className="flex items-center justify-center">
                     {currentQuestion < questions.length - 1 || !showResult ? (
                         <button
                             type="button"
                             onClick={showResult ? handleNext : handleSubmit}
                             disabled={!showResult && (selectedOptions.length === 0 || isDisabled || isComplete)}
                             className={cn(
-                                'h-12 w-full rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all transform border-b-4 active:border-b-0 active:translate-y-[2px] shadow-md',
+                                'px-6 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all border-b-4 active:border-b-0 active:translate-y-[2px] shadow-md cursor-pointer',
                                 showResult
-                                    ? 'bg-[#1CB0F6] text-white shadow-sky-500/20 hover:bg-sky-500 border-[#0090CC]'
+                                    ? 'bg-[#1CB0F6] text-white hover:bg-sky-500 border-[#0090CC]'
                                     : selectedOptions.length > 0
-                                        ? 'bg-[#58CC02] text-white shadow-emerald-500/20 hover:bg-[#46a302] border-[#3B8C00]'
-                                        : 'bg-slate-100 text-slate-400 border border-slate-200 border-b-slate-200 shadow-none'
+                                        ? 'bg-[#58CC02] text-white hover:bg-[#46a302] border-[#3B8C00]'
+                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700 border-b-slate-300 shadow-none cursor-not-allowed'
                             )}
                         >
                             {showResult
@@ -396,14 +362,14 @@ function MultiSelectContent({
                                 : 'Check Answer'}
                         </button>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <button
-                                className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest opacity-100 shadow-lg shadow-emerald-500/20 cursor-default"
-                                disabled
-                            >
-                                Quiz Completed
-                            </button>
-                        </div>
+                        <button
+                            type="button"
+                            onClick={handleReset}
+                            className="px-6 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 border-2 border-slate-200 dark:border-slate-700 border-b-4 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer flex items-center gap-2"
+                        >
+                            <RefreshCw className="w-4 h-4" />
+                            <span>Retry Quiz</span>
+                        </button>
                     )}
                 </div>
             </div>

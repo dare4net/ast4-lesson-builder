@@ -70,22 +70,22 @@ export function ParagraphRenderer({
       "relative group/paragraph transition-all duration-500 flex flex-col my-4 items-center justify-center flex-1 w-full h-full min-h-[20vh]"
     )}>
 
-      {/* Typing Content Box with Read Aloud Button */}
+      {/* Unboxed Typing Content Canvas */}
       <div
         onClick={togglePause}
         className={cn(
-          "relative cursor-pointer select-none rounded-2xl p-6 bg-slate-50/80 border-2 border-slate-100 hover:border-emerald-500/30 transition-all shadow-sm max-w-4xl w-full",
+          "relative cursor-pointer select-none transition-all max-w-4xl w-full px-2 py-4",
           finalAlign === "center" ? "text-center" : "text-left"
         )}
       >
-        <div className="flex items-center justify-between mb-3 border-b border-slate-200/60 pb-2">
-          <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Paragraph Content</span>
+        <div className="flex items-center justify-between mb-4 border-b border-slate-200/40 pb-2">
+          <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.25em]">Story Focus</span>
           {hasAudio && (
             <ListenButton
               hasAudio={hasAudio}
               isPlaying={isPlaying}
               onClick={handleSpeak}
-              className="rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 border border-emerald-500/30"
+              className="rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 border border-emerald-500/30 shadow-none"
               iconClassName={cn(isPlaying && "text-emerald-500")}
               label="Listen"
             />
@@ -94,7 +94,7 @@ export function ParagraphRenderer({
 
         <p className={cn(
           fontSizeClass,
-          "font-medium text-slate-700 leading-relaxed tracking-wide"
+          "font-medium text-slate-800 dark:text-slate-100 leading-relaxed tracking-wide"
         )}>
           {displayedContent}
           <span className={cn(
@@ -104,7 +104,7 @@ export function ParagraphRenderer({
         </p>
 
         {isPaused && (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px] rounded-xl">
+          <div className="absolute inset-0 flex items-center justify-center bg-white/40 dark:bg-slate-950/40 backdrop-blur-[2px] rounded-xl">
             <Pause className="h-6 w-6 text-emerald-600 animate-pulse" />
           </div>
         )}

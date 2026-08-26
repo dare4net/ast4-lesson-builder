@@ -154,23 +154,23 @@ function CategoriseContent({
     const unassignedItems = items.filter(it => !assignments[it.id])
 
     return (
-        <div className="w-full h-full flex-1 flex flex-col justify-center px-4 sm:px-6 py-2 relative min-h-0 overflow-hidden text-slate-900">
+        <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-2">
             <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
-                <div className="flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200 rounded-xl">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-purple-600">
+                <div className="flex items-center gap-2 px-3 py-1 bg-violet-50 dark:bg-violet-950/60 border-2 border-violet-200 dark:border-violet-800 rounded-xl">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-violet-600 dark:text-violet-400">
                         Categorisation • {points} Points
                     </span>
                 </div>
             </div>
 
-            <h3 className="text-lg font-black mb-3 text-slate-900 tracking-tight shrink-0">{title}</h3>
+            <h3 className="text-xl md:text-2xl font-black mb-3 text-slate-900 dark:text-slate-100 tracking-tight shrink-0">{title}</h3>
 
             {!submitted && (
-                <div className="mb-3 p-2.5 rounded-2xl bg-slate-50/80 border-2 border-slate-200 border-b-4 shrink-0 max-h-[120px] overflow-y-auto">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 block mb-1.5">
+                <div className="mb-4 p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 border-b-4 shrink-0 max-h-[140px] overflow-y-auto shadow-sm">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-2">
                         Tap an item card below, then tap a category bucket:
                     </span>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                         {unassignedItems.map(it => (
                             <button
                                 key={it.id}
@@ -178,13 +178,13 @@ function CategoriseContent({
                                 onClick={() => handleSelectItem(it.id)}
                                 disabled={isEditing || disabled}
                                 className={cn(
-                                    "flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-b-4 font-black text-xs transition-all duration-200 cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
+                                    "flex items-center gap-2 px-3.5 py-2 rounded-xl border-2 border-b-4 font-extrabold text-xs transition-all duration-200 cursor-pointer active:border-b-2 active:translate-y-[2px] shadow-sm",
                                     selectedItemId === it.id
                                         ? "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-105"
-                                        : "bg-white hover:bg-purple-50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-purple-300"
+                                        : "bg-white dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 border-b-slate-300 dark:border-b-slate-800 text-slate-800 dark:text-slate-200 hover:border-[#1CB0F6]/60"
                                 )}
                             >
-                                <Layers className="w-3 h-3" />
+                                <Layers className="w-3.5 h-3.5" />
                                 <span>{it.text}</span>
                             </button>
                         ))}
@@ -197,31 +197,31 @@ function CategoriseContent({
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 flex-1 min-h-0 overflow-y-auto pr-0.5 pb-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 flex-1 min-h-0 overflow-y-auto p-4 -m-4">
                 {categories.map((cat, idx) => {
                     const palette = PALETTES[idx % PALETTES.length]
                     const assignedItems = items.filter(it => assignments[it.id] === cat.id)
 
                     return (
-                        <div key={cat.id} className="flex flex-col gap-1 w-full shrink-0 sm:shrink min-h-[160px] sm:min-h-0">
+                        <div key={cat.id} className="flex flex-col gap-1.5 w-full shrink-0 sm:shrink min-h-[160px] sm:min-h-0 p-1">
                             <div className="flex items-center justify-between px-1">
-                                <span className={cn("text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg border shadow-xs", palette.badgeBg)}>
+                                <span className={cn("text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg border shadow-xs", palette.badgeBg)}>
                                     {assignedItems.length} item{assignedItems.length === 1 ? "" : "s"}
                                 </span>
                             </div>
                             <div
                                 onClick={() => handleAssignToCategory(cat.id)}
                                 className={cn(
-                                    "flex-1 min-h-[140px] rounded-2xl border-2 border-b-4 transition-all duration-300 flex flex-col justify-between select-none shadow-sm overflow-hidden",
+                                    "flex-1 min-h-[140px] rounded-2xl border-2 border-b-4 transition-all duration-300 flex flex-col justify-between select-none shadow-sm p-0.5",
                                     palette.bg,
                                     selectedItemId && palette.hoverBorder,
-                                    selectedItemId && "cursor-pointer scale-[1.01]"
+                                    selectedItemId && "cursor-pointer scale-[1.04] shadow-xl z-10"
                                 )}
                             >
-                                <div className={cn("p-2.5 flex items-center justify-between border-b border-black/10 shrink-0", palette.headerBg)}>
+                                <div className={cn("p-2.5 flex items-center justify-between border-b border-black/10 shrink-0 rounded-t-xl", palette.headerBg)}>
                                     <h4 className="font-black text-xs uppercase tracking-wider drop-shadow-sm">{cat.title}</h4>
                                 </div>
-                                <div className="p-2.5 flex-1 space-y-1.5 overflow-y-auto min-h-[80px]">
+                                <div className="p-2.5 flex-1 space-y-2 overflow-y-auto min-h-[80px]">
                                     {assignedItems.map(it => {
                                         const isCorrect = submitted && it.categoryId === cat.id
                                         const isIncorrect = submitted && it.categoryId !== cat.id
@@ -230,21 +230,21 @@ function CategoriseContent({
                                                 key={it.id}
                                                 onClick={(e) => handleRemoveAssignment(it.id, e)}
                                                 className={cn(
-                                                    "flex items-center justify-between p-2.5 rounded-xl border-2 border-b-4 font-bold text-xs transition-all shadow-sm",
-                                                    !submitted && "bg-white border-slate-200 border-b-slate-300 text-slate-800 hover:border-[#FF4B4B] hover:text-[#FF4B4B] cursor-pointer",
+                                                    "flex items-center justify-between p-2.5 rounded-xl border-2 border-b-4 font-extrabold text-xs transition-all shadow-sm",
+                                                    !submitted && "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 border-b-slate-300 text-slate-800 dark:text-slate-200 hover:border-[#FF4B4B] hover:text-[#FF4B4B] cursor-pointer",
                                                     isCorrect && "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950",
                                                     isIncorrect && "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
                                                 )}
                                             >
                                                 <span>{it.text}</span>
-                                                {submitted && isCorrect && <CheckCircle2 className="w-3.5 h-3.5 text-[#58CC02]" />}
-                                                {submitted && isIncorrect && <XCircle className="w-3.5 h-3.5 text-[#FF4B4B]" />}
+                                                {submitted && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#58CC02]" />}
+                                                {submitted && isIncorrect && <XCircle className="w-4 h-4 text-[#FF4B4B]" />}
                                             </div>
                                         )
                                     })}
                                     {assignedItems.length === 0 && (
-                                        <div className="h-full min-h-[50px] flex items-center justify-center p-3 border-2 border-dashed border-slate-300/60 rounded-xl">
-                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider text-center">
+                                        <div className="h-full min-h-[50px] flex items-center justify-center p-3 border-2 border-dashed border-slate-300/60 dark:border-slate-700/60 rounded-xl">
+                                            <span className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider text-center">
                                                 Tap item above to assign here
                                             </span>
                                         </div>
@@ -256,9 +256,10 @@ function CategoriseContent({
                 })}
             </div>
 
-            <div className="mt-4 flex items-center justify-between gap-4 shrink-0">
+            {/* Reserved Footer Height to Prevent Layout Shift */}
+            <div className="mt-4 flex items-center justify-center gap-4 shrink-0 min-h-[56px]">
                 {submitted ? (
-                    <button type="button" onClick={handleReset} className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer">
+                    <button type="button" onClick={handleReset} className="px-6 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 border-2 border-slate-200 dark:border-slate-700 border-b-4 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer flex items-center gap-2">
                         <RefreshCw className="w-4 h-4" />
                         <span>Retry Categorisation</span>
                     </button>
@@ -268,10 +269,10 @@ function CategoriseContent({
                         onClick={handleCheckAnswers}
                         disabled={Object.keys(assignments).length === 0 || isEditing || disabled}
                         className={cn(
-                            "w-full h-11 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
+                            "px-6 py-2.5 rounded-xl font-black uppercase text-xs tracking-wider transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
                             Object.keys(assignments).length > 0
                                 ? "bg-[#58CC02] hover:bg-[#46a302] text-white border-[#58CC02] border-b-[#3B8C00] shadow-emerald-500/20 cursor-pointer"
-                                : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
+                                : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700 border-b-slate-300 shadow-none cursor-not-allowed"
                         )}
                     >
                         Check Categorisation

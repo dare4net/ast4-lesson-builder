@@ -117,15 +117,15 @@ export function BulletListRenderer({
   const ListComponent = type === "ordered" ? "ol" : "ul"
 
   return (
-    <div className="space-y-4 my-4 max-w-2xl mx-auto w-full">
-      <div className="flex items-center justify-between px-4">
-        <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">List Items</span>
+    <div className="space-y-4 my-4 w-full px-6 sm:px-10 md:px-12">
+      <div className="flex items-center justify-between px-2">
+        <span className="text-[9px] font-black text-emerald-600/70 dark:text-emerald-400/70 uppercase tracking-[0.2em]">Key Takeaways</span>
         {hasAudio && (
           <ListenButton
             hasAudio={hasAudio}
             isPlaying={isPlaying}
             onClick={handleSpeak}
-            className="rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 border border-emerald-500/30"
+            className="rounded-xl bg-emerald-50 dark:bg-emerald-950/50 hover:bg-emerald-100 text-emerald-600 dark:text-emerald-400 border-2 border-emerald-200 dark:border-emerald-800 border-b-4 active:border-b-2 active:translate-y-[1px]"
             iconClassName={cn(isPlaying && "text-emerald-500")}
             label="Listen"
           />
@@ -133,7 +133,7 @@ export function BulletListRenderer({
       </div>
 
       <ListComponent className={cn(
-        "space-y-3 px-2 mx-auto max-w-2xl text-left",
+        "space-y-3.5 px-2 mx-auto w-full text-left",
         type === "ordered" ? "list-none counter-reset-item" : "list-none"
       )}>
         {items.map((item, index) => {
@@ -147,15 +147,15 @@ export function BulletListRenderer({
           return (
             <li
               key={index}
-              className="relative text-slate-800 dark:text-slate-200 font-medium leading-relaxed text-sm md:text-base flex items-start gap-3 transition-all duration-300 group"
+              className="relative text-slate-800 dark:text-slate-200 font-bold leading-relaxed text-sm md:text-base flex items-start gap-4 transition-all duration-300 group"
             >
-              {/* Marker Badge */}
-              <div className="shrink-0 flex items-center justify-center min-w-[28px] h-7 mt-0.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-black text-xs px-2 shadow-xs">
+              {/* 3D Tactile Marker Badge */}
+              <div className="shrink-0 flex items-center justify-center min-w-[32px] h-8 mt-0.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-b-4 border-emerald-200 dark:border-emerald-800 border-b-emerald-300 dark:border-b-emerald-700 text-emerald-600 dark:text-emerald-400 font-black text-xs px-2.5 shadow-sm">
                 {type === "ordered" ? `${index + 1}` : "•"}
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0 pt-0.5">
+              <div className="flex-1 min-w-0 pt-1">
                 {(isActive || (index < currentIndex && !isPreviouslyCompleted && !isEditing)) ? (
                   <AnimatedListItem
                     item={item}
@@ -173,15 +173,6 @@ export function BulletListRenderer({
           )
         })}
       </ListComponent>
-
-      {(isPreviouslyCompleted || (hasStarted && currentIndex === items.length - 1)) && !isEditing && (
-        <div className="mt-6 flex justify-center animate-in slide-in-from-bottom-2 fade-in duration-700">
-          <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 shadow-sm">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span className="text-[9px] font-black text-emerald-700 uppercase tracking-widest">All done! ✓</span>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

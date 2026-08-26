@@ -224,17 +224,15 @@ function DragDropContent({
 
   return (
     <div className={cn(
-      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/dnd transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 group/dnd transition-all duration-300 px-6 sm:px-10 md:px-12 py-2",
       disabledProp && "opacity-75"
     )}>
-      {/* Visual Accent */}
-      <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* Header */}
       <div className="shrink-0 relative flex items-center justify-between pt-2">
         <div className="space-y-0.5">
           <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Ordering Activity</span>
-          <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+          <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">{title}</h3>
         </div>
         <div className="flex items-center gap-2">
           {isLive && (
@@ -247,7 +245,7 @@ function DragDropContent({
             </div>
           )}
           {disabledProp && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700">
               <Lock className="h-2.5 w-2.5" />
               <span>Locked</span>
             </div>
@@ -255,61 +253,61 @@ function DragDropContent({
         </div>
       </div>
 
-      {/* CENTER SECTION: Interactive List */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
-        <div className="relative space-y-2.5 my-auto">
+      {/* CENTER SECTION: Interactive List (Full Canvas Width) */}
+      <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+        <div className="relative space-y-3 my-auto w-full">
           {dragItems.map((item, index) => (
             <div
               key={item.id}
               className={cn(
-                "group/item relative p-3 rounded-xl border-2 transition-all duration-300 flex items-center gap-3 overflow-hidden shadow-sm",
+                "group/item relative p-4 rounded-2xl border-2 border-b-4 transition-all duration-200 flex items-center gap-4 shadow-sm",
                 isSubmitted && item.correctIndex === index
-                  ? "bg-emerald-500 border-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+                  ? "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg"
                   : isSubmitted && item.correctIndex !== index
-                    ? "bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10"
-                    : "bg-white border-slate-100 text-slate-900 hover:border-emerald-500/30 hover:shadow-md"
+                    ? "bg-rose-50 dark:bg-rose-950/40 border-rose-500 border-b-rose-600 text-rose-600 font-bold"
+                    : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5"
               )}
             >
               <div
-                className="absolute left-0 top-0 bottom-0 w-[2px]"
+                className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl"
                 style={{ backgroundColor: !isSubmitted ? item.color : 'transparent' }}
               />
 
-              <div className="flex items-center gap-3 flex-1">
+              <div className="flex items-center gap-3.5 flex-1 pl-1">
                 <div className={cn(
-                  "w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs transition-all duration-300",
-                  isSubmitted && item.correctIndex === index ? "bg-white/20 text-white" : "bg-emerald-50 text-emerald-600"
+                  "w-8 h-8 rounded-xl flex items-center justify-center font-black text-xs transition-all duration-300",
+                  isSubmitted && item.correctIndex === index ? "bg-white/20 text-white" : "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400"
                 )}>
                   {index + 1}
                 </div>
-                <span className="font-bold text-xs md:text-sm tracking-tight">{item.text}</span>
+                <span className="font-bold text-sm tracking-tight">{item.text}</span>
               </div>
 
               {!isSubmitted && (
-                <div className="flex gap-1.5">
-                  <Button
-                    className="h-8 w-8 rounded-lg bg-white border-2 border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-500 transition-all active:scale-90 shadow-sm p-0"
+                <div className="flex gap-2">
+                  <button
+                    className="h-9 w-9 rounded-xl bg-white dark:bg-slate-800 border-2 border-b-4 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:border-emerald-500 transition-all active:border-b-2 active:translate-y-[2px] p-0 flex items-center justify-center cursor-pointer"
                     onClick={() => moveItem(index, 'up')}
                     disabled={index === 0 || disabledProp}
                   >
-                    <MoveUp className="h-3.5 w-3.5 stroke-[3]" />
-                  </Button>
-                  <Button
-                    className="h-8 w-8 rounded-lg bg-white border-2 border-slate-100 text-slate-400 hover:text-emerald-600 hover:border-emerald-500 transition-all active:scale-90 shadow-sm p-0"
+                    <MoveUp className="h-4 w-4 stroke-[3]" />
+                  </button>
+                  <button
+                    className="h-9 w-9 rounded-xl bg-white dark:bg-slate-800 border-2 border-b-4 border-slate-200 dark:border-slate-700 text-slate-500 hover:text-emerald-600 hover:border-emerald-500 transition-all active:border-b-2 active:translate-y-[2px] p-0 flex items-center justify-center cursor-pointer"
                     onClick={() => moveItem(index, 'down')}
                     disabled={index === dragItems.length - 1 || disabledProp}
                   >
-                    <MoveDown className="h-3.5 w-3.5 stroke-[3]" />
-                  </Button>
+                    <MoveDown className="h-4 w-4 stroke-[3]" />
+                  </button>
                 </div>
               )}
 
               {isSubmitted && (
                 <div className="animate-in zoom-in-50 duration-300">
                   {item.correctIndex === index ? (
-                    <CheckCircle2 className="h-5 w-5 text-white stroke-[4]" />
+                    <CheckCircle2 className="h-6 w-6 text-white stroke-[3]" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-rose-600 stroke-[4] animate-in shake" />
+                    <XCircle className="h-6 w-6 text-rose-600 stroke-[3] animate-in shake" />
                   )}
                 </div>
               )}
@@ -318,66 +316,54 @@ function DragDropContent({
         </div>
       </div>
 
-      {/* BOTTOM SECTION: Feedback & Buttons */}
-      <div className="shrink-0 space-y-3 pt-1 px-4 pb-4">
+      {/* BOTTOM SECTION: Reserved Footer Height to Prevent Layout Jump */}
+      <div className="shrink-0 space-y-3 pt-1 pb-4 min-h-[56px] flex flex-col justify-center items-center">
         {!isSubmitted ? (
-          <Button
-            className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 hover:bg-emerald-500"
+          <button
+            className="px-6 py-2.5 rounded-xl bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] active:border-b-0 active:translate-y-[2px] text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
             onClick={handleCheck}
             disabled={disabledProp}
           >
             Check Order
-          </Button>
+          </button>
         ) : (
-          <div className="space-y-3 animate-in slide-in-from-top-2 duration-500">
+          <div className="space-y-3 animate-in slide-in-from-top-2 duration-500 w-full max-w-md">
             <div className={cn(
-              "p-4 rounded-xl border-2 transition-all duration-300 shadow-sm",
-              isCorrect ? "bg-emerald-50/50 border-emerald-500/20 shadow-emerald-500/5" : "bg-rose-50/50 border-rose-500/20 shadow-rose-500/5"
+              "p-3.5 rounded-xl border-2 transition-all duration-300 shadow-sm text-center",
+              isCorrect ? "bg-emerald-50/50 border-emerald-500/20" : "bg-rose-50/50 border-rose-500/20"
             )}>
               {isCorrect ? (
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Correct</span>
-                  </div>
-                  <p className="text-sm font-black text-slate-900 italic">"Excellent! The order is correct."</p>
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest block">Correct</span>
+                  <p className="text-xs font-black text-slate-900 dark:text-slate-100">"Excellent! The order is correct."</p>
                 </div>
               ) : (
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Incorrect</span>
-                  </div>
-                  <p className="text-sm font-black text-slate-900">The order is incorrect. Please try again.</p>
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest block">Incorrect</span>
+                  <p className="text-xs font-black text-slate-900 dark:text-slate-100">The order is incorrect. Please try again.</p>
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-              <Button
-                className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest disabled:opacity-100 shadow-lg shadow-emerald-500/20"
+            <div className="flex items-center justify-center gap-3">
+              <button
+                className="px-5 py-2.5 rounded-xl bg-emerald-600 border-b-4 border-emerald-800 text-white font-black uppercase text-xs tracking-wider cursor-default"
                 disabled
               >
-                Completed
-              </Button>
+                Completed ✓
+              </button>
               {!isLive && !isCorrect && (
-                <Button
-                  className="h-11 w-full rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95 shadow-sm"
+                <button
+                  className="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-b-4 border-emerald-500 border-b-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-all font-black uppercase text-xs tracking-wider active:border-b-2 active:translate-y-[2px] cursor-pointer"
                   onClick={onLocalRetry}
                   disabled={disabledProp}
                 >
                   Retry
-                </Button>
+                </button>
               )}
             </div>
           </div>
         )}
-
-        <div className="flex justify-center pt-0.5">
-          <div className="px-4 py-1.5 bg-emerald-50/50 border border-emerald-100 rounded">
-            <span className="text-[7px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">
-              Points: <span className="text-emerald-700">{state.dragItems.reduce((acc, item, idx) => acc + (item.correctIndex === idx ? (props.points || 15) / props.items!.length : 0), 0)}</span> / {props.points || 15}
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   )

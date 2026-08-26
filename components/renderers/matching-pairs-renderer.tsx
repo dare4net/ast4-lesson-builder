@@ -346,11 +346,9 @@ function MatchingPairsContent({
 
   return (
     <div className={cn(
-      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/matching transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 group/matching transition-all duration-300 px-6 sm:px-10 md:px-12 py-2",
       disabledProp && "opacity-75"
     )}>
-      {/* Structural Accents */}
-      <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* TOP SECTION: Progress & Meta */}
       <div className="shrink-0 space-y-3 pt-2">
@@ -359,7 +357,7 @@ function MatchingPairsContent({
             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Progress</span>
             <span className="text-[8px] font-black text-emerald-600 uppercase tracking-tighter">{Math.round((Object.keys(matches).length / pairs.length) * 100)}%</span>
           </div>
-          <div className="h-1.5 w-full bg-emerald-50 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-emerald-50 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500 ease-out"
               style={{ width: `${(Object.keys(matches).length / pairs.length) * 100}%` }}
@@ -370,7 +368,7 @@ function MatchingPairsContent({
         <div className="relative flex items-center justify-between">
           <div className="space-y-0.5">
             <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Matching Activity</span>
-            <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+            <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">{title}</h3>
           </div>
           <div className="flex items-center gap-2">
             {isLive && (
@@ -383,7 +381,7 @@ function MatchingPairsContent({
               </div>
             )}
             {disabledProp && (
-              <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
+              <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 dark:bg-slate-800 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700">
                 <Lock className="h-2.5 w-2.5" />
                 <span>Locked</span>
               </div>
@@ -393,14 +391,14 @@ function MatchingPairsContent({
       </div>
 
       {/* CENTER SECTION: Interactive Match Grid */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
-        <div className="grid grid-cols-2 gap-3 relative my-auto">
+      <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 relative my-auto w-full">
           {/* Connector Lane (Hidden on mobile) */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-slate-100 hidden md:block -translate-x-1/2 rounded-full" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-slate-100 dark:bg-slate-800 hidden md:block -translate-x-1/2 rounded-full" />
 
           {/* Source Nodes */}
-          <div className="space-y-2">
-            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Group A</span>
+          <div className="space-y-3">
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Group A</span>
             {leftItems.map((item) => {
               const match = matches[item.id]
               const isMatched = !!match
@@ -413,16 +411,17 @@ function MatchingPairsContent({
                     backgroundColor: isMatched && (!isChecking || item.id === match.rightId) ? match.color : undefined
                   }}
                   className={cn(
-                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 text-slate-900 overflow-hidden shadow-sm',
-                    isSelected && 'border-emerald-500 bg-emerald-50 scale-[1.02] shadow-emerald-500/10',
-                    isMatched && !isChecking && 'border-emerald-300 shadow-md font-bold',
+                    'group/node w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm',
+                    'border-b-4 active:border-b-0 active:translate-y-[2px]',
+                    isSelected && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
+                    isMatched && !isChecking && 'border-emerald-500 border-b-emerald-600 font-bold',
                     isChecking && isMatched && (
                       item.id === match.rightId
-                        ? 'border-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/20 font-bold'
-                        : 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10 font-bold'
+                        ? 'border-emerald-500 border-b-emerald-600 text-slate-900 dark:text-slate-100 font-bold'
+                        : 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 border-b-rose-600 text-rose-600 font-bold'
                     ),
                     (isMatched || isChecking || disabledProp) && 'cursor-not-allowed',
-                    !isMatched && !isChecking && !disabledProp && 'hover:border-emerald-500/50 hover:bg-emerald-50/20 hover:shadow-md'
+                    !isMatched && !isChecking && !disabledProp && 'hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 cursor-pointer'
                   )}
                   onClick={() => handleLeftClick(item.id)}
                   disabled={isMatched || isChecking || disabledProp}
@@ -441,8 +440,8 @@ function MatchingPairsContent({
           </div>
 
           {/* Destination Nodes */}
-          <div className="space-y-2">
-            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Group B</span>
+          <div className="space-y-3">
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1 ml-1">Group B</span>
             {rightItems.map((item) => {
               const matchEntry = Object.entries(matches).find(([_, m]) => m.rightId === item.id)
               const isMatched = !!matchEntry
@@ -456,16 +455,17 @@ function MatchingPairsContent({
                     backgroundColor: isMatched && match && (!isChecking || matchEntry?.[0] === item.id) ? match.color : undefined
                   }}
                   className={cn(
-                    'group/node w-full p-3 text-left transition-all duration-300 relative rounded-xl border-2 border-slate-100 text-slate-900 overflow-hidden shadow-sm',
-                    isSelected && 'border-emerald-500 bg-emerald-50 scale-[1.02] shadow-emerald-500/10',
-                    isMatched && !isChecking && 'border-emerald-300 shadow-md font-bold',
+                    'group/node w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm',
+                    'border-b-4 active:border-b-0 active:translate-y-[2px]',
+                    isSelected && 'border-[#1CB0F6] bg-[#1CB0F6]/5 border-b-[#0090CC]',
+                    isMatched && !isChecking && 'border-emerald-500 border-b-emerald-600 font-bold',
                     isChecking && isMatched && (
                       matchEntry?.[0] === item.id
-                        ? 'border-emerald-500 text-slate-900 shadow-lg shadow-emerald-500/20 font-bold'
-                        : 'bg-rose-50 border-rose-500 text-rose-600 shadow-rose-500/10 font-bold'
+                        ? 'border-emerald-500 border-b-emerald-600 text-slate-900 dark:text-slate-100 font-bold'
+                        : 'bg-rose-50 dark:bg-rose-950/40 border-rose-500 border-b-rose-600 text-rose-600 font-bold'
                     ),
                     (isMatched || isChecking || disabledProp) && 'cursor-not-allowed',
-                    !isMatched && !isChecking && !disabledProp && 'hover:border-emerald-500/50 hover:bg-emerald-50/20 hover:shadow-md'
+                    !isMatched && !isChecking && !disabledProp && 'hover:border-[#1CB0F6]/60 hover:bg-[#1CB0F6]/5 cursor-pointer'
                   )}
                   onClick={() => handleRightClick(item.id)}
                   disabled={isMatched || isChecking || disabledProp}
@@ -518,33 +518,33 @@ function MatchingPairsContent({
           )}
         </div>
 
-        <div className="w-full">
+        <div className="w-full min-h-[56px] flex items-center justify-center shrink-0">
           {!isChecking && allPairsMatched && (
-            <Button
-              className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-emerald-500/20 hover:bg-emerald-500"
+            <button
+              className="px-6 py-2.5 rounded-xl bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] active:border-b-0 active:translate-y-[2px] text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md cursor-pointer"
               onClick={handleCheck}
               disabled={disabledProp}
             >
               Check Matches
-            </Button>
+            </button>
           )}
 
           {isChecking && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-              <Button
-                className="h-11 w-full rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest disabled:opacity-100 shadow-lg shadow-emerald-500/20"
+            <div className="flex items-center justify-center gap-3">
+              <button
+                className="px-5 py-2.5 rounded-xl bg-emerald-600 border-b-4 border-emerald-800 text-white font-black uppercase text-xs tracking-wider cursor-default"
                 disabled
               >
-                Completed
-              </Button>
+                Completed ✓
+              </button>
               {!isLive && (
-                <Button
-                  className="h-11 w-full rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all font-black uppercase text-[10px] tracking-widest active:scale-95 shadow-sm"
+                <button
+                  className="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 border-2 border-b-4 border-emerald-500 border-b-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-all font-black uppercase text-xs tracking-wider active:border-b-2 active:translate-y-[2px] cursor-pointer"
                   onClick={onLocalRetry}
                   disabled={disabledProp}
                 >
                   Retry
-                </Button>
+                </button>
               )}
             </div>
           )}
