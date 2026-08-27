@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 export type ControlType = "slider" | "knob" | "stepper" | "toggle"
@@ -561,9 +562,7 @@ function SpectrumSorterContent({
                     <span className="text-[10px] font-black uppercase tracking-widest text-[#0284C7]">
                         System Control Deck • {points} Points
                     </span>
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                        {title}
-                    </h3>
+                    <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
                 <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#F8FAFC] shadow-[-4px_-4px_10px_#FFFFFF,5px_5px_12px_rgba(148,163,184,0.35)] border border-white text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -694,7 +693,7 @@ function SpectrumSorterContent({
                                 <div className="flex items-center justify-between">
                                     <span className="font-black text-sm tracking-tight flex items-center gap-2 text-slate-800">
                                         <RenderItemIcon iconName={item.icon} fallbackType={widgetType} />
-                                        {item.label}
+                                        <FormattedText content={item.label} as="span" />
                                     </span>
 
                                     <div className="flex items-center gap-2">

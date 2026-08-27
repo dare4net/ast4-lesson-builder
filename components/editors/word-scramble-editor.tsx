@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Type, HelpCircle, Sparkles, Plus, Trash2, AlignLeft, Wand2, Zap, Anchor, Lightbulb } from "lucide-react"
@@ -205,12 +206,12 @@ export function WordScrambleEditor({
                             <AlignLeft className="w-4 h-4 text-[#1CB0F6]" />
                             Target Sentence
                         </Label>
-                        <textarea
+                        <WYSIWYGTextArea
                             value={sentence}
-                            onChange={e => onSentenceChange?.(e.target.value)}
+                            onChange={val => onSentenceChange?.(val)}
                             placeholder="e.g. Photosynthesis converts sunlight into chemical energy"
                             rows={3}
-                            className="w-full bg-slate-950/60 border border-slate-800 rounded-xl text-sm font-bold text-slate-200 placeholder:text-slate-700 px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-sky-500/40"
+                            showPreviewToggle={false}
                         />
                     </div>
 
@@ -240,11 +241,10 @@ export function WordScrambleEditor({
                     <HelpCircle className="w-4 h-4 text-[#1CB0F6]" />
                     Clue / Definition Text
                 </Label>
-                <Input
+                <WYSIWYGInput
                     value={hint}
-                    onChange={e => onHintChange?.(e.target.value)}
+                    onChange={val => onHintChange?.(val)}
                     placeholder="e.g. Process plants use to make food from sunlight..."
-                    className="bg-slate-950/60 border-slate-800 focus-visible:ring-sky-500/50 h-11 text-sm font-medium placeholder:text-slate-700 rounded-xl"
                 />
             </div>
 

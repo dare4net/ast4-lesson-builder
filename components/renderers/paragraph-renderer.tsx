@@ -4,6 +4,7 @@ import { useTypingAnimation } from "@/hooks/use-typing-animation"
 import { Pause, CheckCircle2 } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
+import { FormattedText } from "@/components/ui/formatted-text"
 
 interface ParagraphRendererProps {
   content: string
@@ -45,7 +46,7 @@ export function ParagraphRenderer({
     togglePause,
     fontSizeClass
   } = useTypingAnimation({
-    content: content.replace(/<[^>]*>?/gm, ""),
+    content: content,
     componentId: id,
     isEditing,
     alreadyCompleted: isPreviouslyCompleted,
@@ -96,11 +97,13 @@ export function ParagraphRenderer({
           fontSizeClass,
           "font-medium text-slate-800 dark:text-slate-100 leading-relaxed tracking-wide"
         )}>
-          {displayedContent}
-          <span className={cn(
-            "inline-block w-[0.1em] h-[0.8em] ml-[0.1em] bg-emerald-500 align-middle",
-            showCursor ? "opacity-100" : "opacity-0"
-          )} />
+          <FormattedText content={displayedContent} />
+          {isTyping && (
+            <span className={cn(
+              "inline-block w-[0.1em] h-[0.8em] ml-[0.1em] bg-emerald-500 align-middle",
+              showCursor ? "opacity-100" : "opacity-0"
+            )} />
+          )}
         </p>
 
         {isPaused && (

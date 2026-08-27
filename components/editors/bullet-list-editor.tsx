@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { GripVertical } from "lucide-react"
 import { DndProvider, useDrag, useDrop } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
@@ -104,11 +104,10 @@ function DraggableListItem({ index, item, updateItem, moveItem }: DraggableListI
         <GripVertical className="h-4 w-4" />
       </div>
 
-      <Input
+      <WYSIWYGInput
         value={item}
-        onChange={(e) => updateItem(index, e.target.value)}
+        onChange={(val) => updateItem(index, val)}
         placeholder={`Data Point ${index + 1}`}
-        className="flex-1 bg-slate-950/50 border-slate-800/50 focus-visible:ring-emerald-500/50 text-sm font-medium h-10 rounded-xl transition-all"
       />
     </div>
   )

@@ -896,7 +896,10 @@ Chronological event ordering line.
 ---
 
 #### `wordScramble`
-Tap tile puzzle to unscramble target word.
+Interactive letter tile puzzle to unscramble target words or full sentences. Supports three variants: `"single"`, `"multi"`, and `"sentence"`.
+
+##### Variant 1: Single Word (`"variant": "single"`)
+Unscramble one target word.
 
 ```json
 {
@@ -904,10 +907,14 @@ Tap tile puzzle to unscramble target word.
   "type": "wordScramble",
   "props": {
     "title": "Unscramble the Word",
+    "variant": "single",
     "word": "PHOTOSYNTHESIS",
     "hint": "Process plants use to make food",
     "points": 15,
     "mode": "practice",
+    "allowTextClue": true,
+    "allowLetterReveal": true,
+    "maxLetterReveals": 3,
     "state": "active"
   },
   "state": "active",
@@ -915,6 +922,76 @@ Tap tile puzzle to unscramble target word.
   "mode": "practice"
 }
 ```
+
+##### Variant 2: Multi-Word (`"variant": "multi"`)
+Unscramble multiple words independently from a single letter pool.
+
+```json
+{
+  "id": "wordScramble-<ts>",
+  "type": "wordScramble",
+  "props": {
+    "title": "Unscramble Key Terms",
+    "variant": "multi",
+    "words": ["SOLAR", "SYSTEM"],
+    "hint": "Our planetary neighborhood",
+    "points": 20,
+    "mode": "practice",
+    "allowTextClue": true,
+    "allowLetterReveal": true,
+    "maxLetterReveals": 3,
+    "allowWordSolve": true,
+    "maxWordSolves": 1,
+    "allowFirstLetterAnchors": true,
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+##### Variant 3: Sentence (`"variant": "sentence"`)
+Unscramble a complete sentence word by word.
+
+```json
+{
+  "id": "wordScramble-<ts>",
+  "type": "wordScramble",
+  "props": {
+    "title": "Unscramble the Sentence",
+    "variant": "sentence",
+    "sentence": "Photosynthesis converts sunlight into energy",
+    "hint": "How plants produce food",
+    "points": 25,
+    "mode": "practice",
+    "allowTextClue": true,
+    "allowLetterReveal": true,
+    "maxLetterReveals": 3,
+    "allowWordSolve": true,
+    "maxWordSolves": 1,
+    "allowFirstLetterAnchors": true,
+    "state": "active"
+  },
+  "state": "active",
+  "status": "uncompleted",
+  "mode": "practice"
+}
+```
+
+| Prop | Type | Variant | Default / Notes |
+|---|---|---|---|
+| `variant` | `string` | All | `"single"` \| `"multi"` \| `"sentence"` (Default: `"single"`) |
+| `word` | `string` | `"single"` | Target word string (required for `"single"`) |
+| `words` | `string[]` | `"multi"` | Array of target word strings (required for `"multi"`) |
+| `sentence` | `string` | `"sentence"` | Target sentence string (required for `"sentence"`) |
+| `hint` | `string` | All | Optional clue text revealed via the Hint button |
+| `allowTextClue` | `boolean` | All | Enable text hint toggle button (Default: `true`) |
+| `allowLetterReveal` | `boolean` | All | Enable auto-place correct letter button (Default: `true`) |
+| `maxLetterReveals` | `number` | All | Max letter reveals allowed per attempt (Default: `3`) |
+| `allowWordSolve` | `boolean` | `"multi"`, `"sentence"` | Enable auto-solve next word button (Default: `true`) |
+| `maxWordSolves` | `number` | `"multi"`, `"sentence"` | Max word solves allowed (Default: `1`) |
+| `allowFirstLetterAnchors` | `boolean` | `"multi"`, `"sentence"` | Enable first letter reveal anchors (Default: `true`) |
 
 ---
 

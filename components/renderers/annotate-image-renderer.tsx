@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Tag, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface AnnotationLabel {
@@ -148,7 +149,7 @@ function AnnotateImageContent({
                 </div>
             </div>
 
-            <h3 className="text-lg font-black mb-3 text-slate-900 tracking-tight shrink-0">{title}</h3>
+            <FormattedText content={title} as="h3" className="text-lg font-black mb-3 text-slate-900 tracking-tight shrink-0" />
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center flex-1 min-h-0 overflow-hidden">
                 <div className="lg:col-span-4 flex flex-col justify-between h-full space-y-3 min-h-0">
@@ -170,7 +171,7 @@ function AnnotateImageContent({
                                                 isPlaced && "opacity-40 bg-slate-100 border-slate-200 border-b-slate-200 text-slate-400 cursor-not-allowed"
                                             )}>
                                             <Tag className="w-3 h-3" />
-                                            <span>{label.text}</span>
+                                            <FormattedText content={label.text} as="span" />
                                         </button>
                                     )
                                 })}
@@ -222,7 +223,7 @@ function AnnotateImageContent({
                                             isCorrect && "bg-emerald-50 border-[#58CC02] border-b-[#3B8C00] text-emerald-950",
                                             isIncorrect && "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
                                         )}>
-                                        <span>{placedLabel.text}</span>
+                                        <FormattedText content={placedLabel.text} as="span" />
                                         {submitted && isCorrect && <CheckCircle2 className="w-3.5 h-3.5 text-[#58CC02]" />}
                                         {submitted && isIncorrect && <XCircle className="w-3.5 h-3.5 text-[#FF4B4B]" />}
                                     </div>

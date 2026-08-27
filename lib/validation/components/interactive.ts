@@ -447,10 +447,35 @@ export const wordScrambleValidator: ComponentValidator = {
         const res = createResult(component.id, component.type);
         validateTimeLimit(res, component);
 
-        const { word } = component.props || {};
-        if (typeof word !== 'string' || word.trim().length < 2) {
-            addError(res, 'INVALID_SCRAMBLE_WORD', 'props.word', 'Word scramble target word must be at least 2 characters long.');
+        const { variant = "single", word, words, sentence } = component.props || {};
+
+        if (variant === 'single' || (!variant && word)) {
+            if (typeof word !== 'string' || word.trim().length < 2) {
+                addError(res, 'INVALID_SCRAMBLE_WORD', 'props.word', 'Single-word scramble target word must be at least 2 characters long.');
+            }
+        } else if (variant === 'multi') {
+            if (!Array.isArray(words) || words.length === 0) {
+                addError(res, 'NO_SCRAMBLE_WORDS', 'props.words', 'Multi-word scramble mode requires a non-empty array of target words.');
+            } else {
+                words.forEach((w: any, idx: number) => {
+                    if (typeof w !== 'string' || w.trim() === '') {
+                        addError(res, 'INVALID_SCRAMBLE_WORD_ITEM', `props.words[${idx}]`, `Word scramble item ${idx + 1} cannot be empty.`);
+                    }
+                });
+            }
+        } else if (variant === 'sentence') {
+            if (typeof sentence !== 'string' || sentence.trim().length < 2) {
+                addError(res, 'INVALID_SCRAMBLE_SENTENCE', 'props.sentence', 'Sentence scramble mode requires a non-empty target sentence.');
+            } else {
+                const wordCount = sentence.trim().split(/\s+/).filter(Boolean).length;
+                if (wordCount < 2) {
+                    addWarning(res, 'SHORT_SCRAMBLE_SENTENCE', 'props.sentence', 'Sentence scramble mode works best with sentences containing 2 or more words.');
+                }
+            }
+        } else {
+            addError(res, 'INVALID_SCRAMBLE_VARIANT', 'props.variant', `Unknown word scramble variant '${variant}'. Must be 'single', 'multi', or 'sentence'.`);
         }
+
         return res;
     }
 };

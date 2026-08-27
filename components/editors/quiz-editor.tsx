@@ -2,10 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Plus, Trash2, Check, X, Circle, Shuffle } from "lucide-react"
+import { Plus, Trash2, Check, Circle, Shuffle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
@@ -121,11 +121,10 @@ export function QuizEditor({
           <div className="space-y-6">
             <div className="space-y-2">
               <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Inquiry Definition</Label>
-              <Input
+              <WYSIWYGInput
                 value={question.question}
-                onChange={(e) => updateQuestion(qIndex, "question", e.target.value)}
+                onChange={(val) => updateQuestion(qIndex, "question", val)}
                 placeholder="What is the prompt for this sector?"
-                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-12 text-sm font-bold placeholder:text-slate-700 rounded-xl"
               />
             </div>
 
@@ -175,14 +174,11 @@ export function QuizEditor({
                       )}
                     </Button>
 
-                    <Input
+                    <WYSIWYGInput
                       value={option.text}
-                      onChange={(e) => updateOption(qIndex, oIndex, "text", e.target.value)}
+                      onChange={(val) => updateOption(qIndex, oIndex, "text", val)}
                       placeholder={`Descriptor ${oIndex + 1}`}
-                      className={cn(
-                        "flex-1 w-full min-w-0 bg-slate-950/20 border-slate-800/50 h-10 text-sm font-bold transition-all rounded-xl",
-                        option.isCorrect ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-400" : "focus:bg-slate-950/50"
-                      )}
+                      className="flex-1 w-full min-w-0"
                     />
 
                     <Button
@@ -199,14 +195,14 @@ export function QuizEditor({
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 pt-1">
               <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Logic Feedback (Optional)</Label>
-              <Textarea
+              <WYSIWYGTextArea
                 value={question.explanation || ""}
-                onChange={(e) => updateQuestion(qIndex, "explanation", e.target.value)}
+                onChange={(val) => updateQuestion(qIndex, "explanation", val)}
                 placeholder="Why is the chosen data stream correct?"
                 rows={3}
-                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
+                showPreviewToggle={false}
               />
             </div>
           </div>

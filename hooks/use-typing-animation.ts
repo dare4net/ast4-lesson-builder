@@ -61,7 +61,22 @@ export function useTypingAnimation({
         if (isPaused) return
 
         if (indexRef.current < contentRef.current.length) {
-            const char = contentRef.current.charAt(indexRef.current)
+            const currentStr = contentRef.current
+
+            // HTML Tag Skipping: If pointing to an HTML tag '<', skip tag in 0ms
+            if (currentStr.charAt(indexRef.current) === "<") {
+                const closingTagIdx = currentStr.indexOf(">", indexRef.current)
+                if (closingTagIdx !== -1) {
+                    const fullTag = currentStr.substring(indexRef.current, closingTagIdx + 1)
+                    setDisplayedContent(prev => prev + fullTag)
+                    indexRef.current = closingTagIdx + 1
+                    // Instantly trigger next character so tag parsing is seamless
+                    timeoutRef.current = setTimeout(animate, 0)
+                    return
+                }
+            }
+
+            const char = currentStr.charAt(indexRef.current)
 
             // Calculate dynamic delay for "dramatic" effect
             // Pause longer at punctuation

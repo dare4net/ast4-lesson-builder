@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, RotateCw, CheckCircle2, Lock } from "lucide-
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 import {
   playFlashcardFlipForward,
@@ -248,7 +249,7 @@ function FlashcardsContent({
                     }}
                   >
                     <div className="text-center space-y-3">
-                      <div className="text-2xl font-black text-slate-900 tracking-tight leading-tight px-4">{currentCard.front}</div>
+                      <FormattedText content={currentCard.front} className="text-2xl font-black text-slate-900 tracking-tight leading-tight px-4" />
                       {!disabledProp && (
                         <div className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em]">tap card to flip</div>
                       )}
@@ -265,7 +266,7 @@ function FlashcardsContent({
                     }}
                   >
                     <div className="text-center space-y-3">
-                      <div className="text-2xl font-black text-white tracking-tight leading-tight px-4">{currentCard.back}</div>
+                      <FormattedText content={currentCard.back} className="text-2xl font-black text-white tracking-tight leading-tight px-4" />
                       {!disabledProp && (
                         <div className="text-[9px] font-bold text-white/50 uppercase tracking-[0.15em]">Got it!</div>
                       )}

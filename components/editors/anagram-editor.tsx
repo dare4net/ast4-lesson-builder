@@ -2,6 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 
 interface AnagramEditorProps {
@@ -35,11 +36,10 @@ export function AnagramEditor({
                 <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     Hint Text (Optional)
                 </Label>
-                <Input
+                <WYSIWYGInput
                     value={hint}
-                    onChange={e => onHintChange(e.target.value)}
+                    onChange={val => onHintChange(val)}
                     placeholder="e.g. A step-by-step procedure for solving a problem"
-                    className="bg-slate-950/60 border-slate-800 text-xs font-medium"
                 />
             </div>
         </div>

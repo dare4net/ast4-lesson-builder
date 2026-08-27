@@ -2,6 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Cloud, Plus, Trash2 } from "lucide-react"
@@ -63,11 +64,10 @@ export function WordCloudEditor({
             {/* Prompt */}
             <div className="space-y-2">
                 <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide">Prompt / Instruction</Label>
-                <Input
+                <WYSIWYGInput
                     value={prompt}
-                    onChange={e => onPromptChange?.(e.target.value)}
+                    onChange={val => onPromptChange?.(val)}
                     placeholder="e.g. What words come to mind when you think of..."
-                    className="bg-slate-950/60 border-slate-800 focus-visible:ring-violet-500/50 h-10 text-sm font-bold placeholder:text-slate-700 rounded-xl w-full"
                 />
             </div>
 

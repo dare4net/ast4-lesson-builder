@@ -121,7 +121,7 @@ Below is the complete list of all registered interactive components, their modes
 | **`categorise`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Bucket item sorting | Medium-High | Categorization, concept grouping, bucket classification |
 | **`annotateImage`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Diagram node tag placement | Medium-High | Visual diagram annotation, structural labeling assessment |
 | **`timeline`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Chronological event placement | Medium-High | Historical/process event ordering on interactive timeline |
-| **`wordScramble`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Letter un-scrambling | Medium-High | Key term spelling and exact word retrieval |
+| **`wordScramble`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Letter & sentence un-scrambling (`single`, `multi`, `sentence`) | Medium-High | Key term spelling, multi-word retrieval, and sentence unscrambling |
 | **`memoryGrid`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | 3D tile pair matching | Medium-High | Memory card matching, term-definition association game |
 | **`hotspot`** (quiz) | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Visual diagram target selection | Medium-High | Visual assessment — clicking exact regions on a diagram under time limit |
 | **`fillInTheBlank`** | `"practice"` / `"live"` | ✅ (`props.timeLimit`) | Sentence reading & typing/selecting text | High (Requires Sealed Concept) | Sentence completion & exact terminology retrieval (ONLY after concept is sealed) |
@@ -148,7 +148,7 @@ timeLimit = Base Setup Time (10-20s) + (Per-Item Processing Time × Item Count) 
 | **`categorise`** | 15 seconds | 8s per item | `15 + (8 × items.length)` | **35s** | • 4 Items = **45s**<br>• 6 Items = **65s** |
 | **`annotateImage`** | 15 seconds | 10s per label | `15 + (10 × labels.length)` | **35s** | • 3 Labels = **45s**<br>• 5 Labels = **65s** |
 | **`trueFalse`** | 10 seconds | 10s per question | `10 + (10 × questions.length)` | **20s** | • 1 Question = **20s**<br>• 2 Questions = **30s** |
-| **`wordScramble`** | 15 seconds | 15s per word | `15 + (15 × words.length)` | **30s** | • 1 Word = **30s**<br>• 3 Words = **60s** |
+| **`wordScramble`** | 15 seconds | 15s per word / 20s per sentence | `15 + (15 × words.length)` | **30s** | • 1 Word = **30s**<br>• 3 Words (`multi`) = **60s**<br>• 1 Sentence = **45s** |
 | **`memoryGrid`** | 15 seconds | 10s per pair | `15 + (10 × pairs.length)` | **35s** | • 4 Pairs = **55s**<br>• 6 Pairs = **75s** |
 | **`timeline`** | 15 seconds | 10s per event | `15 + (10 × events.length)` | **35s** | • 3 Events = **45s**<br>• 5 Events = **65s** |
 | **`fillInTheBlank`** | 15 seconds | 15s per blank | `15 + (15 × blanks.length)` | **30s** | • 1 Blank = **30s**<br>• 2 Blanks = **45s**<br>• 3 Blanks = **60s** |

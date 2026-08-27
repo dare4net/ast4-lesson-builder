@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { cn } from "@/lib/utils"
 
 export interface AnnotationLabel {
@@ -280,11 +281,12 @@ export function AnnotationBoardEditor({
                 <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     1. Passage Text
                 </Label>
-                <Textarea
+                <WYSIWYGTextArea
                     value={passage}
-                    onChange={e => onPassageChange(e.target.value)}
+                    onChange={val => onPassageChange(val)}
                     placeholder="Enter full passage or sentence here..."
-                    className="bg-slate-950/60 border-slate-800 text-sm font-medium focus-visible:ring-emerald-500/50 min-h-[90px]"
+                    rows={4}
+                    showPreviewToggle={false}
                 />
             </div>
 

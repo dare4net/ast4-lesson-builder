@@ -8,6 +8,7 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface QuizRendererProps {
@@ -336,7 +337,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                     <div className="h-px w-8 bg-emerald-500 rounded-full" />
                     <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length}</span>
                   </div>
-                  <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{question.question}</h2>
+                  <FormattedText content={question.question} as="h2" className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight" />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
@@ -371,7 +372,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                             )}>
                               {String.fromCharCode(65 + idx)}
                             </span>
-                            <span className="font-bold text-sm tracking-tight text-inherit">{option.text}</span>
+                            <FormattedText content={option.text} className="font-bold text-sm tracking-tight text-inherit" />
                           </div>
                           {showCorrect && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                           {showIncorrect && <XCircle className="w-5 h-5 text-[#FF4B4B] stroke-[3] animate-in shake duration-500 shrink-0" />}
@@ -417,7 +418,7 @@ export function QuizRenderer(props: QuizRendererProps) {
                           <p className="text-sm font-black text-slate-900 leading-tight">Not quite right — keep going, you can do it!</p>
                         )}
                         {question.explanation && (
-                          <p className="text-xs font-bold text-slate-600 leading-tight mt-1">{question.explanation}</p>
+                          <FormattedText content={question.explanation} as="p" className="text-xs font-bold text-slate-600 leading-tight mt-1" />
                         )}
                       </>
                     )}

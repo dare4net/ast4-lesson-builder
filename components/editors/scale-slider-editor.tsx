@@ -2,6 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Sliders } from "lucide-react"
@@ -66,11 +67,10 @@ export function ScaleSliderEditor({
             {/* Prompt */}
             <div className="space-y-2">
                 <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide">Slider Prompt / Question</Label>
-                <Input
+                <WYSIWYGInput
                     value={prompt}
-                    onChange={e => onPromptChange?.(e.target.value)}
+                    onChange={val => onPromptChange?.(val)}
                     placeholder="e.g. How well do you understand photosynthesis?"
-                    className={inputClass}
                 />
             </div>
 

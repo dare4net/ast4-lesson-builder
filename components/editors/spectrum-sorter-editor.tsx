@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { Plus, Trash2, Sliders, Settings2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { SpectrumItem } from "@/components/renderers/spectrum-sorter-renderer"
@@ -332,11 +333,10 @@ export function SpectrumSorterEditor({
 
                             <div className="space-y-1.5">
                                 <Label className="text-[10px] font-black uppercase text-slate-400">Explanation / Hint</Label>
-                                <Input
+                                <WYSIWYGInput
                                     value={activeItem.explanation || ""}
-                                    onChange={e => handleUpdateItem(activeItem.id, { explanation: e.target.value })}
+                                    onChange={val => handleUpdateItem(activeItem.id, { explanation: val })}
                                     placeholder="Explanation revealed upon grading..."
-                                    className="bg-slate-900 border-slate-800 text-xs font-medium"
                                 />
                             </div>
                         </div>

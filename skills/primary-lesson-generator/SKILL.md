@@ -117,7 +117,7 @@ Only use components from `skills/lesson-json/SKILL.md`. This tier list governs *
 |---|---|---|
 | `hotspot` (`behavior: "discovery"`) | Tap-to-explore scenes | Best opening activity on any slide |
 | `memoryGrid` | Match pairs game | Keep to 3–4 pairs max |
-| `wordScramble` | Spell a single short word | Max 8 letters; always include `hint` |
+| `wordScramble` | Spell a short word or simple sentence (`single`, `multi`, `sentence`) | Max 8 letters per word; always include `hint` |
 | `spinTheWheel` | Review game | `requiredSpins: 2–3`; simple questions only |
 | `poll` | Opinions, predictions, icebreakers | 2–3 options; no wrong answer |
 | `image` | Big visual anchor | Always include `caption` with one short sentence |

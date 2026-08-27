@@ -11,6 +11,7 @@ import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import type { Component } from "@/types/lesson"
+import { FormattedText } from "@/components/ui/formatted-text"
 import { isInputDisabled, shouldShowRetry, isItemApproved } from "@/lib/tutor-marking-contract"
 
 interface ShortAnswerRendererProps {
@@ -219,9 +220,7 @@ function ShortAnswerContent({
 
             {/* CENTER SECTION: Question & Input Area */}
             <div className="flex-1 min-h-0 flex flex-col justify-center py-2 space-y-3 overflow-y-auto">
-                <p className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight">
-                    {question}
-                </p>
+                <FormattedText content={question} as="p" className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight" />
                 <Textarea
                     value={userResponse}
                     onChange={(e) => handleResponseChange(e.target.value)}

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Rocket, Shield, Heart, HelpCircle, RefreshCw, CheckCircle2, XCircle, Tag, Bot, Anchor, Radio, Flame } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 import type { HangmanTheme } from "@/components/editors/hangman-editor"
 
@@ -346,9 +347,7 @@ function HangmanContent({
                             </span>
                         )}
                     </div>
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                        {title}
-                    </h3>
+                    <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
                 {/* Attempts / Lives Display */}
@@ -370,7 +369,7 @@ function HangmanContent({
             {effectiveClue && (
                 <div className="shrink-0 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                     <HelpCircle className="w-4 h-4 text-[#1CB0F6] shrink-0" />
-                    <span>Clue: {effectiveClue}</span>
+                    <span>Clue: <FormattedText content={effectiveClue} as="span" /></span>
                 </div>
             )}
 

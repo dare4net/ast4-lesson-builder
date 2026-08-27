@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Sparkles, ArrowLeft, ArrowRight, RefreshCw, CheckCircle2, XCircle, Layers, HelpCircle } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 export interface SwipeCardItem {
@@ -216,9 +217,7 @@ function SwipeDeckContent({
                                     </div>
 
                                     <div className="my-auto py-4 text-center">
-                                        <p className="text-lg sm:text-xl font-bold tracking-tight leading-relaxed text-slate-800 dark:text-slate-100">
-                                            {currentCard.front || currentCard.text || currentCard.statement || "No statement text provided"}
-                                        </p>
+                                        <FormattedText content={currentCard.front || currentCard.text || currentCard.statement || "No statement text provided"} as="p" className="text-lg sm:text-xl font-bold tracking-tight leading-relaxed text-slate-800 dark:text-slate-100" />
                                     </div>
 
                                     <div className="flex justify-between items-center text-xs font-black text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800/80">
@@ -243,9 +242,7 @@ function SwipeDeckContent({
                                     </div>
 
                                     <div className="my-auto py-4 text-center space-y-2">
-                                        <p className="text-sm sm:text-base font-bold leading-relaxed text-slate-700 dark:text-slate-200">
-                                            {currentCard.explanation || `Correct answer is ${currentCard.correctSide === "left" ? leftLabel : rightLabel}.`}
-                                        </p>
+                                        <FormattedText content={currentCard.explanation || `Correct answer is ${currentCard.correctSide === "left" ? leftLabel : rightLabel}.`} as="p" className="text-sm sm:text-base font-bold leading-relaxed text-slate-700 dark:text-slate-200" />
                                     </div>
 
                                     <button

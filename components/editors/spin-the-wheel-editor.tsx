@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RotateCw, Plus, Trash2, ChevronDown, ChevronUp, CheckCircle2, Type, ToggleLeft } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -151,12 +151,12 @@ function QuestionCard({
                     {/* Prompt */}
                     <div className="space-y-1 w-full max-w-full min-w-0">
                         <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Question Prompt</Label>
-                        <Textarea
+                        <WYSIWYGTextArea
                             value={question.prompt}
-                            onChange={e => set("prompt", e.target.value)}
+                            onChange={val => set("prompt", val)}
                             placeholder="e.g. What is the powerhouse of the cell?"
                             rows={2}
-                            className="bg-slate-900 border-slate-800 text-xs font-bold text-white resize-none w-full max-w-full min-w-0"
+                            showPreviewToggle={false}
                         />
                     </div>
 
@@ -281,11 +281,10 @@ function QuestionCard({
                     {/* Explanation */}
                     <div className="space-y-1 w-full max-w-full min-w-0">
                         <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Explanation (optional, shown after answer)</Label>
-                        <Input
+                        <WYSIWYGInput
                             value={question.explanation || ""}
-                            onChange={e => set("explanation", e.target.value)}
+                            onChange={val => set("explanation", val)}
                             placeholder="e.g. The mitochondria is the powerhouse of the cell."
-                            className="bg-slate-900 border-slate-800 h-9 text-xs font-bold text-white w-full max-w-full min-w-0"
                         />
                     </div>
                 </div>

@@ -8,6 +8,7 @@ import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { useFeedback } from "@/hooks/use-feedback"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -261,7 +262,7 @@ function MultiSelectContent({
                             <div className="h-px w-8 bg-violet-500 rounded-full" />
                             <span className="text-[9px] font-black text-violet-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length} · Select all correct</span>
                         </div>
-                        <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{question.question}</h2>
+                        <FormattedText content={question.question} as="h2" className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight" />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
@@ -301,7 +302,7 @@ function MultiSelectContent({
                                                 {(isSelected || showCorrect) && !showIncorrect && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                                                 {showIncorrect && <span className="font-black text-xs">✕</span>}
                                             </span>
-                                            <span className="font-bold text-sm tracking-tight text-inherit">{option.text}</span>
+                                            <FormattedText content={option.text} className="font-bold text-sm tracking-tight text-inherit" />
                                         </div>
                                         {showCorrect && isSelected && <CheckCircle2 className="w-5 h-5 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                                         {showCorrect && !isSelected && <CheckCircle2 className="w-5 h-5 text-[#58CC02] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
@@ -337,7 +338,7 @@ function MultiSelectContent({
                             </div>
                         )}
                         {question.explanation && (
-                            <p className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1">{question.explanation}</p>
+                            <FormattedText content={question.explanation} as="p" className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1" />
                         )}
                     </div>
                 )}

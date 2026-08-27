@@ -7,6 +7,7 @@ import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
 import { useFeedback } from "@/hooks/use-feedback"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface TimelineEvent {
@@ -104,7 +105,7 @@ function TimelineContent({
                 )}
             </div>
 
-            <h3 className="text-lg font-black mb-4 text-slate-900 tracking-tight shrink-0">{title}</h3>
+            <FormattedText content={title} as="h3" className="text-lg font-black mb-4 text-slate-900 tracking-tight shrink-0" />
 
             <div className="relative w-full mb-6 pt-3 pb-5 px-4 shrink-0">
                 <div className="absolute left-8 right-8 top-1/2 -translate-y-1/2 h-2 bg-slate-200 rounded-full z-0" />
@@ -157,11 +158,9 @@ function TimelineContent({
                         <Calendar className="w-3.5 h-3.5 text-amber-600" />
                         <span>{currentEvent.year}</span>
                     </div>
-                    <h4 className="text-base font-black text-slate-900 mb-1.5 tracking-tight">{currentEvent.title}</h4>
+                    <FormattedText content={currentEvent.title} as="h4" className="text-base font-black text-slate-900 mb-1.5 tracking-tight" />
                     {currentEvent.description && (
-                        <p className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed">
-                            {currentEvent.description}
-                        </p>
+                        <FormattedText content={currentEvent.description} as="p" className="text-xs sm:text-sm font-bold text-slate-700 leading-relaxed" />
                     )}
                     {currentEvent.mediaUrl && (
                         <div className="mt-3 rounded-2xl overflow-hidden border-2 border-amber-200 aspect-video max-h-40 shadow-sm">

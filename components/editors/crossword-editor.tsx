@@ -19,6 +19,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
@@ -426,11 +427,10 @@ export function CrosswordEditor({
                                     </Select>
                                 </div>
 
-                                <Input
+                                <WYSIWYGInput
                                     value={w.clue}
-                                    onChange={e => handleUpdateWord(w.id, { clue: e.target.value })}
+                                    onChange={val => handleUpdateWord(w.id, { clue: val })}
                                     placeholder="Clue description..."
-                                    className="bg-slate-900 border-slate-800 text-xs font-medium"
                                 />
 
                                 <div className="grid grid-cols-2 gap-2 text-[10px]">

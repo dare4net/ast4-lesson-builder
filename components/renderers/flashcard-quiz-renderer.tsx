@@ -7,6 +7,7 @@ import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { useFeedback } from "@/hooks/use-feedback"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface FlashcardQuizQuestion {
@@ -260,7 +261,7 @@ function FlashcardQuizContent({
                         </div>
                         {/* Back — question text */}
                         <div className="relative w-full h-full min-h-[140px] sm:min-h-[160px] [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg flex items-center justify-center p-5 sm:p-6">
-                            <p className="text-white text-base sm:text-lg md:text-xl font-bold text-center leading-relaxed">{question.question}</p>
+                            <FormattedText content={question.question} as="p" className="text-white text-base sm:text-lg md:text-xl font-bold text-center leading-relaxed" />
                         </div>
                     </div>
                 </div>
@@ -294,7 +295,7 @@ function FlashcardQuizContent({
                                 </div>
                                 {/* Back — option text */}
                                 <div className="relative w-full h-full min-h-[60px] sm:min-h-[70px] [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-sm flex items-center justify-center p-3 sm:p-4">
-                                    <p className="text-white font-semibold text-center text-xs sm:text-sm leading-snug line-clamp-3 sm:line-clamp-4 px-1 break-words">{option}</p>
+                                    <FormattedText content={option} as="p" className="text-white font-semibold text-center text-xs sm:text-sm leading-snug line-clamp-3 sm:line-clamp-4 px-1 break-words" />
                                 </div>
                             </div>
 
@@ -324,7 +325,7 @@ function FlashcardQuizContent({
                             </p>
                         )}
                         {question.explanation && (
-                            <p className="text-xs font-medium text-slate-500 mt-1">{question.explanation}</p>
+                            <FormattedText content={question.explanation} as="p" className="text-xs font-medium text-slate-500 mt-1" />
                         )}
                     </div>
                 )}

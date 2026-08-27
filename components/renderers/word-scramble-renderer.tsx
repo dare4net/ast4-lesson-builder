@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { HelpCircle, RefreshCw, Delete, Shuffle, ChevronRight, Wand2, Zap, Anchor, Lightbulb } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -299,7 +300,7 @@ function SingleWordContent({
         <div className="flex flex-col h-full p-5 max-w-xl mx-auto w-full justify-between">
             {/* Header */}
             <div className="flex items-center justify-between gap-3 mb-3 shrink-0">
-                <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">{title}</h3>
+                <FormattedText content={title} as="h3" className="text-sm font-black text-slate-800 uppercase tracking-wider" />
                 <div className="flex items-center gap-1.5">
                     {/* Text Clue Button */}
                     {allowTextClue && hint && (
@@ -338,7 +339,7 @@ function SingleWordContent({
             {allowTextClue && showHintText && hint && (
                 <div className="mb-4 p-3 rounded-2xl bg-amber-50 border-2 border-amber-200 text-amber-900 text-xs font-semibold flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
                     <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <span>{hint}</span>
+                    <FormattedText content={hint} as="span" />
                 </div>
             )}
 
@@ -679,7 +680,7 @@ function MultiWordContent({
         <div className="flex flex-col h-full p-4 max-w-2xl mx-auto w-full justify-between">
             {/* Header */}
             <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
-                <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider">{title}</h3>
+                <FormattedText content={title} as="h3" className="text-sm font-black text-slate-800 uppercase tracking-wider" />
 
                 {/* Helper Toolbar */}
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -748,7 +749,7 @@ function MultiWordContent({
             {allowTextClue && showHintText && hint && (
                 <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border-2 border-amber-200 text-amber-900 text-xs font-semibold flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
                     <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <span>{hint}</span>
+                    <FormattedText content={hint} as="span" />
                 </div>
             )}
 

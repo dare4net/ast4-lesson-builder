@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Check, Circle } from "lucide-react"
@@ -112,12 +112,10 @@ export function FlashcardQuizEditor({
                                 {q.question.length}/{MAX_QUESTION_CHARS}
                             </span>
                         </div>
-                        <Input
+                        <WYSIWYGInput
                             value={q.question}
-                            onChange={(e) => updateQuestion(qIndex, "question", e.target.value.slice(0, MAX_QUESTION_CHARS))}
+                            onChange={(val) => updateQuestion(qIndex, "question", val)}
                             placeholder="Enter question..."
-                            maxLength={MAX_QUESTION_CHARS}
-                            className="bg-slate-950/50 border-slate-800 focus-visible:ring-indigo-500/50 h-11 text-sm font-bold rounded-xl"
                         />
                     </div>
 
@@ -192,12 +190,12 @@ export function FlashcardQuizEditor({
                         <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
                             Explanation (Optional)
                         </Label>
-                        <Textarea
+                        <WYSIWYGTextArea
                             value={q.explanation || ""}
-                            onChange={(e) => updateQuestion(qIndex, "explanation", e.target.value)}
+                            onChange={(val) => updateQuestion(qIndex, "explanation", val)}
                             placeholder="Why is this answer correct?"
                             rows={2}
-                            className="bg-slate-950/50 border-slate-800 focus-visible:ring-indigo-500/50 text-xs font-medium placeholder:text-slate-700 rounded-xl resize-none p-3"
+                            showPreviewToggle={false}
                         />
                     </div>
                 </div>

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Layers, CheckCircle2, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface MemoryPair {
@@ -53,7 +54,7 @@ function createShuffledDeck(pairs: MemoryPair[]): CardTile[] {
     })
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
-        ;[deck[i], deck[j]] = [deck[j], deck[i]]
+            ;[deck[i], deck[j]] = [deck[j], deck[i]]
     }
     return deck
 }
@@ -162,7 +163,7 @@ function MemoryGridContent({
                 </div>
             </div>
 
-            <h3 className="text-lg font-black mb-4 text-slate-900 tracking-tight shrink-0">{title}</h3>
+            <FormattedText content={title} as="h3" className="text-lg font-black mb-4 text-slate-900 tracking-tight shrink-0" />
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 flex-1 p-1 overflow-visible">
                 {cards.map(card => {

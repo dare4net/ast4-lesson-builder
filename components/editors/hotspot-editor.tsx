@@ -5,7 +5,7 @@ import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Switch } from "@/components/ui/switch"
 import { Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -219,22 +219,21 @@ export function HotspotEditor({ image, hotspots, onChange, behavior: rawBehavior
 
             <div className="space-y-2">
               <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Node Identifier</Label>
-              <Input
+              <WYSIWYGInput
                 value={hotspot.label}
-                onChange={(e) => updateHotspot(index, "label", e.target.value)}
+                onChange={(val) => updateHotspot(index, "label", val)}
                 placeholder="Tag this sensor"
-                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold rounded-xl"
               />
             </div>
 
             <div className="space-y-2">
               <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Payload Content</Label>
-              <Textarea
+              <WYSIWYGTextArea
                 value={hotspot.content}
-                onChange={(e) => updateHotspot(index, "content", e.target.value)}
+                onChange={(val) => updateHotspot(index, "content", val)}
                 placeholder="What data does this sensor emit?"
                 rows={3}
-                className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
+                showPreviewToggle={false}
               />
             </div>
           </div>

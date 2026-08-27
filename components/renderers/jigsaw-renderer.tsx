@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Puzzle, RefreshCw, CheckCircle2, Info, Sparkles, Eye } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 export interface JigsawHotspot {
@@ -211,9 +212,7 @@ function JigsawContent({
                     <span className="text-[10px] font-black uppercase tracking-widest text-[#1CB0F6]">
                         Jigsaw Puzzle • {points} Points
                     </span>
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                        {title}
-                    </h3>
+                    <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300">

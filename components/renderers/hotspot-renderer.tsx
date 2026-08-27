@@ -27,6 +27,7 @@ import {
     type HotspotState,
     type HotspotBehavior,
 } from "@/lib/hotspot-utils"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface HotspotRendererProps {
@@ -114,10 +115,8 @@ function HotspotDetailPanel({
             onPointerDown={(e) => e.stopPropagation()}
         >
             <div className="space-y-1.5">
-                <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", colorText)}>
-                    {hotspot.label}
-                </p>
-                <p className="text-sm font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{hotspot.content}</p>
+                <FormattedText content={hotspot.label} as="p" className={cn("text-[10px] font-black uppercase tracking-[0.2em]", colorText)} />
+                <FormattedText content={hotspot.content} as="p" className="text-sm font-extrabold text-slate-900 dark:text-slate-100 leading-tight" />
             </div>
 
             {/* Chat-bubble arrow — points at the pin */}

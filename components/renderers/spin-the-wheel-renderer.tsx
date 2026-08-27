@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { RotateCw, Award, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { playWheelSpin } from "@/lib/sound-effects"
+import { FormattedText } from "@/components/ui/formatted-text"
 import {
     resolveSpinTheWheelQuestions,
     type QuestionType,
@@ -73,7 +74,7 @@ function MultipleChoiceCard({
 
     return (
         <div className="space-y-3">
-            <p className="text-base font-black text-slate-900 leading-snug">{question.prompt}</p>
+            <FormattedText content={question.prompt} as="p" className="text-base font-black text-slate-900 leading-snug" />
             <div className="space-y-2">
                 {(question.options || []).map((opt, idx) => {
                     const isCorrect = submitted && idx === question.correctOptionIndex
@@ -94,7 +95,7 @@ function MultipleChoiceCard({
                             )}
                         >
                             <div className="flex items-center justify-between gap-3">
-                                <span>{opt}</span>
+                                <FormattedText content={opt} as="span" />
                                 {isCorrect && <CheckCircle2 className="w-4 h-4 text-[#58CC02] shrink-0" />}
                                 {isWrong && <XCircle className="w-4 h-4 text-[#FF4B4B] shrink-0" />}
                             </div>
@@ -135,7 +136,7 @@ function InputAnswerCard({
 
     return (
         <div className="space-y-3">
-            <p className="text-base font-black text-slate-900 leading-snug">{question.prompt}</p>
+            <FormattedText content={question.prompt} as="p" className="text-base font-black text-slate-900 leading-snug" />
             <div className="flex gap-2">
                 <input
                     type="text"
@@ -431,7 +432,7 @@ export function SpinTheWheelRenderer({
 
                     {/* Left Column: Title, Progress & SVG Wheel */}
                     <div className="lg:col-span-5 flex flex-col items-center">
-                        <h3 className="text-xl font-black mb-2 text-slate-900 text-center tracking-tight">{title}</h3>
+                        <FormattedText content={title} as="h3" className="text-xl font-black mb-2 text-slate-900 text-center tracking-tight" />
 
                         {/* Progress */}
                         {!activityDone && (

@@ -2,6 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -99,11 +100,10 @@ export function HangmanEditor({
                 <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                     Clue / Definition
                 </Label>
-                <Input
+                <WYSIWYGInput
                     value={clue}
-                    onChange={e => onClueChange(e.target.value)}
+                    onChange={val => onClueChange(val)}
                     placeholder="e.g. The scientific study of celestial bodies"
-                    className="bg-slate-950/60 border-slate-800 text-xs font-medium"
                 />
             </div>
         </div>

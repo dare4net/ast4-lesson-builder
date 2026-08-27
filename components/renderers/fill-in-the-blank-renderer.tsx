@@ -11,6 +11,7 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface Blank {
@@ -267,7 +268,7 @@ function FillInTheBlankContent({
               : false;
             return (
               <React.Fragment key={index}>
-                {part}
+                <FormattedText content={part} as="span" />
                 {index < blanks.length && blank && (
                   <span className="inline-flex relative mx-1.5 group/input align-middle">
                     <Input

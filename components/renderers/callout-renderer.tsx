@@ -6,6 +6,8 @@ import { Info, Lightbulb, AlertTriangle, AlertCircle } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
 
+import { FormattedText } from "@/components/ui/formatted-text"
+
 interface CalloutRendererProps {
     variant?: "note" | "tip" | "warning" | "important"
     title?: string
@@ -84,7 +86,7 @@ export function CalloutRenderer({
                     <div className="flex items-center gap-2.5">
                         {config.icon}
                         <h4 className="font-black text-base uppercase tracking-tight text-slate-900">
-                            {title || config.defaultTitle}
+                            <FormattedText content={title || config.defaultTitle} className="font-black text-slate-900" />
                         </h4>
                     </div>
 
@@ -100,7 +102,7 @@ export function CalloutRenderer({
 
                 {/* Body Content */}
                 <div className="pl-2.5 pr-2 pt-1 text-sm font-bold text-slate-800 leading-relaxed">
-                    <p>{content}</p>
+                    <FormattedText content={content} as="p" className="font-bold text-slate-800" />
                 </div>
             </div>
         </div>

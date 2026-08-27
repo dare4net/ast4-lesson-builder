@@ -4,6 +4,7 @@ import { useTypingAnimation } from "@/hooks/use-typing-animation"
 import { CheckCircle2 } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
+import { FormattedText } from "@/components/ui/formatted-text"
 
 interface BulletListRendererProps {
   items: string[]
@@ -166,7 +167,7 @@ export function BulletListRenderer({
                     isPreviouslyCompleted={isPreviouslyCompleted}
                   />
                 ) : (
-                  <span>{item.replace(/<[^>]*>?/gm, "")}</span>
+                  <FormattedText content={item} />
                 )}
               </div>
             </li>

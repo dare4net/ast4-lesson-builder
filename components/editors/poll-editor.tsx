@@ -3,6 +3,7 @@
 import React from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
 interface PollOption {
@@ -52,12 +53,10 @@ export function PollEditor({
                         {question.length}/{MAX_QUESTION_CHARS}
                     </span>
                 </div>
-                <Input
+                <WYSIWYGInput
                     value={question}
-                    onChange={(e) => onQuestionChange(e.target.value.slice(0, MAX_QUESTION_CHARS))}
+                    onChange={(val) => onQuestionChange(val)}
                     placeholder="Ask a question..."
-                    maxLength={MAX_QUESTION_CHARS}
-                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-indigo-500/50 h-11 text-sm font-bold rounded-xl"
                 />
             </div>
 

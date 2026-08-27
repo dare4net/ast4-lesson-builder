@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { GripVertical } from "lucide-react"
 import { DndProvider, useDrag, useDrop } from "react-dnd"
@@ -118,11 +118,10 @@ function DraggableEditorItem({ index, item, updateItem, moveItem }: DraggableEdi
         {index + 1}
       </div>
 
-      <Input
+      <WYSIWYGInput
         value={item.text}
-        onChange={(e) => updateItem(index, e.target.value)}
+        onChange={(val) => updateItem(index, val)}
         placeholder={`Item ${index + 1}`}
-        className="flex-1 w-full min-w-0 border-[#4CAF50]/30 focus-visible:ring-[#4CAF50] text-[#2E7D32] placeholder-[#4CAF50]/50"
       />
     </div>
   )

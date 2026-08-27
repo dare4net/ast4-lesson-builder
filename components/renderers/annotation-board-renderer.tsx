@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Tag, CheckCircle2, XCircle, RefreshCw, Eraser, Info } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 export interface AnnotationToken {
@@ -283,14 +284,12 @@ function AnnotationBoardContent({
                             Text Annotation • {points} Points
                         </span>
                     </div>
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                        {title}
-                    </h3>
+                    <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
                 {instruction && (
                     <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold">
                         <Info className="w-3.5 h-3.5 text-[#1CB0F6] shrink-0" />
-                        <span>{instruction}</span>
+                        <FormattedText content={instruction} as="span" />
                     </div>
                 )}
             </div>

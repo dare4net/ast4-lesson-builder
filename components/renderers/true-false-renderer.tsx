@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface TrueFalseRendererProps {
@@ -117,7 +118,7 @@ function TrueFalseContent({
                             <div className="h-px w-8 bg-indigo-500 rounded-full" />
                             <span className="text-[9px] font-black text-indigo-600 uppercase tracking-[0.2em]">Is this TRUE or FALSE?</span>
                         </div>
-                        <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight">{statement}</h2>
+                        <FormattedText content={statement} as="h2" className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight" />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
@@ -204,7 +205,7 @@ function TrueFalseContent({
                                 <p className="text-xs font-black text-slate-900 dark:text-slate-100">Not quite — keep going!</p>
                             )}
                             {explanation && (
-                                <p className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1">{explanation}</p>
+                                <FormattedText content={explanation} as="p" className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1" />
                             )}
                         </div>
                     )}

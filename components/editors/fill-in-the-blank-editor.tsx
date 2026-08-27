@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGTextArea, WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Plus, Trash2 } from "lucide-react"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
@@ -87,12 +87,12 @@ export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChang
       <div className="space-y-3">
         <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Composition Stream</Label>
         <p className="text-[10px] font-bold text-slate-800 mb-2 uppercase tracking-tight">Use <span className="text-emerald-500">{'{{'} blank {'}}'}</span> to inject delta points</p>
-        <Textarea
+        <WYSIWYGTextArea
           value={text}
-          onChange={(e) => onTextChange(e.target.value)}
+          onChange={(val) => onTextChange(val)}
           placeholder="Enter text with {{blank}} placeholders..."
           rows={5}
-          className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-slate-200 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
+          showPreviewToggle={false}
         />
       </div>
 
@@ -115,11 +115,10 @@ export function FillInTheBlankEditor({ text, blanks, onTextChange, onBlanksChang
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Dominant Value</Label>
-                <Input
+                <WYSIWYGInput
                   value={blank.answer}
-                  onChange={(e) => updateBlank(blankIndex, "answer", e.target.value)}
+                  onChange={(val) => updateBlank(blankIndex, "answer", val)}
                   placeholder="Enter specific answer"
-                  className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 h-11 text-sm font-bold rounded-xl"
                 />
               </div>
 

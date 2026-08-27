@@ -429,7 +429,7 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                   )}
 
                   {propDef.type === "richText" && (
-                    <div className="rounded-xl overflow-hidden border border-slate-800 focus-within:border-emerald-500/50 transition-all">
+                    <div className="relative pt-2">
                       <RichTextEditor
                         value={props[propDef.name] || ""}
                         onChange={(value) => handleChange(propDef.name, value)}

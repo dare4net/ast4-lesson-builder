@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Volume2, Layers, BookOpen } from "lucide-react"
@@ -107,11 +107,10 @@ export function AccordionEditor({
                             <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
                                 Panel Title
                             </Label>
-                            <Input
+                            <WYSIWYGInput
                                 value={item.title}
-                                onChange={(e) => updateItem(index, "title", e.target.value)}
+                                onChange={(val) => updateItem(index, "title", val)}
                                 placeholder="Question or Topic Title"
-                                className="bg-slate-950/50 border-slate-800 focus-visible:ring-sky-500/50 h-10 text-sm font-bold placeholder:text-slate-700 rounded-xl"
                             />
                         </div>
 
@@ -119,12 +118,12 @@ export function AccordionEditor({
                             <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
                                 Panel Explanation Content
                             </Label>
-                            <Textarea
+                            <WYSIWYGTextArea
                                 value={item.content}
-                                onChange={(e) => updateItem(index, "content", e.target.value)}
+                                onChange={(val) => updateItem(index, "content", val)}
                                 placeholder="Provide details or answers for this panel..."
                                 rows={3}
-                                className="bg-slate-950/50 border-slate-800 focus-visible:ring-sky-500/50 text-sm font-medium placeholder:text-slate-700 rounded-xl resize-none p-3"
+                                showPreviewToggle={false}
                             />
                         </div>
 

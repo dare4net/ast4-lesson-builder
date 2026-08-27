@@ -2,7 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Calendar, Plus, Trash2, ArrowUp, ArrowDown, Image as ImageIcon, Clock } from "lucide-react"
@@ -183,11 +183,10 @@ export function TimelineEditor({
                                     <Label className="text-[10px] font-bold text-slate-400 uppercase">
                                         Event Title
                                     </Label>
-                                    <Input
+                                    <WYSIWYGInput
                                         value={ev.title}
-                                        onChange={(e) => handleUpdateEvent(idx, { title: e.target.value })}
+                                        onChange={(val) => handleUpdateEvent(idx, { title: val })}
                                         placeholder="e.g. Apollo 11 Moon Landing"
-                                        className="bg-slate-900 border-slate-800 h-9 text-xs font-bold text-white"
                                     />
                                 </div>
                             </div>
@@ -197,12 +196,12 @@ export function TimelineEditor({
                                 <Label className="text-[10px] font-bold text-slate-400 uppercase">
                                     Description / Milestone Details
                                 </Label>
-                                <Textarea
+                                <WYSIWYGTextArea
                                     value={ev.description || ""}
-                                    onChange={(e) => handleUpdateEvent(idx, { description: e.target.value })}
+                                    onChange={(val) => handleUpdateEvent(idx, { description: val })}
                                     placeholder="Explain what happened at this stage of the timeline..."
                                     rows={2}
-                                    className="bg-slate-900 border-slate-800 text-xs font-medium text-slate-300 rounded-xl resize-none p-3"
+                                    showPreviewToggle={false}
                                 />
                             </div>
 

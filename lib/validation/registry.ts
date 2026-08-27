@@ -53,6 +53,7 @@ const registry: Record<string, ComponentValidator> = {
     table: tableValidator,
     image: imageValidator,
     video: videoValidator,
+    videoClip: videoValidator,
     codeBlock: codeBlockValidator,
     quote: quoteValidator,
     callout: calloutValidator,

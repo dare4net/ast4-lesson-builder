@@ -4,7 +4,7 @@ import React from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGInput, WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Grid2X2, Plus, Trash2 } from "lucide-react"
 
 export interface MemoryPair {
@@ -108,21 +108,20 @@ export function MemoryGridEditor({
                                 </div>
                                 <div className="space-y-1">
                                     <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Term (front)</Label>
-                                    <Input
+                                    <WYSIWYGInput
                                         value={pair.term}
-                                        onChange={e => handleUpdate(pair.id, "term", e.target.value)}
+                                        onChange={val => handleUpdate(pair.id, "term", val)}
                                         placeholder="e.g. Photosynthesis"
-                                        className="bg-slate-900 border-slate-800 h-9 text-xs font-bold text-white w-full"
                                     />
                                 </div>
                                 <div className="space-y-1">
                                     <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Definition (back)</Label>
-                                    <Textarea
+                                    <WYSIWYGTextArea
                                         value={pair.definition}
-                                        onChange={e => handleUpdate(pair.id, "definition", e.target.value)}
+                                        onChange={val => handleUpdate(pair.id, "definition", val)}
                                         placeholder="e.g. The process plants use to convert sunlight into energy"
-                                        className="bg-slate-900 border-slate-800 text-xs font-bold text-white resize-none min-h-[64px] w-full"
                                         rows={2}
+                                        showPreviewToggle={false}
                                     />
                                 </div>
                             </div>

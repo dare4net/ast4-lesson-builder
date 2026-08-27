@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface MatchingPair {
@@ -427,7 +428,7 @@ function MatchingPairsContent({
                   disabled={isMatched || isChecking || disabledProp}
                 >
                   <div className="relative z-10 flex items-center justify-between">
-                    <span className="font-bold text-xs md:text-sm tracking-tight">{item.left}</span>
+                    <FormattedText content={item.left} className="font-bold text-xs md:text-sm tracking-tight" />
                     {isChecking && isMatched && (
                       item.id === match.rightId
                         ? <CheckCircle2 className="w-4 h-4 text-emerald-700 stroke-[3] animate-in zoom-in-50" />
@@ -471,7 +472,7 @@ function MatchingPairsContent({
                   disabled={isMatched || isChecking || disabledProp}
                 >
                   <div className="relative z-10 flex items-center justify-between">
-                    <span className="font-bold text-xs md:text-sm tracking-tight">{item.right}</span>
+                    <FormattedText content={item.right} className="font-bold text-xs md:text-sm tracking-tight" />
                     {isChecking && isMatched && (
                       matchEntry?.[0] === item.id
                         ? <CheckCircle2 className="w-4 h-4 text-emerald-700 stroke-[3] animate-in zoom-in-50" />

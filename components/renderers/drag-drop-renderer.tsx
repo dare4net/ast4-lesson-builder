@@ -8,6 +8,7 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface DragItem {
@@ -232,7 +233,7 @@ function DragDropContent({
       <div className="shrink-0 relative flex items-center justify-between pt-2">
         <div className="space-y-0.5">
           <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Ordering Activity</span>
-          <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">{title}</h3>
+          <FormattedText content={title} as="h3" className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none" />
         </div>
         <div className="flex items-center gap-2">
           {isLive && (
@@ -280,7 +281,7 @@ function DragDropContent({
                 )}>
                   {index + 1}
                 </div>
-                <span className="font-bold text-sm tracking-tight">{item.text}</span>
+                <FormattedText content={item.text} className="font-bold text-sm tracking-tight" />
               </div>
 
               {!isSubmitted && (

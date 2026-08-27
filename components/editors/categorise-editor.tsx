@@ -2,6 +2,7 @@
 
 import React from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -287,11 +288,10 @@ export function CategoriseEditor({
                                     <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">
                                         Tag Label Text
                                     </Label>
-                                    <Input
+                                    <WYSIWYGInput
                                         value={it.text}
-                                        onChange={(e) => handleUpdateItemText(it.id, e.target.value)}
+                                        onChange={(val) => handleUpdateItemText(it.id, val)}
                                         placeholder="e.g. Oxygen or Water"
-                                        className="bg-slate-900 border-slate-800 h-9 text-xs font-bold text-white w-full min-w-0"
                                     />
                                 </div>
 

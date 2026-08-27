@@ -67,8 +67,8 @@ const componentRenderers: ComponentRenderers = {
   ),
 
   // Gamified Components
-  annotationBoard: dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => mod.AnnotationBoardRenderer as any)),
-  "annotation-board": dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => mod.AnnotationBoardRenderer as any)),
+  annotationBoard: dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => (mod.AnnotationBoardRenderer || mod.default) as any)),
+  "annotation-board": dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => (mod.AnnotationBoardRenderer || mod.default) as any)),
   anagram: dynamic(() => import("@/components/renderers/anagram-renderer").then((mod) => mod.AnagramRenderer as any)),
   hangman: dynamic(() => import("@/components/renderers/hangman-renderer").then((mod) => mod.HangmanRenderer as any)),
   swipeDeck: dynamic(() => import("@/components/renderers/swipe-deck-renderer").then((mod) => mod.SwipeDeckRenderer as any)),

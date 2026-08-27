@@ -6,6 +6,7 @@ import { CheckCircle2, BarChart2, Check, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
 import { useFeedback } from "@/hooks/use-feedback"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface PollOption {
@@ -149,7 +150,7 @@ function PollContent({
                         </span>
                     )}
                 </div>
-                <h3 className="text-lg font-black text-slate-900 leading-tight">{question}</h3>
+                <FormattedText content={question} as="h3" className="text-lg font-black text-slate-900 leading-tight" />
             </div>
 
             {/* Options List */}
@@ -185,12 +186,7 @@ function PollContent({
                             )}
 
                             <div className="relative z-10 flex items-center justify-between">
-                                <span className={cn(
-                                    "font-bold text-sm",
-                                    isSelected ? "text-indigo-950 font-black" : "text-slate-700"
-                                )}>
-                                    {opt.text}
-                                </span>
+                                <FormattedText content={opt.text} className={cn("font-bold text-sm", isSelected ? "text-indigo-950 font-black" : "text-slate-700")} />
 
                                 {hasVoted ? (
                                     <div className="flex items-center gap-2">

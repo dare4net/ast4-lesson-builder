@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { FormattedText } from "@/components/ui/formatted-text";
 import type { Component } from "@/types/lesson";
 
 interface TableRendererProps {
@@ -46,7 +47,7 @@ export function TableRenderer(props: TableRendererProps) {
       {/* TOP SECTION: Meta */}
       <div className="shrink-0 pt-2 pb-2">
         <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Reference Data</span>
-        <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+        <FormattedText content={title} as="h3" className="text-base font-black text-slate-900 tracking-tight uppercase leading-none" />
       </div>
 
       {/* CENTER SECTION: Table Content */}
@@ -69,7 +70,7 @@ export function TableRenderer(props: TableRendererProps) {
                           : "text-slate-900 text-sm font-bold tracking-tight bg-white group-hover/row:bg-emerald-50/50"
                       )}
                     >
-                      {cell}
+                      <FormattedText content={cell} as="span" />
                     </td>
                   ))}
                 </tr>

@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus, Trash2, Key, Sparkles } from "lucide-react"
 
@@ -60,12 +60,12 @@ export function ShortAnswerEditor({
                 <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
                     Question Prompt <span className="text-emerald-500">*</span>
                 </Label>
-                <Textarea
+                <WYSIWYGTextArea
                     value={question}
-                    onChange={(e) => onQuestionChange(e.target.value)}
+                    onChange={(val) => onQuestionChange(val)}
                     placeholder="Enter short answer question..."
                     rows={3}
-                    className="bg-slate-950/50 border-slate-800 focus-visible:ring-emerald-500/50 text-slate-200 text-sm font-semibold placeholder:text-slate-700 rounded-xl resize-none p-3"
+                    showPreviewToggle={false}
                 />
             </div>
 

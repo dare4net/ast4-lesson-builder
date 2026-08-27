@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Quote, User, BookOpen, Volume2 } from "lucide-react"
+import { WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 
 export interface QuoteEditorProps {
     text?: string
@@ -16,7 +17,6 @@ export interface QuoteEditorProps {
     audioUrl?: string
     onAudioUrlChange?: (val: string) => void
 }
-
 export function QuoteEditor({
     text = "",
     onTextChange,
@@ -35,12 +35,11 @@ export function QuoteEditor({
                     <Quote className="w-4 h-4 text-emerald-400" />
                     Quote Text Content
                 </Label>
-                <Textarea
+                <WYSIWYGTextArea
                     value={text}
-                    onChange={(e) => onTextChange && onTextChange(e.target.value)}
+                    onChange={(val: string) => onTextChange && onTextChange(val)}
                     placeholder="Enter the featured quote text..."
                     rows={4}
-                    className="bg-slate-950/60 border-slate-800 focus-visible:ring-emerald-500/50 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
                 />
             </div>
 

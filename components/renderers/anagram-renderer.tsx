@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Sparkles, RefreshCw, HelpCircle, CheckCircle2, XCircle, Lightbulb, Shuffle, ArrowRightLeft } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 export interface AnagramRendererProps {
@@ -245,9 +246,7 @@ function AnagramContent({
                     <span className="text-[10px] font-black uppercase tracking-widest text-[#58CC02]">
                         Anagram Challenge • {points} Points
                     </span>
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight">
-                        {title}
-                    </h3>
+                    <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -281,7 +280,7 @@ function AnagramContent({
             {hintText && (
                 <div className="shrink-0 my-2 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
                     <HelpCircle className="w-4 h-4 text-[#1CB0F6] shrink-0" />
-                    <span>Clue: {hintText}</span>
+                    <span>Clue: <FormattedText content={hintText} as="span" /></span>
                 </div>
             )}
 

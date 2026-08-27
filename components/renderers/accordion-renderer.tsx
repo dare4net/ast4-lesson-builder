@@ -6,6 +6,7 @@ import { ChevronDown, CheckCircle2 } from "lucide-react"
 import { ListenButton } from "@/components/renderers/listen-button"
 import { useFeedback } from "@/hooks/use-feedback"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface AccordionItem {
@@ -196,7 +197,7 @@ const AccordionItemCard = ({
                     >
                         {isOpened ? "✓" : idx + 1}
                     </div>
-                    <span className="tracking-tight text-slate-900 font-extrabold">{item.title}</span>
+                    <FormattedText content={item.title} className="tracking-tight text-slate-900 font-extrabold" />
                 </button>
 
                 <div className="flex items-center gap-2 shrink-0">
@@ -237,7 +238,7 @@ const AccordionItemCard = ({
                         theme.divider,
                     )}
                 >
-                    <p>{item.content}</p>
+                    <FormattedText content={item.content} as="p" />
                 </div>
             )}
         </div>

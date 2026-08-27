@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Layers, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface Category {
@@ -163,7 +164,7 @@ function CategoriseContent({
                 </div>
             </div>
 
-            <h3 className="text-xl md:text-2xl font-black mb-3 text-slate-900 dark:text-slate-100 tracking-tight shrink-0">{title}</h3>
+            <FormattedText content={title} as="h3" className="text-xl md:text-2xl font-black mb-3 text-slate-900 dark:text-slate-100 tracking-tight shrink-0" />
 
             {!submitted && (
                 <div className="mb-4 p-3 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 border-b-4 shrink-0 max-h-[140px] overflow-y-auto shadow-sm">
@@ -185,7 +186,7 @@ function CategoriseContent({
                                 )}
                             >
                                 <Layers className="w-3.5 h-3.5" />
-                                <span>{it.text}</span>
+                                <FormattedText content={it.text} as="span" />
                             </button>
                         ))}
                         {unassignedItems.length === 0 && (
@@ -219,7 +220,7 @@ function CategoriseContent({
                                 )}
                             >
                                 <div className={cn("p-2.5 flex items-center justify-between border-b border-black/10 shrink-0 rounded-t-xl", palette.headerBg)}>
-                                    <h4 className="font-black text-xs uppercase tracking-wider drop-shadow-sm">{cat.title}</h4>
+                                    <FormattedText content={cat.title} as="h4" className="font-black text-xs uppercase tracking-wider drop-shadow-sm" />
                                 </div>
                                 <div className="p-2.5 flex-1 space-y-2 overflow-y-auto min-h-[80px]">
                                     {assignedItems.map(it => {
@@ -236,7 +237,7 @@ function CategoriseContent({
                                                     isIncorrect && "bg-rose-50 border-[#FF4B4B] border-b-[#CC3C3C] text-rose-950"
                                                 )}
                                             >
-                                                <span>{it.text}</span>
+                                                <FormattedText content={it.text} as="span" />
                                                 {submitted && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#58CC02]" />}
                                                 {submitted && isIncorrect && <XCircle className="w-4 h-4 text-[#FF4B4B]" />}
                                             </div>

@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Info, Lightbulb, AlertTriangle, AlertCircle, Volume2, ShieldAlert } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { WYSIWYGTextArea, WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 
 export type CalloutVariant = "note" | "tip" | "warning" | "important"
 
@@ -100,11 +101,10 @@ export function CalloutEditor({
                 <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide">
                     Callout Header Title
                 </Label>
-                <Input
+                <WYSIWYGInput
                     value={title}
-                    onChange={(e) => onTitleChange && onTitleChange(e.target.value)}
+                    onChange={(val: string) => onTitleChange && onTitleChange(val)}
                     placeholder="e.g. Pro Tip, Key Takeaway, Warning"
-                    className="bg-slate-950/60 border-slate-800 focus-visible:ring-sky-500/50 h-11 text-sm font-bold placeholder:text-slate-700 rounded-xl"
                 />
             </div>
 
@@ -113,12 +113,11 @@ export function CalloutEditor({
                 <Label className="text-xs font-bold text-slate-200 uppercase tracking-wide">
                     Callout Message Content
                 </Label>
-                <Textarea
+                <WYSIWYGTextArea
                     value={content}
-                    onChange={(e) => onContentChange && onContentChange(e.target.value)}
+                    onChange={(val: string) => onContentChange && onContentChange(val)}
                     placeholder="Enter the callout explanation message..."
                     rows={4}
-                    className="bg-slate-950/60 border-slate-800 focus-visible:ring-sky-500/50 text-sm font-medium placeholder:text-slate-700 rounded-2xl resize-none p-4"
                 />
             </div>
 

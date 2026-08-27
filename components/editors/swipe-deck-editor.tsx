@@ -5,7 +5,7 @@ import { Plus, Trash2, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export interface SwipeCardItem {
@@ -120,11 +120,12 @@ export function SwipeDeckEditor({
                                 </button>
                             </div>
 
-                            <Textarea
+                            <WYSIWYGTextArea
                                 value={card.front || card.text || card.statement || ""}
-                                onChange={e => handleUpdateCard(card.id, { front: e.target.value, text: e.target.value })}
+                                onChange={(val) => handleUpdateCard(card.id, { front: val, text: val })}
                                 placeholder="Statement text..."
-                                className="bg-slate-900 border-slate-800 text-xs font-medium min-h-[60px]"
+                                rows={2}
+                                showPreviewToggle={false}
                             />
 
                             <div className="grid grid-cols-2 gap-2">

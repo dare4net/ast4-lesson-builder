@@ -10,6 +10,7 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface WordCloudRendererProps {
@@ -162,7 +163,7 @@ function WordCloudContent({
                     <span className="text-[8px] font-black text-purple-600/70 uppercase tracking-[0.2em] flex items-center gap-1">
                         <Cloud className="w-3 h-3 text-purple-500" /> Live Word Cloud
                     </span>
-                    <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+                    <FormattedText content={title} as="h3" className="text-base font-black text-slate-900 tracking-tight uppercase leading-none" />
                 </div>
                 <div className="flex items-center gap-2">
                     {isLive && (
@@ -184,9 +185,7 @@ function WordCloudContent({
             {/* Question Prompt & Input */}
             <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-3 space-y-3">
                 <div className="p-3.5 bg-purple-50/50 border-2 border-purple-100 rounded-2xl">
-                    <p className="text-sm md:text-base font-bold text-slate-900 leading-relaxed">
-                        {question || "Type words or short key concepts to build the word cloud:"}
-                    </p>
+                    <FormattedText content={question || "Type words or short key concepts to build the word cloud:"} as="p" className="text-sm md:text-base font-bold text-slate-900 leading-relaxed" />
                 </div>
 
                 {/* Input Bar */}

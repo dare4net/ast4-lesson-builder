@@ -4,6 +4,7 @@ import React from "react"
 import { Quote } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
+import { FormattedText } from "@/components/ui/formatted-text"
 
 interface QuoteRendererProps {
     text?: string
@@ -51,7 +52,7 @@ export function QuoteRenderer({
                 </div>
 
                 <blockquote className="text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 italic leading-relaxed tracking-tight text-center">
-                    "{text}"
+                    "<FormattedText content={text} />"
                 </blockquote>
 
                 {(author || source) && (

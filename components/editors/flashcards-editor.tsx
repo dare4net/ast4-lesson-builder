@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { WYSIWYGTextArea } from "@/components/ui/wysiwyg-editor"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
 
 interface Flashcard {
@@ -46,23 +46,23 @@ export function FlashcardsEditor({ cards, onChange }: FlashcardsEditorProps) {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label className="text-[#2E7D32]">Front Side</Label>
-            <Textarea
+            <WYSIWYGTextArea
               value={card.front}
-              onChange={(e) => updateCard(index, "front", e.target.value)}
+              onChange={(val) => updateCard(index, "front", val)}
               placeholder="Front side content"
               rows={3}
-              className="border-[#4CAF50]/30 focus-visible:ring-[#4CAF50] text-[#2E7D32] bg-white"
+              showPreviewToggle={false}
             />
           </div>
 
           <div className="space-y-2">
             <Label className="text-[#2E7D32]">Back Side</Label>
-            <Textarea
+            <WYSIWYGTextArea
               value={card.back}
-              onChange={(e) => updateCard(index, "back", e.target.value)}
+              onChange={(val) => updateCard(index, "back", val)}
               placeholder="Back side content"
               rows={3}
-              className="border-[#4CAF50]/30 focus-visible:ring-[#4CAF50] text-[#2E7D32] bg-white"
+              showPreviewToggle={false}
             />
           </div>
         </div>

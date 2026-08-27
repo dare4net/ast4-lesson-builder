@@ -11,6 +11,7 @@ import { playSliderTick } from "@/lib/sound-effects"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
 interface ScaleSliderRendererProps {
@@ -150,7 +151,7 @@ function ScaleSliderContent({
                     <span className="text-[8px] font-black text-sky-600/70 uppercase tracking-[0.2em] flex items-center gap-1">
                         <Sliders className="w-3 h-3 text-[#1CB0F6]" /> Opinion Spectrum
                     </span>
-                    <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
+                    <FormattedText content={title} as="h3" className="text-base font-black text-slate-900 tracking-tight uppercase leading-none" />
                 </div>
                 <div className="flex items-center gap-2">
                     {isLive && (
@@ -172,9 +173,7 @@ function ScaleSliderContent({
             {/* Center Slider Display */}
             <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-4 space-y-6">
                 <div className="p-4 bg-sky-50/50 border-2 border-sky-100 rounded-2xl text-center">
-                    <p className="text-sm md:text-base font-bold text-slate-900 leading-relaxed">
-                        {prompt || "Slide to indicate your rating or confidence level:"}
-                    </p>
+                    <FormattedText content={prompt || "Slide to indicate your rating or confidence level:"} as="p" className="text-sm md:text-base font-bold text-slate-900 leading-relaxed" />
                 </div>
 
                 {/* Selected Value Badge */}
@@ -199,8 +198,8 @@ function ScaleSliderContent({
                     />
 
                     <div className="flex justify-between items-center text-xs font-black uppercase tracking-wider">
-                        <span className="text-slate-500 max-w-[120px] text-left">{minLabel}</span>
-                        <span className="text-[#1CB0F6] max-w-[120px] text-right">{maxLabel}</span>
+                        <FormattedText content={minLabel} as="span" className="text-slate-500 max-w-[120px] text-left" />
+                        <FormattedText content={maxLabel} as="span" className="text-[#1CB0F6] max-w-[120px] text-right" />
                     </div>
                 </div>
             </div>

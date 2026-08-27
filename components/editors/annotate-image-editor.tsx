@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react"
 import { Input } from "@/components/ui/input"
+import { WYSIWYGInput } from "@/components/ui/wysiwyg-editor"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Image as ImageIcon, MapPin, Plus, Trash2 } from "lucide-react"
@@ -265,12 +266,10 @@ export function AnnotateImageEditor({
                                     <span className="w-6 h-6 rounded-lg bg-teal-500/20 text-teal-400 font-black text-[10px] flex items-center justify-center shrink-0">
                                         {idx + 1}
                                     </span>
-                                    <Input
+                                    <WYSIWYGInput
                                         value={lbl.text}
-                                        onChange={e => handleUpdateText(lbl.id, e.target.value)}
+                                        onChange={val => handleUpdateText(lbl.id, val)}
                                         placeholder={`Pin ${idx + 1} label`}
-                                        onClick={e => e.stopPropagation()}
-                                        className="bg-slate-900 border-slate-800 h-8 text-xs font-bold text-white flex-1 min-w-0"
                                     />
                                     <Button
                                         type="button"
