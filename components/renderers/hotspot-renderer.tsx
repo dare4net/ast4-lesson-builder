@@ -106,7 +106,7 @@ function HotspotDetailPanel({
         <div
             ref={panelRef}
             className={cn(
-                "absolute z-[100] w-max max-w-[min(16rem,70vw)] rounded-xl border-2 bg-white p-4 shadow-xl pointer-events-auto",
+                "absolute z-[100] w-max max-w-[min(18rem,75vw)] rounded-2xl border-2 border-b-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 p-4 shadow-2xl pointer-events-auto",
                 colorBorder,
             )}
             style={panelStyle}
@@ -117,17 +117,17 @@ function HotspotDetailPanel({
                 <p className={cn("text-[10px] font-black uppercase tracking-[0.2em]", colorText)}>
                     {hotspot.label}
                 </p>
-                <p className="text-sm font-black text-slate-900 leading-tight">{hotspot.content}</p>
+                <p className="text-sm font-extrabold text-slate-900 dark:text-slate-100 leading-tight">{hotspot.content}</p>
             </div>
 
-            {/* Chat-bubble arrow — always points at the pin */}
+            {/* Chat-bubble arrow — points at the pin */}
             {arrowDir === "above" ? (
-                <div className="absolute bottom-[-7px]" style={{ left: arrowOffset - 6 }}>
-                    <div className={cn("w-3 h-3 rotate-45 bg-white border-b-2 border-r-2", arrowBorder)} />
+                <div className="absolute bottom-[-8px]" style={{ left: arrowOffset - 6 }}>
+                    <div className={cn("w-3 h-3 rotate-45 bg-white dark:bg-slate-900 border-b-2 border-r-2", arrowBorder)} />
                 </div>
             ) : (
-                <div className="absolute top-[-7px]" style={{ left: arrowOffset - 6 }}>
-                    <div className={cn("w-3 h-3 rotate-45 bg-white border-t-2 border-l-2", arrowBorder)} />
+                <div className="absolute top-[-8px]" style={{ left: arrowOffset - 6 }}>
+                    <div className={cn("w-3 h-3 rotate-45 bg-white dark:bg-slate-900 border-t-2 border-l-2", arrowBorder)} />
                 </div>
             )}
         </div>
@@ -194,18 +194,18 @@ function HotspotPin({
             <button
                 type="button"
                 className={cn(
-                    "absolute rounded-full flex items-center justify-center transition-all duration-300 border-2 z-10 shadow-lg",
-                    showNumbers ? "w-8 h-8 font-black text-[10px]" : "w-6 h-6",
-                    pinStyle === "explored" && "bg-emerald-500 border-white text-white scale-110",
-                    pinStyle === "explore-idle" && "bg-white border-emerald-500 text-emerald-600 hover:scale-110",
-                    pinStyle === "correct-hit" && "bg-emerald-500 border-white text-white scale-110",
-                    pinStyle === "correct-missed" && "bg-amber-100 border-amber-400 text-amber-700",
-                    pinStyle === "decoy-hit" && "bg-rose-500 border-white text-white",
-                    pinStyle === "decoy-unclicked" && "bg-slate-200 border-slate-300 text-slate-500",
-                    pinStyle === "correct-found-play" && "bg-emerald-500 border-white text-white scale-110 animate-in zoom-in-50 duration-300",
-                    pinStyle === "decoy-found-play" && "bg-rose-500 border-white text-white scale-110 animate-in zoom-in-50 duration-300",
-                    pinStyle === "discover-clicked" && "bg-sky-500 border-white text-white animate-pulse",
-                    isOpen && "ring-2 ring-offset-1",
+                    "absolute rounded-full flex items-center justify-center transition-all duration-300 border-2 border-b-4 active:border-b-2 active:translate-y-[2px] z-10 shadow-md cursor-pointer",
+                    showNumbers ? "w-8 h-8 font-black text-[10px]" : "w-7 h-7",
+                    pinStyle === "explored" && "bg-[#58CC02] border-[#58CC02] border-b-[#3B8C00] text-white scale-110",
+                    pinStyle === "explore-idle" && "bg-white dark:bg-slate-900 border-emerald-500 border-b-emerald-600 text-emerald-600 dark:text-emerald-400 hover:scale-110",
+                    pinStyle === "correct-hit" && "bg-[#58CC02] border-[#58CC02] border-b-[#3B8C00] text-white scale-110",
+                    pinStyle === "correct-missed" && "bg-amber-100 dark:bg-amber-950 border-amber-400 border-b-amber-500 text-amber-700 dark:text-amber-300",
+                    pinStyle === "decoy-hit" && "bg-[#FF4B4B] border-[#FF4B4B] border-b-[#CC3C3C] text-white",
+                    pinStyle === "decoy-unclicked" && "bg-slate-200 dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400",
+                    pinStyle === "correct-found-play" && "bg-[#58CC02] border-[#58CC02] border-b-[#3B8C00] text-white scale-110 animate-in zoom-in-50 duration-300",
+                    pinStyle === "decoy-found-play" && "bg-[#FF4B4B] border-[#FF4B4B] border-b-[#CC3C3C] text-white scale-110 animate-in zoom-in-50 duration-300",
+                    pinStyle === "discover-clicked" && "bg-[#1CB0F6] border-[#1CB0F6] border-b-[#0090CC] text-white animate-pulse",
+                    isOpen && "ring-2 ring-offset-2 ring-offset-transparent",
                     isOpen && (foundDecoyDuringPlay || (isRevealed && clickResult === "decoy-hit") ? "ring-rose-400" : "ring-emerald-400"),
                 )}
                 style={{
@@ -219,22 +219,22 @@ function HotspotPin({
                 }}
             >
                 {(isRevealed && clickResult === "correct-hit") || pinStyle === "correct-found-play" ? (
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <CheckCircle2 className="w-3.5 h-3.5 stroke-[3]" />
                 ) : null}
                 {((isRevealed && clickResult === "decoy-hit") || pinStyle === "decoy-found-play") && (
-                    <XCircle className="w-3.5 h-3.5" />
+                    <XCircle className="w-3.5 h-3.5 stroke-[3]" />
                 )}
                 {showNumbers && !isRevealed && !foundDuringPlay && <span>{index + 1}</span>}
                 {!showNumbers && !isRevealed && !foundDuringPlay && (
                     <div
                         className={cn(
                             "rounded-full transition-all duration-300",
-                            isDiscovered || wasClicked ? "w-2.5 h-2.5 bg-white" : "w-2 h-2 bg-emerald-500",
+                            isDiscovered || wasClicked ? "w-2.5 h-2.5 bg-white" : "w-2.5 h-2.5 bg-emerald-500 dark:bg-emerald-400",
                         )}
                     />
                 )}
                 {isExplore && !isDiscovered && (
-                    <div className="absolute inset-0 rounded-full border-2 border-emerald-500/30 animate-ping" />
+                    <div className="absolute inset-0 rounded-full border-2 border-emerald-500/40 animate-ping pointer-events-none" />
                 )}
             </button>
             {isOpen && (foundDuringPlay || isExplore || isRevealed) && (
@@ -509,7 +509,7 @@ function HotspotContent({
 
     if (props.isEditing) {
         return (
-            <div className="border p-4 rounded-md text-slate-900">
+            <div className="border p-4 rounded-md text-slate-900 dark:text-slate-100">
                 <h3 className="font-semibold mb-2">{title}</h3>
                 <p className="text-xs text-muted-foreground mb-2 capitalize">{behavior} mode preview</p>
                 <div className="relative">
@@ -559,27 +559,28 @@ function HotspotContent({
     return (
         <div
             className={cn(
-                "w-full h-full flex-1 flex flex-col bg-white text-slate-900 overflow-hidden transition-all duration-300 px-6",
+                "w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-2",
                 disabledProp && "opacity-75",
             )}
         >
+            {/* TOP SECTION: Meta & Title */}
             <div className="shrink-0 space-y-1.5 pt-2">
                 <div className="relative flex items-center justify-between">
                     <div className="space-y-0.5">
-                        <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">
+                        <span className="text-[8px] font-black text-emerald-600/70 dark:text-emerald-400/70 uppercase tracking-[0.2em]">
                             Image Exploration
                         </span>
-                        <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">
+                        <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">
                             {title}
                         </h3>
                     </div>
                     <div className="flex items-center gap-2">
                         <span
                             className={cn(
-                                "px-2 py-1 rounded text-[7px] font-black uppercase tracking-widest border",
+                                "px-2.5 py-1 rounded-xl text-[8px] font-black uppercase tracking-widest border-2",
                                 isExplore
-                                    ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                                    : "bg-purple-50 text-purple-600 border-purple-100",
+                                    ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
+                                    : "bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800",
                             )}
                         >
                             {isExplore ? "Explore Mode" : "Discover Mode"}
@@ -595,9 +596,10 @@ function HotspotContent({
                 </div>
             </div>
 
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-hidden py-1">
+            {/* CENTER SECTION: Interactive Image Stage */}
+            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-visible py-2 w-full">
                 <div className="flex items-center justify-center w-full h-full my-auto">
-                    {/* Outer wrapper: overflow-visible so tooltips/panels aren't clipped */}
+                    {/* Stage wrapper: overflow-visible so popovers/tooltips don't clip */}
                     <div
                         ref={stageRef}
                         className={cn(
@@ -607,18 +609,18 @@ function HotspotContent({
                         )}
                         onClick={handleStageClick}
                     >
-                        {/* Image wrapper: overflow-hidden here only clips the img to the border-radius */}
-                        <div className="rounded-2xl border-2 border-emerald-100 overflow-hidden shadow-sm">
+                        {/* 3D Tactile Image Frame */}
+                        <div className="rounded-2xl border-2 border-b-4 border-slate-200 dark:border-slate-800 border-b-slate-300 dark:border-b-slate-800 overflow-hidden shadow-md bg-slate-900/5 dark:bg-slate-900/50">
                             <img
                                 ref={imageRef}
                                 src={image || "/placeholder.svg?height=300&width=400"}
                                 alt={title}
-                                className="max-h-[48vh] md:max-h-[52vh] w-auto h-auto object-contain block select-none bg-white"
+                                className="max-h-[48vh] md:max-h-[52vh] w-auto h-auto object-contain block select-none bg-transparent"
                                 draggable={false}
                             />
                         </div>
 
-                        {/* Pin + panel layer: sits above the image, not clipped */}
+                        {/* Pin + detail popover layer */}
                         <div className="absolute inset-0">
                             {hotspots.map((hotspot, idx) => (
                                 <HotspotPin
@@ -642,13 +644,14 @@ function HotspotContent({
                 </div>
             </div>
 
-            <div className="shrink-0 space-y-2.5 pb-4 pt-1">
-                <div className="min-h-[44px] flex flex-col justify-end">
+            {/* BOTTOM SECTION: Reserved Footer Height for Submit & Retry */}
+            <div className="shrink-0 space-y-2.5 pb-4 pt-1 min-h-[56px] flex flex-col justify-center">
+                <div className="flex flex-col justify-end">
                     {isDiscover && !isRevealed && (
                         <div className="space-y-2">
                             {allTargetsFound && (
-                                <div className="p-2.5 rounded-xl border-2 bg-emerald-50 border-emerald-400 animate-in slide-in-from-top-2 duration-300">
-                                    <p className="text-xs font-black text-emerald-700">
+                                <div className="p-2.5 rounded-xl border-2 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-400 text-center animate-in slide-in-from-top-2 duration-300">
+                                    <p className="text-xs font-black text-emerald-700 dark:text-emerald-300">
                                         All targets found — press Submit when ready!
                                     </p>
                                 </div>
@@ -656,25 +659,26 @@ function HotspotContent({
                             <div className="flex items-center justify-between gap-2">
                                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                                     Clicks left:{" "}
-                                    <span className={cn(clicksRemaining === 0 ? "text-rose-500" : "text-purple-600")}>
+                                    <span className={cn(clicksRemaining === 0 ? "text-rose-500 font-extrabold" : "text-purple-600 dark:text-purple-400 font-extrabold")}>
                                         {clicksRemaining}
                                     </span>
                                 </span>
                                 {!isSubmitted && (
-                                    <Button
-                                        size="sm"
-                                        className={cn(
-                                            "h-9 rounded-xl text-white font-black uppercase text-[10px] tracking-wider shrink-0 transition-all",
-                                            allTargetsFound
-                                                ? "bg-emerald-600 hover:bg-emerald-500 ring-2 ring-emerald-400 ring-offset-1 animate-pulse"
-                                                : "bg-purple-600 hover:bg-purple-500",
-                                            !canSubmit && "opacity-50 cursor-not-allowed",
-                                        )}
-                                        onClick={handleSubmit}
+                                    <button
+                                        type="button"
                                         disabled={!canSubmit}
+                                        onClick={handleSubmit}
+                                        className={cn(
+                                            "px-6 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider transition-all border-b-4 active:border-b-0 active:translate-y-[2px] shadow-md cursor-pointer",
+                                            allTargetsFound
+                                                ? "bg-[#58CC02] text-white hover:bg-[#46a302] border-[#3B8C00] ring-2 ring-emerald-400 ring-offset-1 animate-pulse"
+                                                : canSubmit
+                                                    ? "bg-[#1CB0F6] text-white hover:bg-sky-500 border-[#0090CC]"
+                                                    : "bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700 border-b-slate-300 shadow-none cursor-not-allowed",
+                                        )}
                                     >
                                         Submit
-                                    </Button>
+                                    </button>
                                 )}
                             </div>
                         </div>
@@ -685,29 +689,29 @@ function HotspotContent({
                             className={cn(
                                 "p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm",
                                 isPendingMarking && !tutorMarkedFlag
-                                    ? "bg-amber-50 border-amber-200"
+                                    ? "bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800"
                                     : approved || correctFoundCount >= totalCorrectTargets
-                                        ? "bg-emerald-50/50 border-emerald-500/20"
+                                        ? "bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-500/20"
                                         : correctFoundCount > 0
-                                            ? "bg-amber-50/50 border-amber-300/30"
-                                            : "bg-rose-50/50 border-rose-300/30",
+                                            ? "bg-amber-50/50 dark:bg-amber-950/40 border-amber-300/30"
+                                            : "bg-rose-50/50 dark:bg-rose-950/40 border-rose-300/30",
                             )}
                         >
                             {isPendingMarking && !tutorMarkedFlag ? (
                                 <div className="space-y-1">
-                                    <span className="text-[10px] font-black text-amber-700 uppercase tracking-widest">
+                                    <span className="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-widest">
                                         Submitted — Pending Tutor Review
                                     </span>
-                                    <p className="text-[10px] font-medium text-slate-700 mt-0.5">
+                                    <p className="text-[10px] font-medium text-slate-700 dark:text-slate-300 mt-0.5">
                                         Tap any pin to read its explanation. Your tutor will score this attempt.
                                     </p>
                                 </div>
                             ) : approved || correctFoundCount >= totalCorrectTargets ? (
                                 <div className="space-y-1">
-                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">
+                                    <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
                                         {tutorMarkedFlag ? "Tutor Approved" : "Correct"}
                                     </span>
-                                    <p className="text-sm font-black text-slate-900 leading-tight italic">
+                                    <p className="text-sm font-black text-slate-900 dark:text-slate-100 leading-tight italic">
                                         {tutorMarkedFlag
                                             ? "Response reviewed and approved by tutor."
                                             : `Excellent! You found all ${totalCorrectTargets} targets.`}
@@ -716,10 +720,10 @@ function HotspotContent({
                                 </div>
                             ) : correctFoundCount > 0 ? (
                                 <div className="space-y-1">
-                                    <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">
+                                    <span className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest">
                                         {tutorMarkedFlag ? "Tutor Scored" : "Partial Credit"}
                                     </span>
-                                    <p className="text-sm font-black text-slate-900 leading-tight">
+                                    <p className="text-sm font-black text-slate-900 dark:text-slate-100 leading-tight">
                                         You found {correctFoundCount} / {totalCorrectTargets} correct targets.
                                     </p>
                                     {renderScoreLine()}
@@ -729,7 +733,7 @@ function HotspotContent({
                                     <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">
                                         {tutorMarkedFlag ? "Tutor Reviewed" : "Incorrect"}
                                     </span>
-                                    <p className="text-sm font-black text-slate-900 leading-tight">
+                                    <p className="text-sm font-black text-slate-900 dark:text-slate-100 leading-tight">
                                         {tutorMarkedFlag
                                             ? "Response reviewed by tutor — revision required."
                                             : `You found 0 / ${totalCorrectTargets} correct targets.`}
@@ -737,29 +741,30 @@ function HotspotContent({
                                     {renderScoreLine()}
                                 </div>
                             )}
-                            <p className="text-[10px] text-slate-500 mt-2">
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2">
                                 Tap any pin to read its explanation.
                             </p>
                         </div>
                     )}
 
                     {isExplore && discoveredHotspots.length === hotspots.length && hotspots.length > 0 && (
-                        <div className="p-3 rounded-xl border-2 bg-emerald-50/50 border-emerald-500/20">
-                            <p className="text-xs font-black text-slate-900 italic">
+                        <div className="p-3 rounded-xl border-2 bg-emerald-50/50 dark:bg-emerald-950/40 border-emerald-500/20">
+                            <p className="text-xs font-black text-slate-900 dark:text-slate-100 italic">
                                 You&apos;ve explored all nodes!
                             </p>
                         </div>
                     )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center justify-center gap-3">
                     {showRetry && (
-                        <Button
-                            className="h-10 rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-black uppercase text-[10px] tracking-widest"
+                        <button
+                            type="button"
                             onClick={onLocalRetry}
+                            className="px-6 py-2.5 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-2 border-slate-200 dark:border-slate-700 border-b-4 font-black text-xs uppercase tracking-wider transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer"
                         >
                             Try Again
-                        </Button>
+                        </button>
                     )}
                     {disabledProp && (
                         <div className="flex items-center gap-1.5 text-[7px] font-black text-slate-400 uppercase tracking-widest">
