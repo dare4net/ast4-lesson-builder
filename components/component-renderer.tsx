@@ -2,9 +2,8 @@
 
 import dynamic from "next/dynamic"
 import * as React from 'react'
-import { createElement } from "react"
 import { cn } from "@/lib/utils"
-import type { Component, ComponentType } from "@/types/lesson"
+import type { Component } from "@/types/lesson"
 import type { PollVotesMap } from "@/hooks/use-poll-store"
 import { usesGamifiedRendererProps, usesInteractiveRendererProps } from "@/lib/component-registry"
 import { resolveHotspotComponentProps } from "@/lib/hotspot-utils"
@@ -68,9 +67,23 @@ const componentRenderers: ComponentRenderers = {
   ),
 
   // Gamified Components
-  wordScramble: dynamic(() => import("@/components/renderers/word-scramble-renderer").then((mod) => mod.WordScrambleRenderer)),
-  memoryGrid: dynamic(() => import("@/components/renderers/memory-grid-renderer").then((mod) => mod.MemoryGridRenderer)),
-  spinTheWheel: dynamic(() => import("@/components/renderers/spin-the-wheel-renderer").then((mod) => mod.SpinTheWheelRenderer)),
+  annotationBoard: dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => mod.AnnotationBoardRenderer as any)),
+  "annotation-board": dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => mod.AnnotationBoardRenderer as any)),
+  anagram: dynamic(() => import("@/components/renderers/anagram-renderer").then((mod) => mod.AnagramRenderer as any)),
+  hangman: dynamic(() => import("@/components/renderers/hangman-renderer").then((mod) => mod.HangmanRenderer as any)),
+  swipeDeck: dynamic(() => import("@/components/renderers/swipe-deck-renderer").then((mod) => mod.SwipeDeckRenderer as any)),
+  "swipe-deck": dynamic(() => import("@/components/renderers/swipe-deck-renderer").then((mod) => mod.SwipeDeckRenderer as any)),
+  spectrumSorter: dynamic(() => import("@/components/renderers/spectrum-sorter-renderer").then((mod) => mod.SpectrumSorterRenderer as any)),
+  "spectrum-sorter": dynamic(() => import("@/components/renderers/spectrum-sorter-renderer").then((mod) => mod.SpectrumSorterRenderer as any)),
+  labScale: dynamic(() => import("@/components/renderers/spectrum-sorter-renderer").then((mod) => mod.SpectrumSorterRenderer as any)),
+  jigsaw: dynamic(() => import("@/components/renderers/jigsaw-renderer").then((mod) => mod.JigsawRenderer as any)),
+  crossword: dynamic(() => import("@/components/renderers/crossword-renderer").then((mod) => mod.CrosswordRenderer as any)),
+  wordScramble: dynamic(() => import("@/components/renderers/word-scramble-renderer").then((mod) => mod.WordScrambleRenderer as any)),
+  "word-scramble": dynamic(() => import("@/components/renderers/word-scramble-renderer").then((mod) => mod.WordScrambleRenderer as any)),
+  memoryGrid: dynamic(() => import("@/components/renderers/memory-grid-renderer").then((mod) => mod.MemoryGridRenderer as any)),
+  "memory-grid": dynamic(() => import("@/components/renderers/memory-grid-renderer").then((mod) => mod.MemoryGridRenderer as any)),
+  spinTheWheel: dynamic(() => import("@/components/renderers/spin-the-wheel-renderer").then((mod) => mod.SpinTheWheelRenderer as any)),
+  "spin-the-wheel": dynamic(() => import("@/components/renderers/spin-the-wheel-renderer").then((mod) => mod.SpinTheWheelRenderer as any)),
 
   // Structure Components
   slideTitle: dynamic(() => import("@/components/renderers/heading-renderer").then((mod) => mod.HeadingRenderer)),
@@ -232,7 +245,7 @@ const ComponentRendererBase = function ComponentRenderer({
         setComponentState={setComponentState}
       >
         <div className={cn(
-          "flex-1 min-h-0 flex flex-col w-full transition-opacity overflow-hidden motion-cascade",
+          "flex-1 flex flex-col w-full transition-opacity motion-cascade",
           isDisabled && !isTutorView && "opacity-75"
         )}>
           <Renderer {...props} />

@@ -89,6 +89,13 @@ export type ComponentType =
   | "spinTheWheel"
   | "memoryGrid"
   | "wordCloud"
+  | "annotationBoard"
+  | "anagram"
+  | "hangman"
+  | "swipeDeck"
+  | "spectrumSorter"
+  | "jigsaw"
+  | "crossword"
 
   // Media
   | "audioPlayer"

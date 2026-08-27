@@ -32,6 +32,13 @@ import { CalloutEditor } from "@/components/editors/callout-editor"
 import { TimelineEditor } from "@/components/editors/timeline-editor"
 import { CategoriseEditor } from "@/components/editors/categorise-editor"
 import { WordScrambleEditor } from "@/components/editors/word-scramble-editor"
+import { AnnotationBoardEditor } from "@/components/editors/annotation-board-editor"
+import { AnagramEditor } from "@/components/editors/anagram-editor"
+import { HangmanEditor } from "@/components/editors/hangman-editor"
+import { SwipeDeckEditor } from "@/components/editors/swipe-deck-editor"
+import { CrosswordEditor } from "@/components/editors/crossword-editor"
+import { SpectrumSorterEditor } from "@/components/editors/spectrum-sorter-editor"
+import { JigsawEditor } from "@/components/editors/jigsaw-editor"
 import { MemoryGridEditor } from "@/components/editors/memory-grid-editor"
 import { TrueFalseEditor } from "@/components/editors/true-false-editor"
 import { ScaleSliderEditor } from "@/components/editors/scale-slider-editor"
@@ -52,14 +59,14 @@ interface ComponentEditorProps {
 
 export function ComponentEditor({ component, updateComponent, onClose, isMobile = false, lessonId }: ComponentEditorProps) {
   const [props, setProps] = useState<Record<string, any>>(() =>
-    component.type === "hotspot" ? resolveHotspotComponentProps(component) : component.props,
+    component.type === "hotspot" ? resolveHotspotComponentProps(component as any) : component.props,
   )
   const [hasDraftChanges, setHasDraftChanges] = useState(false)
 
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
 
   useEffect(() => {
-    setProps(component.type === "hotspot" ? resolveHotspotComponentProps(component) : component.props)
+    setProps(component.type === "hotspot" ? resolveHotspotComponentProps(component as any) : component.props)
     setHasDraftChanges(false)
   }, [component])
 
@@ -144,12 +151,30 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
           />
         ) : component.type === "wordScramble" ? (
           <WordScrambleEditor
-            title={props.title || ""}
-            onTitleChange={(val) => handleChange("title", val)}
+            title={props.title || "Unscramble the Sequence"}
+            onTitleChange={(val: string) => handleChange("title", val)}
+            variant={props.variant || "single"}
+            onVariantChange={(val) => handleChange("variant", val)}
             word={props.word || ""}
-            onWordChange={(val) => handleChange("word", val)}
+            onWordChange={(val: string) => handleChange("word", val)}
+            words={props.words || []}
+            onWordsChange={(val) => handleChange("words", val)}
+            sentence={props.sentence || ""}
+            onSentenceChange={(val) => handleChange("sentence", val)}
             hint={props.hint || ""}
-            onHintChange={(val) => handleChange("hint", val)}
+            onHintChange={(val: string) => handleChange("hint", val)}
+            allowTextClue={props.allowTextClue !== undefined ? props.allowTextClue : true}
+            onAllowTextClueChange={(val) => handleChange("allowTextClue", val)}
+            allowLetterReveal={props.allowLetterReveal !== undefined ? props.allowLetterReveal : true}
+            onAllowLetterRevealChange={(val) => handleChange("allowLetterReveal", val)}
+            maxLetterReveals={props.maxLetterReveals ?? 3}
+            onMaxLetterRevealsChange={(val) => handleChange("maxLetterReveals", val)}
+            allowWordSolve={props.allowWordSolve !== undefined ? props.allowWordSolve : true}
+            onAllowWordSolveChange={(val) => handleChange("allowWordSolve", val)}
+            maxWordSolves={props.maxWordSolves ?? 1}
+            onMaxWordSolvesChange={(val) => handleChange("maxWordSolves", val)}
+            allowFirstLetterAnchors={props.allowFirstLetterAnchors !== undefined ? props.allowFirstLetterAnchors : true}
+            onAllowFirstLetterAnchorsChange={(val) => handleChange("allowFirstLetterAnchors", val)}
           />
         ) : component.type === "memoryGrid" ? (
           <MemoryGridEditor
@@ -215,7 +240,7 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
             questions={props.questions}
             items={props.items}
             onQuestionsChange={(questions) => {
-              setProps((prev) => {
+              setProps((prev: any) => {
                 const updatedProps = { ...prev, questions }
                 if (Array.isArray(updatedProps.items) && updatedProps.items.length > 0) {
                   delete updatedProps.items
@@ -245,6 +270,81 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
               handleChange("correctKeywords", val)
               handleChange("keyConcepts", val)
             }}
+          />
+        ) : component.type === "annotationBoard" ? (
+          <AnnotationBoardEditor
+            title={props.title || "Identify Grammar Roles"}
+            onTitleChange={(val) => handleChange("title", val)}
+            passage={props.passage || ""}
+            onPassageChange={(val) => handleChange("passage", val)}
+            labels={props.labels || []}
+            onLabelsChange={(labels) => handleChange("labels", labels)}
+            correctAnswers={props.correctAnswers || []}
+            onCorrectAnswersChange={(answers) => handleChange("correctAnswers", answers)}
+            groups={props.groups || []}
+            onGroupsChange={(groups) => handleChange("groups", groups)}
+          />
+        ) : component.type === "anagram" ? (
+          <AnagramEditor
+            word={props.word || ""}
+            onWordChange={(val) => handleChange("word", val)}
+            hint={props.hint || ""}
+            onHintChange={(val) => handleChange("hint", val)}
+          />
+        ) : component.type === "hangman" ? (
+          <HangmanEditor
+            word={props.secretWord || props.word || props.targetWord || props.answer || ""}
+            onWordChange={(val) => {
+              handleChange("secretWord", val)
+              handleChange("word", val)
+            }}
+            category={props.category || ""}
+            onCategoryChange={(val) => handleChange("category", val)}
+            clue={props.clue || ""}
+            onClueChange={(val) => handleChange("clue", val)}
+            theme={props.theme || "mascot"}
+            onThemeChange={(val) => handleChange("theme", val)}
+            maxLives={props.maxLives || props.maxAttempts || 6}
+            onMaxLivesChange={(val) => {
+              handleChange("maxLives", val)
+              handleChange("maxAttempts", val)
+            }}
+          />
+        ) : component.type === "swipeDeck" ? (
+          <SwipeDeckEditor
+            leftLabel={props.leftLabel || "Myth"}
+            onLeftLabelChange={(val) => handleChange("leftLabel", val)}
+            rightLabel={props.rightLabel || "Fact"}
+            onRightLabelChange={(val) => handleChange("rightLabel", val)}
+            cards={props.cards || []}
+            onCardsChange={(cards) => handleChange("cards", cards)}
+          />
+        ) : component.type === "crossword" ? (
+          <CrosswordEditor
+            gridSize={props.gridSize || { rows: 5, cols: 5 }}
+            onGridSizeChange={(val) => handleChange("gridSize", val)}
+            words={props.words || []}
+            onWordsChange={(words) => handleChange("words", words)}
+          />
+        ) : component.type === "spectrumSorter" ? (
+          <SpectrumSorterEditor
+            minLabel={props.minLabel || "Low"}
+            onMinLabelChange={(val) => handleChange("minLabel", val)}
+            maxLabel={props.maxLabel || "High"}
+            onMaxLabelChange={(val) => handleChange("maxLabel", val)}
+            tolerance={props.tolerance || 10}
+            onToleranceChange={(val) => handleChange("tolerance", val)}
+            items={props.items || []}
+            onItemsChange={(items) => handleChange("items", items)}
+          />
+        ) : component.type === "jigsaw" ? (
+          <JigsawEditor
+            image={props.image || ""}
+            onImageChange={(val) => handleChange("image", val)}
+            gridSize={typeof props.gridSize === "object" ? (props.gridSize?.rows ?? 3) as 2 | 3 | 4 : (props.gridSize ?? 3) as 2 | 3 | 4}
+            onGridSizeChange={(val) => handleChange("gridSize", val)}
+            lessonId={lessonId}
+            componentId={component.id}
           />
         ) : (
           <div className="space-y-8">
@@ -466,7 +566,24 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                           onAllowMultipleChange={(m: boolean) => handleChange("allowMultiple", m)}
                         />
                       )}
+                      {component.type === "wordScramble" && propDef.name === "word" && (
+                        <WordScrambleEditor
+                          title={props.title || ""}
+                          onTitleChange={(v) => handleChange("title", v)}
+                          variant={props.variant || "single"}
+                          onVariantChange={(v) => handleChange("variant", v)}
+                          word={props.word || ""}
+                          onWordChange={(v) => handleChange("word", v)}
+                          words={props.words || []}
+                          onWordsChange={(v) => handleChange("words", v)}
+                          sentence={props.sentence || ""}
+                          onSentenceChange={(v) => handleChange("sentence", v)}
+                          hint={props.hint || ""}
+                          onHintChange={(v) => handleChange("hint", v)}
+                        />
+                      )}
                     </div>
+
                   )}
 
                   {propDef.description && <p className="text-[10px] text-slate-600 font-bold ml-1">{propDef.description}</p>}

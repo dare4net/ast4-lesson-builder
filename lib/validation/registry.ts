@@ -35,7 +35,14 @@ import {
     spinTheWheelValidator,
     shortAnswerValidator,
     wordCloudValidator,
-    scaleSliderValidator
+    scaleSliderValidator,
+    annotationBoardValidator,
+    spectrumSorterValidator,
+    anagramValidator,
+    crosswordValidator,
+    jigsawValidator,
+    hangmanValidator,
+    swipeDeckValidator
 } from './components/interactive';
 
 const registry: Record<string, ComponentValidator> = {
@@ -65,11 +72,25 @@ const registry: Record<string, ComponentValidator> = {
     categorise: categoriseValidator,
     timeline: timelineValidator,
     wordScramble: wordScrambleValidator,
+    'word-scramble': wordScrambleValidator,
     memoryGrid: memoryGridValidator,
+    'memory-grid': memoryGridValidator,
     spinTheWheel: spinTheWheelValidator,
+    'spin-the-wheel': spinTheWheelValidator,
     shortAnswer: shortAnswerValidator,
     wordCloud: wordCloudValidator,
-    scaleSlider: scaleSliderValidator
+    scaleSlider: scaleSliderValidator,
+    annotationBoard: annotationBoardValidator,
+    'annotation-board': annotationBoardValidator,
+    spectrumSorter: spectrumSorterValidator,
+    'spectrum-sorter': spectrumSorterValidator,
+    labScale: spectrumSorterValidator,
+    anagram: anagramValidator,
+    crossword: crosswordValidator,
+    jigsaw: jigsawValidator,
+    hangman: hangmanValidator,
+    swipeDeck: swipeDeckValidator,
+    'swipe-deck': swipeDeckValidator
 };
 
 import { isSupportedRenderer } from '@/components/component-renderer';
@@ -117,3 +138,4 @@ export function validateSingleComponent(
 
     return validator.validate(component, context);
 }
+

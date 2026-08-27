@@ -58,6 +58,13 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
     { type: "wordScramble", category: "gamified", gated: true, scored: true, wrapper: "scored" },
     { type: "memoryGrid", category: "gamified", gated: true, scored: true, wrapper: "scored" },
     { type: "spinTheWheel", category: "gamified", gated: true, scored: true, wrapper: "scored" },
+    { type: "annotationBoard", category: "interactive", gated: true, scored: true, wrapper: "scored" },
+    { type: "anagram", category: "gamified", gated: true, scored: true, wrapper: "scored" },
+    { type: "hangman", category: "gamified", gated: true, scored: true, wrapper: "scored" },
+    { type: "swipeDeck", category: "gamified", gated: true, scored: true, wrapper: "scored" },
+    { type: "spectrumSorter", category: "interactive", gated: true, scored: true, wrapper: "scored" },
+    { type: "jigsaw", category: "gamified", gated: true, scored: true, wrapper: "scored" },
+    { type: "crossword", category: "gamified", gated: true, scored: true, wrapper: "scored" },
 
     // Structure
     { type: "slideTitle", category: "structure", gated: false, scored: false, wrapper: "content" },

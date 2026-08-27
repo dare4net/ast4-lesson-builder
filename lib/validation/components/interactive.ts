@@ -528,3 +528,105 @@ export const scaleSliderValidator: ComponentValidator = {
         return res;
     }
 };
+
+// AnnotationBoard Validator
+export const annotationBoardValidator: ComponentValidator = {
+    type: 'annotationBoard',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { passage, text } = component.props || {};
+        if (!passage && !text) {
+            addWarning(res, 'MISSING_ANNOTATION_PASSAGE', 'props.passage', 'Annotation board requires a passage text to annotate.');
+        }
+        return res;
+    }
+};
+
+// SpectrumSorter / Lab Scale Validator
+export const spectrumSorterValidator: ComponentValidator = {
+    type: 'spectrumSorter',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { items } = component.props || {};
+        if (!Array.isArray(items) || items.length === 0) {
+            addWarning(res, 'NO_SPECTRUM_ITEMS', 'props.items', 'Spectrum sorter lab scale requires at least 1 item.');
+        }
+        return res;
+    }
+};
+
+// Anagram Validator
+export const anagramValidator: ComponentValidator = {
+    type: 'anagram',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { word, targetWord } = component.props || {};
+        const target = word || targetWord;
+        if (!target || typeof target !== 'string' || target.trim().length < 2) {
+            addError(res, 'INVALID_ANAGRAM_WORD', 'props.word', 'Anagram target word must be at least 2 characters long.');
+        }
+        return res;
+    }
+};
+
+// Crossword Validator
+export const crosswordValidator: ComponentValidator = {
+    type: 'crossword',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { words } = component.props || {};
+        if (!Array.isArray(words) || words.length === 0) {
+            addError(res, 'NO_CROSSWORD_WORDS', 'props.words', 'Crossword puzzle requires at least 1 word entry.');
+        }
+        return res;
+    }
+};
+
+// Jigsaw Validator
+export const jigsawValidator: ComponentValidator = {
+    type: 'jigsaw',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { imageUrl, image, src } = component.props || {};
+        const img = imageUrl || image || src;
+        if (!img || typeof img !== 'string' || img.trim() === '') {
+            addWarning(res, 'MISSING_JIGSAW_IMAGE', 'props.imageUrl', 'Jigsaw puzzle missing custom background image URL (uses default).');
+        }
+        return res;
+    }
+};
+
+// Hangman Validator
+export const hangmanValidator: ComponentValidator = {
+    type: 'hangman',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { secretWord, word } = component.props || {};
+        const target = secretWord || word;
+        if (!target || typeof target !== 'string' || target.trim().length < 2) {
+            addError(res, 'INVALID_HANGMAN_WORD', 'props.secretWord', 'Hangman secret word must be at least 2 characters long.');
+        }
+        return res;
+    }
+};
+
+// SwipeDeck Validator
+export const swipeDeckValidator: ComponentValidator = {
+    type: 'swipeDeck',
+    validate: (component) => {
+        const res = createResult(component.id, component.type);
+        validateTimeLimit(res, component);
+        const { cards } = component.props || {};
+        if (!Array.isArray(cards) || cards.length === 0) {
+            addError(res, 'NO_SWIPE_CARDS', 'props.cards', 'Swipe deck requires at least 1 card.');
+        }
+        return res;
+    }
+};
+
