@@ -94,6 +94,33 @@ describe('evaluateLevelProgress', () => {
         expect(complete.activeMissions[0].isCompleted).toBe(true)
     })
 
+    it('counts a specific lesson block without using other hangmen', () => {
+        const catalog = [
+            {
+                id: 'l3-this-hangman',
+                level: 3,
+                title: 'This Hangman',
+                description: 'Complete this hangman',
+                targetCount: 1,
+                rewardStars: 4,
+                stat: 'submits' as const,
+                filters: { lessonId: 'lesson-1', componentId: 'hang-1' },
+            },
+        ]
+        const other = evaluateLevelProgress({
+            currentLevel: 3,
+            catalog,
+            stats: { submitsByComponent: { 'lesson-2__hang-9': { total: 2 } }, submitsByType: { hangman: { total: 2 } } },
+        })
+        expect(other.activeMissions[0].isCompleted).toBe(false)
+        const mine = evaluateLevelProgress({
+            currentLevel: 3,
+            catalog,
+            stats: { submitsByComponent: { 'lesson-1__hang-1': { total: 1 } } },
+        })
+        expect(mine.activeMissions[0].isCompleted).toBe(true)
+    })
+
     it('keeps the shared mission ID contract', () => {
         expect(PLATFORM_MISSIONS.map(m => m.id)).toEqual([
             'l1-enroll-program',

@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { apiClient } from "@/lib/api-client"
 import { queryKeys } from "@/lib/query-keys"
 import { useMyPrograms, useProgramDetails } from "@/hooks/use-my-programs"
+import { programProgressPercent } from "@/lib/program-progress"
 import {
     BookOpen,
     ArrowLeft,
@@ -68,18 +69,7 @@ export default function StudentCourseDetailPage() {
         }
     }
 
-    const getProgressValue = () => {
-        if (!program) return 0
-        const reg = program.registration
-        if (typeof reg?.progress?.percent_complete === 'number') return reg.progress.percent_complete
-        if (typeof reg?.progress?.percentComplete === 'number') return reg.progress.percentComplete
-        if (typeof reg?.overallProgress === 'number') return reg.overallProgress
-        if (typeof reg?.totalProgress === 'number') return reg.totalProgress
-
-        if (!program.modules || program.modules.length === 0) return 0
-        const completedCount = reg?.progress?.completed_modules?.length || 0
-        return Math.round((completedCount / program.modules.length) * 100)
-    }
+    const getProgressValue = () => programProgressPercent(program)
 
     const getModuleTitle = (mod: any, idx: number) => {
         return (
@@ -126,6 +116,9 @@ export default function StudentCourseDetailPage() {
     }
 
     const progressPct = getProgressValue()
+    const liveModules = (program.modules || []).filter((mod: any) =>
+        mod?.is_deleted !== true && mod?.is_published !== false
+    )
 
 
     const handleOpenModule = (moduleId: string) => {
@@ -174,11 +167,11 @@ export default function StudentCourseDetailPage() {
             <div className="space-y-4">
                 <h2 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">
                     <Folder className="w-5 h-5 text-[#1CB0F6]" />
-                    <span>Course Modules ({program.modules?.length || 0})</span>
+                    <span>Course Modules ({liveModules.length})</span>
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {program.modules?.map((mod: any, idx: number) => {
+                    {liveModules.map((mod: any, idx: number) => {
                         const moduleTitle = getModuleTitle(mod, idx)
                         const lessonCount = getModuleLessonCount(mod)
                         const modThumbnail = mod.thumbnail || mod.image_url || mod.cover_image || program.image_url || program.cover_image || "/logo.webp"

@@ -16,8 +16,15 @@ import {
     RULE_OP_LABELS,
     RULE_OPS,
     SCORED_COMPONENT_TYPES,
+    describeAchievementRecipe,
+    describeMissionRecipe,
+    persistMissionFilters,
+    visibleAchievementRules,
+    canUsePerfectAttempt,
+    isScoredCatalogType,
     type AchievementEventType,
     type AchievementRule,
+    type CatalogLessonTarget,
     type MissionFilters,
     type MissionStatKey,
     type RuleOp,
@@ -46,6 +53,11 @@ type AchievementDraft = {
     rules: AchievementRule[];
 };
 
+type LessonTarget = CatalogLessonTarget & {
+    moduleTitle?: string;
+    published?: boolean;
+};
+
 const emptyMission = (level = 1): MissionDraft => ({
     id: '',
     level,
@@ -69,24 +81,10 @@ const emptyAchievement = (): AchievementDraft => ({
     rules: [{ field: 'type', op: 'eq', value: 'quiz' }],
 });
 
-function slugify(value: string) {
-    return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48);
-}
-
-function missionSentence(mission: MissionDraft) {
-    if (mission.stat === 'submits') {
-        const mode = mission.filters.mode ? `${mission.filters.mode} ` : '';
-        const type = mission.filters.type || 'any block';
-        const perfect = mission.filters.perfect ? ' at 100% first try' : '';
-        return `Count ${mode}${type} completions${perfect} until ${mission.targetCount}`;
-    }
-    return `${MISSION_STAT_LABELS[mission.stat]} until ${mission.targetCount}`;
-}
-
-function ruleSentence(rule: AchievementRule) {
-    if (rule.op === 'exists') return `${rule.field} is present`;
-    if (rule.op === 'ratioLt') return `${rule.field} ÷ ${rule.over || '?'} is less than ${rule.value}`;
-    return `${rule.field} ${RULE_OP_LABELS[rule.op]} ${rule.value ?? ''}`;
+function nextMissionFilters(current: MissionFilters, patch: Partial<MissionFilters>, lessons: LessonTarget[]): MissionFilters {
+    const next = { ...current, ...patch };
+    if (!canUsePerfectAttempt(next, lessons)) next.perfect = undefined;
+    return next;
 }
 
 function SuperadminCatalog() {
@@ -102,14 +100,16 @@ function SuperadminCatalog() {
     const [editingAchievement, setEditingAchievement] = useState<AchievementDraft>(emptyAchievement());
     const [isNewMission, setIsNewMission] = useState(true);
     const [isNewAchievement, setIsNewAchievement] = useState(true);
+    const [lessonTargets, setLessonTargets] = useState<LessonTarget[]>([]);
 
     const load = async () => {
         setError('');
         setLoading(true);
         try {
-            const [missionRes, achievementRes] = await Promise.all([
+            const [missionRes, achievementRes, targetRes] = await Promise.all([
                 superadminClient.listMissions(),
                 superadminClient.listAchievements(),
+                superadminClient.listTargets().catch(() => ({ lessons: [] })),
             ]);
             setMissions(Array.isArray(missionRes?.missions) ? missionRes.missions.map((m: MissionDraft) => ({
                 ...emptyMission(),
@@ -118,6 +118,7 @@ function SuperadminCatalog() {
                 enabled: m.enabled !== false,
             })) : []);
             setAchievements(Array.isArray(achievementRes?.achievements) ? achievementRes.achievements : []);
+            setLessonTargets(Array.isArray(targetRes?.lessons) ? targetRes.lessons : []);
         } catch {
             setError('Failed to load catalog.');
         } finally {
@@ -162,15 +163,8 @@ function SuperadminCatalog() {
         setSaving(true);
         setError('');
         try {
-            const filters = editingMission.stat === 'submits'
-                ? {
-                    ...(editingMission.filters.mode ? { mode: editingMission.filters.mode } : {}),
-                    ...(editingMission.filters.type ? { type: editingMission.filters.type } : {}),
-                    ...(editingMission.filters.perfect ? { perfect: true } : {}),
-                }
-                : null;
+            const filters = persistMissionFilters(editingMission.stat, editingMission.filters, lessonTargets);
             const payload = {
-                id: isNewMission ? (editingMission.id || slugify(editingMission.title)) : editingMission.id,
                 level: Number(editingMission.level),
                 title: editingMission.title,
                 description: editingMission.description,
@@ -183,8 +177,7 @@ function SuperadminCatalog() {
             if (isNewMission) {
                 await superadminClient.createMission(payload);
             } else {
-                const { id, ...rest } = payload;
-                await superadminClient.updateMission(id, rest);
+                await superadminClient.updateMission(editingMission.id, payload);
             }
             await load();
             setIsNewMission(true);
@@ -201,16 +194,18 @@ function SuperadminCatalog() {
         setError('');
         try {
             const payload = {
-                ...editingAchievement,
-                id: isNewAchievement ? (editingAchievement.id || slugify(editingAchievement.title)) : editingAchievement.id,
+                title: editingAchievement.title,
+                description: editingAchievement.description,
+                icon: editingAchievement.icon,
                 rewardStars: Number(editingAchievement.rewardStars),
-                rules: editingAchievement.rules.filter((rule) => rule.field && rule.op),
+                eventType: editingAchievement.eventType,
+                enabled: editingAchievement.enabled,
+                rules: visibleAchievementRules(editingAchievement.rules, lessonTargets).filter((rule) => rule.field && rule.op),
             };
             if (isNewAchievement) {
                 await superadminClient.createAchievement(payload);
             } else {
-                const { id, ...rest } = payload;
-                await superadminClient.updateAchievement(id, rest);
+                await superadminClient.updateAchievement(editingAchievement.id, payload);
             }
             await load();
             setIsNewAchievement(true);
@@ -252,7 +247,6 @@ function SuperadminCatalog() {
             targetCount: preset.targetCount,
             rewardStars: preset.rewardStars,
             filters: { ...preset.filters },
-            id: `l${maxLevel}-${slugify(preset.title)}`,
         });
     };
 
@@ -264,11 +258,17 @@ function SuperadminCatalog() {
             description: preset.description,
             eventType: preset.eventType,
             rules: preset.rules.map((rule) => ({ ...rule })),
-            id: slugify(preset.title),
         });
     };
 
-    const eventFields = ACHIEVEMENT_FIELDS_BY_EVENT[editingAchievement.eventType] || [];
+    const targetingBlock = editingAchievement.rules.some((rule) => rule.field === 'componentId' && rule.value !== undefined && rule.value !== '');
+    const targetedAchievementType = targetingBlock
+        ? lessonTargets.flatMap((lesson) => lesson.components).find((block) => block.id === editingAchievement.rules.find((rule) => rule.field === 'componentId')?.value)?.type
+        : String(editingAchievement.rules.find((rule) => rule.field === 'type')?.value || '');
+    const achievementAllowsScore = !targetedAchievementType || isScoredCatalogType(targetedAchievementType);
+    const eventFields = (ACHIEVEMENT_FIELDS_BY_EVENT[editingAchievement.eventType] || [])
+        .filter((field) => !targetingBlock || (field !== 'type' && field !== 'mode'))
+        .filter((field) => achievementAllowsScore || !['percentage', 'isFirstAttempt', 'score', 'maxScore'].includes(field));
     const fieldClass = 'w-full h-10 px-3 rounded-xl border-2 border-slate-200 text-sm font-medium';
 
     if (!ready) {
@@ -330,7 +330,7 @@ function SuperadminCatalog() {
                                         >
                                             <div className="min-w-0">
                                                 <p className="text-xs font-black text-slate-800 truncate">{mission.title}</p>
-                                                <p className="text-[11px] text-slate-500 truncate">{missionSentence(mission)}</p>
+                                                <p className="text-[11px] text-slate-500 truncate">{describeMissionRecipe(mission, lessonTargets)}</p>
                                             </div>
                                             <span className="text-[10px] font-bold text-amber-600 shrink-0">+{mission.rewardStars}</span>
                                         </button>
@@ -360,13 +360,13 @@ function SuperadminCatalog() {
                                 </div>
                             </div>
                             <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs font-bold text-slate-700">
-                                Mission recipe: {missionSentence(editingMission)}
+                                Mission recipe: {describeMissionRecipe(editingMission, lessonTargets)}
                             </div>
-                            <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">ID
-                                <input className={fieldClass} value={editingMission.id} disabled={!isNewMission} onChange={(e) => setEditingMission((m) => ({ ...m, id: slugify(e.target.value) }))} placeholder="l3-complete-three-lessons" />
-                            </label>
+                            {!isNewMission && editingMission.id ? (
+                                <p className="text-[10px] font-bold text-slate-400">Saved as {editingMission.id}</p>
+                            ) : null}
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Title
-                                <input className={fieldClass} value={editingMission.title} onChange={(e) => setEditingMission((m) => ({ ...m, title: e.target.value, id: isNewMission && !m.id ? `l${m.level}-${slugify(e.target.value)}` : m.id }))} />
+                                <input className={fieldClass} value={editingMission.title} onChange={(e) => setEditingMission((m) => ({ ...m, title: e.target.value }))} />
                             </label>
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Description
                                 <textarea className={`${fieldClass} h-20 py-2`} value={editingMission.description} onChange={(e) => setEditingMission((m) => ({ ...m, description: e.target.value }))} />
@@ -386,23 +386,63 @@ function SuperadminCatalog() {
                             </label>
                             {editingMission.stat === 'submits' && (
                                 <div className="grid grid-cols-2 gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50">
-                                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Mode
-                                        <select className={fieldClass} value={editingMission.filters.mode || ''} onChange={(e) => setEditingMission((m) => ({ ...m, filters: { ...m.filters, mode: (e.target.value || undefined) as MissionFilters['mode'] } }))}>
-                                            <option value="">Any mode</option>
-                                            <option value="live">Live</option>
-                                            <option value="practice">Practice</option>
+                                    <label className="col-span-2 block text-[10px] font-black uppercase tracking-wider text-slate-400">Lesson
+                                        <select className={fieldClass} value={editingMission.filters.lessonId || ''} onChange={(e) => setEditingMission((m) => ({ ...m, filters: nextMissionFilters(m.filters, { lessonId: e.target.value || undefined, componentId: undefined }, lessonTargets) }))}>
+                                            <option value="">Any lesson</option>
+                                            {lessonTargets.map((lesson) => (
+                                                <option key={lesson.id} value={lesson.id}>
+                                                    {lesson.programTitle ? `${lesson.programTitle} · ` : ''}{lesson.title}
+                                                </option>
+                                            ))}
                                         </select>
                                     </label>
-                                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Block type
-                                        <select className={fieldClass} value={editingMission.filters.type || ''} onChange={(e) => setEditingMission((m) => ({ ...m, filters: { ...m.filters, type: e.target.value || undefined } }))}>
-                                            <option value="">Any block</option>
-                                            {SCORED_COMPONENT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                                    <label className="col-span-2 block text-[10px] font-black uppercase tracking-wider text-slate-400">Block
+                                        <select
+                                            className={fieldClass}
+                                            value={editingMission.filters.componentId || ''}
+                                            disabled={!editingMission.filters.lessonId}
+                                            onChange={(e) => {
+                                                const componentId = e.target.value || undefined;
+                                                setEditingMission((m) => ({
+                                                    ...m,
+                                                    filters: nextMissionFilters(m.filters, {
+                                                        componentId,
+                                                        ...(componentId ? { mode: undefined, type: undefined } : {}),
+                                                    }, lessonTargets),
+                                                }));
+                                            }}
+                                        >
+                                            <option value="">{editingMission.filters.lessonId ? 'Any scored block in this lesson' : 'Pick a lesson first'}</option>
+                                            {(lessonTargets.find((lesson) => lesson.id === editingMission.filters.lessonId)?.components || [])
+                                                .filter((block) => isScoredCatalogType(block.type))
+                                                .map((block) => (
+                                                    <option key={block.id} value={block.id}>{block.title} ({block.type})</option>
+                                                ))}
                                         </select>
                                     </label>
-                                    <label className="col-span-2 flex items-center gap-2 text-xs font-bold text-slate-700">
-                                        <input type="checkbox" checked={editingMission.filters.perfect === true} onChange={(e) => setEditingMission((m) => ({ ...m, filters: { ...m.filters, perfect: e.target.checked || undefined } }))} />
-                                        100% on first attempt
-                                    </label>
+                                    {!editingMission.filters.componentId && (
+                                        <>
+                                            <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Mode
+                                                <select className={fieldClass} value={editingMission.filters.mode || ''} onChange={(e) => setEditingMission((m) => ({ ...m, filters: nextMissionFilters(m.filters, { mode: (e.target.value || undefined) as MissionFilters['mode'] }, lessonTargets) }))}>
+                                                    <option value="">Any mode</option>
+                                                    <option value="live">Live</option>
+                                                    <option value="practice">Practice</option>
+                                                </select>
+                                            </label>
+                                            <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Block type
+                                                <select className={fieldClass} value={editingMission.filters.type || ''} onChange={(e) => setEditingMission((m) => ({ ...m, filters: nextMissionFilters(m.filters, { type: e.target.value || undefined }, lessonTargets) }))}>
+                                                    <option value="">Any block</option>
+                                                    {SCORED_COMPONENT_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                                                </select>
+                                            </label>
+                                        </>
+                                    )}
+                                    {canUsePerfectAttempt(editingMission.filters, lessonTargets) && (
+                                        <label className="col-span-2 flex items-center gap-2 text-xs font-bold text-slate-700">
+                                            <input type="checkbox" checked={editingMission.filters.perfect === true} onChange={(e) => setEditingMission((m) => ({ ...m, filters: { ...m.filters, perfect: e.target.checked || undefined } }))} />
+                                            100% on first attempt
+                                        </label>
+                                    )}
                                 </div>
                             )}
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Star reward
@@ -457,11 +497,11 @@ function SuperadminCatalog() {
                                     ))}
                                 </div>
                             </div>
-                            <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">ID
-                                <input className={fieldClass} value={editingAchievement.id} disabled={!isNewAchievement} onChange={(e) => setEditingAchievement((a) => ({ ...a, id: slugify(e.target.value) }))} />
-                            </label>
+                            {!isNewAchievement && editingAchievement.id ? (
+                                <p className="text-[10px] font-bold text-slate-400">Saved as {editingAchievement.id}</p>
+                            ) : null}
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Title
-                                <input className={fieldClass} value={editingAchievement.title} onChange={(e) => setEditingAchievement((a) => ({ ...a, title: e.target.value, id: isNewAchievement && !a.id ? slugify(e.target.value) : a.id }))} />
+                                <input className={fieldClass} value={editingAchievement.title} onChange={(e) => setEditingAchievement((a) => ({ ...a, title: e.target.value }))} />
                             </label>
                             <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Description
                                 <textarea className={`${fieldClass} h-20 py-2`} value={editingAchievement.description} onChange={(e) => setEditingAchievement((a) => ({ ...a, description: e.target.value }))} />
@@ -490,14 +530,17 @@ function SuperadminCatalog() {
                                 </select>
                             </label>
                             <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-xs font-medium text-slate-700">
-                                {ACHIEVEMENT_EVENT_LABELS[editingAchievement.eventType]}, if {editingAchievement.rules.map(ruleSentence).join(' and ') || 'no criteria'}
+                                {describeAchievementRecipe(editingAchievement.eventType, editingAchievement.rules, lessonTargets)}
                             </div>
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">Criteria (all must match)</p>
                                     <button type="button" onClick={() => setEditingAchievement((a) => ({ ...a, rules: [...a.rules, { field: eventFields[0] || 'type', op: 'eq', value: '' }] }))} className="text-[10px] font-bold text-[#1CB0F6]">Add rule</button>
                                 </div>
-                                {editingAchievement.rules.map((rule, index) => (
+                                {editingAchievement.rules.map((rule, index) => {
+                                    if (targetingBlock && (rule.field === 'type' || rule.field === 'mode')) return null;
+                                    if (!achievementAllowsScore && ['percentage', 'isFirstAttempt', 'score', 'maxScore'].includes(rule.field)) return null;
+                                    return (
                                     <div key={index} className="space-y-1">
                                         <div className="grid grid-cols-[1fr_1fr_1fr_auto] gap-1">
                                             <select className="h-9 px-2 rounded-lg border border-slate-200 text-xs" value={eventFields.includes(rule.field) ? rule.field : '__custom'} onChange={(e) => {
@@ -527,6 +570,23 @@ function SuperadminCatalog() {
                                                     <option value="true">true</option>
                                                     <option value="false">false</option>
                                                 </select>
+                                            ) : rule.field === 'lessonId' ? (
+                                                <select className="h-9 px-2 rounded-lg border border-slate-200 text-xs" value={String(rule.value || '')} onChange={(e) => setEditingAchievement((a) => ({ ...a, rules: a.rules.map((r, i) => i === index ? { ...r, value: e.target.value } : r) }))}>
+                                                    <option value="">Select lesson</option>
+                                                    {lessonTargets.map((lesson) => (
+                                                        <option key={lesson.id} value={lesson.id}>{lesson.title}</option>
+                                                    ))}
+                                                </select>
+                                            ) : rule.field === 'componentId' ? (
+                                                <select className="h-9 px-2 rounded-lg border border-slate-200 text-xs" value={String(rule.value || '')} onChange={(e) => setEditingAchievement((a) => ({
+                                                    ...a,
+                                                    rules: visibleAchievementRules(a.rules.map((r, i) => i === index ? { ...r, value: e.target.value } : r), lessonTargets),
+                                                }))}>
+                                                    <option value="">Select block</option>
+                                                    {lessonTargets.flatMap((lesson) => lesson.components.map((block) => (
+                                                        <option key={`${lesson.id}-${block.id}`} value={block.id}>{lesson.title} · {block.title}</option>
+                                                    )))}
+                                                </select>
                                             ) : (
                                                 <input className="h-9 px-2 rounded-lg border border-slate-200 text-xs" placeholder="value" value={rule.value === undefined ? '' : String(rule.value)} onChange={(e) => {
                                                     const raw = e.target.value;
@@ -543,7 +603,8 @@ function SuperadminCatalog() {
                                             <input className="h-9 w-full px-2 rounded-lg border border-slate-200 text-xs" placeholder="divide by field, e.g. timeLimitMs" value={rule.over || ''} onChange={(e) => setEditingAchievement((a) => ({ ...a, rules: a.rules.map((r, i) => i === index ? { ...r, over: e.target.value } : r) }))} />
                                         )}
                                     </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                             <label className="flex items-center gap-2 text-xs font-bold text-slate-700">
                                 <input type="checkbox" checked={editingAchievement.enabled} onChange={(e) => setEditingAchievement((a) => ({ ...a, enabled: e.target.checked }))} />

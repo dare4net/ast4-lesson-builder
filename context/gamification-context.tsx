@@ -78,6 +78,8 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
         perfectLiveSubmits: stats.perfectLiveSubmits || 0,
         perfectPracticeSubmits: stats.perfectPracticeSubmits || 0,
         submitsByType: stats.submitsByType || {},
+        submitsByLesson: stats.submitsByLesson || {},
+        submitsByComponent: stats.submitsByComponent || {},
     }), [stats, starBalance])
 
     const level = typeof stats.level === 'number' && stats.level > 0 ? stats.level : 1

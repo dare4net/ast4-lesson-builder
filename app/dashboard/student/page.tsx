@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { buildStudentViewerHref } from "@/lib/viewer-url"
 import { useGamification } from "@/context/gamification-context"
+import { useMyPrograms } from "@/hooks/use-my-programs"
+import { programProgressPercent } from "@/lib/program-progress"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
@@ -25,6 +27,8 @@ export default function StudentDashboardPage() {
     const [visibleCount, setVisibleCount] = useState<number>(8)
     const { starBalance, level } = useGamification()
     const router = useRouter()
+    const myProgramsQuery = useMyPrograms()
+    const enrolledPrograms = myProgramsQuery.data || []
 
     // ... inside StudentDashboardPage
     useEffect(() => {
@@ -208,6 +212,48 @@ export default function StudentDashboardPage() {
                     </div>
                 </div>
             </section>
+
+            {enrolledPrograms.length > 0 && (
+                <section className="space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                        <h2 className="text-lg font-extrabold text-slate-900 dark:text-white tracking-tight">Your courses</h2>
+                        <Link
+                            href="/dashboard/student/programs"
+                            className="text-xs font-bold text-[#1CB0F6] hover:underline"
+                        >
+                            View all
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {enrolledPrograms.slice(0, 3).map((prog: any) => {
+                            const progressValue = programProgressPercent(prog)
+                            const programId = prog.program_id || prog._id
+                            return (
+                                <Link
+                                    key={programId}
+                                    href={`/dashboard/student/programs/${programId}`}
+                                    className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:border-[#1CB0F6]/40 transition-colors"
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <h3 className="text-sm font-extrabold text-slate-900 dark:text-white truncate">
+                                            {prog.program_name || prog.name || prog.title || "Course"}
+                                        </h3>
+                                        <span className="text-xs font-extrabold text-[#1CB0F6] tabular-nums shrink-0">
+                                            {progressValue}%
+                                        </span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-3">
+                                        <div
+                                            className="h-full bg-[#1CB0F6] rounded-full"
+                                            style={{ width: `${progressValue}%` }}
+                                        />
+                                    </div>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </section>
+            )}
 
             {/* Lessons Section with Filter Tabs & View All Link */}
             <div className="space-y-4 pt-2">

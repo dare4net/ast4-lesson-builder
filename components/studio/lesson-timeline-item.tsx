@@ -18,6 +18,7 @@ interface Lesson {
     order: number;
     duration?: number;
     level?: string;
+    is_published?: boolean;
 }
 
 interface LessonTimelineItemProps {
@@ -72,6 +73,16 @@ export function LessonTimelineItem({ lesson, index, isLast, onEdit, onEditSettin
                                     {lesson.level}
                                 </span>
                             )}
+                            <span
+                                className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full border shrink-0"
+                                style={
+                                    lesson.is_published === false
+                                        ? { backgroundColor: '#FFF4E0', color: '#FF9600', borderColor: '#FFD199' }
+                                        : { backgroundColor: '#EDF9E0', color: '#58CC02', borderColor: '#C3EEA0' }
+                                }
+                            >
+                                {lesson.is_published === false ? 'Draft' : 'Live'}
+                            </span>
                         </div>
 
                         {/* Description */}

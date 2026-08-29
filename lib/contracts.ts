@@ -45,6 +45,8 @@ export const statsEventBodySchema = z.object({
     amount: z.number().positive().optional(),
     lessonId: z.string().min(1).max(128).optional(),
     programId: z.string().min(1).max(128).optional(),
+    componentId: z.string().min(1).max(128).optional(),
+    completionTimeMs: z.number().min(0).max(3600000).optional(),
 })
 
 export const claimMissionBodySchema = z.object({
@@ -69,10 +71,34 @@ export type StatsEventBody = z.infer<typeof statsEventBodySchema>
 export type ClaimMissionBody = z.infer<typeof claimMissionBodySchema>
 export type InteractionSaveBody = z.input<typeof interactionSaveBodySchema>
 
+export const handleSchema = z.string().min(3).max(24).regex(
+    /^[a-z][a-z0-9_]*$/,
+    'Use a lowercase handle like maya_codes'
+)
+
+export const accentColorSchema = z.enum(['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B'])
+
+export const updateProfileBodySchema = z.object({
+    full_name: z.string().min(2).max(80).optional(),
+    handle: handleSchema.optional(),
+    isPublicProfile: z.boolean().optional(),
+    accentColor: accentColorSchema.optional(),
+})
+
+export const markNotificationsBodySchema = z.object({
+    ids: z.array(z.string().min(1).max(64)).max(50).optional(),
+    all: z.boolean().optional(),
+}).refine((value) => value.all === true || (Array.isArray(value.ids) && value.ids.length > 0), {
+    message: 'Provide ids or all: true',
+})
+
+export type UpdateProfileBody = z.infer<typeof updateProfileBodySchema>
+export type MarkNotificationsBody = z.infer<typeof markNotificationsBodySchema>
+
 export const CONTRACT_KEYS = {
     awardStars: ['amount', 'reason', 'componentId'],
     spendStars: ['amount', 'itemType'],
-    statsEvent: ['eventType', 'isFirstAttempt', 'percentage', 'mode', 'type', 'amount', 'lessonId', 'programId'],
+    statsEvent: ['eventType', 'isFirstAttempt', 'percentage', 'mode', 'type', 'amount', 'lessonId', 'programId', 'componentId', 'completionTimeMs'],
     claimMission: ['missionId'],
     interactionGet: ['lessonId', 'userId'],
     interactionSave: ['userId', 'lessonId', 'componentsState', 'lessonState', 'attemptsMap', 'version'],

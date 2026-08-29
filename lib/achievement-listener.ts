@@ -71,8 +71,19 @@ function persistProgressEvent(eventType: string, payload?: {
     amount?: number
     lessonId?: string
     programId?: string
+    componentId?: string
+    completionTimeMs?: number
 }) {
-    void apiClient.gamification.recordProgressEvent(eventType, payload).catch((err) => {
+    void apiClient.gamification.recordProgressEvent(eventType, payload).then((result) => {
+        const golds = Array.isArray(result?.golds) ? result.golds : []
+        for (const gold of golds) {
+            appEventBus.emit('CROWN_GOLD', {
+                statKey: String(gold.statKey || ''),
+                label: String(gold.label || 'Pride board'),
+                value: Number(gold.value) || 0,
+            })
+        }
+    }).catch((err) => {
         console.warn('[AchievementListener] Failed to record progress event:', err)
     })
 }
@@ -83,6 +94,10 @@ function awardFromSubmitted(payload: ComponentSubmittedPayload) {
         percentage: payload.percentage,
         mode: payload.mode,
         type: payload.type,
+        lessonId: payload.lessonId,
+        programId: payload.programId,
+        componentId: payload.componentId,
+        completionTimeMs: payload.completionTimeMs,
     })
     evaluateAchievements('COMPONENT_SUBMITTED', { ...payload })
     const stars = calculateStarReward({
@@ -133,7 +148,7 @@ export function initAchievementListener(userId: string) {
 
     const unsubSubmitted = appEventBus.on('COMPONENT_SUBMITTED', awardFromSubmitted)
     const unsubReset = appEventBus.on('COMPONENT_RESET', (payload) => {
-        persistProgressEvent('COMPONENT_RESET', { type: payload.type })
+        persistProgressEvent('COMPONENT_RESET', { type: payload.type, lessonId: payload.lessonId, componentId: payload.componentId })
         evaluateAchievements('COMPONENT_RESET', { ...payload })
     })
     const unsubEnrolled = appEventBus.on('PROGRAM_ENROLLED', (payload) => {

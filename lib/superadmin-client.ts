@@ -63,6 +63,8 @@ class SuperadminClient {
     deleteMission = (id: string) =>
         this.api.delete(`/superadmin/catalog/missions/${id}`).then((r) => r.data);
 
+    listTargets = () => this.api.get('/superadmin/catalog/targets').then((r) => r.data);
+
     listAchievements = () => this.api.get('/superadmin/catalog/achievements').then((r) => r.data);
     createAchievement = (data: Record<string, unknown>) =>
         this.api.post('/superadmin/catalog/achievements', data).then((r) => r.data);

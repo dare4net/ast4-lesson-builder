@@ -11,6 +11,7 @@ import {
     Compass,
     TrendingUp,
     Settings,
+    Crown,
     PanelLeftClose,
     PanelLeftOpen,
     User
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
     { label: "My Courses", icon: BookOpen, href: "/dashboard/student/programs" },
     { label: "Explore Courses", icon: Compass, href: "/dashboard/student/catalog" },
     { label: "My Progress", icon: TrendingUp, href: "/dashboard/student/progress" },
+    { label: "Pride", icon: Crown, href: "/dashboard/student/pride" },
     { label: "Settings", icon: Settings, href: "/dashboard/student/settings" },
 ]
 

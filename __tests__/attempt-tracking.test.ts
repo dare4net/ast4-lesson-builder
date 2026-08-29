@@ -127,4 +127,29 @@ describe('useAttemptTracking', () => {
         expect(result.current.bestAttemptCount).toBe(3)
         expect(result.current.hasCompleted).toBe(true)
     })
+
+    it('includes lessonId and programId on COMPONENT_SUBMITTED', () => {
+        const busListener = vi.fn()
+        appEventBus.on('COMPONENT_SUBMITTED', busListener)
+        const { result } = renderHook(() =>
+            useAttemptTracking({
+                componentId: 'hang-1',
+                componentType: 'hangman',
+                mode: 'practice',
+                lessonId: 'lesson-1',
+                programId: 'prog-1',
+            })
+        )
+        act(() => {
+            result.current.recordAttempt(true, 10, 10)
+        })
+        expect(busListener).toHaveBeenCalledWith(
+            expect.objectContaining({
+                componentId: 'hang-1',
+                lessonId: 'lesson-1',
+                programId: 'prog-1',
+                type: 'hangman',
+            })
+        )
+    })
 })

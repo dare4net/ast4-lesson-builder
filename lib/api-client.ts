@@ -188,7 +188,7 @@ class APIClient {
         getModule: (id: string) => this.get(`/studio/modules/${id}`),
         createModule: (programId: string, data: { name: string; description?: string; order?: number }) =>
             this.post(`/studio/programs/${programId}/modules`, data),
-        updateModule: (id: string, data: { name?: string; description?: string; order?: number }) =>
+        updateModule: (id: string, data: { name?: string; description?: string; order?: number; is_published?: boolean; image_url?: string; default_voice?: string }) =>
             this.put(`/studio/modules/${id}`, data),
         deleteModule: (id: string) => this.delete(`/studio/modules/${id}`),
 
@@ -214,6 +214,10 @@ class APIClient {
                 slides?: any[];
                 settings?: any;
                 version?: number;
+                is_published?: boolean;
+                voice?: string;
+                introAudioUrl?: string | null;
+                introTextHash?: string;
             }
         ) => this.put(`/studio/lessons/${id}`, data),
         deleteLesson: (id: string) => this.delete(`/studio/lessons/${id}`),
@@ -297,13 +301,44 @@ class APIClient {
             amount?: number
             lessonId?: string
             programId?: string
+            componentId?: string
+            completionTimeMs?: number
         }) =>
             this.post('/stats/event', statsEventBodySchema.parse({ eventType, ...payload })),
     };
 
+    pride = {
+        summary: () => this.get('/pride'),
+        board: (statKey: string) => this.get(`/pride/${encodeURIComponent(statKey)}`),
+    };
+
     profile = {
         get: () => this.get('/profile'),
-        update: (data: { full_name: string }) => this.put('/profile', data),
+        update: (data: { full_name?: string; handle?: string; isPublicProfile?: boolean; accentColor?: string }) =>
+            this.put('/profile', data),
+    };
+
+    people = {
+        getByHandle: (handle: string) => this.get(`/people/${encodeURIComponent(handle)}`),
+        search: (q = '') => this.get(`/people/search?q=${encodeURIComponent(q)}`),
+        follow: (handle: string) => this.post(`/people/${encodeURIComponent(handle)}/follow`),
+        unfollow: (handle: string) => this.delete(`/people/${encodeURIComponent(handle)}/follow`),
+        mute: (handle: string, muted: boolean) =>
+            this.post(`/people/${encodeURIComponent(handle)}/mute`, { muted }),
+        block: (handle: string) => this.post(`/people/${encodeURIComponent(handle)}/block`),
+        unblock: (handle: string) => this.delete(`/people/${encodeURIComponent(handle)}/block`),
+    };
+
+    notifications = {
+        list: (opts?: { unread?: boolean; limit?: number }) => {
+            const params = new URLSearchParams();
+            if (opts?.unread) params.set('unread', 'true');
+            if (opts?.limit) params.set('limit', String(opts.limit));
+            const query = params.toString();
+            return this.get(`/notifications${query ? `?${query}` : ''}`);
+        },
+        unreadCount: () => this.get('/notifications/unread-count'),
+        markRead: (body: { ids?: string[]; all?: boolean }) => this.post('/notifications/read', body),
     };
 }
 

@@ -38,11 +38,14 @@ export interface ComponentSubmittedPayload {
      * Used by leaderboards, achievements, and missions. Retries produce false.
      */
     isFirstAttempt: boolean
+    lessonId?: string
+    programId?: string
 }
 
 export interface ComponentResetPayload {
     componentId: string
     type: string
+    lessonId?: string
 }
 
 export interface LiveTimeoutPayload {
@@ -103,6 +106,17 @@ export interface LevelUpPayload {
     level: number
 }
 
+export interface CrownGoldPayload {
+    statKey: string
+    label: string
+    value: number
+}
+
+export interface InboxNoticePayload {
+    title: string
+    body: string
+}
+
 // ─── Event Map ───────────────────────────────────────────────────────────────
 
 export interface SystemEventMap {
@@ -132,6 +146,9 @@ export interface SystemEventMap {
     MISSION_CLAIMED: MissionClaimedPayload
     /** Emitted after a student levels up */
     LEVEL_UP: LevelUpPayload
+    CROWN_GOLD: CrownGoldPayload
+    /** Inbox garnish for mail from someone else (follows, crowns, curriculum drops) */
+    INBOX_NOTICE: InboxNoticePayload
 }
 
 export type SystemEventName = keyof SystemEventMap

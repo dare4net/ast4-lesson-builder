@@ -5,7 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, Settings, Volume2 } from "lucide-react";
+import { Loader2, Settings, Volume2, Globe, Lock } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { apiClient } from "@/lib/api-client";
 import { generateBatchAudio, normalizeTextForSpeech, hashText } from "@/lib/audio-generator";
 import { VoiceSelector } from "@/components/ui/voice-selector";
@@ -18,6 +19,7 @@ interface Lesson {
     introAudioUrl?: string;
     introTextHash?: string;
     voice?: string;
+    is_published?: boolean;
 }
 
 interface EditLessonSettingsModalProps {
@@ -42,6 +44,7 @@ export function EditLessonSettingsModal({
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [voice, setVoice] = useState("inherit");
+    const [isPublished, setIsPublished] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
@@ -49,17 +52,20 @@ export function EditLessonSettingsModal({
             setTitle(lesson.title || "");
             setDescription(lesson.description || "");
             setVoice(lesson.voice || "inherit");
+            setIsPublished(lesson.is_published !== false);
         }
     }, [lesson]);
 
+    const wasPublished = lesson?.is_published !== false;
     const isChanged = useMemo(() => {
         if (!lesson) return false;
         return (
             title.trim() !== (lesson.title || "").trim() ||
             description.trim() !== (lesson.description || "").trim() ||
-            voice !== (lesson.voice || "inherit")
+            voice !== (lesson.voice || "inherit") ||
+            isPublished !== wasPublished
         );
-    }, [lesson, title, description, voice]);
+    }, [lesson, title, description, voice, isPublished, wasPublished]);
 
     if (!lesson) return null;
 
@@ -68,44 +74,47 @@ export function EditLessonSettingsModal({
         setIsSaving(true);
 
         try {
-            // 1. Generate clean speech text for the lesson intro with full welcome prefix
             const cleanTitle = title.trim();
             const cleanDesc = description.trim();
-            const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`;
-            const speechText = normalizeTextForSpeech(welcomeText);
+            const metadataOnly =
+                cleanTitle === (lesson.title || "").trim() &&
+                cleanDesc === (lesson.description || "").trim() &&
+                voice === (lesson.voice || "inherit");
 
-            // 2. Synthesize audio via EdgeTTS & upload to Cloudinary (ast_lessons/{lessonId}/intro)
-            let cloudinaryAudioUrl: string | null = null;
-            const resolvedVoice = (voice && voice !== "inherit") ? voice : (moduleVoice || "en-GB-SoniaNeural");
-            const resolvedVoiceForHash = (voice && voice !== "inherit") ? voice : "default";
-            const introHash = hashText(`${speechText}::${resolvedVoiceForHash}`);
-
-            try {
-                const { urlMap: audioMap } = await generateBatchAudio(
-                    [
-                        {
-                            componentId: "intro",
-                            text: speechText,
-                            lessonId: lesson._id,
-                            voice: resolvedVoice,
-                        },
-                    ],
-                    resolvedVoice
-                );
-                cloudinaryAudioUrl = audioMap["intro"] || null;
-            } catch (err) {
-                console.warn("[EditLessonSettingsModal] Cloudinary audio generation warning:", err);
-            }
-
-            // 3. Save updated lesson title, description, voice, and Cloudinary audio URL to MongoDB
             const updatePayload: any = {
                 title: cleanTitle,
                 description: cleanDesc,
                 voice: voice,
+                is_published: isPublished,
             };
-            if (cloudinaryAudioUrl) {
-                updatePayload.introAudioUrl = cloudinaryAudioUrl;
-                updatePayload.introTextHash = introHash;
+
+            if (!metadataOnly) {
+                const welcomeText = `Welcome to today's lesson. Today's topic is ${cleanTitle}. ${cleanDesc ? `You'll learn about ${cleanDesc}.` : ""}`;
+                const speechText = normalizeTextForSpeech(welcomeText);
+                const resolvedVoice = (voice && voice !== "inherit") ? voice : (moduleVoice || "en-GB-SoniaNeural");
+                const resolvedVoiceForHash = (voice && voice !== "inherit") ? voice : "default";
+                const introHash = hashText(`${speechText}::${resolvedVoiceForHash}`);
+
+                try {
+                    const { urlMap: audioMap } = await generateBatchAudio(
+                        [
+                            {
+                                componentId: "intro",
+                                text: speechText,
+                                lessonId: lesson._id,
+                                voice: resolvedVoice,
+                            },
+                        ],
+                        resolvedVoice
+                    );
+                    const cloudinaryAudioUrl = audioMap["intro"] || null;
+                    if (cloudinaryAudioUrl) {
+                        updatePayload.introAudioUrl = cloudinaryAudioUrl;
+                        updatePayload.introTextHash = introHash;
+                    }
+                } catch (err) {
+                    console.warn("[EditLessonSettingsModal] Cloudinary audio generation warning:", err);
+                }
             }
 
             await apiClient.studio.updateLesson(lesson._id, updatePayload);
@@ -173,6 +182,28 @@ export function EditLessonSettingsModal({
                             onChange={setVoice}
                             inheritLabel={`Inherit from Module (${getVoiceById(moduleVoice).name})`}
                             disabled={isSaving}
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-between p-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl">
+                        <div className="flex items-center gap-2.5">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${isPublished ? "bg-emerald-100 text-emerald-600" : "bg-amber-100 text-amber-600"}`}>
+                                {isPublished ? <Globe className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                            </div>
+                            <div>
+                                <p className="text-xs font-black text-slate-900">
+                                    {isPublished ? "Published" : "Draft Status"}
+                                </p>
+                                <p className="text-[10px] text-slate-500 font-medium">
+                                    {isPublished ? "Counts toward student course percent" : "Hidden from the live curriculum"}
+                                </p>
+                            </div>
+                        </div>
+                        <Switch
+                            checked={isPublished}
+                            onCheckedChange={setIsPublished}
+                            disabled={isSaving}
+                            className="data-[state=checked]:bg-[#58CC02] data-[state=unchecked]:bg-slate-300"
                         />
                     </div>
                 </div>

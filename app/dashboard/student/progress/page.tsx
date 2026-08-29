@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { TrendingUp, Star, Rocket, Trophy, Target, Award, Lock, CheckCircle2, RefreshCw, Sparkles } from "lucide-react"
+import Link from "next/link"
+import { TrendingUp, Star, Rocket, Trophy, Target, Award, Lock, CheckCircle2, RefreshCw, Sparkles, Crown } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
@@ -274,6 +275,10 @@ export default function ProgressPage() {
                         <div>
                             <h3 className="text-base font-extrabold text-slate-900 dark:text-white">Platform Leaderboard</h3>
                             <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Rankings based on points earned in completed lessons</p>
+                            <Link href="/dashboard/student/pride" className="inline-flex items-center gap-1 mt-1 text-xs font-extrabold text-[#FF9600] hover:underline">
+                                <Crown className="w-3.5 h-3.5" />
+                                Pride boards
+                            </Link>
                         </div>
                     </div>
 

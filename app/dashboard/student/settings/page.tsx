@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuth } from "@/context/auth-context"
 import {
     User,
@@ -10,36 +10,97 @@ import {
     CheckCircle2,
     Loader2,
     Volume2,
+    AtSign,
+    Globe,
 } from "lucide-react"
+import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FeedbackSettings } from "@/components/ui/feedback-settings"
 import { apiClient } from "@/lib/api-client"
+import { handleSchema } from "@/lib/contracts"
+import { ACCENT_COLORS, resolveAccentColor } from "@/lib/pride-format"
+import { publicProfilePath } from "@/lib/pride-paths"
 
 export default function SettingsPage() {
     const { user, logout, updateUser } = useAuth()
     const defaultDisplayName = user?.full_name || user?.fullName || (user?.email ? user.email.split("@")[0] : "Student")
     const [name, setName] = useState(defaultDisplayName)
+    const [handle, setHandle] = useState(user?.handle || "")
+    const [isPublic, setIsPublic] = useState(user?.isPublicProfile === true)
+    const [accentColor, setAccentColor] = useState<string | null>(user?.accentColor || null)
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
+    useEffect(() => {
+        let cancelled = false
+        apiClient.profile.get().then((profile) => {
+            if (cancelled || !profile) return
+            const nextHandle = profile.handle || ""
+            const nextPublic = profile.isPublicProfile === true
+            if (profile.full_name) setName(profile.full_name)
+            setHandle(nextHandle)
+            setIsPublic(nextPublic)
+            setAccentColor(profile.accentColor || null)
+            updateUser({
+                full_name: profile.full_name,
+                fullName: profile.full_name,
+                handle: profile.handle || null,
+                isPublicProfile: nextPublic,
+                accentColor: profile.accentColor || null,
+            })
+        }).catch(() => {})
+        return () => {
+            cancelled = true
+        }
+        // Hydrate once from the live profile document.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
         const fullName = name.trim()
+        const nextHandle = handle.trim().toLowerCase()
         if (!fullName) {
             setError("Display name is required.")
+            return
+        }
+        if (nextHandle) {
+            const parsed = handleSchema.safeParse(nextHandle)
+            if (!parsed.success) {
+                setError("Use 3–24 characters: start with a letter, then letters, numbers, or _")
+                return
+            }
+        }
+        if (isPublic && !nextHandle) {
+            setError("Choose a handle before making your profile public.")
             return
         }
         setSaving(true)
         setError(null)
         setSaved(false)
         try {
-            await apiClient.profile.update({ full_name: fullName })
-            updateUser({ full_name: fullName, fullName: fullName })
+            const payload: { full_name: string; handle?: string; isPublicProfile: boolean; accentColor?: string } = {
+                full_name: fullName,
+                isPublicProfile: isPublic && Boolean(nextHandle),
+            }
+            if (nextHandle) payload.handle = nextHandle
+            if (accentColor) payload.accentColor = accentColor
+            const result = await apiClient.profile.update(payload)
+            updateUser({
+                full_name: fullName,
+                fullName: fullName,
+                handle: result.handle ?? nextHandle ?? null,
+                isPublicProfile: result.isPublicProfile === true,
+                accentColor: result.accentColor ?? accentColor,
+            })
+            setIsPublic(result.isPublicProfile === true)
+            if (result.handle) setHandle(result.handle)
             setSaved(true)
         } catch (err: any) {
             setError(err.response?.data?.message || err.response?.data?.error || err.message || "Could not save profile.")
@@ -47,6 +108,8 @@ export default function SettingsPage() {
             setSaving(false)
         }
     }
+
+    const canGoPublic = Boolean(handle.trim())
 
     return (
         <div className="max-w-4xl space-y-6">
@@ -67,6 +130,9 @@ export default function SettingsPage() {
                     </Avatar>
                     <div className="text-center space-y-1 min-w-0 w-full">
                         <h2 className="text-lg font-extrabold text-slate-800 capitalize truncate">{name}</h2>
+                        {handle ? (
+                            <p className="text-xs font-bold text-slate-400 truncate">@{handle}</p>
+                        ) : null}
                         <span className="text-[11px] font-extrabold text-[#1CB0F6] bg-[#1CB0F6]/10 px-2.5 py-0.5 rounded-full border border-[#1CB0F6]/20 inline-block">
                             Student
                         </span>
@@ -109,6 +175,79 @@ export default function SettingsPage() {
                                 />
                             </div>
                             <div className="space-y-1.5">
+                                <Label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+                                    <AtSign className="w-3.5 h-3.5" />
+                                    Handle
+                                </Label>
+                                <Input
+                                    value={handle}
+                                    onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24))}
+                                    placeholder="maya_codes"
+                                    autoComplete="off"
+                                    className="h-11 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-[#1CB0F6] focus:bg-white text-slate-800 font-semibold text-sm"
+                                />
+                                <p className="text-[11px] text-slate-400 font-medium">
+                                    3–24 characters. This is how people find you. Email stays private.
+                                </p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="text-xs font-extrabold text-slate-700">Handle color</Label>
+                                <p className="text-[11px] text-slate-500 font-medium">
+                                    Follow buttons and your @handle use this. If you skip it, we pick one from your handle so not everyone is the same.
+                                </p>
+                                <div className="flex flex-wrap gap-2">
+                                    {ACCENT_COLORS.map((color) => {
+                                        const current = resolveAccentColor(handle, accentColor)
+                                        const selected = current === color
+                                        return (
+                                            <button
+                                                key={color}
+                                                type="button"
+                                                aria-label={`Choose ${color}`}
+                                                onClick={() => setAccentColor(color)}
+                                                className="h-9 w-9 rounded-full border-2"
+                                                style={{
+                                                    backgroundColor: color,
+                                                    borderColor: selected ? '#0f172a' : 'transparent',
+                                                    boxShadow: selected ? `0 0 0 2px ${color}` : undefined,
+                                                }}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className="flex items-start justify-between gap-4 rounded-2xl border-2 border-slate-100 bg-slate-50 px-4 py-3">
+                                <div className="space-y-1">
+                                    <Label className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+                                        <Globe className="w-3.5 h-3.5" />
+                                        Make my profile public
+                                    </Label>
+                                    <p className="text-[11px] text-slate-500 font-medium">
+                                        Off by default. Public pages never show your email.
+                                    </p>
+                                    {canGoPublic ? (
+                                        <Link
+                                            href={publicProfilePath(handle)}
+                                            className="text-[11px] font-bold"
+                                            style={{ color: resolveAccentColor(handle, accentColor) }}
+                                        >
+                                            Preview your public profile
+                                        </Link>
+                                    ) : (
+                                        <p className="text-[11px] font-semibold text-slate-400">
+                                            Pick a handle first.
+                                        </p>
+                                    )}
+                                </div>
+                                <Switch
+                                    checked={isPublic && canGoPublic}
+                                    disabled={!canGoPublic}
+                                    onCheckedChange={setIsPublic}
+                                    aria-label="Make my profile public"
+                                    className="data-[state=checked]:bg-[#58CC02]"
+                                />
+                            </div>
+                            <div className="space-y-1.5">
                                 <Label className="text-xs font-extrabold text-slate-700">Email</Label>
                                 <Input
                                     value={user?.email || ""}
@@ -121,7 +260,7 @@ export default function SettingsPage() {
                                 {saved ? (
                                     <span className="text-xs font-bold text-[#58CC02] flex items-center gap-1.5">
                                         <CheckCircle2 className="w-4 h-4" />
-                                        Name saved
+                                        Profile saved
                                     </span>
                                 ) : error ? (
                                     <span className="text-xs font-bold text-red-600">{error}</span>
@@ -133,7 +272,7 @@ export default function SettingsPage() {
                                     className="ml-auto bg-[#1CB0F6] hover:bg-[#1899D6] border-[#1CB0F6] border-b-[#1482B8]"
                                 >
                                     {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                    Save name
+                                    Save profile
                                 </Button>
                             </div>
                         </form>

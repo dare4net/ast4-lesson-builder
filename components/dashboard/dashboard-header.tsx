@@ -17,6 +17,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
+import { NotificationBell } from "@/components/dashboard/notification-bell"
+import { PrideSearch } from "@/components/pride/pride-search"
 
 const TUTOR_NAV = [
     { label: "Overview", href: "/dashboard/tutor", icon: LayoutDashboard },
@@ -42,7 +44,7 @@ export function DashboardHeader({ sidebarIsCollapsed = true, hasSidebar = true }
                     ? "left-0 md:left-[72px]"
                     : "left-0 md:left-[240px]"
         )}>
-            <div className="px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
+            <div className="px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
                 {/* Brand */}
                 <Link href={isTutor ? "/dashboard/tutor" : "/dashboard/student"} className="flex items-center gap-2.5 group shrink-0">
                     <Image
@@ -52,11 +54,17 @@ export function DashboardHeader({ sidebarIsCollapsed = true, hasSidebar = true }
                         height={30}
                         className="rounded-lg group-hover:scale-105 transition-transform"
                     />
-                    <div className="hidden sm:flex flex-col leading-tight">
+                    <div className="hidden lg:flex flex-col leading-tight">
                         <span className="text-slate-900 font-black text-xs tracking-tight">After-school.tech</span>
                         <span className="text-[10px] text-[#1CB0F6] font-bold">{isTutor ? 'Teacher Dashboard' : 'Student Dashboard'}</span>
                     </div>
                 </Link>
+
+                {!isTutor && (
+                    <div className="flex-1 min-w-0 flex justify-center">
+                        <PrideSearch />
+                    </div>
+                )}
 
                 {/* Tutor nav links */}
                 {isTutor && (
@@ -82,6 +90,7 @@ export function DashboardHeader({ sidebarIsCollapsed = true, hasSidebar = true }
 
                 {/* User Menu */}
                 <div className="flex items-center gap-2 shrink-0">
+                    {!isTutor && <NotificationBell />}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" aria-label="Account menu" className="h-9 w-9 sm:w-auto sm:px-3 sm:gap-2.5 rounded-xl hover:bg-slate-100 transition-colors">

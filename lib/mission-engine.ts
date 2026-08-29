@@ -84,6 +84,7 @@ export interface SubmitTypeCounts {
     perfect?: number
     perfectLive?: number
     perfectPractice?: number
+    byType?: Record<string, SubmitTypeCounts>
 }
 
 export interface MissionStats {
@@ -102,6 +103,8 @@ export interface MissionStats {
     perfectLiveSubmits?: number
     perfectPracticeSubmits?: number
     submitsByType?: Record<string, SubmitTypeCounts>
+    submitsByLesson?: Record<string, SubmitTypeCounts>
+    submitsByComponent?: Record<string, SubmitTypeCounts>
     completedLessonsCount?: number
     totalBaselineScore?: number
 }
@@ -113,19 +116,37 @@ export interface LevelProgress {
     canLevelUp: boolean
 }
 
+function sanitizeProgressKey(value?: string) {
+    if (typeof value !== 'string') return ''
+    return value.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 128)
+}
+
+function countFromBag(bag: SubmitTypeCounts | undefined, mode: string, perfect: boolean): number {
+    if (!bag) return 0
+    if (perfect && mode === 'live') return Number(bag.perfectLive) || 0
+    if (perfect && mode === 'practice') return Number(bag.perfectPractice) || 0
+    if (perfect) return Number(bag.perfect) || 0
+    if (mode === 'live' || mode === 'practice') return Number(bag[mode]) || 0
+    return Number(bag.total) || 0
+}
+
 function countSubmits(stats: MissionStats = {}, filters: MissionFilters = {}): number {
     const type = typeof filters.type === 'string' ? filters.type.replace(/[^a-zA-Z0-9]/g, '') : ''
     const mode = filters.mode === 'live' || filters.mode === 'practice' ? filters.mode : ''
     const perfect = filters.perfect === true
-    const bag = type ? stats.submitsByType?.[type] : undefined
+    const lessonId = sanitizeProgressKey(filters.lessonId)
+    const componentId = sanitizeProgressKey(filters.componentId)
 
-    if (bag) {
-        if (perfect && mode === 'live') return Number(bag.perfectLive) || 0
-        if (perfect && mode === 'practice') return Number(bag.perfectPractice) || 0
-        if (perfect) return Number(bag.perfect) || 0
-        if (mode) return Number(bag[mode]) || 0
-        return Number(bag.total) || 0
+    if (componentId) {
+        const key = lessonId ? `${lessonId}__${componentId}` : componentId
+        return countFromBag(stats.submitsByComponent?.[key], mode, perfect)
     }
+    if (lessonId) {
+        const lessonBag = stats.submitsByLesson?.[lessonId]
+        if (type) return countFromBag(lessonBag?.byType?.[type], mode, perfect)
+        return countFromBag(lessonBag, mode, perfect)
+    }
+    if (type) return countFromBag(stats.submitsByType?.[type], mode, perfect)
     if (perfect && mode === 'live') return Number(stats.perfectLiveSubmits) || 0
     if (perfect && mode === 'practice') return Number(stats.perfectPracticeSubmits) || 0
     if (perfect) return Number(stats.perfectSubmits) || 0

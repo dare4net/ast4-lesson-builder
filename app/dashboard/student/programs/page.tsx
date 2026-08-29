@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { PageHero } from "@/components/dashboard/page-hero"
 import { StudentCard } from "@/components/dashboard/student-card"
 import { useMyPrograms } from "@/hooks/use-my-programs"
+import { programProgressPercent } from "@/lib/program-progress"
 
 export default function StudentProgramsListPage() {
     const router = useRouter()
@@ -14,16 +15,7 @@ export default function StudentProgramsListPage() {
     const programs = myProgramsQuery.data || []
     const loading = myProgramsQuery.isLoading
 
-    const calculateProgress = (prog: any) => {
-        if (typeof prog.progress?.percent_complete === 'number') return prog.progress.percent_complete
-        if (typeof prog.progress?.percentComplete === 'number') return prog.progress.percentComplete
-        if (typeof prog.overallProgress === 'number') return prog.overallProgress
-        if (typeof prog.totalProgress === 'number') return prog.totalProgress
-        if (typeof prog.percent_complete === 'number') return prog.percent_complete
-        if (!prog.modules || prog.modules.length === 0) return 0
-        const done = prog.progress?.completed_modules?.length || 0
-        return Math.round((done / prog.modules.length) * 100)
-    }
+    const calculateProgress = (prog: any) => programProgressPercent(prog)
 
     return (
         <div className="space-y-6">

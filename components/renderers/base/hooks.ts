@@ -58,6 +58,8 @@ export interface UseAttemptTrackingProps {
     /** Component type key e.g. 'quiz', 'memoryGrid' */
     componentType: string
     mode: 'practice' | 'live'
+    lessonId?: string | null
+    programId?: string | null
     /** Restored first/best counts from a previous session */
     initialRecord?: { firstAttemptCount: number | null; bestAttemptCount: number | null }
 }
@@ -103,6 +105,8 @@ export function useAttemptTracking({
     componentId,
     componentType,
     mode,
+    lessonId,
+    programId,
     initialRecord,
 }: UseAttemptTrackingProps): UseAttemptTrackingReturn {
     const restoredFirst = initialRecord?.firstAttemptCount ?? null
@@ -134,6 +138,8 @@ export function useAttemptTracking({
                 attemptCount: 1,
                 completionTimeMs: elapsed,
                 isFirstAttempt: true,
+                ...(lessonId ? { lessonId } : {}),
+                ...(programId ? { programId } : {}),
             })
             return
         }
@@ -166,8 +172,10 @@ export function useAttemptTracking({
             attemptCount: nextAttemptCount,
             completionTimeMs: elapsed,
             isFirstAttempt,
+            ...(lessonId ? { lessonId } : {}),
+            ...(programId ? { programId } : {}),
         })
-    }, [attemptCount, bestAttemptCount, hasCompleted, componentId, componentType, mode, isLive])
+    }, [attemptCount, bestAttemptCount, hasCompleted, componentId, componentType, mode, isLive, lessonId, programId])
 
     const resetAttempts = useCallback(() => {
         if (!hasCompleted) return
@@ -177,8 +185,9 @@ export function useAttemptTracking({
         appEventBus.emit('COMPONENT_RESET', {
             componentId,
             type: componentType,
+            ...(lessonId ? { lessonId } : {}),
         })
-    }, [hasCompleted, componentId, componentType])
+    }, [hasCompleted, componentId, componentType, lessonId])
 
     return {
         attemptCount,

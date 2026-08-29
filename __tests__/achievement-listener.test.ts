@@ -15,6 +15,7 @@ vi.mock('@/lib/api-client', () => ({
 
 const awardStars = () => vi.mocked(apiClient.gamification.awardStars)
 const evaluateAchievements = () => vi.mocked(apiClient.gamification.evaluateAchievements)
+const recordProgressEvent = () => vi.mocked(apiClient.gamification.recordProgressEvent)
 
 describe('initAchievementListener', () => {
     beforeEach(() => {
@@ -24,6 +25,8 @@ describe('initAchievementListener', () => {
         awardStars().mockResolvedValue({ success: true, starBalance: 5 })
         evaluateAchievements().mockReset()
         evaluateAchievements().mockResolvedValue({ success: true, newlyEarned: [] })
+        recordProgressEvent().mockReset()
+        recordProgressEvent().mockResolvedValue({ success: true })
     })
 
     it('credits stars via awardStars and evaluates achievements via apiClient', async () => {
@@ -137,6 +140,38 @@ describe('initAchievementListener', () => {
         expect(evaluateAchievements()).toHaveBeenCalledWith(
             'LESSON_COMPLETED',
             expect.objectContaining({ lessonId: 'l1', percentage: 100 }),
+        )
+        cleanup()
+    })
+
+    it('persists lessonId and componentId on COMPONENT_SUBMITTED', async () => {
+        const cleanup = initAchievementListener('user-123')
+        appEventBus.emit('COMPONENT_SUBMITTED', {
+            componentId: 'hang-1',
+            type: 'hangman',
+            mode: 'practice',
+            score: 10,
+            maxScore: 10,
+            percentage: 100,
+            attemptCount: 1,
+            isFirstAttempt: true,
+            completionTimeMs: 1500,
+            lessonId: 'lesson-1',
+            programId: 'prog-1',
+        })
+        await Promise.resolve()
+        expect(recordProgressEvent()).toHaveBeenCalledWith(
+            'COMPONENT_SUBMITTED',
+            expect.objectContaining({
+                type: 'hangman',
+                lessonId: 'lesson-1',
+                programId: 'prog-1',
+                componentId: 'hang-1',
+            }),
+        )
+        expect(evaluateAchievements()).toHaveBeenCalledWith(
+            'COMPONENT_SUBMITTED',
+            expect.objectContaining({ lessonId: 'lesson-1', componentId: 'hang-1' }),
         )
         cleanup()
     })

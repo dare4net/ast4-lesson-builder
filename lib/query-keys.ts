@@ -6,6 +6,12 @@ export const queryKeys = {
     myPrograms: ['programs', 'mine'] as const,
     catalog: ['programs', 'catalog'] as const,
     programDetails: (id: string) => ['programs', 'detail', id] as const,
+    notifications: ['notifications', 'inbox'] as const,
+    notificationsUnread: ['notifications', 'unread'] as const,
+    prideSummary: ['pride', 'summary'] as const,
+    prideBoard: (statKey: string) => ['pride', 'board', statKey] as const,
+    peopleSearch: (q: string) => ['people', 'search', q] as const,
+    peopleProfile: (handle: string) => ['people', 'profile', handle] as const,
 }
 
 export function parseProgramList(raw: unknown): any[] {

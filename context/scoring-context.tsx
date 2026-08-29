@@ -18,6 +18,8 @@ interface ScoringContextType {
     addPoints: (points: number) => void
     resetScore: () => void
     isPerfect: boolean
+    lessonId: string | null
+    programId: string | null
     /** Map of componentId -> { firstAttemptCount, bestAttemptCount } */
     attemptsMap: Record<string, ComponentAttemptRecord>
     recordComponentAttempt: (componentId: string, record: ComponentAttemptRecord) => void
@@ -106,6 +108,9 @@ export function ScoringProvider({
         return totalScore > 0 && currentScore >= totalScore
     }, [currentScore, totalScore])
 
+    const lessonId = lesson?.id || null
+    const programId = (lesson as { programId?: string } | null)?.programId || null
+
     const value = useMemo(() => ({
         currentScore,
         totalScore,
@@ -113,9 +118,11 @@ export function ScoringProvider({
         addPoints,
         resetScore,
         isPerfect,
+        lessonId,
+        programId,
         attemptsMap,
         recordComponentAttempt
-    }), [currentScore, totalScore, percentage, addPoints, resetScore, isPerfect, attemptsMap, recordComponentAttempt])
+    }), [currentScore, totalScore, percentage, addPoints, resetScore, isPerfect, lessonId, programId, attemptsMap, recordComponentAttempt])
 
     return (
         <ScoringContext.Provider value={value}>

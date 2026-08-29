@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from 'react'
 import { appEventBus } from '@/lib/event-bus'
-import { Star, Trophy, Target, Rocket, X } from 'lucide-react'
+import { Star, Trophy, Target, Rocket, X, Crown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export interface ToastItem {
     id: string
-    type: 'stars' | 'achievement' | 'mission' | 'level'
+    type: 'stars' | 'achievement' | 'mission' | 'level' | 'inbox' | 'crown'
     title: string
     description: string
     rewardStars?: number
@@ -88,6 +88,22 @@ export function GamificationToastContainer() {
             })
         })
 
+        const unsubCrown = appEventBus.on('CROWN_GOLD', (payload) => {
+            addToast({
+                type: 'crown',
+                title: `Gold crown: ${payload.label}`,
+                description: 'You are #1 on this pride board',
+            })
+        })
+
+        const unsubInbox = appEventBus.on('INBOX_NOTICE', (payload) => {
+            addToast({
+                type: 'inbox',
+                title: payload.title || 'New notification',
+                description: payload.body || '',
+            })
+        })
+
         return () => {
             unsubSubmitted()
             unsubEarlyFinish()
@@ -95,6 +111,8 @@ export function GamificationToastContainer() {
             unsubAchievement()
             unsubMission()
             unsubLevel()
+            unsubCrown()
+            unsubInbox()
         }
     }, [])
 
@@ -115,6 +133,12 @@ export function GamificationToastContainer() {
                 } else if (toast.type === 'level') {
                     icon = <Rocket className="w-6 h-6 text-cyan-400" />
                     bgGradient = "from-cyan-500/20 to-blue-500/10 border-cyan-500/40"
+                } else if (toast.type === 'inbox') {
+                    icon = <Trophy className="w-6 h-6 text-[#1CB0F6]" />
+                    bgGradient = "from-sky-500/20 to-blue-500/10 border-sky-500/40"
+                } else if (toast.type === 'crown') {
+                    icon = <Crown className="w-6 h-6 text-[#FF9600]" />
+                    bgGradient = "from-amber-500/20 to-orange-500/10 border-amber-500/40"
                 }
 
                 return (

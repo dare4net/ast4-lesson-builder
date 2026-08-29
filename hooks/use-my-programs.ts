@@ -11,6 +11,7 @@ export function useMyPrograms() {
         queryKey: queryKeys.myPrograms,
         queryFn: async () => parseProgramList(await apiClient.programs.getMyPrograms()),
         enabled: !authLoading && (isAuthenticated || Boolean(token)),
+        refetchOnMount: 'always',
     })
 }
 

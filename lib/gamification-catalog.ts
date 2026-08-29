@@ -53,6 +53,8 @@ export type MissionFilters = {
     mode?: 'live' | 'practice'
     type?: string
     perfect?: boolean
+    lessonId?: string
+    componentId?: string
 }
 
 export const ACHIEVEMENT_EVENT_TYPES = [
@@ -70,11 +72,11 @@ export const ACHIEVEMENT_EVENT_TYPES = [
 export type AchievementEventType = (typeof ACHIEVEMENT_EVENT_TYPES)[number]
 
 export const ACHIEVEMENT_FIELDS_BY_EVENT: Record<AchievementEventType, string[]> = {
-    COMPONENT_SUBMITTED: ['type', 'mode', 'score', 'maxScore', 'percentage', 'attemptCount', 'isFirstAttempt', 'completionTimeMs', 'componentId'],
-    LIVE_EARLY_FINISH: ['type', 'completionTimeMs', 'timeLimitMs', 'componentId'],
-    LIVE_TIMEOUT: ['type', 'componentId'],
+    COMPONENT_SUBMITTED: ['type', 'mode', 'score', 'maxScore', 'percentage', 'attemptCount', 'isFirstAttempt', 'completionTimeMs', 'componentId', 'lessonId', 'programId'],
+    LIVE_EARLY_FINISH: ['type', 'completionTimeMs', 'timeLimitMs', 'componentId', 'lessonId'],
+    LIVE_TIMEOUT: ['type', 'componentId', 'lessonId'],
     LESSON_COMPLETED: ['lessonId', 'programId', 'score', 'maxScore', 'percentage'],
-    COMPONENT_RESET: ['type', 'componentId'],
+    COMPONENT_RESET: ['type', 'componentId', 'lessonId'],
     LESSON_REVIEWED: ['lessonId'],
     PROGRAM_ENROLLED: ['programId'],
     STARS_SPENT: ['amount', 'itemType'],
@@ -159,6 +161,15 @@ export const MISSION_PRESETS = [
         filters: { mode: 'live' as const },
     },
     {
+        label: 'Complete a hangman',
+        title: 'Word Detective',
+        description: 'Finish a hangman block',
+        stat: 'submits' as const,
+        targetCount: 1,
+        rewardStars: 4,
+        filters: { type: 'hangman' },
+    },
+    {
         label: 'Finish 2 lessons',
         title: 'Lesson Finisher',
         description: 'Complete 2 lessons',
@@ -232,3 +243,134 @@ export const ACHIEVEMENT_PRESETS = [
         rules: [{ field: 'amount', op: 'gte' as const, value: 1 }],
     },
 ]
+
+export type CatalogLessonTarget = {
+    id: string
+    title: string
+    programTitle?: string
+    components: Array<{ id: string; type: string; title: string }>
+}
+
+function findLesson(lessons: CatalogLessonTarget[], lessonId?: string) {
+    if (!lessonId) return undefined
+    return lessons.find((lesson) => lesson.id === lessonId)
+}
+
+function findBlock(lessons: CatalogLessonTarget[], lessonId?: string, componentId?: string) {
+    if (!componentId) return undefined
+    const fromLesson = findLesson(lessons, lessonId)?.components.find((block) => block.id === componentId)
+    if (fromLesson) return fromLesson
+    for (const lesson of lessons) {
+        const block = lesson.components.find((item) => item.id === componentId)
+        if (block) return block
+    }
+    return undefined
+}
+
+function lessonLabel(lesson?: CatalogLessonTarget) {
+    if (!lesson) return 'this lesson'
+    return lesson.programTitle ? `${lesson.programTitle} · ${lesson.title}` : lesson.title
+}
+
+const SCORED_TYPE_SET = new Set<string>(SCORED_COMPONENT_TYPES)
+const SCORE_RULE_FIELDS = new Set(['percentage', 'isFirstAttempt', 'score', 'maxScore'])
+
+function hasSpecificBlock(rules: AchievementRule[]) {
+    return rules.some((rule) => rule.field === 'componentId' && rule.value !== undefined && rule.value !== '')
+}
+
+export function isScoredCatalogType(type?: string) {
+    return Boolean(type && SCORED_TYPE_SET.has(type))
+}
+
+function resolvedTargetType(filters: MissionFilters = {}, lessons: CatalogLessonTarget[] = []) {
+    if (filters.componentId) {
+        const block = findBlock(lessons, filters.lessonId, filters.componentId)
+        if (block?.type) return block.type
+    }
+    return filters.type
+}
+
+export function canUsePerfectAttempt(filters: MissionFilters = {}, lessons: CatalogLessonTarget[] = []) {
+    return isScoredCatalogType(resolvedTargetType(filters, lessons))
+}
+
+export function persistMissionFilters(
+    stat: MissionStatKey,
+    filters: MissionFilters = {},
+    lessons: CatalogLessonTarget[] = [],
+): MissionFilters | null {
+    if (stat !== 'submits') return null
+    const targetingBlock = Boolean(filters.componentId)
+    const out: MissionFilters = {}
+    if (!targetingBlock && filters.mode) out.mode = filters.mode
+    if (!targetingBlock && filters.type) out.type = filters.type
+    if (filters.perfect && canUsePerfectAttempt(filters, lessons)) out.perfect = true
+    if (filters.lessonId) out.lessonId = filters.lessonId
+    if (filters.componentId) out.componentId = filters.componentId
+    return Object.keys(out).length ? out : null
+}
+
+export function visibleAchievementRules(rules: AchievementRule[], lessons: CatalogLessonTarget[] = []) {
+    let visible = hasSpecificBlock(rules)
+        ? rules.filter((rule) => rule.field !== 'type' && rule.field !== 'mode')
+        : rules
+    const type = hasSpecificBlock(rules)
+        ? findBlock(lessons, undefined, String(rules.find((rule) => rule.field === 'componentId')?.value || ''))?.type
+        : String(rules.find((rule) => rule.field === 'type')?.value || '')
+    if (type && !isScoredCatalogType(type)) {
+        visible = visible.filter((rule) => !SCORE_RULE_FIELDS.has(rule.field))
+    }
+    return visible
+}
+
+export function describeMissionRecipe(
+    mission: { stat: MissionStatKey; targetCount: number; filters?: MissionFilters },
+    lessons: CatalogLessonTarget[] = [],
+) {
+    if (mission.stat !== 'submits') {
+        return `${MISSION_STAT_LABELS[mission.stat]} until ${mission.targetCount}`
+    }
+    const filters = persistMissionFilters('submits', mission.filters, lessons) || {}
+    const perfect = filters.perfect ? ' at 100% first try' : ''
+    const until = `until ${mission.targetCount}`
+    const lesson = findLesson(lessons, filters.lessonId)
+    const where = filters.lessonId ? ` in ${lessonLabel(lesson)}` : ''
+
+    if (filters.componentId) {
+        const block = findBlock(lessons, filters.lessonId, filters.componentId)
+        const name = block?.title || 'this block'
+        return `Count completions of ${name}${where}${perfect} ${until}`.replace(/\s+/g, ' ').trim()
+    }
+
+    const mode = filters.mode ? `${filters.mode} ` : ''
+    const type = filters.type || 'any block'
+    return `Count ${mode}${type} completions${perfect}${where} ${until}`.replace(/\s+/g, ' ').trim()
+}
+
+export function describeAchievementRule(rule: AchievementRule, lessons: CatalogLessonTarget[] = []) {
+    if (rule.field === 'componentId') {
+        const block = findBlock(lessons, undefined, String(rule.value || ''))
+        if (rule.op === 'exists') return 'a specific block is present'
+        return block ? `block is ${block.title}` : 'a specific block is selected'
+    }
+    if (rule.field === 'lessonId') {
+        const lesson = findLesson(lessons, String(rule.value || ''))
+        if (rule.op === 'exists') return 'a specific lesson is present'
+        return lesson ? `lesson is ${lesson.title}` : 'a specific lesson is selected'
+    }
+    if (rule.op === 'exists') return `${rule.field} is present`
+    if (rule.op === 'ratioLt') return `${rule.field} ÷ ${rule.over || '?'} is less than ${rule.value}`
+    return `${rule.field} ${RULE_OP_LABELS[rule.op]} ${rule.value ?? ''}`
+}
+
+export function describeAchievementRecipe(
+    eventType: AchievementEventType,
+    rules: AchievementRule[],
+    lessons: CatalogLessonTarget[] = [],
+) {
+    const targetingBlock = hasSpecificBlock(rules)
+    const visible = visibleAchievementRules(rules, lessons).filter((rule) => !(targetingBlock && rule.field === 'lessonId'))
+    const criteria = visible.map((rule) => describeAchievementRule(rule, lessons)).join(' and ') || 'no criteria'
+    return `${ACHIEVEMENT_EVENT_LABELS[eventType]}, if ${criteria}`
+}

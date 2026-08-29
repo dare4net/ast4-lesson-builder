@@ -10,7 +10,7 @@ import { LessonTimelineItem } from '@/components/studio/lesson-timeline-item';
 import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
 import { EditLessonSettingsModal } from '@/components/studio/edit-lesson-settings-modal';
 
-interface Lesson { _id: string; title: string; description: string; order: number; duration?: number; level?: string; voice?: string; }
+interface Lesson { _id: string; title: string; description: string; order: number; duration?: number; level?: string; voice?: string; is_published?: boolean; }
 interface Module { _id: string; name: string; title?: string; description: string; program_id: string; image_url?: string; cover_image?: string; is_published?: boolean; default_voice?: string; }
 
 function ModuleDetailContent() {

@@ -11,6 +11,9 @@ export interface User {
     email?: string;
     full_name?: string;
     fullName?: string;
+    handle?: string | null;
+    isPublicProfile?: boolean;
+    accentColor?: string | null;
 }
 
 interface AuthContextType {
@@ -48,6 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             ...(storedUser || {}),
                             email: storedUser?.email || decoded.email,
                             full_name: storedUser?.full_name || storedUser?.fullName || decoded.full_name || decoded.fullName,
+                            handle: storedUser?.handle ?? decoded.handle ?? null,
+                            isPublicProfile: storedUser?.isPublicProfile === true,
                         };
                         setUser(fullUser);
                         setToken(storedToken);
@@ -82,6 +87,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...decoded,
                 email: responseUser?.email || decoded.email || email,
                 full_name: responseUser?.full_name || responseUser?.fullName || decoded.full_name || decoded.fullName,
+                handle: responseUser?.handle || null,
+                isPublicProfile: responseUser?.isPublicProfile === true,
             };
 
             apiClient.setUser(fullUserData);
@@ -106,6 +113,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 ...decoded,
                 email: responseUser?.email || decoded.email || email,
                 full_name: fullName || responseUser?.full_name || decoded.full_name,
+                handle: responseUser?.handle || null,
+                isPublicProfile: responseUser?.isPublicProfile === true,
             };
 
             apiClient.setUser(fullUserData);

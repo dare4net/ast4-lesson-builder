@@ -1,0 +1,60 @@
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { describe, expect, it } from 'vitest'
+import { handleAccent, hasPrideRecord, profileHeadline, resolveAccentColor } from '@/lib/pride-format'
+import { publicProfilePath } from '@/lib/pride-paths'
+
+const read = (relative: string) => readFileSync(join(process.cwd(), relative), 'utf8')
+
+describe('W3 follows and public handle wall', () => {
+    it('wires follow mute and block on the public profile without email', () => {
+        const profile = read('components/pride/public-profile.tsx')
+        const client = read('lib/api-client.ts')
+        const hook = read('hooks/use-people.ts')
+        expect(profile).toContain('Follow')
+        expect(read('components/pride/student-name.tsx')).toContain('FollowChip')
+        expect(read('components/pride/student-name.tsx')).toContain('CrownTier')
+        expect(read('components/pride/student-name.tsx')).toContain('fill="currentColor"')
+        expect(read('components/pride/student-name.tsx')).toContain('bestCrown || crown')
+        expect(read('app/dashboard/student/pride/[statKey]/page.tsx')).toContain('StudentName')
+        expect(read('app/dashboard/student/pride/[statKey]/page.tsx')).toContain('crown={row.crown}')
+        expect(read('components/pride/pride-search.tsx')).toContain('FollowChip')
+        expect(profile).toContain('Following')
+        expect(profile).toContain('Mute gold alerts')
+        expect(profile).toContain('Block this student')
+        expect(profile).toContain('goldCrowns')
+        expect(profile).toContain('silverCrowns')
+        expect(profile).toContain('bronzeCrowns')
+        expect(profile).toContain('Pride wall')
+        expect(profile).toContain('Every board they stand on')
+        expect(profile).toContain('GoldHint')
+        expect(profile).toContain('item.gold')
+        expect(profile).not.toContain('profile.email')
+        expect(profile).not.toContain('user.email')
+        expect(client).toContain("this.post(`/people/${encodeURIComponent(handle)}/follow`)")
+        expect(client).toContain("this.delete(`/people/${encodeURIComponent(handle)}/follow`)")
+        expect(client).toContain('/mute')
+        expect(client).toContain('/block')
+        expect(hook).toContain('peopleProfile')
+        expect(hook).toContain("refetchOnMount: 'always'")
+        expect(read('lib/query-keys.ts')).toContain('peopleProfile')
+        expect(publicProfilePath('star_kid')).toBe('/dashboard/student/u/star_kid')
+    })
+
+    it('makes a handle page worth opening', () => {
+        expect(profileHeadline({ goldCrowns: [{ label: 'Quizzes completed' }] })).toBe('Gold on Quizzes completed')
+        expect(profileHeadline({ silverCrowns: [{ label: 'Hangman finished' }] })).toBe('Silver on Hangman finished')
+        expect(profileHeadline({})).toBe('Building a pride wall')
+        expect(['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B']).toContain(handleAccent('maya_codes'))
+        expect(handleAccent('maya_codes')).toBe(handleAccent('maya_codes'))
+        expect(resolveAccentColor('maya_codes', '#CE82FF')).toBe('#CE82FF')
+        expect(resolveAccentColor('maya_codes', null)).toBe(handleAccent('maya_codes'))
+        expect(read('components/pride/public-profile.tsx')).toContain('resolveAccentColor')
+        expect(read('components/pride/public-profile.tsx')).toContain('profileHeadline')
+        expect(read('components/pride/public-profile.tsx')).toContain('@{profile.handle}')
+        expect(hasPrideRecord({ rank: 4, value: 2 })).toBe(true)
+        expect(hasPrideRecord({ rank: null, value: null })).toBe(false)
+        expect(read('components/pride/gold-hint.tsx')).toContain('StudentName')
+        expect(read('app/dashboard/student/pride/page.tsx')).toContain('leaders')
+    })
+})

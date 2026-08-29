@@ -52,6 +52,8 @@ export function ScoredRenderer<S>({
         componentId: interactiveProps.component.id,
         componentType: interactiveProps.component.type,
         mode,
+        lessonId: contextScoring.lessonId,
+        programId: contextScoring.programId,
         initialRecord: contextScoring.attemptsMap?.[interactiveProps.component.id],
     })
 

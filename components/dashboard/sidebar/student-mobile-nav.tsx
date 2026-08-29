@@ -7,7 +7,8 @@ import {
     BookOpen,
     Compass,
     TrendingUp,
-    Settings
+    Settings,
+    Crown
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
@@ -17,6 +18,7 @@ const navItems = [
     { label: "Courses", icon: BookOpen, href: "/dashboard/student/programs" },
     { label: "Explore", icon: Compass, href: "/dashboard/student/catalog" },
     { label: "Progress", icon: TrendingUp, href: "/dashboard/student/progress" },
+    { label: "Pride", icon: Crown, href: "/dashboard/student/pride" },
     { label: "Settings", icon: Settings, href: "/dashboard/student/settings" },
 ]
 
