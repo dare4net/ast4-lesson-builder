@@ -61,10 +61,32 @@ export function usePrideBoard(statKey: string) {
     })
 }
 
+export type PridePerson = {
+    handle: string
+    displayName?: string
+    accentColor?: string | null
+    bestCrown?: string | null
+    following?: boolean
+    value?: number | null
+}
+
+export type PrideSearchBoard = {
+    key: string
+    label: string
+    unit?: string
+    gold?: PridePerson | null
+}
+
+export type PrideSearchPayload = {
+    people?: PridePerson[]
+    boards?: PrideSearchBoard[]
+    mode?: string
+}
+
 export function usePrideSearch(query: string, enabled: boolean) {
     return useQuery({
         queryKey: queryKeys.peopleSearch(query),
-        queryFn: () => apiClient.people.search(query),
+        queryFn: () => apiClient.people.search(query) as Promise<PrideSearchPayload>,
         enabled,
         staleTime: PRIDE_STALE_MS,
         placeholderData: (previous) => previous,

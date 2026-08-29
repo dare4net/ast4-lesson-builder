@@ -2,7 +2,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { nextBackoffMs } from '@/lib/backoff'
-import { createTabSync } from '@/lib/tab-sync'
+import { createTabSync, type Channel, type TabInteractionMessage } from '@/lib/tab-sync'
 import { saveUserInteraction, getOfflineStorageKey } from '@/lib/user-interactions'
 import { apiClient } from '@/lib/api-client'
 
@@ -17,16 +17,16 @@ vi.mock('@/lib/api-client', () => ({
 const read = (relative: string) => readFileSync(join(process.cwd(), relative), 'utf8')
 const save = () => vi.mocked(apiClient.interactions.save)
 
-function memoryChannel() {
-    const listeners = new Set<(event: { data: unknown }) => void>()
+function memoryChannel(): Channel {
+    const listeners = new Set<(event: { data: TabInteractionMessage }) => void>()
     return {
-        postMessage(msg: unknown) {
+        postMessage(msg: TabInteractionMessage) {
             for (const listener of [...listeners]) listener({ data: msg })
         },
-        addEventListener(_type: 'message', fn: (event: { data: unknown }) => void) {
+        addEventListener(_type: 'message', fn: (event: { data: TabInteractionMessage }) => void) {
             listeners.add(fn)
         },
-        removeEventListener(_type: 'message', fn: (event: { data: unknown }) => void) {
+        removeEventListener(_type: 'message', fn: (event: { data: TabInteractionMessage }) => void) {
             listeners.delete(fn)
         },
         close() {

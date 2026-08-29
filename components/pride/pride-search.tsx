@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Crown, Search, Sparkles, UserRound, X } from 'lucide-react'
 import { FollowChip, CrownTier } from '@/components/pride/student-name'
@@ -74,7 +74,7 @@ export function PrideSearch() {
         router.push(href)
     }
 
-    const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    const onKeyDown = (event: ReactKeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Escape') {
             setOpen(false)
             inputRef.current?.blur()

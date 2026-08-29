@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils'
 
 export default function PrideBoardPage() {
     const params = useParams<{ statKey: string }>()
-    const statKey = decodeURIComponent(String(params.statKey || ''))
+    const statKey = decodeURIComponent(String(params?.statKey || ''))
     const { user } = useAuth()
     const { data, isLoading, isFetching, isError, error } = usePrideBoard(statKey)
 

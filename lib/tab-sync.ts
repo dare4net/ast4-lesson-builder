@@ -7,7 +7,7 @@ export type TabInteractionMessage = {
     at: number
 }
 
-type Channel = {
+export type Channel = {
     postMessage: (msg: TabInteractionMessage) => void
     addEventListener: (type: 'message', fn: (event: { data: TabInteractionMessage }) => void) => void
     removeEventListener?: (type: 'message', fn: (event: { data: TabInteractionMessage }) => void) => void
