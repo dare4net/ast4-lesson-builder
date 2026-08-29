@@ -1,116 +1,172 @@
 "use client"
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { SoundEffects, SoundEffect } from './sound-effects';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { animationClassFor } from './feedback-animation'
+import { SoundEffects, SoundEffect } from './sound-effects'
+import { setLessonAudioPrefs } from './lesson-audio'
+
+export { animationClassFor } from './feedback-animation'
+
+export interface FeedbackOptions {
+  animation?: boolean
+  sound?: boolean
+}
 
 interface FeedbackContextType {
-  isSoundEnabled: boolean;
-  soundVolume: number;
-  isAnimationEnabled: boolean;
-  toggleSound: () => void;
-  toggleAnimation: () => void;
-  setVolume: (volume: number) => void;
-  playFeedback: (type: SoundEffect, options?: FeedbackOptions) => Promise<string>;
+  isSoundEnabled: boolean
+  soundVolume: number
+  isAnimationEnabled: boolean
+  toggleSound: () => void
+  toggleAnimation: () => void
+  setVolume: (volume: number) => void
+  playFeedback: (type: SoundEffect, options?: FeedbackOptions) => Promise<string>
 }
 
-interface FeedbackOptions {
-  animation?: boolean;
-  sound?: boolean;
+interface FeedbackScopeValue {
+  apply: (className: string) => void
+  animationClass: string
 }
 
-const FeedbackContext = createContext<FeedbackContextType | undefined>(undefined);
+const STORAGE_KEY = 'ast-feedback-prefs'
 
-export function FeedbackProvider({ children }: { children: React.ReactNode }) {
-  const [isSoundEnabled, setIsSoundEnabled] = useState(true);
-  const [soundVolume, setSoundVolume] = useState(0.5);
-  const [isAnimationEnabled, setIsAnimationEnabled] = useState(true);
+const FeedbackContext = createContext<FeedbackContextType | undefined>(undefined)
+export const FeedbackScopeContext = createContext<FeedbackScopeValue | null>(null)
 
-  // Initialize sound system
-  useEffect(() => {
-    SoundEffects.preloadAll();
-    return () => {
-      SoundEffects.unloadAll();
-    };
-  }, []);
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
-  // Update sound settings when they change
-  useEffect(() => {
-    if (isSoundEnabled) {
-      SoundEffects.unmute();
-      SoundEffects.setVolume(soundVolume);
-    } else {
-      SoundEffects.mute();
-    }
-  }, [isSoundEnabled, soundVolume]);
+function animationDurationMs(className: string): number {
+  if (className.includes('duo-shake')) return 550
+  if (className.includes('duo-pop')) return 350
+  return 1100
+}
 
-  const toggleSound = useCallback(() => {
-    setIsSoundEnabled(prev => !prev);
-  }, []);
+export function FeedbackAnimationScope({ children }: { children: React.ReactNode }) {
+  const [animationClass, setAnimationClass] = useState('')
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  const toggleAnimation = useCallback(() => {
-    setIsAnimationEnabled(prev => !prev);
-  }, []);
+  const apply = useCallback((className: string) => {
+    if (!className) return
+    setAnimationClass(className)
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => setAnimationClass(''), animationDurationMs(className))
+  }, [])
 
-  const setVolume = useCallback((volume: number) => {
-    setSoundVolume(Math.max(0, Math.min(1, volume)));
-  }, []);
-
-  const playFeedback = useCallback(async (type: SoundEffect, options: FeedbackOptions = {}) => {
-    const { animation = true, sound = true } = options;
-
-    // Only play click sounds if explicitly requested with sound=true
-    // This prevents accidental triggering of click sounds from global click events
-    if (type === 'click' && !options.hasOwnProperty('sound')) {
-      return '';
-    }
-
-    // Play sound if enabled and requested
-    if (sound && isSoundEnabled) {
-      await SoundEffects.play(type);
-    }
-
-    // Return animation class if enabled and requested
-    if (animation && isAnimationEnabled) {
-      switch (type) {
-        case 'correct':
-          return 'duo-bounce duo-pulse';
-        case 'incorrect':
-          return 'duo-shake';
-        case 'complete':
-          return 'duo-celebrate duo-pulse';
-        case 'click':
-          return 'duo-pop';
-        case 'levelUp':
-          return 'duo-celebrate duo-pulse duo-float';
-        case 'streak':
-          return 'duo-bounce duo-pulse duo-float';
-        default:
-          return '';
-      }
-    }
-
-    return '';
-  }, [isSoundEnabled, isAnimationEnabled]);
+  useEffect(() => () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+  }, [])
 
   return (
-    <FeedbackContext.Provider value={{
-      isSoundEnabled,
-      soundVolume,
-      isAnimationEnabled,
-      toggleSound,
-      toggleAnimation,
-      setVolume,
-      playFeedback,
-    }}>
+    <FeedbackScopeContext.Provider value={{ apply, animationClass }}>
+      {children}
+    </FeedbackScopeContext.Provider>
+  )
+}
+
+export function FeedbackProvider({ children }: { children: React.ReactNode }) {
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
+  const [soundVolume, setSoundVolume] = useState(0.5)
+  const [isAnimationEnabled, setIsAnimationEnabled] = useState(true)
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      if (raw) {
+        const parsed = JSON.parse(raw) as {
+          isSoundEnabled?: boolean
+          soundVolume?: number
+          isAnimationEnabled?: boolean
+        }
+        if (typeof parsed.isSoundEnabled === 'boolean') setIsSoundEnabled(parsed.isSoundEnabled)
+        if (typeof parsed.soundVolume === 'number') setSoundVolume(parsed.soundVolume)
+        if (typeof parsed.isAnimationEnabled === 'boolean') setIsAnimationEnabled(parsed.isAnimationEnabled)
+      }
+    } catch {
+      // Ignore unreadable prefs and keep defaults.
+    }
+    setHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    if (!hydrated) return
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        isSoundEnabled,
+        soundVolume,
+        isAnimationEnabled,
+      }))
+    } catch {
+      // Ignore quota / private-mode failures.
+    }
+  }, [hydrated, isSoundEnabled, soundVolume, isAnimationEnabled])
+
+  useEffect(() => {
+    SoundEffects.preloadAll()
+    return () => {
+      SoundEffects.unloadAll()
+    }
+  }, [])
+
+  useEffect(() => {
+    setLessonAudioPrefs({ enabled: isSoundEnabled, volume: soundVolume })
+    if (isSoundEnabled) {
+      SoundEffects.unmute()
+      SoundEffects.setVolume(soundVolume)
+    } else {
+      SoundEffects.mute()
+    }
+  }, [isSoundEnabled, soundVolume])
+
+  const toggleSound = useCallback(() => {
+    setIsSoundEnabled(prev => !prev)
+  }, [])
+
+  const toggleAnimation = useCallback(() => {
+    setIsAnimationEnabled(prev => !prev)
+  }, [])
+
+  const setVolume = useCallback((volume: number) => {
+    setSoundVolume(Math.max(0, Math.min(1, volume)))
+  }, [])
+
+  const playFeedback = useCallback(async (type: SoundEffect, options: FeedbackOptions = {}) => {
+    const { animation = true, sound = true } = options
+
+    if (sound && isSoundEnabled) {
+      await SoundEffects.play(type)
+    }
+
+    if (animation && isAnimationEnabled && !prefersReducedMotion()) {
+      return animationClassFor(type)
+    }
+
+    return ''
+  }, [isSoundEnabled, isAnimationEnabled])
+
+  const value = useMemo(() => ({
+    isSoundEnabled,
+    soundVolume,
+    isAnimationEnabled,
+    toggleSound,
+    toggleAnimation,
+    setVolume,
+    playFeedback,
+  }), [isSoundEnabled, soundVolume, isAnimationEnabled, toggleSound, toggleAnimation, setVolume, playFeedback])
+
+  return (
+    <FeedbackContext.Provider value={value}>
       {children}
     </FeedbackContext.Provider>
-  );
+  )
 }
 
 export function useFeedback() {
-  const context = useContext(FeedbackContext);
+  const context = useContext(FeedbackContext)
   if (context === undefined) {
-    throw new Error('useFeedback must be used within a FeedbackProvider');
+    throw new Error('useFeedback must be used within a FeedbackProvider')
   }
-  return context;
-} 
+  return context
+}

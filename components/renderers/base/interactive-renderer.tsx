@@ -3,6 +3,10 @@
 import * as React from "react"
 import { BaseComponentRenderer, BaseRendererProps } from "./base-renderer"
 import { useInteractiveState } from "./hooks"
+import { isComponentCompleted } from "@/domain/component-status"
+import { LiveComponentMetaProvider } from "@/components/live-mode"
+import { cn } from "@/lib/utils"
+import { FeedbackAnimationScope, FeedbackScopeContext } from "@/lib/feedback-context"
 
 export interface InteractiveRenderProps<S> {
     state: S
@@ -19,40 +23,51 @@ export interface InteractiveRendererProps<S> extends Omit<BaseRendererProps, 'ch
 
 /**
  * InteractiveRenderer
- * 
+ *
  * Wrapper for components that have persistent state but no scoring (e.g. Flashcards).
  * Handles:
  * - Local state management
  * - Persistence to parent via setComponentState
  * - Completion status tracking
+ * - Applying playFeedback animation classes on this component only
  */
-export function InteractiveRenderer<S>({
+export function InteractiveRenderer<S>(props: InteractiveRendererProps<S>) {
+    return (
+        <LiveComponentMetaProvider componentId={props.component.id} type={props.component.type}>
+            <FeedbackAnimationScope>
+                <InteractiveRendererView {...props} />
+            </FeedbackAnimationScope>
+        </LiveComponentMetaProvider>
+    )
+}
+
+function InteractiveRendererView<S>({
     component,
     initialState,
     savedState,
     setComponentState,
     onRender,
+    className,
     ...baseProps
 }: InteractiveRendererProps<S>) {
+    const animationClass = React.useContext(FeedbackScopeContext)?.animationClass ?? ''
     const [state, setState] = useInteractiveState({
         initialState,
         savedState,
         setComponentState
     })
 
-    // Determine completion status
-    // Checks both local state and component prop for 'completed' status
     const isComplete =
-        (state as any)?.status === 'completed' ||
-        (state as any)?.isComplete === true ||
+        isComponentCompleted(state) ||
         component.status === 'completed'
 
     return (
         <BaseComponentRenderer
             component={component}
+            className={cn(className, animationClass)}
             {...baseProps}
-            // Pass children explicitly to satisfy TypeScript if implicit children fails
-            children={onRender({ state, setState, isComplete })}
-        />
+        >
+            {onRender({ state, setState, isComplete })}
+        </BaseComponentRenderer>
     )
 }

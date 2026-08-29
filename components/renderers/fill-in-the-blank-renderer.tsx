@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { CheckCircle2, XCircle, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
+import { ACTION_LABELS } from "@/lib/action-labels"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
@@ -63,6 +64,7 @@ function FillInTheBlankContent({
   setState,
   handlePoints,
   handleRetry,
+  recordAttempt,
   isLive,
   isDisabled: disabledProp,
   props
@@ -173,6 +175,9 @@ function FillInTheBlankContent({
     }
 
     handlePoints(earnedPoints);
+    if (!isPending) {
+      recordAttempt(allCorrect, earnedPoints, totalPossible)
+    }
 
     setState(prev => ({
       ...prev,
@@ -223,14 +228,14 @@ function FillInTheBlankContent({
 
   return (
     <div className={cn(
-      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-6 relative",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/fib transition-all duration-300 px-3 sm:px-6 relative",
       disabledProp && "opacity-75"
     )}>
       {/* Visual Accent */}
       <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* Header */}
-      <div className="shrink-0 relative flex items-center justify-between px-2 pt-2">
+      <div className="shrink-0 relative flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-2 pt-2">
         <div className="space-y-0.5">
           <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Activity</span>
           <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
@@ -255,7 +260,7 @@ function FillInTheBlankContent({
       </div>
 
       {/* CENTER SECTION: Interactive Text */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+      <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center overflow-y-auto py-2">
         <div className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight my-auto">
           {parts.map((part, index) => {
             const blank = blanks[index];
@@ -270,14 +275,14 @@ function FillInTheBlankContent({
               <React.Fragment key={index}>
                 <FormattedText content={part} as="span" />
                 {index < blanks.length && blank && (
-                  <span className="inline-flex relative mx-1.5 group/input align-middle">
+                  <span className="inline-flex relative mx-1.5 my-1 group/input align-middle max-sm:block max-sm:w-full max-sm:mx-0">
                     <Input
                       value={userAnswers[blankKey] || ""}
                       onChange={(e) => handleAnswerChange(blankKey, e.target.value)}
                       disabled={inputsLocked}
                       placeholder="..."
                       className={cn(
-                        "w-28 md:w-36 h-9 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-xs md:text-sm shadow-inner",
+                        "w-28 sm:w-32 md:w-36 max-sm:w-full min-h-11 h-11 bg-emerald-50/20 border-2 border-emerald-100 focus-visible:ring-emerald-500/50 rounded-lg text-center font-black text-slate-900 transition-all placeholder:text-emerald-600/20 py-0 text-xs md:text-sm shadow-inner",
                         isSubmitted && (
                           isBlankCorrect
                             ? "border-emerald-500 bg-emerald-500 text-white shadow-none"
@@ -305,7 +310,7 @@ function FillInTheBlankContent({
             ((isPendingMarking && !tutorMarked) || (props.markingMode === 'tutor-mark' && !tutorMarked)) ? (
               <div className="p-4 rounded-xl border-2 bg-amber-50 border-amber-200 text-amber-800 animate-in slide-in-from-top-2 duration-300">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-amber-700">Submitted — Pending Tutor Review</span>
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-700">{ACTION_LABELS.pendingTutorReview}</span>
                 </div>
                 <p className="text-[10px] font-medium opacity-80 mt-0.5">Your response has been submitted for tutor marking.</p>
               </div>

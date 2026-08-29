@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Lock, User, Loader2, ArrowRight, GraduationCap, BookOpenCheck, Sparkles, Zap, Flame } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 function SignupForm() {
     const router = useRouter();
@@ -186,6 +187,35 @@ function SignupForm() {
     );
 }
 
+function SignupFloatingBadges() {
+    const reduceMotion = useReducedMotion()
+    return (
+        <>
+            <motion.div
+                className="absolute top-12 right-10 p-3 bg-white border-2 border-[#1CB0F6] rounded-2xl hidden md:flex items-center gap-2"
+                animate={reduceMotion ? undefined : { y: [0, -8, 0], rotate: [3, -3, 3] }}
+                transition={reduceMotion ? undefined : { duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+                <div className="w-7 h-7 rounded-xl bg-[#1CB0F6] flex items-center justify-center text-white font-black text-xs">
+                    <Zap className="w-3.5 h-3.5 fill-white" />
+                </div>
+                <span className="text-xs font-black text-slate-800">Instant Access</span>
+            </motion.div>
+
+            <motion.div
+                className="absolute bottom-16 left-10 p-3 bg-white border-2 border-[#FFC800] rounded-2xl hidden md:flex items-center gap-2"
+                animate={reduceMotion ? undefined : { y: [0, 8, 0], rotate: [-3, 3, -3] }}
+                transition={reduceMotion ? undefined : { duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+                <div className="w-7 h-7 rounded-xl bg-[#FFC800] flex items-center justify-center text-white font-black text-xs">
+                    <Flame className="w-3.5 h-3.5 fill-white" />
+                </div>
+                <span className="text-xs font-black text-slate-800">Earn Badges</span>
+            </motion.div>
+        </>
+    )
+}
+
 export default function SignupPage() {
     return (
         <div className="min-h-screen bg-[#FAF9F5] flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden select-none">
@@ -208,27 +238,7 @@ export default function SignupPage() {
             />
 
             {/* Decorative Floating Badges */}
-            <motion.div
-                className="absolute top-12 right-10 p-3 bg-white border-2 border-[#1CB0F6] rounded-2xl hidden md:flex items-center gap-2"
-                animate={{ y: [0, -8, 0], rotate: [3, -3, 3] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <div className="w-7 h-7 rounded-xl bg-[#1CB0F6] flex items-center justify-center text-white font-black text-xs">
-                    <Zap className="w-3.5 h-3.5 fill-white" />
-                </div>
-                <span className="text-xs font-black text-slate-800">Instant Access</span>
-            </motion.div>
-
-            <motion.div
-                className="absolute bottom-16 left-10 p-3 bg-white border-2 border-[#FFC800] rounded-2xl hidden md:flex items-center gap-2"
-                animate={{ y: [0, 8, 0], rotate: [-3, 3, -3] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <div className="w-7 h-7 rounded-xl bg-[#FFC800] flex items-center justify-center text-white font-black text-xs">
-                    <Flame className="w-3.5 h-3.5 fill-white" />
-                </div>
-                <span className="text-xs font-black text-slate-800">Earn Badges</span>
-            </motion.div>
+            <SignupFloatingBadges />
 
             <Suspense fallback={<div className="text-slate-600 text-xs font-extrabold">Loading...</div>}>
                 <SignupForm />

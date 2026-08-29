@@ -26,7 +26,7 @@ import { normalizeSlides } from '@/lib/lesson-utils';
 interface LoadLessonModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onLoadSuccess: (lesson: Lesson, lessonId: string) => void;
+    onLoadSuccess: (lesson: Lesson, lessonId: string, version?: number) => void;
 }
 
 export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLessonModalProps) {
@@ -117,11 +117,17 @@ export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLesso
             const lesson: Lesson = {
                 id: lessonData.content.id,
                 title: lessonData.title,
+                description: lessonData.description ?? '',
+                author: lessonData.author ?? '',
+                level: lessonData.level ?? '',
+                duration: lessonData.duration ?? 0,
                 slides: normalizeSlides(lessonData.content.slides || []),
                 settings: lessonData.content.settings || {},
+                createdAt: lessonData.createdAt ?? lessonData.created_at ?? new Date().toISOString(),
+                updatedAt: lessonData.updatedAt ?? lessonData.updated_at ?? new Date().toISOString(),
             };
 
-            onLoadSuccess(lesson, selectedLessonId);
+            onLoadSuccess(lesson, selectedLessonId, Number(lessonData.version) || 0);
             onOpenChange(false);
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to load lesson');
@@ -132,7 +138,7 @@ export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLesso
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-md w-[min(calc(100vw-2rem),28rem)] overflow-hidden">
                 <DialogHeader>
                     <DialogTitle>Load Lesson from Database</DialogTitle>
                     <DialogDescription>
@@ -205,8 +211,8 @@ export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLesso
                                 Loading lessons...
                             </div>
                         ) : (
-                            <ScrollArea className="h-[200px] rounded-md border">
-                                <div className="p-2 space-y-2">
+                            <ScrollArea className="h-[200px] w-full min-w-0 rounded-md border overflow-x-hidden">
+                                <div className="p-2 space-y-2 w-full min-w-0 max-w-full overflow-x-hidden">
                                     {lessons.length === 0 ? (
                                         <div className="text-sm text-gray-500 text-center py-8">
                                             {selectedModuleId ? 'No lessons in this module' : 'Select a module first'}
@@ -215,18 +221,21 @@ export function LoadLessonModal({ open, onOpenChange, onLoadSuccess }: LoadLesso
                                         lessons.map((lesson) => (
                                             <button
                                                 key={lesson._id}
+                                                type="button"
                                                 onClick={() => setSelectedLessonId(lesson._id)}
-                                                className={`w-full p-3 text-left rounded-md transition-colors ${selectedLessonId === lesson._id
+                                                className={`block w-full min-w-0 max-w-full overflow-x-hidden p-3 text-left rounded-md transition-colors ${selectedLessonId === lesson._id
                                                     ? 'bg-blue-100 border-blue-500 border-2'
                                                     : 'bg-gray-50 hover:bg-gray-100 border border-gray-200'
                                                     }`}
                                             >
-                                                <div className="flex items-start gap-2">
-                                                    <FileText className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="font-medium text-sm truncate">{lesson.title}</div>
+                                                <div className="flex items-start gap-2 w-full min-w-0">
+                                                    <FileText className="w-4 h-4 mt-0.5 shrink-0" />
+                                                    <div className="min-w-0 flex-1 overflow-x-hidden">
+                                                        <div className="font-medium text-sm break-words [overflow-wrap:anywhere]">
+                                                            {lesson.title}
+                                                        </div>
                                                         {lesson.description && (
-                                                            <div className="text-xs text-gray-600 truncate">
+                                                            <div className="text-xs text-gray-600 mt-1 break-words [overflow-wrap:anywhere]">
                                                                 {lesson.description}
                                                             </div>
                                                         )}

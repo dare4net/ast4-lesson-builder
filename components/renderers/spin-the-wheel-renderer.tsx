@@ -11,6 +11,8 @@ import {
     type QuestionType,
     type WheelQuestion,
 } from "@/lib/spin-the-wheel-utils"
+import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import type { Component } from "@/types/lesson"
 
 export type { QuestionType, WheelQuestion }
 export {
@@ -26,6 +28,7 @@ interface SpinTheWheelRendererProps {
     items?: unknown[]
     requiredSpins?: number
     points?: number
+    mode?: "practice" | "live"
     savedState?: any
     setComponentState?: (state: any) => void
     isEditing?: boolean
@@ -243,7 +246,7 @@ function TrueFalseCard({
 
 // ── Main Renderer ───────────────────────────────────────────────────────────────
 
-export function SpinTheWheelRenderer({
+function SpinTheWheelPlayfield({
     id = "spin-the-wheel-component",
     title = "Spin the Wheel",
     questions = [],
@@ -253,7 +256,10 @@ export function SpinTheWheelRenderer({
     savedState,
     setComponentState,
     isEditing = false,
-}: SpinTheWheelRendererProps) {
+    handlePoints,
+    handleRetry,
+    recordAttempt,
+}: SpinTheWheelRendererProps & Pick<ScoredRenderProps<Record<string, unknown>>, "handlePoints" | "handleRetry" | "recordAttempt">) {
     const [rotation, setRotation] = useState(savedState?.rotation ?? 0)
     const [isSpinning, setIsSpinning] = useState(false)
     const safeQuestions = React.useMemo(
@@ -384,6 +390,8 @@ export function SpinTheWheelRenderer({
         if (newSpins >= requiredSpins) {
             const earned = Math.round((newCorrect / requiredSpins) * points)
             setActivityDone(true)
+            handlePoints(earned)
+            recordAttempt(newCorrect === requiredSpins, earned, points)
             if (setComponentState) {
                 setComponentState({
                     status: "completed",
@@ -399,6 +407,7 @@ export function SpinTheWheelRenderer({
     }
 
     const handleReset = () => {
+        handleRetry()
         setRotation(0)
         setIsSpinning(false)
         setCurrentQuestion(null)
@@ -415,7 +424,7 @@ export function SpinTheWheelRenderer({
     const spinsLeft = requiredSpins - spinsCompleted
 
     return (
-        <div className="w-full my-auto py-4 flex flex-col items-center justify-center flex-1">
+        <div className="w-full py-4 flex flex-col items-center justify-start md:justify-center md:flex-1 md:my-auto">
             <div className="relative w-full bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
 
                 {/* Header */}
@@ -645,5 +654,44 @@ export function SpinTheWheelRenderer({
                 </div>
             </div>
         </div>
+    )
+}
+
+export function SpinTheWheelRenderer(props: SpinTheWheelRendererProps) {
+    const {
+        id = "spin-the-wheel-component",
+        title = "Spin the Wheel",
+        questions = [],
+        items,
+        requiredSpins = 3,
+        points = 20,
+        savedState,
+        mode = "practice",
+    } = props
+
+    const component: Component = {
+        id,
+        type: "spinTheWheel",
+        state: "active",
+        status: (savedState?.completed ? "completed" : "uncompleted") as any,
+        props: { title, questions, items, requiredSpins, points },
+        mode,
+    } as Component
+
+    return (
+        <ScoredRenderer<Record<string, unknown>>
+            component={component}
+            initialState={{ completed: Boolean(savedState?.completed) }}
+            points={points}
+            mode={mode}
+            onRender={(renderProps) => (
+                <SpinTheWheelPlayfield
+                    {...props}
+                    handlePoints={renderProps.handlePoints}
+                    handleRetry={renderProps.handleRetry}
+                    recordAttempt={renderProps.recordAttempt}
+                />
+            )}
+        />
     )
 }

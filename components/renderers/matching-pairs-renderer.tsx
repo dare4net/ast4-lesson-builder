@@ -54,6 +54,7 @@ type MatchingPairsState = {
   }
   mode: 'practice' | 'live'
   status?: string
+  score?: number
 }
 
 const generatePastelColor = () => {
@@ -70,6 +71,7 @@ function MatchingPairsContent({
   setState,
   handlePoints,
   handleRetry,
+  recordAttempt,
   isLive,
   isDisabled: disabledProp,
   props
@@ -132,6 +134,7 @@ function MatchingPairsContent({
 
       const earnedPoints = correctCount * (props.points || 15)
       handlePoints(earnedPoints)
+      recordAttempt(allCorrect, earnedPoints, pairs.length * (props.points || 15))
 
       // State Update
       setState(prev => ({
@@ -185,7 +188,7 @@ function MatchingPairsContent({
     await playFeedback('click', { sound: true, animation: false })
 
     setState(prev => {
-      let newMatches = { ...prev.matches }
+      const newMatches = { ...prev.matches }
       let newSelLeft: string | null = id
       let newSelRight: string | null = prev.selectedRight
 
@@ -218,7 +221,7 @@ function MatchingPairsContent({
     await playFeedback('click', { sound: true, animation: false })
 
     setState(prev => {
-      let newMatches = { ...prev.matches }
+      const newMatches = { ...prev.matches }
       let newSelRight: string | null = id
       let newSelLeft: string | null = prev.selectedLeft
 
@@ -275,6 +278,7 @@ function MatchingPairsContent({
     // Scoring (Using standardized handlePoints)
     const earnedPoints = correctCount * (props.points || 15)
     handlePoints(earnedPoints)
+    recordAttempt(allCorrect, earnedPoints, pairs.length * (props.points || 15))
 
     // State Update
     setState(prev => ({
@@ -282,14 +286,15 @@ function MatchingPairsContent({
       isChecking: true,
       isCorrect: allCorrect,
       matchStats: { correctCount, noneCorrect, someCorrect },
-      status: 'completed'
+      status: 'completed',
+      score: earnedPoints,
     }))
   }
 
   const onLocalRetry = async () => {
     handleRetry() // Centralized handler
     // Logic: Reset matches, re-shuffle rightItems
-    let newRight = [...pairs].map(p => ({ ...p, selected: false }))
+    const newRight = [...pairs].map(p => ({ ...p, selected: false }))
     if (shuffled) {
       newRight.sort(() => Math.random() - 0.5)
     }
@@ -392,7 +397,7 @@ function MatchingPairsContent({
       </div>
 
       {/* CENTER SECTION: Interactive Match Grid */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+      <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center py-3 md:py-4 w-full">
         <div className="grid grid-cols-2 gap-4 sm:gap-6 relative my-auto w-full">
           {/* Connector Lane (Hidden on mobile) */}
           <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-slate-100 dark:bg-slate-800 hidden md:block -translate-x-1/2 rounded-full" />

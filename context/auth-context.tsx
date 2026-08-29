@@ -20,6 +20,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<User>;
     signup: (email: string, password: string, fullName: string, role: string) => Promise<void>;
     logout: () => void;
+    updateUser: (partial: Partial<User>) => void;
     isAuthenticated: boolean;
 }
 
@@ -123,6 +124,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         router.push('/');
     };
 
+    const updateUser = (partial: Partial<User>) => {
+        setUser((current) => {
+            if (!current) return current;
+            const next = { ...current, ...partial };
+            apiClient.setUser(next);
+            return next;
+        });
+    };
+
     const value: AuthContextType = {
         user,
         token,
@@ -130,6 +140,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         signup,
         logout,
+        updateUser,
         isAuthenticated: !!token && !!user,
     };
 

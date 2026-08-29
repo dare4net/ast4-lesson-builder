@@ -1,3 +1,7 @@
+import { apiClient } from './api-client'
+import { interactionStorageKey } from './lesson-ref'
+import { tabSync } from './tab-sync'
+
 // Types for the interaction data structure
 interface SlideState {
   id: string;
@@ -18,48 +22,68 @@ interface LessonState {
 interface InteractionData {
   componentsState: Record<string, any>;
   lessonState: LessonState;
+  attemptsMap?: Record<string, { firstAttemptCount: number | null; bestAttemptCount: number | null }>;
+  version?: number;
 }
 
-// Key helper for offline local storage
-function getOfflineStorageKey(userId: string, lessonId: string) {
-  return `ast_interaction_${userId}_${lessonId}`;
+export function getOfflineStorageKey(userId: string, lessonId: string) {
+  return interactionStorageKey(userId, lessonId);
 }
 
-// Utility for loading and saving user interactions
+function persistLocally(userId: string, lessonId: string, interactionData: InteractionData): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    localStorage.setItem(getOfflineStorageKey(userId, lessonId), JSON.stringify(interactionData));
+    return true;
+  } catch (err) {
+    console.error("[user-interactions] Failed to persist locally:", err);
+    return false;
+  }
+}
+
+function axiosStatus(err: unknown): number | undefined {
+  if (err && typeof err === "object" && "response" in err) {
+    return (err as { response?: { status?: number } }).response?.status;
+  }
+  return undefined;
+}
+
+function axiosErrorMessage(err: unknown): string {
+  if (err && typeof err === "object") {
+    const ax = err as { response?: { data?: { error?: string; details?: string } }; message?: string };
+    return ax.response?.data?.details || ax.response?.data?.error || ax.message || "Network error";
+  }
+  return "Network error";
+}
+
 export async function fetchUserInteraction(userId: string, lessonId: string) {
-  console.log('[user-interactions] fetchUserInteraction', { userId, lessonId });
+  console.log("[user-interactions] fetchUserInteraction", { userId, lessonId });
 
-  // 1. Try fetching from network if online
-  if (typeof window !== 'undefined' && navigator.onLine) {
+  if (typeof window !== "undefined" && navigator.onLine) {
     try {
-      const res = await fetch(`/api/interactions?userId=${userId}&lessonId=${lessonId}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (data) {
-          // Cache successful network response locally for offline backup
-          localStorage.setItem(getOfflineStorageKey(userId, lessonId), JSON.stringify(data));
-          return data;
-        }
-      } else if (res.status === 404) {
-        // Server explicitly states no interaction exists. Clear stale local storage cache!
+      const data = await apiClient.interactions.get(lessonId, userId);
+      if (data) {
+        localStorage.setItem(getOfflineStorageKey(userId, lessonId), JSON.stringify(data));
+        return data;
+      }
+    } catch (e) {
+      if (axiosStatus(e) === 404) {
         localStorage.removeItem(getOfflineStorageKey(userId, lessonId));
         return null;
       }
-    } catch (e) {
-      console.warn('[user-interactions] Network fetch failed, falling back to local storage:', e);
+      console.warn("[user-interactions] Network fetch failed, falling back to local storage:", e);
     }
   }
 
-  // 2. Fallback to localStorage (offline mode or network failure)
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     const cached = localStorage.getItem(getOfflineStorageKey(userId, lessonId));
     if (cached) {
       try {
         const parsed = JSON.parse(cached);
-        console.log('[user-interactions] Restored interaction from offline storage');
+        console.log("[user-interactions] Restored interaction from offline storage");
         return parsed;
       } catch (err) {
-        console.error('[user-interactions] Failed to parse cached interaction:', err);
+        console.error("[user-interactions] Failed to parse cached interaction:", err);
       }
     }
   }
@@ -71,87 +95,44 @@ export async function saveUserInteraction(
   userId: string,
   lessonId: string,
   interactionData: InteractionData
-): Promise<{ success: boolean; error?: string }> {
-  console.log('[user-interactions] saveUserInteraction', { userId, lessonId });
+): Promise<{ success: boolean; error?: string; conflict?: boolean; version?: number; suppressed?: boolean }> {
+  console.log("[user-interactions] saveUserInteraction", { userId, lessonId });
 
-  // Always save locally first so user progress is 100% safe offline
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(getOfflineStorageKey(userId, lessonId), JSON.stringify(interactionData));
+  if (tabSync.shouldSuppressWrite(userId, lessonId)) {
+    return { success: true, suppressed: true };
   }
 
-  // If online, post to server API
-  if (typeof window !== 'undefined' && !navigator.onLine) {
-    console.log('[user-interactions] Device is offline. Saved progress locally.');
-    return { success: true };
+  const version = interactionData.version ?? 0;
+  tabSync.publishInteraction(userId, lessonId, version);
+
+  const savedLocally = persistLocally(userId, lessonId, interactionData);
+
+  if (typeof window !== "undefined" && !navigator.onLine) {
+    if (!savedLocally) {
+      return { success: false, error: "Offline and local save failed" };
+    }
+    console.log("[user-interactions] Device is offline. Saved progress locally.");
+    return { success: true, version };
   }
 
   try {
-    const res = await fetch('/api/interactions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId,
-        lessonId,
-        componentsState: interactionData.componentsState,
-        lessonState: interactionData.lessonState
-      })
+    const data = await apiClient.interactions.save({
+      userId,
+      lessonId,
+      componentsState: interactionData.componentsState,
+      lessonState: interactionData.lessonState,
+      attemptsMap: interactionData.attemptsMap,
+      version,
     });
-
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => ({}));
-      const errorMsg = errorData.details || errorData.error || `Server responded with ${res.status}`;
-      console.warn('[user-interactions] Server save warning (saved locally):', errorMsg);
-      return { success: true };
+    return { success: true, version: data?.version ?? version + 1 };
+  } catch (err: unknown) {
+    if (axiosStatus(err) === 409) {
+      const conflictVersion = (err as { response?: { data?: { version?: number } } }).response?.data?.version;
+      tabSync.noteRemote(userId, lessonId, conflictVersion ?? version);
+      return { success: false, error: "Version conflict", conflict: true, version: conflictVersion };
     }
-
-    return { success: true };
-  } catch (err: any) {
-    console.warn('[user-interactions] Saved locally due to network error:', err.message);
-    return { success: true };
+    const errorMsg = axiosErrorMessage(err);
+    console.warn("[user-interactions] Server save failed (kept locally for retry):", errorMsg);
+    return { success: false, error: errorMsg };
   }
-}
-
-// Auto-sync offline progress to backend when network returns
-if (typeof window !== 'undefined') {
-  window.addEventListener('online', async () => {
-    console.log('[user-interactions] Back online! Checking for unsynced local progress...');
-    try {
-      const keys: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k) keys.push(k);
-      }
-
-      for (const key of keys) {
-        if (key.startsWith('ast_interaction_')) {
-          const parts = key.split('_');
-          if (parts.length >= 4) {
-            const userId = parts[2];
-            const lessonId = parts.slice(3).join('_');
-            const dataStr = localStorage.getItem(key);
-            if (dataStr && userId && lessonId) {
-              try {
-                const data = JSON.parse(dataStr);
-                await fetch('/api/interactions', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    userId,
-                    lessonId,
-                    componentsState: data.componentsState,
-                    lessonState: data.lessonState
-                  })
-                });
-                console.log(`[user-interactions] Successfully synced offline progress for lesson ${lessonId}`);
-              } catch (e) {
-                console.error(`[user-interactions] Failed to sync ${key}:`, e);
-              }
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.warn('[user-interactions] Error reading offline keys during online sync:', err);
-    }
-  });
 }

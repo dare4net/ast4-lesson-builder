@@ -1,14 +1,15 @@
-import { LessonViewer } from '@/components/viewer/LessonViewerUpload';
-import { notFound } from 'next/navigation';
+import { LessonViewer } from '@/components/viewer/LessonViewer';
+import { notFound, redirect } from 'next/navigation';
+import { getSessionFromAstCookie } from '@/lib/session-cookie';
 
-async function fetchLesson(id: string, token?: string, userId?: string) {
+async function fetchLesson(id: string, token: string) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
   const url = `${baseUrl}/lessons/${id}`;
 
   const res = await fetch(url, {
     method: 'GET',
     headers: {
-      'Authorization': token ? `Bearer ${token}` : '',
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
   });
@@ -24,21 +25,23 @@ async function fetchLesson(id: string, token?: string, userId?: string) {
 
 export default async function ViewerIdPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ userId?: string; token?: string }>;
 }) {
   const awaitedParams = await params;
-  const awaitedSearchParams = await searchParams;
-  const lessonData = await fetchLesson(awaitedParams.id, awaitedSearchParams?.token, awaitedSearchParams?.userId);
+  const session = await getSessionFromAstCookie();
+  if (!session) {
+    redirect(`/auth/login?role=student&next=/viewer/${awaitedParams.id}`);
+  }
+
+  const lessonData = await fetchLesson(awaitedParams.id, session.token);
   if (!lessonData) return notFound();
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="h-dvh w-screen overflow-hidden">
       <LessonViewer
         initialLesson={lessonData.lesson}
         initialInteraction={lessonData.interaction}
-        userId={awaitedSearchParams?.userId}
+        userId={session.user_id}
       />
     </div>
   );

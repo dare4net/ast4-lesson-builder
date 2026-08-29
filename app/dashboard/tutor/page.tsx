@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import {
     BookOpen, Users, Layers, ArrowRight,
     Loader2, Globe, FileText, ChevronRight
@@ -20,11 +21,13 @@ interface Program {
     enrolled_students?: string[];
     image_url?: string;
     cover_image?: string;
+    lessons_count?: number;
 }
 
 export default function TutorDashboardOverview() {
     const [programs, setPrograms] = useState<Program[]>([]);
     const [loading, setLoading] = useState(true);
+    const reduceMotion = useReducedMotion()
 
     useEffect(() => {
         apiClient.studio.getPrograms()
@@ -237,8 +240,8 @@ export default function TutorDashboardOverview() {
                         >
                             {/* Animated ambient glow ring */}
                             <motion.div
-                                animate={{ opacity: [0.3, 0.7, 0.3] }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                animate={reduceMotion ? undefined : { opacity: [0.3, 0.7, 0.3] }}
+                                transition={reduceMotion ? undefined : { duration: 2, repeat: Infinity, ease: "easeInOut" }}
                                 className="absolute -inset-1 bg-gradient-to-r from-[#1CB0F6]/20 via-[#58CC02]/20 to-[#CE82FF]/20 rounded-2xl blur-sm -z-10"
                             />
 
@@ -253,8 +256,8 @@ export default function TutorDashboardOverview() {
                             </div>
 
                             <motion.div
-                                animate={{ x: [0, 4, 0] }}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                                animate={reduceMotion ? undefined : { x: [0, 4, 0] }}
+                                transition={reduceMotion ? undefined : { duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                                 className="w-8 h-8 rounded-xl bg-[#1CB0F6] text-white flex items-center justify-center shrink-0 shadow-md"
                             >
                                 <ArrowRight className="w-4 h-4" />

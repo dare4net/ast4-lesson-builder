@@ -46,7 +46,6 @@ export function BaseComponentRenderer({
             )}
             data-component-id={component.id}
         >
-            {/* Content */}
             <div className={cn(
                 "h-full flex-1 flex flex-col",
                 isDisabled && "pointer-events-none select-none"

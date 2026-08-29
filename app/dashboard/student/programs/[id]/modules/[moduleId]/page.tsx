@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { apiClient } from "@/lib/api-client"
 import { useAuth } from "@/context/auth-context"
+import { buildStudentViewerHref } from "@/lib/viewer-url"
 import {
     Folder,
     ArrowLeft,
@@ -107,8 +108,8 @@ export default function StudentModuleDetailPage() {
         const id = lesson.lessonId || lesson._id
         if (!id || launchingId) return
         setLaunchingId(id)
-        const returnUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.pathname) : ''
-        router.push(`/viewer/${id}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}&moduleId=${moduleId}`)
+        const returnUrl = typeof window !== 'undefined' ? window.location.pathname : ''
+        router.push(buildStudentViewerHref(id, { returnUrl, moduleId }))
     }
 
     if (loading) {

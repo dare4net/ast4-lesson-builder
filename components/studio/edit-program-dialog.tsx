@@ -6,14 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
 } from "@/components/ui/dialog"
-import { Edit3, Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2 } from "lucide-react"
+import { EntityEditDialog } from "@/components/studio/entity-edit-dialog"
+import { Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2 } from "lucide-react"
 import { generateArtisticThumbnail } from "@/lib/thumbnail-generator"
 import { compressImageFile } from "@/lib/image-compressor"
 import { VoiceSelector } from "@/components/ui/voice-selector"
@@ -120,24 +116,13 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-2xl border-0 shadow-2xl rounded-3xl p-6 sm:p-7 bg-white text-slate-900 overflow-hidden">
-                <DialogHeader className="pb-2 border-b border-slate-100">
-                    <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-xl bg-[#EAF6FE] text-[#1CB0F6] flex items-center justify-center shrink-0">
-                            <Edit3 className="w-4 h-4" />
-                        </div>
-                        <div>
-                            <DialogTitle className="text-lg font-black text-slate-900 tracking-tight">
-                                Edit Program Settings
-                            </DialogTitle>
-                            <DialogDescription className="text-xs text-slate-500 font-medium">
-                                Configure program details, thumbnail cover, and visibility state.
-                            </DialogDescription>
-                        </div>
-                    </div>
-                </DialogHeader>
-
+        <EntityEditDialog
+            isOpen={isOpen}
+            onClose={onClose}
+            title="Edit Program Settings"
+            description="Configure program details, thumbnail cover, and visibility state."
+            accent="sky"
+        >
                 <form onSubmit={handleSubmit} className="space-y-5 pt-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
                         {/* LEFT COLUMN: Inputs */}
@@ -296,7 +281,6 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                         </Button>
                     </DialogFooter>
                 </form>
-            </DialogContent>
-        </Dialog>
+        </EntityEditDialog>
     )
 }

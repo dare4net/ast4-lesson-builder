@@ -1,10 +1,30 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Play, Clock, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { SoundEffects } from "@/lib/sound-effects"
+import { emitLiveTimerEvent, resolveLiveTimerEvent } from "@/lib/live-events"
+
+const LiveComponentMetaContext = React.createContext<{ componentId: string; type: string } | null>(null)
+
+export function LiveComponentMetaProvider({
+    componentId,
+    type,
+    children,
+}: {
+    componentId: string
+    type: string
+    children: React.ReactNode
+}) {
+    const value = React.useMemo(() => ({ componentId, type }), [componentId, type])
+    return (
+        <LiveComponentMetaContext.Provider value={value}>
+            {children}
+        </LiveComponentMetaContext.Provider>
+    )
+}
 
 interface LiveStartScreenProps {
     onStart: () => void
@@ -52,6 +72,9 @@ export function LiveTimer({
     onTimeout?: () => void
 }) {
     const [secondsRemaining, setSecondsRemaining] = useState(duration)
+    const meta = React.useContext(LiveComponentMetaContext)
+    const wasIncompleteAtStartRef = useRef(!isCompleted)
+    const alreadyEmittedRef = useRef(false)
 
     const onTimeoutRef = useRef(onTimeout)
     useEffect(() => {
@@ -72,7 +95,6 @@ export function LiveTimer({
         return () => clearInterval(interval)
     }, [isCompleted])
 
-    // Play tick sound on every tick when active (and extra tick when urgent)
     useEffect(() => {
         if (!isCompleted && secondsRemaining > 0 && secondsRemaining < duration) {
             SoundEffects.play('timerTick')
@@ -80,10 +102,23 @@ export function LiveTimer({
     }, [secondsRemaining, isCompleted, duration])
 
     useEffect(() => {
-        if (secondsRemaining === 0 && !isCompleted) {
+        const event = resolveLiveTimerEvent({
+            alreadyEmitted: alreadyEmittedRef.current,
+            wasIncompleteAtStart: wasIncompleteAtStartRef.current,
+            isCompleted,
+            secondsRemaining,
+            durationSeconds: duration,
+        })
+        if (!event) return
+
+        alreadyEmittedRef.current = true
+        if (event.type === 'LIVE_TIMEOUT') {
             onTimeoutRef.current?.()
         }
-    }, [secondsRemaining, isCompleted])
+        if (meta?.componentId && meta.type) {
+            emitLiveTimerEvent(event, { componentId: meta.componentId, type: meta.type })
+        }
+    }, [secondsRemaining, isCompleted, duration, meta])
 
     const fmt = (s: number) => {
         const min = Math.floor(s / 60)
@@ -110,11 +145,14 @@ export function LiveTimer({
                 <Clock className="h-4 w-4 text-emerald-400 shrink-0" />
             )}
 
-            <span className={cn(
-                "font-mono font-black text-sm md:text-base tracking-widest leading-none",
-                isCompleted && "text-xs font-bold text-emerald-600 tracking-wider",
-                isUrgent && "text-rose-600 text-base"
-            )}>
+            <span
+                aria-live="polite"
+                className={cn(
+                    "font-mono font-black text-sm md:text-base tracking-widest leading-none",
+                    isCompleted && "text-xs font-bold text-emerald-600 tracking-wider",
+                    isUrgent && "text-rose-600 text-base"
+                )}
+            >
                 {isCompleted ? "COMPLETED" : fmt(secondsRemaining)}
             </span>
         </div>

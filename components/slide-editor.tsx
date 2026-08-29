@@ -2,17 +2,17 @@
 
 import * as React from "react";
 import { useState, useCallback, useEffect } from "react";
+import { useDrop } from "react-dnd";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Trash2,
   Settings,
-  LayoutGrid,
   ListTree,
-  CheckCircle2,
   AlertTriangle,
-  XCircle
+  XCircle,
+  Pencil
 } from "lucide-react";
 import type { Slide, Component } from "@/types/lesson";
 import { ComponentRenderer } from "@/components/component-renderer";
@@ -32,6 +32,8 @@ interface SlideEditorProps {
   onSelectComponent: (componentId: string) => void;
   selectedComponentId: string | null;
   className?: string;
+  onOpenLibrary?: () => void;
+  onAddLibraryComponent?: (type: string, defaultProps: Record<string, any>) => Promise<void>;
 }
 
 // Lightweight Stage Component Card (No DnD handles on stage canvas!)
@@ -58,56 +60,51 @@ function StageComponentCard({
     <>
       <div
         id={component.id}
-        onClick={onSelect}
         className={cn(
-          "relative group border rounded-2xl p-6 transition-all duration-200 bg-white/70 backdrop-blur-sm shadow-sm cursor-pointer",
+          "relative group rounded-2xl px-1 sm:px-2 py-2 transition-colors duration-200",
           isSelected
-            ? "ring-4 ring-emerald-500 ring-offset-4 ring-offset-white scale-[1.01] shadow-2xl z-10 border-emerald-400"
-            : "hover:scale-[1.005] hover:border-emerald-300 border-slate-200",
-          !isValid && "border-rose-400 bg-rose-50/10"
+            ? "bg-emerald-50/70 ring-1 ring-[#58CC02]/40"
+            : "hover:bg-slate-50",
+          !isValid && "ring-1 ring-rose-300 bg-rose-50/40"
         )}
       >
-        {/* Header Badges & 1-Click Delete */}
-        <div className="absolute right-4 top-4 flex items-center gap-2 z-20">
-          {/* Status Badge */}
+        <div className="flex items-center justify-end mb-1">
+          <div className="flex items-center gap-0.5 rounded-full border border-slate-200 bg-white p-0.5 shadow-sm">
+          {(!isValid || warnings.length > 0) && (
           <Button
             variant="ghost"
-            size="sm"
+            size="icon"
             onClick={(e) => {
               e.stopPropagation();
               setIsVerificationModalOpen(true);
             }}
             className={cn(
-              "h-7 px-2.5 rounded-lg font-medium text-[11px] flex items-center gap-1.5 transition-all border shadow-xs",
-              isValid
-                ? warnings.length === 0
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
-                  : "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
-                : "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100"
+              "h-8 w-8 rounded-full",
+              isValid ? "text-amber-600 hover:bg-amber-50" : "text-rose-600 hover:bg-rose-50"
             )}
-            title="View Verification Senate Details"
+            title="View verification details"
           >
             {isValid ? (
-              warnings.length === 0 ? (
-                <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Valid</span>
-                </>
-              ) : (
-                <>
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                  <span>{warnings.length} Warn</span>
-                </>
-              )
+              <AlertTriangle className="w-3.5 h-3.5" />
             ) : (
-              <>
-                <XCircle className="w-3.5 h-3.5 text-rose-600 animate-pulse" />
-                <span>{errors.length} Error{errors.length > 1 ? "s" : ""}</span>
-              </>
+              <XCircle className="w-3.5 h-3.5" />
             )}
           </Button>
+          )}
 
-          {/* 1-Click Delete Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect();
+            }}
+            className="h-8 w-8 rounded-full text-slate-500 hover:text-[#58CC02] hover:bg-emerald-50"
+            title="Edit component"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+          </Button>
+
           <Button
             variant="ghost"
             size="icon"
@@ -115,14 +112,15 @@ function StageComponentCard({
               e.stopPropagation();
               onDelete();
             }}
-            className="h-7 w-7 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all"
+            className="h-8 w-8 rounded-full text-slate-500 hover:text-rose-600 hover:bg-rose-50"
             title="Delete Component"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </Button>
+          </div>
         </div>
 
-        <ComponentRenderer component={component} isEditing={true} onClick={onSelect} />
+        <ComponentRenderer component={component} isEditing={true} />
       </div>
 
       <VerificationModal
@@ -142,12 +140,24 @@ export function SlideEditor({
   slideIndex,
   onSelectComponent,
   selectedComponentId,
-  className
+  className,
+  onOpenLibrary,
+  onAddLibraryComponent,
 }: SlideEditorProps) {
   const [mounted, setMounted] = useState(false);
   const [isSlideEditOpen, setIsSlideEditOpen] = useState(false);
   const [isTreeModalOpen, setIsTreeModalOpen] = useState(false);
   const { playFeedback } = useFeedback();
+
+  const [{ isOver }, dropRef] = useDrop(() => ({
+    accept: "COMPONENT",
+    drop: (item: { type: string; defaultProps?: Record<string, any> }) => {
+      void onAddLibraryComponent?.(item.type, item.defaultProps || {});
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver({ shallow: true }),
+    }),
+  }), [onAddLibraryComponent]);
 
   useEffect(() => {
     setMounted(true);
@@ -155,8 +165,7 @@ export function SlideEditor({
 
   const handleTitleChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     await updateSlide({ ...slide, title: e.target.value });
-    await playFeedback("click", { animation: false });
-  }, [slide, updateSlide, playFeedback]);
+  }, [slide, updateSlide]);
 
   const handleDeleteClick = useCallback(async () => {
     await deleteSlide(slideIndex);
@@ -200,39 +209,43 @@ export function SlideEditor({
   }
 
   return (
-    <div className={cn("flex flex-1 overflow-hidden bg-white shadow-2xl relative", className)}>
+    <div
+      ref={dropRef as unknown as React.RefObject<HTMLDivElement>}
+      className={cn(
+        "flex flex-1 overflow-hidden bg-white shadow-2xl relative transition-colors duration-200",
+        isOver && "ring-4 ring-emerald-400/60 ring-inset bg-emerald-50/40",
+        className
+      )}
+    >
       <ScrollArea className="flex-1 max-w-full overflow-x-hidden">
-        <div className="p-3 sm:p-10 space-y-4 sm:space-y-8 max-w-4xl mx-auto w-full overflow-hidden">
-          {/* Header Section */}
-          <div className="flex items-center gap-2 sm:gap-6 border-b border-slate-100 pb-4 sm:pb-6 group/header min-w-0">
-            <div className="flex-1 space-y-0.5 sm:space-y-1 min-w-0">
-              <span className="text-[9px] sm:text-[10px] font-bold text-emerald-600 uppercase tracking-[0.15em]">Slide Title</span>
+        <div className="px-4 sm:px-8 py-5 sm:py-8 space-y-8 w-full">
+          <div className="flex items-start gap-3 min-w-0">
+            <div className="flex-1 min-w-0">
               <Input
-                placeholder="Enter slide title..."
+                placeholder="Untitled slide"
                 value={slide.title || ""}
                 onChange={handleTitleChange}
-                className="text-lg sm:text-3xl font-bold bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-300 text-slate-900 tracking-tight min-w-0 w-full truncate"
+                className="text-2xl sm:text-3xl font-semibold bg-transparent border-none shadow-none focus-visible:ring-0 p-0 h-auto placeholder:text-slate-300 text-slate-900 tracking-tight min-w-0 w-full"
               />
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 shrink-0">
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={() => setIsTreeModalOpen(true)}
-                className="h-9 px-3 rounded-xl text-xs font-semibold flex items-center gap-1.5 border border-slate-200 text-slate-700 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all shadow-2xs"
-                title="Open Component Re-ordering Modal"
+                className="h-9 w-9 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                title="Reorder blocks"
               >
-                <ListTree className="w-4 h-4 text-emerald-600" />
-                <span className="hidden sm:inline">Re-order Components</span>
+                <ListTree className="w-4 h-4" />
               </Button>
 
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleSlideEdit}
-                className="h-9 w-9 rounded-xl text-slate-400 hover:text-emerald-500 hover:bg-emerald-50 border border-transparent hover:border-emerald-100 transition-all"
-                title="Slide Settings"
+                className="h-9 w-9 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                title="Slide settings"
               >
                 <Settings className="h-4 w-4" />
               </Button>
@@ -240,17 +253,16 @@ export function SlideEditor({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-100 transition-all"
+                className="h-9 w-9 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50"
                 onClick={handleDeleteClick}
-                title="Delete Slide"
+                title="Delete slide"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          {/* Components Stage Area */}
-          <div className="space-y-6">
+          <div className="space-y-2">
             {slide.components.map((component) => (
               <StageComponentCard
                 key={component.id}
@@ -264,13 +276,14 @@ export function SlideEditor({
 
           {/* Empty State */}
           {slide.components.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-32 border-2 border-dashed border-slate-100 rounded-[2rem] bg-slate-50/50 group/empty hover:border-emerald-100 transition-colors">
-              <div className="w-16 h-16 rounded-full bg-white shadow-xl flex items-center justify-center mb-6 group-hover/empty:scale-110 transition-transform">
-                <LayoutGrid className="h-8 w-8 text-slate-200 group-hover/empty:text-emerald-400 transition-colors" />
-              </div>
-              <p className="text-slate-400 font-bold uppercase tracking-wider text-xs">Empty Slide</p>
-              <p className="text-slate-400 text-xs mt-2 font-medium">Add components from the Component Library to build your lesson slide.</p>
-            </div>
+            <button
+              type="button"
+              onClick={() => onOpenLibrary?.()}
+              className="w-full flex flex-col items-center justify-center py-20 sm:py-28 rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 hover:border-[#58CC02]/40 hover:bg-emerald-50/40 transition-colors"
+            >
+              <p className="text-sm font-medium text-slate-500">This slide is empty</p>
+              <p className="text-sm text-slate-400 mt-1">Open the library to add a block</p>
+            </button>
           )}
         </div>
       </ScrollArea>

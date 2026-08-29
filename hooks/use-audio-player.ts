@@ -1,6 +1,11 @@
 "use client"
 
 import { useEffect, useRef, useState, useCallback } from 'react'
+import {
+    canPlayLessonAudio,
+    registerLessonAudio,
+    subscribeLessonAudioPrefs,
+} from '@/lib/lesson-audio'
 
 interface UseAudioPlayerOptions {
     audioUrl?: string
@@ -10,12 +15,23 @@ interface UseAudioPlayerOptions {
 
 export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudioPlayerOptions) {
     const audioRef = useRef<HTMLAudioElement | null>(null)
+    const onEndedRef = useRef(onEnded)
+    const autoPlayRef = useRef(autoPlay)
     const [isPlaying, setIsPlaying] = useState(false)
     const [hasAudio, setHasAudio] = useState(false)
 
     useEffect(() => {
+        onEndedRef.current = onEnded
+    }, [onEnded])
+
+    useEffect(() => {
+        autoPlayRef.current = autoPlay
+    }, [autoPlay])
+
+    useEffect(() => {
         if (!audioUrl) {
             setHasAudio(false)
+            audioRef.current = null
             return
         }
 
@@ -23,35 +39,42 @@ export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudio
         audioRef.current = audio
         setHasAudio(true)
 
+        const unregister = registerLessonAudio(audio)
+
         audio.onplay = () => setIsPlaying(true)
         audio.onpause = () => setIsPlaying(false)
         audio.onended = () => {
             setIsPlaying(false)
-            onEnded?.()
+            onEndedRef.current?.()
         }
         audio.onerror = () => {
             setIsPlaying(false)
-            // Do NOT call onEnded here — audio load failure should let the 30s timer handle unlock
         }
 
-        if (autoPlay) {
+        if (autoPlay && canPlayLessonAudio()) {
             audio.play().catch(() => {
-                // Autoplay blocked — user can click the Start button
+                // Autoplay blocked — overlay timer still unlocks the cue.
             })
-            return () => {
-                audio.pause()
-                audio.src = ''
-            }
         }
+
+        const unsubscribe = subscribeLessonAudioPrefs((prefs) => {
+            if (!autoPlayRef.current || !canPlayLessonAudio(prefs) || audio.ended) return
+            if (audio.paused) {
+                audio.play().catch(() => {})
+            }
+        })
 
         return () => {
+            unsubscribe()
+            unregister()
             audio.pause()
             audio.src = ''
+            if (audioRef.current === audio) audioRef.current = null
         }
     }, [audioUrl, autoPlay])
 
     const play = useCallback(() => {
-        if (!audioRef.current) return
+        if (!audioRef.current || !canPlayLessonAudio()) return
         audioRef.current.currentTime = 0
         audioRef.current.play().catch((err) => {
             console.warn('[useAudioPlayer] play() blocked:', err)

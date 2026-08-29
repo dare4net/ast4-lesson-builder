@@ -1,135 +1,148 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useEffect, useMemo, useState, useCallback, type ReactNode } from "react"
 import { useDrag } from "react-dnd"
-import { Search, X, Plus } from "lucide-react"
+import { Search, Plus } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { componentDefinitions } from "@/lib/component-definitions"
-import type { ComponentCategory, ComponentDefinition } from "@/types/lesson"
+import type { ComponentDefinition } from "@/types/lesson"
 import { cn } from "@/lib/utils"
-import type { ConnectDragSource } from 'react-dnd'
 import { useFeedback } from "@/lib/feedback-context"
+import {
+  LIBRARY_FILTERS,
+  LIBRARY_GROUPS,
+  type LibraryFilterId,
+} from "@/lib/component-library-groups"
 
 interface ComponentLibraryProps {
   addComponent: (type: string, defaultProps: Record<string, any>) => Promise<void>;
+  headerAction?: ReactNode;
 }
 
-export function ComponentLibrary({ addComponent }: ComponentLibraryProps) {
+const definitionByType = new Map(componentDefinitions.map((definition) => [definition.type as string, definition]))
+
+export function ComponentLibrary({ addComponent, headerAction }: ComponentLibraryProps) {
   const [searchTerm, setSearchTerm] = useState("")
-  const [activeCategory, setActiveCategory] = useState<ComponentCategory | "all">("all")
+  const [activeFilter, setActiveFilter] = useState<LibraryFilterId>("all")
+  const [openGroups, setOpenGroups] = useState<string[]>(LIBRARY_GROUPS.map((group) => group.id))
   const { playFeedback } = useFeedback()
 
-  const handleTabChange = useCallback(async (value: string) => {
-    setActiveCategory(value as ComponentCategory | "all")
-    await playFeedback('click', { animation: false })
+  const grouped = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase()
+
+    return LIBRARY_GROUPS.map((group) => {
+      const items = group.types
+        .map((type) => definitionByType.get(type))
+        .filter((definition): definition is ComponentDefinition => {
+          if (!definition) return false
+          if (activeFilter !== "all" && group.filter !== activeFilter) return false
+          if (!query) return true
+          return (
+            definition.label.toLowerCase().includes(query) ||
+            definition.description.toLowerCase().includes(query) ||
+            definition.type.toLowerCase().includes(query) ||
+            group.label.toLowerCase().includes(query)
+          )
+        })
+
+      return { ...group, items }
+    }).filter((group) => group.items.length > 0)
+  }, [activeFilter, searchTerm])
+
+  useEffect(() => {
+    setOpenGroups(grouped.map((group) => group.id))
+  }, [grouped])
+
+  const handleFilter = useCallback(async (filter: LibraryFilterId) => {
+    setActiveFilter(filter)
+    await playFeedback("click", { animation: false })
   }, [playFeedback])
 
-  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value)
-  }, [])
-
-  const filteredComponents = componentDefinitions.filter((component) => {
-    const matchesSearch =
-      component.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      component.description.toLowerCase().includes(searchTerm.toLowerCase())
-
-    const matchesCategory = activeCategory === "all" || component.category === activeCategory
-
-    return matchesSearch && matchesCategory
-  })
-
-  const renderComponents = useCallback((components: typeof componentDefinitions) => {
-    return components.map((component) => (
-      <DraggableComponent
-        key={component.type}
-        component={component}
-        addComponent={addComponent}
-      />
-    ))
-  }, [addComponent])
+  const total = grouped.reduce((sum, group) => sum + group.items.length, 0)
 
   return (
-    <div className="flex flex-col h-full bg-[#1e293b]/10 backdrop-blur-sm">
-      <div className="p-4 border-b border-slate-800 flex-shrink-0 bg-slate-900/40">
-        <h2 className="font-semibold mb-4 text-emerald-400 uppercase tracking-wider text-xs">Components</h2>
+    <div className="flex flex-col h-full w-full min-w-0 max-w-full overflow-x-hidden bg-[#0B1220]">
+      <div className="p-3 border-b border-white/10 flex-shrink-0">
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <h2 className="font-semibold text-slate-200 text-xs uppercase tracking-wider">Library</h2>
+          {headerAction}
+        </div>
         <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
           <Input
-            placeholder="Search assets..."
-            className="pl-10 w-full bg-slate-950/50 border-slate-800 text-slate-200 placeholder:text-slate-600 focus-visible:ring-emerald-500/50 h-10"
+            placeholder="Find a block..."
+            className="pl-9 w-full bg-white/5 border-white/10 text-slate-200 placeholder:text-slate-500 focus-visible:ring-[#58CC02]/40 h-9 text-sm"
             value={searchTerm}
-            onChange={handleSearch}
+            onChange={(event) => setSearchTerm(event.target.value)}
           />
+        </div>
+        <div className="flex flex-wrap gap-1.5 mt-3">
+          {LIBRARY_FILTERS.map((filter) => (
+            <button
+              key={filter.id}
+              type="button"
+              onClick={() => void handleFilter(filter.id)}
+              className={cn(
+                "h-7 px-2.5 rounded-full text-[11px] font-semibold border transition-colors",
+                activeFilter === filter.id
+                  ? "bg-[#58CC02] border-[#58CC02] text-white"
+                  : "bg-white/5 border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20"
+              )}
+            >
+              {filter.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden flex flex-col">
-        <Tabs value={activeCategory} onValueChange={handleTabChange} className="flex flex-col h-full">
-          <TabsList className="flex h-auto p-1 mx-4 mt-4 bg-slate-950/50 border border-slate-800 rounded-lg">
-            <TabsTrigger
-              value="all"
-              className="flex-1 text-[10px] uppercase font-bold data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
-            >
-              All
-            </TabsTrigger>
-            <TabsTrigger
-              value="content"
-              className="flex-1 text-[10px] uppercase font-bold data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
-            >
-              Docs
-            </TabsTrigger>
-            <TabsTrigger
-              value="interactive"
-              className="flex-1 text-[10px] uppercase font-bold data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
-            >
-              Labs
-            </TabsTrigger>
-            <TabsTrigger
-              value="gamified"
-              className="flex-1 text-[10px] uppercase font-bold data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
-            >
-              Play
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="flex-1 overflow-hidden mt-2">
-            <TabsContent value="all" className="h-full p-0 m-0 data-[state=active]:flex flex-col">
-              <ScrollArea className="flex-1">
-                <div className="p-4 grid grid-cols-1 gap-3">
-                  {renderComponents(filteredComponents)}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-
-            <TabsContent value="content" className="h-full p-0 m-0 data-[state=active]:flex flex-col">
-              <ScrollArea className="flex-1">
-                <div className="p-4 grid grid-cols-1 gap-3">
-                  {renderComponents(filteredComponents.filter(c => c.category === "content"))}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-
-            <TabsContent value="interactive" className="h-full p-0 m-0 data-[state=active]:flex flex-col">
-              <ScrollArea className="flex-1">
-                <div className="p-4 grid grid-cols-1 gap-3">
-                  {renderComponents(filteredComponents.filter(c => c.category === "interactive"))}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-
-            <TabsContent value="gamified" className="h-full p-0 m-0 data-[state=active]:flex flex-col">
-              <ScrollArea className="flex-1">
-                <div className="p-4 grid grid-cols-1 gap-3">
-                  {renderComponents(filteredComponents.filter(c => c.category === "gamified"))}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-          </div>
-        </Tabs>
-      </div>
+      <ScrollArea className="flex-1 min-h-0 w-full min-w-0 overflow-x-hidden">
+        {total === 0 ? (
+          <p className="px-4 py-10 text-center text-sm text-slate-500">No blocks match that search.</p>
+        ) : (
+          <Accordion
+            type="multiple"
+            value={openGroups}
+            onValueChange={setOpenGroups}
+            className="px-2 py-2 w-full min-w-0 overflow-x-hidden"
+          >
+            {grouped.map((group) => (
+              <AccordionItem
+                key={group.id}
+                value={group.id}
+                className="border-white/10 w-full min-w-0 overflow-x-hidden"
+              >
+                <AccordionTrigger className="px-2 py-2.5 hover:no-underline text-left w-full min-w-0 gap-2 overflow-x-hidden whitespace-normal">
+                  <div className="min-w-0 flex-1 overflow-x-hidden pr-1">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs font-semibold text-slate-200 break-words">{group.label}</span>
+                      <span className="text-[10px] font-semibold text-slate-500 bg-white/5 rounded-full px-1.5 py-0.5 shrink-0">
+                        {group.items.length}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-normal mt-0.5 break-words [overflow-wrap:anywhere]">
+                      {group.description}
+                    </p>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="pb-2 pt-0 w-full min-w-0 overflow-x-hidden">
+                  <div className="space-y-1 w-full min-w-0 overflow-x-hidden">
+                    {group.items.map((component) => (
+                      <DraggableComponent
+                        key={component.type}
+                        component={component}
+                        addComponent={addComponent}
+                      />
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
+      </ScrollArea>
     </div>
   )
 }
@@ -159,28 +172,31 @@ function DraggableComponent({ component, addComponent }: ComponentProps) {
     <div
       ref={dragRef as unknown as React.RefObject<HTMLDivElement>}
       className={cn(
-        "cursor-grab active:cursor-grabbing group",
+        "cursor-grab active:cursor-grabbing group w-full min-w-0 max-w-full overflow-x-hidden",
         isDragging && "opacity-50"
       )}
       onClick={handleClick}
     >
-      <div className="w-full p-4 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-800/80 transition-all duration-200 flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-xl text-emerald-500 group-hover:scale-110 transition-transform duration-200">
-            {component.icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-slate-200 truncate">{component.label}</h4>
-            <p className="text-[10px] text-slate-500 truncate">{component.description}</p>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-white"
-          >
-            <Plus className="h-4 w-4" />
-          </Button>
+      <div className="w-full min-w-0 max-w-full px-2 py-2 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-colors flex items-start gap-2 overflow-x-hidden">
+        <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-base shrink-0">
+          {component.icon}
         </div>
+        <div className="min-w-0 flex-1 overflow-x-hidden">
+          <h4 className="text-sm font-medium text-slate-200 break-words [overflow-wrap:anywhere]">
+            {component.label}
+          </h4>
+          <p className="text-[11px] leading-snug text-slate-500 break-words [overflow-wrap:anywhere]">
+            {component.description}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 rounded-full shrink-0 text-[#58CC02] hover:bg-[#58CC02]/15 hover:text-[#58CC02]"
+          title={`Add ${component.label}`}
+        >
+          <Plus className="h-3.5 w-3.5" />
+        </Button>
       </div>
     </div>
   );

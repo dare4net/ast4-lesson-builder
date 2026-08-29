@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import isEqual from "lodash.isequal"
+import { appEventBus } from "@/lib/event-bus"
 
 export interface UseInteractiveStateProps<S> {
     initialState: S
@@ -48,6 +49,148 @@ export function useInteractiveState<S>({
 
     return [state, setState] as const
 }
+
+// ─── Attempt Tracking ─────────────────────────────────────────────────────────
+
+export interface UseAttemptTrackingProps {
+    /** Unique component ID as it appears in the lesson JSON */
+    componentId: string
+    /** Component type key e.g. 'quiz', 'memoryGrid' */
+    componentType: string
+    mode: 'practice' | 'live'
+    /** Restored first/best counts from a previous session */
+    initialRecord?: { firstAttemptCount: number | null; bestAttemptCount: number | null }
+}
+
+export interface UseAttemptTrackingReturn {
+    /** Running attempt count since last reset (shown in viewer UI) */
+    attemptCount: number
+    /** 
+     * Sealed on first completion. Used by leaderboards/achievements.
+     * null = not yet completed even once.
+     */
+    firstAttemptCount: number | null
+    /** Lowest attempt count across all resets. Shown as the local best. */
+    bestAttemptCount: number | null
+    /** Whether the component has been completed at least once */
+    hasCompleted: boolean
+    /** 
+     * Call this on every submit/check press.
+     * @param isCorrect - pass true only when the full component is 100% correct/completed
+     * @param score - points earned this submission
+     * @param maxScore - max possible points
+     * @param completionTimeMs - elapsed ms since component was first shown
+     */
+    recordAttempt: (isCorrect: boolean, score?: number, maxScore?: number, completionTimeMs?: number) => void
+    /** 
+     * Resets running attemptCount to 0 so the student can challenge their best.
+     * Only callable after first completion. Does NOT mutate firstAttemptCount.
+     */
+    resetAttempts: () => void
+}
+
+/**
+ * useAttemptTracking
+ * 
+ * Tracks attempts per gamified component in Practice mode.
+ * Seals the first-attempt baseline and maintains the local best attempt count.
+ * Emits COMPONENT_SUBMITTED events to the AppEventBus on completion.
+ * 
+ * Live mode: attempt counts stay sealed at 0. Completing still emits
+ * COMPONENT_SUBMITTED so the star engine can credit the wallet.
+ */
+export function useAttemptTracking({
+    componentId,
+    componentType,
+    mode,
+    initialRecord,
+}: UseAttemptTrackingProps): UseAttemptTrackingReturn {
+    const restoredFirst = initialRecord?.firstAttemptCount ?? null
+    const restoredBest = initialRecord?.bestAttemptCount ?? null
+    const [attemptCount, setAttemptCount] = useState(restoredFirst ?? 0)
+    const [firstAttemptCount, setFirstAttemptCount] = useState<number | null>(restoredFirst)
+    const [bestAttemptCount, setBestAttemptCount] = useState<number | null>(restoredBest)
+    const [hasCompleted, setHasCompleted] = useState(restoredFirst !== null)
+    const mountTimeRef = useRef<number>(Date.now())
+    const isLive = mode === 'live'
+
+    const recordAttempt = useCallback((
+        isCorrect: boolean,
+        score = 0,
+        maxScore = 0,
+        completionTimeMs?: number
+    ) => {
+        if (isLive) {
+            if (!isCorrect) return
+            const elapsed = completionTimeMs ?? (Date.now() - mountTimeRef.current)
+            const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 100
+            appEventBus.emit('COMPONENT_SUBMITTED', {
+                componentId,
+                type: componentType,
+                mode,
+                score,
+                maxScore,
+                percentage,
+                attemptCount: 1,
+                completionTimeMs: elapsed,
+                isFirstAttempt: true,
+            })
+            return
+        }
+
+        const nextAttemptCount = attemptCount + 1
+        setAttemptCount(nextAttemptCount)
+
+        if (!isCorrect) return
+
+        const elapsed = completionTimeMs ?? (Date.now() - mountTimeRef.current)
+        const isFirstAttempt = !hasCompleted
+        setHasCompleted(true)
+
+        if (isFirstAttempt) {
+            setFirstAttemptCount(nextAttemptCount)
+            setBestAttemptCount(nextAttemptCount)
+        } else if (bestAttemptCount === null || nextAttemptCount < bestAttemptCount) {
+            setBestAttemptCount(nextAttemptCount)
+        }
+
+        const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : (isCorrect ? 100 : 0)
+
+        appEventBus.emit('COMPONENT_SUBMITTED', {
+            componentId,
+            type: componentType,
+            mode,
+            score,
+            maxScore,
+            percentage,
+            attemptCount: nextAttemptCount,
+            completionTimeMs: elapsed,
+            isFirstAttempt,
+        })
+    }, [attemptCount, bestAttemptCount, hasCompleted, componentId, componentType, mode, isLive])
+
+    const resetAttempts = useCallback(() => {
+        if (!hasCompleted) return
+        setAttemptCount(0)
+        mountTimeRef.current = Date.now()
+
+        appEventBus.emit('COMPONENT_RESET', {
+            componentId,
+            type: componentType,
+        })
+    }, [hasCompleted, componentId, componentType])
+
+    return {
+        attemptCount,
+        firstAttemptCount,
+        bestAttemptCount,
+        hasCompleted,
+        recordAttempt,
+        resetAttempts,
+    }
+}
+
+// ─── Scoring ──────────────────────────────────────────────────────────────────
 
 export interface UseScoringProps {
     points: number

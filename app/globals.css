@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap');
 @import '../styles/animations.css';
 @import '../styles/disabled-states.css';
 @tailwind base;
@@ -7,76 +6,103 @@
 
 @layer base {
   :root {
+    /* Brand: #58CC02 / #FFC800 / #FF4B4B / #4B4B4B */
     --background: 0 0% 100%;
-    --foreground: 200 20% 20%;
+    --background-secondary: 0 0% 97%;
+    --background-tertiary: 0 0% 90%;
+    --foreground: 0 0% 29%;
+    --foreground-secondary: 0 0% 47%;
+    --foreground-tertiary: 0 0% 69%;
 
     --card: 0 0% 100%;
-    --card-foreground: 200 20% 20%;
+    --card-foreground: 0 0% 29%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 20% 20%;
+    --popover-foreground: 0 0% 29%;
 
-    --primary: 130 70% 45%;
+    --primary: 94 98% 40%;
+    --primary-hover: 94 100% 34%;
+    --primary-active: 95 100% 27%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 45 100% 50%;
-    --secondary-foreground: 200 20% 20%;
+    --secondary: 47 100% 50%;
+    --secondary-hover: 47 100% 45%;
+    --secondary-active: 46 100% 40%;
+    --secondary-foreground: 0 0% 29%;
 
-    --muted: 210 20% 95%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 0 0% 97%;
+    --muted-foreground: 0 0% 47%;
 
-    --accent: 200 100% 45%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 94 70% 95%;
+    --accent-foreground: 94 98% 25%;
 
-    --destructive: 0 85% 60%;
+    --destructive: 0 100% 65%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 130 70% 45%;
+    --success: 94 98% 40%;
+    --success-foreground: 0 0% 100%;
+    --warning: 47 100% 50%;
+    --warning-foreground: 0 0% 29%;
+    --error: 0 100% 65%;
+    --error-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 94 98% 40%;
 
     --radius: 1rem;
   }
 
   .dark {
     --background: 222 47% 11%;
-    /* slate-950 */
+    --background-secondary: 217 33% 17%;
+    --background-tertiary: 217 33% 22%;
     --foreground: 210 40% 98%;
-    /* slate-50 */
+    --foreground-secondary: 215 20% 65%;
+    --foreground-tertiary: 215 15% 50%;
 
     --card: 217 33% 17%;
-    /* slate-900 */
     --card-foreground: 210 40% 98%;
 
     --popover: 217 33% 17%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 158 64% 52%;
-    /* emerald-500 */
+    --primary: 94 80% 45%;
+    --primary-hover: 94 80% 40%;
+    --primary-active: 94 80% 35%;
     --primary-foreground: 222 47% 11%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 47 90% 50%;
+    --secondary-hover: 47 90% 45%;
+    --secondary-active: 46 90% 40%;
+    --secondary-foreground: 222 47% 11%;
 
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 158 64% 52%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 94 25% 18%;
+    --accent-foreground: 94 80% 90%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
+    --success: 94 80% 45%;
+    --success-foreground: 222 47% 11%;
+    --warning: 47 90% 50%;
+    --warning-foreground: 222 47% 11%;
+    --error: 0 84% 60%;
+    --error-foreground: 210 40% 98%;
+
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    --ring: 158 64% 52%;
+    --ring: 94 80% 45%;
 
     --radius: 0.75rem;
   }
 
   html,
   body {
-    font-family: 'Nunito', 'DIN Round Pro', Arial, sans-serif;
+    font-family: var(--font-sans, ui-sans-serif), system-ui, sans-serif;
     @apply antialiased;
   }
 
@@ -87,13 +113,13 @@
   h5,
   h6,
   .font-heading {
-    font-family: 'Lexend', 'Nunito', 'DIN Round Pro', Arial, sans-serif;
+    font-family: var(--font-heading, var(--font-sans, ui-sans-serif)), system-ui, sans-serif;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
 
   .font-body {
-    font-family: 'Nunito', 'DIN Round Pro', Arial, sans-serif;
+    font-family: var(--font-sans, ui-sans-serif), system-ui, sans-serif;
   }
 }
 
@@ -108,28 +134,43 @@
 }
 
 @layer components {
-
-  /* Duolingo-style button - FLATTENED */
   .duo-button {
-    @apply rounded-xl font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-95;
+    @apply rounded-xl font-black transition-all duration-200 transform hover:scale-[1.02] active:scale-95;
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-sm hover:shadow-md;
     @apply border border-white/10;
   }
 
-  /* Duolingo-style card - FLATTENED */
+  .duo-button-primary {
+    @apply duo-button bg-primary hover:bg-primary-hover active:bg-primary-active text-primary-foreground border-b-4 border-primary-active hover:border-primary-active/70 active:border-b-0 active:mt-1;
+  }
+
+  .duo-button-secondary {
+    @apply duo-button bg-secondary hover:bg-secondary-hover active:bg-secondary-active text-secondary-foreground border-b-4 border-secondary-active hover:border-secondary-active/70 active:border-b-0 active:mt-1;
+  }
+
   .duo-card {
     @apply rounded-2xl bg-card p-6 transition-all duration-200;
     @apply border border-border shadow-none hover:border-primary/50;
   }
 
-  /* Duolingo-style input - FLATTENED */
+  .duo-card-interactive {
+    @apply duo-card hover:border-foreground cursor-pointer;
+  }
+
   .duo-input {
     @apply rounded-lg border border-input bg-background/50 px-4 py-2;
     @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary;
     @apply placeholder:text-muted-foreground transition-all duration-200;
   }
 
-  /* Duolingo-style progress bar */
+  .duo-input-large {
+    @apply duo-input px-6 py-3 text-lg;
+  }
+
+  .duo-label {
+    @apply text-sm font-medium text-foreground mb-1 block;
+  }
+
   .duo-progress-bar {
     @apply h-2 rounded-full bg-muted overflow-hidden;
   }
@@ -139,16 +180,57 @@
     animation: progress-fill 0.5s ease-out forwards;
   }
 
-  /* Duolingo-style badge */
   .duo-badge {
-    @apply rounded-full px-3 py-1 text-sm font-bold;
-    @apply bg-secondary text-secondary-foreground;
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors duration-200;
   }
 
-  /* Duolingo-style tooltip */
+  .duo-badge-primary {
+    @apply duo-badge bg-primary/10 text-primary;
+  }
+
+  .duo-badge-secondary {
+    @apply duo-badge bg-secondary/10 text-secondary;
+  }
+
   .duo-tooltip {
     @apply rounded-xl bg-popover p-2 text-sm font-medium shadow-lg;
     @apply text-popover-foreground;
+  }
+
+  .duo-checkbox {
+    @apply h-5 w-5 rounded border border-border text-primary focus:ring-2 focus:ring-primary/10 transition-colors duration-200;
+  }
+
+  .duo-radio {
+    @apply h-5 w-5 rounded-full border border-border text-primary focus:ring-2 focus:ring-primary/10 transition-colors duration-200;
+  }
+
+  .duo-select {
+    @apply rounded-lg border border-border focus:border-foreground focus:ring-2 focus:ring-foreground/10 transition-all duration-200 px-4 py-2 pr-10;
+  }
+
+  .duo-textarea {
+    @apply rounded-lg border border-border focus:border-foreground focus:ring-2 focus:ring-foreground/10 transition-all duration-200 px-4 py-2 min-h-[100px];
+  }
+
+  .duo-text-primary {
+    @apply text-primary font-bold;
+  }
+
+  .duo-text-secondary {
+    @apply text-foreground-secondary;
+  }
+
+  .duo-text-success {
+    @apply text-success font-bold;
+  }
+
+  .duo-text-error {
+    @apply text-error font-bold;
+  }
+
+  .duo-text-warning {
+    @apply text-warning font-bold;
   }
 }
 
@@ -162,7 +244,6 @@
   }
 }
 
-/* Keep existing utility classes */
 .perspective-1000 {
   perspective: 1000px;
 }
@@ -179,62 +260,15 @@
   transform: rotateY(180deg);
 }
 
-/* Fix for ScrollArea in component library */
-.h-full {
-  height: 100%;
-}
-
-/* Make sure TabsContent takes full height when active */
-[data-state="active"] {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-/* Add bottom padding to ensure last items are visible when scrolled */
 .space-y-4.pb-8 {
   padding-bottom: 2rem;
 }
 
-/* Fix scrolling issues */
-.overflow-auto {
-  overflow: auto !important;
-}
-
-.max-h-\[300px\] {
-  max-height: 300px !important;
-  overflow: auto !important;
-}
-
-/* Fix for hotspot editor scrolling */
-.relative.max-h-\[300px\].overflow-auto {
-  overflow: auto !important;
-}
-
-/* Make sure the preview container takes full height */
-.flex-1 {
-  flex: 1 1 0% !important;
-}
-
-/* Fix for draggable components */
-.cursor-move {
-  cursor: move !important;
-}
-
-/* Fix for component editor tabs */
-.flex-1.flex.flex-col.overflow-hidden>.w-full>.flex-1.overflow-hidden>[data-state="active"] {
-  height: calc(100vh - 200px);
-  overflow-y: auto;
-}
-
-/* Fix for TabsContent to properly handle overflow */
-.flex-1.overflow-hidden>[data-state="active"] {
-  height: 100%;
-  overflow-y: auto;
+.highlight-new-component {
+  animation: highlight-pulse 2s ease-in-out infinite;
 }
 
 @keyframes highlight-pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -245,6 +279,17 @@
   }
 }
 
-.highlight-new-component {
-  animation: highlight-pulse 2s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

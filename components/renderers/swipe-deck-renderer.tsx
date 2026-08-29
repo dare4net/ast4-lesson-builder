@@ -70,6 +70,7 @@ function SwipeDeckContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     leftLabel = "Myth",
@@ -145,6 +146,7 @@ function SwipeDeckContent({
             }))
 
             handlePoints(earnedPoints)
+            recordAttempt(isAllCorrect, earnedPoints, points)
         } else {
             setState(prev => ({
                 ...prev,

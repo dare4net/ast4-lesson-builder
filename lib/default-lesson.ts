@@ -30,7 +30,7 @@ export const defaultLesson: Lesson = {
           type: "paragraph",
           props: {
             content:
-              "Start adding components to build your interactive lesson. Drag components from the left panel and drop them here.",
+              "Start adding components to build your interactive lesson. Open the library on the right and click a block to add it here.",
             align: "center",
           },
           state: "active",

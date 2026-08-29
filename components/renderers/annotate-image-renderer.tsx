@@ -44,6 +44,7 @@ function AnnotateImageContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     image,
@@ -126,6 +127,7 @@ function AnnotateImageContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {
@@ -140,7 +142,7 @@ function AnnotateImageContent({
     }
 
     return (
-        <div className="w-full h-full flex-1 flex flex-col justify-center px-4 sm:px-6 py-2 relative min-h-0 overflow-hidden text-slate-900">
+        <div className="w-full h-auto md:h-full md:flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-6 py-2 relative min-h-0 overflow-hidden text-slate-900">
             <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
                 <div className="flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-xl">
                     <span className="text-[9px] font-black uppercase tracking-widest text-teal-600">

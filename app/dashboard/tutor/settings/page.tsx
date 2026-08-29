@@ -5,35 +5,45 @@ import { useAuth } from "@/context/auth-context"
 import {
     User,
     Mail,
-    ShieldCheck,
-    Bell,
     Save,
     LogOut,
     CheckCircle2,
     Loader2,
     Settings as SettingsIcon
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { apiClient } from "@/lib/api-client"
 
 export default function TutorSettingsPage() {
-    const { user, logout } = useAuth()
-    const defaultDisplayName = user?.email ? user.email.split('@')[0] : "Instructor"
+    const { user, logout, updateUser } = useAuth()
+    const defaultDisplayName = user?.full_name || user?.fullName || (user?.email ? user.email.split('@')[0] : "Instructor")
     const [name, setName] = useState(defaultDisplayName)
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
-    const handleSave = (e: React.FormEvent) => {
+    const handleSave = async (e: React.FormEvent) => {
         e.preventDefault()
+        const fullName = name.trim()
+        if (!fullName) {
+            setError("Display name is required.")
+            return
+        }
         setSaving(true)
-        setTimeout(() => {
-            setSaving(false)
+        setError(null)
+        setSaved(false)
+        try {
+            await apiClient.profile.update({ full_name: fullName })
+            updateUser({ full_name: fullName, fullName: fullName })
             setSaved(true)
-            setTimeout(() => setSaved(false), 3000)
-        }, 1000)
+        } catch (err: any) {
+            setError(err.response?.data?.message || err.response?.data?.error || err.message || "Could not save profile.")
+        } finally {
+            setSaving(false)
+        }
     }
 
     return (
@@ -74,10 +84,6 @@ export default function TutorSettingsPage() {
                     <div className="w-full h-px bg-slate-100" />
 
                     <div className="w-full space-y-3 text-xs font-semibold text-slate-500">
-                        <div className="flex items-center gap-2.5">
-                            <ShieldCheck className="w-4 h-4 text-[#58CC02]" />
-                            <span>Verified Authoring Status</span>
-                        </div>
                         <div className="flex items-center gap-2.5">
                             <Mail className="w-4 h-4 text-[#1CB0F6]" />
                             <span className="truncate">{user?.email}</span>
@@ -131,8 +137,10 @@ export default function TutorSettingsPage() {
                                 {saved ? (
                                     <span className="text-xs font-bold text-[#58CC02] flex items-center gap-1.5">
                                         <CheckCircle2 className="w-4 h-4" />
-                                        Profile updated successfully!
+                                        Profile updated
                                     </span>
+                                ) : error ? (
+                                    <span className="text-xs font-bold text-red-600">{error}</span>
                                 ) : <span />}
 
                                 <button
@@ -149,21 +157,6 @@ export default function TutorSettingsPage() {
                                 </button>
                             </div>
                         </form>
-                    </Card>
-
-                    <Card className="p-5 bg-white border-2 border-slate-200 rounded-3xl shadow-sm flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2.5 rounded-xl bg-[#1CB0F6]/10 text-[#1CB0F6]">
-                                <Bell className="w-4 h-4" />
-                            </div>
-                            <div>
-                                <h4 className="text-sm font-extrabold text-slate-800">Email Notifications</h4>
-                                <p className="text-xs text-slate-400 font-medium">Receive student progress updates</p>
-                            </div>
-                        </div>
-                        <span className="text-xs font-bold text-[#1CB0F6] bg-[#1CB0F6]/10 px-3 py-1 rounded-full border border-[#1CB0F6]/20">
-                            Active
-                        </span>
                     </Card>
                 </div>
             </div>

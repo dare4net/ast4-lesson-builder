@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { CheckCircle2, Lock, Send } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
+import { ACTION_LABELS } from "@/lib/action-labels"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
@@ -51,6 +52,7 @@ function ShortAnswerContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     isLive,
     isDisabled: disabledProp,
     props
@@ -148,6 +150,7 @@ function ShortAnswerContent({
         }
 
         handlePoints(earnedPoints)
+        recordAttempt(keywordMatch, earnedPoints, points)
 
         setState(prev => ({
             ...prev,
@@ -219,7 +222,7 @@ function ShortAnswerContent({
             </div>
 
             {/* CENTER SECTION: Question & Input Area */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center py-2 space-y-3 overflow-y-auto">
+            <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center py-2 space-y-3 overflow-y-auto">
                 <FormattedText content={question} as="p" className="text-base md:text-lg font-bold text-slate-900 leading-relaxed tracking-tight" />
                 <Textarea
                     value={userResponse}
@@ -244,7 +247,7 @@ function ShortAnswerContent({
                     )}>
                         {((isPendingMarking && !tutorMarked) || (markingMode === "tutor-mark" && !tutorMarked)) ? (
                             <div className="space-y-0.5">
-                                <p className="text-xs font-black uppercase tracking-wider text-amber-700">Submitted — Pending Tutor Review</p>
+                                <p className="text-xs font-black uppercase tracking-wider text-amber-700">{ACTION_LABELS.pendingTutorReview}</p>
                                 <p className="text-[10px] font-medium opacity-80">Your response has been saved for tutor evaluation.</p>
                             </div>
                         ) : isApproved ? (

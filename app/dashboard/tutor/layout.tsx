@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
+import { TutorMobileNav } from "@/components/dashboard/sidebar/tutor-mobile-nav"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface TutorDashboardLayoutProps {
@@ -11,9 +12,10 @@ interface TutorDashboardLayoutProps {
 export default function TutorDashboardLayout({ children }: TutorDashboardLayoutProps) {
     return (
         <div className="min-h-screen bg-[#F7F8FA] text-slate-900 font-sans">
-            <DashboardHeader />
+            <DashboardHeader hasSidebar={false} />
+            <TutorMobileNav />
             <main className="relative flex flex-col min-h-screen">
-                <div className="flex-1 w-full pt-16 pb-12 px-4 sm:px-6 lg:px-8">
+                <div className="flex-1 w-full pt-16 pb-20 md:pb-12 px-4 sm:px-6 lg:px-8">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key="tutor-page-transition"
@@ -31,4 +33,3 @@ export default function TutorDashboardLayout({ children }: TutorDashboardLayoutP
         </div>
     )
 }
-

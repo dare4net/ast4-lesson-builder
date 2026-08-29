@@ -57,7 +57,7 @@ export default function TutorViewPage({
 
     if (loading) {
         return (
-            <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-950 text-white p-4">
+            <div className="h-dvh w-screen flex flex-col items-center justify-center bg-slate-950 text-white p-4">
                 <div className="w-10 h-10 border-4 border-slate-800 border-t-amber-500 rounded-full animate-spin mb-4" />
                 <p className="text-sm font-semibold text-slate-400">Loading Student Session...</p>
             </div>
@@ -66,7 +66,7 @@ export default function TutorViewPage({
 
     if (error || !lessonData) {
         return (
-            <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-950 text-white p-6 text-center">
+            <div className="h-dvh w-screen flex flex-col items-center justify-center bg-slate-950 text-white p-6 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center mb-4">
                     <ShieldAlert className="w-8 h-8 text-rose-400" />
                 </div>
@@ -85,7 +85,7 @@ export default function TutorViewPage({
     }
 
     return (
-        <div className="h-screen w-screen overflow-hidden">
+        <div className="h-dvh w-screen overflow-hidden">
             <TutorLessonViewer
                 initialLesson={lessonData.lesson}
                 initialInteraction={lessonData.interaction}

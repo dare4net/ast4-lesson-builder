@@ -36,6 +36,7 @@ function TrueFalseContent({
     setState,
     handleScore,
     handlePoints,
+    recordAttempt,
     statement,
     isTrue,
     explanation,
@@ -74,6 +75,7 @@ function TrueFalseContent({
             maxScore: points,
         })
 
+        recordAttempt(correct, earnedPoints, points)
         if (correct) {
             await playFeedback("quizSuccess", { sound: true })
             handleScore(true)
@@ -111,7 +113,7 @@ function TrueFalseContent({
                 </div>
             </div>
 
-            <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+            <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center py-3 md:py-4 w-full">
                 <div className="relative space-y-5 my-auto w-full">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">

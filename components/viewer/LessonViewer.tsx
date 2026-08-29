@@ -3,21 +3,31 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FileUploader } from './FileUploader';
 import { LessonContent } from './LessonContent';
+import { FeedbackSettingsButton } from '@/components/ui/feedback-settings';
 import { TopProgressBar } from './TopProgressBar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Clock, User, Award, ArrowLeft, LogOut } from 'lucide-react';
+import { Clock, User, Award, LogOut } from 'lucide-react';
 import { ScoringProvider } from '@/context/scoring-context';
+import type { ComponentAttemptRecord } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
 import { cn } from '@/lib/utils';
 import type { Lesson } from '@/types/lesson';
 import { normalizeSlides, formatSlideTitle } from '@/lib/lesson-utils';
+import { getSlideTheme } from '@/lib/slide-themes';
 import { NavigationLockProvider } from '@/context/navigation-lock-context';
-import { apiClient } from '@/lib/api-client';
-
 import { useRouter } from 'next/navigation';
+import { appEventBus } from '@/lib/event-bus';
+import { initAchievementListener } from '@/lib/achievement-listener';
+import { GamificationHeader } from '@/components/gamification/GamificationHeader';
+import { GamificationHubModal } from '@/components/gamification/GamificationHubModal';
+import { GamificationToastContainer } from '@/components/ui/gamification-toast';
+import { useGamification } from '@/context/gamification-context';
+import { apiClient } from '@/lib/api-client';
+import { buildStudentViewerHref } from '@/lib/viewer-url';
+import { resolveLessonModuleId, resolveNextLesson, type NextLesson } from '@/lib/next-lesson';
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
@@ -41,7 +51,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [slideProgress, setSlideProgress] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
   const [totalPossibleScore, setTotalPossibleScore] = useState(0);
+  const [isHubOpen, setIsHubOpen] = useState(false);
+  const [nextLesson, setNextLesson] = useState<NextLesson | null>(null);
+  const { starBalance, level } = useGamification();
   const lessonContentRef = useRef<any>(null);
+  const lessonCompletedEmittedRef = useRef(false);
+  const resolvedInteraction = initialInteraction;
+  const attemptsMapRef = useRef<Record<string, ComponentAttemptRecord>>(resolvedInteraction?.attemptsMap || {});
+  const interactionVersionRef = useRef<number>(Number(resolvedInteraction?.version) || 0);
 
   const currentSlideIndexRef = useRef(currentSlideIndex);
   const currentScoreRef = useRef(currentScore);
@@ -52,6 +69,38 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   useEffect(() => { currentScoreRef.current = currentScore; }, [currentScore]);
   useEffect(() => { totalPossibleScoreRef.current = totalPossibleScore; }, [totalPossibleScore]);
   useEffect(() => { lessonDataRef.current = lessonData; }, [lessonData]);
+
+  const handleAttemptsMapChange = useCallback((map: Record<string, ComponentAttemptRecord>) => {
+    attemptsMapRef.current = map;
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+    return initAchievementListener(userId);
+  }, [userId]);
+
+  const currentLessonId = lessonData?.id
+  const moduleId = resolveLessonModuleId(lessonData)
+
+  useEffect(() => {
+    if (!currentLessonId || !moduleId) {
+      setNextLesson(null)
+      return
+    }
+
+    let cancelled = false
+    apiClient.lessons.getModuleLessons(moduleId)
+      .then((rows) => {
+        if (!cancelled) setNextLesson(resolveNextLesson(currentLessonId, rows))
+      })
+      .catch(() => {
+        if (!cancelled) setNextLesson(null)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [currentLessonId, moduleId])
 
   const isSlideAccessible = useCallback((index: number) => {
     if (!lessonData?.slides[index]) return false;
@@ -93,8 +142,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       const overallProgress = totalSlides > 0 ? Math.round((completedSlides / totalSlides) * 100) : 0;
 
       const { saveUserInteraction } = await import('@/lib/user-interactions');
-      await saveUserInteraction(userId, currentLessonData.id, {
+      const result = await saveUserInteraction(userId, currentLessonData.id, {
         componentsState,
+        attemptsMap: attemptsMapRef.current,
+        version: interactionVersionRef.current,
         lessonState: {
           slides: currentLessonData.slides.map(s => ({
             id: s.id,
@@ -109,6 +160,9 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
           totalScore: totalPossibleScoreRef.current
         }
       });
+      if (result.version != null) {
+        interactionVersionRef.current = result.version;
+      }
     }
   }, [userId]);
 
@@ -120,10 +174,26 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
       const allCompleted = updatedSlides.every(s => s.status === 'completed');
       if (allCompleted) {
-        const finalScore = totalPossibleScoreRef.current > 0 ? Math.round((currentScoreRef.current / totalPossibleScoreRef.current) * 100) : 0;
+        const earnedPoints = currentScoreRef.current || 0;
+        const possiblePoints = totalPossibleScoreRef.current || 0;
+        const percentage = possiblePoints > 0 ? Math.round((earnedPoints / possiblePoints) * 100) : 0;
 
-        apiClient.lessons.markCompleted(lessonData.id, finalScore).catch((err: any) => {
-          console.error('[LessonViewer] Failed to mark lesson as completed:', err);
+        import('@/lib/api-client').then(({ apiClient }) => {
+          apiClient.lessons.markCompleted(lessonData.id, earnedPoints, possiblePoints)
+            .then(() => {
+              if (lessonCompletedEmittedRef.current) return;
+              lessonCompletedEmittedRef.current = true;
+              appEventBus.emit('LESSON_COMPLETED', {
+                lessonId: lessonData.id,
+                programId: (lessonData as { programId?: string }).programId,
+                score: earnedPoints,
+                maxScore: possiblePoints,
+                percentage,
+              });
+            })
+            .catch((err: any) => {
+              console.error('[Viewer] Failed to mark lesson as completed:', err);
+            });
         });
       }
 
@@ -157,6 +227,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       import('@/lib/user-interactions').then(({ saveUserInteraction }) => {
         saveUserInteraction(userId, lessonData.id, {
           componentsState,
+          attemptsMap: attemptsMapRef.current,
+          version: interactionVersionRef.current,
           lessonState: {
             slides: lessonData.slides.map(s => ({
               id: s.id,
@@ -166,6 +238,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
             currentSlideIndex,
             lessonTitle: lessonData.title,
             lessonDescription: lessonData.description
+          }
+        }).then((result) => {
+          if (result?.version != null) {
+            interactionVersionRef.current = result.version;
           }
         });
       });
@@ -233,6 +309,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     resetViewer();
   }, [performSave, router, lessonData]);
 
+  const handleNextLesson = useCallback((nextLessonId: string) => {
+    performSave(true);
+    const returnUrl = typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('returnUrl') || undefined
+      : undefined;
+    router.push(buildStudentViewerHref(nextLessonId, { returnUrl }));
+  }, [performSave, router]);
+
   const handleJumpToSlide = (index: number) => {
     setCurrentSlideIndex(index);
     lessonContentRef.current?.setCurrentSlideIndex(index);
@@ -240,95 +324,102 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   };
 
   const renderSidebarContent = () => (
-    <div className="flex flex-col h-full bg-slate-900 text-white border-r border-slate-800">
-      {/* Lesson Title Section */}
-      <div className="p-6 border-b border-slate-800 bg-slate-900/60">
+    <div className="flex flex-col h-full bg-white text-slate-800">
+      <div className="relative p-6 bg-gradient-to-br from-emerald-50 via-white to-sky-50 shadow-[0_8px_20px_-14px_rgba(15,23,42,0.12)]">
+        <div className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-2 h-2 rounded-full bg-green-500" />
-          <h2 className="text-xs font-semibold text-slate-400">Course Lesson</h2>
+          <div className="w-2.5 h-2.5 rounded-full bg-[#58CC02]" />
+          <h2 className="text-[10px] font-black uppercase tracking-wider text-[#58CC02]">Course Lesson</h2>
         </div>
-        <h3 className="text-lg font-bold text-white tracking-tight leading-snug">{lessonData?.title}</h3>
+        <h3 className="text-lg font-extrabold text-slate-800 tracking-tight leading-snug">{lessonData?.title}</h3>
       </div>
 
       <ScrollArea className="flex-1">
         <div className="p-5 space-y-6">
-          {/* Navigation Section */}
           <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-slate-400">Lesson Modules</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-wider text-[#1CB0F6]">Slides</h3>
             <div className="space-y-1.5">
-              {lessonData?.slides.map((slide, index) => (
-                <Button
-                  key={slide.id}
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start text-left h-auto py-2.5 px-3.5 rounded-xl transition-all border border-transparent",
-                    index === currentSlideIndex
-                      ? "bg-green-500/10 border-green-500/30 text-green-400 font-semibold"
-                      : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
-                  )}
-                  onClick={() => handleJumpToSlide(index)}
-                >
-                  <div className="flex items-center gap-3 w-full">
-                    <span className={cn(
-                      "text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border shrink-0",
-                      index === currentSlideIndex ? "bg-green-500 border-green-500 text-white" : "border-slate-700 text-slate-500"
-                    )}>
-                      {index + 1}
-                    </span>
-                    <span className="text-xs font-medium truncate flex-1">{formatSlideTitle(slide.title, 20)}</span>
-                    {index === currentSlideIndex && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              {lessonData?.slides.map((slide, index) => {
+                const theme = getSlideTheme(index);
+                const isActive = index === currentSlideIndex;
+                const isDone = slide.status === 'completed';
+                return (
+                  <Button
+                    key={slide.id}
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start text-left h-auto py-2.5 px-3.5 rounded-xl transition-all border-2",
+                      isActive
+                        ? "font-extrabold shadow-sm"
+                        : "hover:bg-slate-50 text-slate-600 border-transparent"
                     )}
-                  </div>
-                </Button>
-              ))}
+                    style={isActive ? {
+                      backgroundColor: theme.solidBgHex,
+                      borderColor: theme.btnBgHex,
+                      color: theme.textHex,
+                    } : undefined}
+                    onClick={() => handleJumpToSlide(index)}
+                  >
+                    <div className="flex items-center gap-3 w-full">
+                      <span
+                        className="text-[10px] font-black w-6 h-6 flex items-center justify-center rounded-full shrink-0 text-white"
+                        style={{ backgroundColor: isDone ? '#58CC02' : theme.btnBgHex }}
+                      >
+                        {index + 1}
+                      </span>
+                      <span className="text-xs font-bold truncate flex-1">{formatSlideTitle(slide.title, 20)}</span>
+                      {isActive && (
+                        <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: theme.btnBgHex }} />
+                      )}
+                    </div>
+                  </Button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Performance Section */}
           <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
-              <Award className="h-4 w-4 text-green-400" />
+            <h3 className="text-[10px] font-black uppercase tracking-wider text-[#FF9600] flex items-center gap-1.5">
+              <Award className="h-4 w-4" />
               Score Overview
             </h3>
-            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/50">
+            <div className="bg-amber-50 rounded-xl p-4 border-2 border-amber-200">
               <ScoreDisplay />
             </div>
           </div>
 
-          {/* Metadata Section */}
-          <div className="space-y-4 pt-2 border-t border-slate-800 text-xs">
-            <div className="flex items-center justify-between text-slate-300">
-              <span className="text-slate-400 flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-green-400" />
+          <div className="space-y-4 pt-2 border-t-2 border-slate-100 text-xs">
+            <div className="flex items-center justify-between text-slate-700">
+              <span className="text-slate-500 flex items-center gap-1.5 font-bold">
+                <User className="h-3.5 w-3.5 text-[#CE82FF]" />
                 Instructor
               </span>
-              <span className="font-semibold">{lessonData?.author}</span>
+              <span className="font-extrabold">{lessonData?.author}</span>
             </div>
 
-            <div className="flex items-center justify-between text-slate-300">
-              <span className="text-slate-400 flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-green-400" />
+            <div className="flex items-center justify-between text-slate-700">
+              <span className="text-slate-500 flex items-center gap-1.5 font-bold">
+                <Clock className="h-3.5 w-3.5 text-[#1CB0F6]" />
                 Duration
               </span>
-              <span className="font-semibold">{lessonData?.duration} minutes</span>
+              <span className="font-extrabold">{lessonData?.duration} minutes</span>
             </div>
 
             {lessonData?.description && (
               <div className="space-y-1">
-                <span className="text-slate-400 font-medium">Summary</span>
-                <p className="text-slate-400 text-[11px] leading-relaxed">{lessonData.description}</p>
+                <span className="text-[#CE82FF] font-black uppercase tracking-wider text-[10px]">Summary</span>
+                <p className="text-slate-500 text-[11px] leading-relaxed">{lessonData.description}</p>
               </div>
             )}
           </div>
         </div>
       </ScrollArea>
 
-      {/* Footer Section */}
-      <div className="p-4 border-t border-slate-800 bg-slate-900">
+      <div className="relative p-4 bg-white shadow-[0_-8px_20px_-14px_rgba(15,23,42,0.12)]">
+        <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
         <Button
-          variant="default"
-          className="w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider transition-all h-10 flex items-center justify-center gap-2 shadow-md shadow-rose-600/20"
+          variant="outline"
+          className="w-full min-h-11 rounded-xl border-2 border-slate-300 text-slate-700 hover:bg-slate-900 hover:text-white font-extrabold text-xs"
           onClick={() => {
             if (lessonContentRef.current?.triggerEndLesson) {
               lessonContentRef.current.triggerEndLesson();
@@ -347,10 +438,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   if (loading) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center p-4 bg-slate-950">
+      <div className="h-dvh w-screen flex items-center justify-center p-4 bg-gradient-to-b from-sky-50 to-emerald-50">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="w-10 h-10 border-3 border-slate-800 border-t-green-500 rounded-full animate-spin" />
-          <h2 className="text-xs font-semibold text-slate-400">Loading lesson...</h2>
+          <div className="w-10 h-10 border-4 border-slate-200 border-t-[#58CC02] rounded-full animate-spin" />
+          <h2 className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Loading lesson...</h2>
         </div>
       </div>
     );
@@ -358,23 +449,23 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
 
   if (!lessonData) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center p-4 bg-slate-950">
-        <Card className="p-8 w-full max-w-lg bg-slate-900 border-slate-800 shadow-xl rounded-2xl">
+      <div className="h-dvh w-screen flex items-center justify-center p-4 bg-gradient-to-b from-sky-50 to-emerald-50">
+        <Card className="p-8 w-full max-w-lg bg-white border-2 border-slate-200 shadow-xl rounded-2xl">
           <div className="text-center space-y-6">
             <div className="flex flex-col items-center">
-              <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-4 border border-green-500/20 text-green-400">
+              <div className="w-14 h-14 rounded-2xl bg-[#58CC02]/10 flex items-center justify-center mb-4 border-2 border-[#58CC02]/30 text-[#58CC02]">
                 <Award className="h-7 w-7" />
               </div>
-              <h2 className="text-xl font-bold text-white">Upload Lesson File</h2>
-              <p className="text-slate-400 text-xs mt-1">Select a lesson JSON file to start learning</p>
+              <h2 className="text-xl font-extrabold text-slate-800">Upload Lesson File</h2>
+              <p className="text-slate-500 text-xs mt-1">Select a lesson JSON file to start learning</p>
             </div>
 
-            <div className="p-6 bg-slate-950/60 border border-slate-800 rounded-xl">
+            <div className="p-6 bg-sky-50/80 border-2 border-sky-100 rounded-xl">
               <FileUploader onFileUpload={handleFileUpload} />
             </div>
 
             {error && (
-              <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-3 text-red-400 text-xs font-medium">
+              <div className="rounded-xl bg-red-50 border-2 border-red-200 p-3 text-red-600 text-xs font-medium">
                 {error}
               </div>
             )}
@@ -385,18 +476,22 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   }
 
   return (
-    <ScoringProvider lesson={lessonData}>
+    <ScoringProvider
+      lesson={lessonData}
+      initialScore={resolvedInteraction?.lessonState?.score || 0}
+      componentsState={resolvedInteraction?.componentsState}
+      initialAttemptsMap={resolvedInteraction?.attemptsMap}
+      onAttemptsMapChange={handleAttemptsMapChange}
+    >
       <NavigationLockProvider>
-        <div className="h-screen w-screen flex overflow-hidden bg-slate-50 dark:bg-slate-950 relative">
-          {/* Collapsible Sidebar Drawer (Hidden by default on all screens) */}
+        <div className="h-dvh w-screen flex overflow-hidden bg-gradient-to-b from-sky-50 to-emerald-50 relative">
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-            <SheetContent side="left" className="p-0 border-r-0 w-80 bg-slate-900 text-white z-50">
+            <SheetContent side="left" className="p-0 border-r-0 w-80 bg-white text-slate-800 z-50">
               {renderSidebarContent()}
             </SheetContent>
           </Sheet>
 
-          {/* Main Content Area (Full screen width by default) */}
-          <div className="flex-1 flex flex-col relative bg-white dark:bg-slate-950 overflow-hidden">
+          <div className="flex-1 flex flex-col relative bg-white overflow-hidden">
             {(() => {
               const completedSlidesCount = lessonData?.slides.filter(s => s.status === 'completed').length || 0;
               const totalSlidesCount = lessonData?.slides.length || 0;
@@ -408,8 +503,21 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                   progress={overallProgress}
                   completedSlides={completedSlidesCount}
                   totalSlides={totalSlidesCount}
+                  currentSlide={currentSlideIndex + 1}
+                  score={currentScore}
+                  lessonTitle={lessonData?.title}
                   isCompleted={isAllCompleted}
                   onMenuClick={() => setIsSidebarOpen(true)}
+                  rightContent={
+                    <div className="flex items-center gap-1.5">
+                      <FeedbackSettingsButton />
+                      <GamificationHeader
+                        starBalance={starBalance}
+                        level={level}
+                        onOpenHub={() => setIsHubOpen(true)}
+                      />
+                    </div>
+                  }
                 />
               );
             })()}
@@ -425,10 +533,20 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                 onSlidesUpdate={handleSlidesUpdate}
                 onScoreUpdate={handleScoreUpdate}
                 onEndLesson={handleEndLesson}
+                nextLesson={nextLesson}
+                onNextLesson={handleNextLesson}
+                hideChromeHeader
               />
             </div>
           </div>
         </div>
+        <GamificationToastContainer />
+        <GamificationHubModal
+          isOpen={isHubOpen}
+          onClose={() => setIsHubOpen(false)}
+          starBalance={starBalance}
+          userId={userId}
+        />
       </NavigationLockProvider>
     </ScoringProvider>
   );

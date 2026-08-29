@@ -4,6 +4,11 @@ import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { X, Download, Share } from "lucide-react"
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>
+}
+
 declare global {
   interface Window {
     __deferredPWAInstallPrompt?: BeforeInstallPromptEvent | null
@@ -120,6 +125,7 @@ export function PWAInstallPrompt() {
         <Button
           variant="ghost"
           size="icon"
+          aria-label="Dismiss install prompt"
           className="h-8 w-8"
           onClick={() => setShowPrompt(false)}
         >

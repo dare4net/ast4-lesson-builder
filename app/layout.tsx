@@ -2,19 +2,33 @@ import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { Inter } from "next/font/google"
+import { Nunito, Lexend } from "next/font/google"
 import { FeedbackProvider } from "@/lib/feedback-context"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
+import { ErrorTrackingInit } from "@/components/error-tracking-init"
 import { AuthProvider } from "@/context/auth-context"
+import { QueryProvider } from "@/components/providers/query-provider"
+import { GamificationProvider } from "@/context/gamification-context"
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+const lexend = Lexend({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-heading",
+  display: "swap",
+})
 
 export const viewport: Viewport = {
-  themeColor: "#4CAF50",
+  themeColor: "#58CC02",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 }
 
 export const metadata: Metadata = {
@@ -40,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${nunito.variable} ${lexend.variable}`} suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -61,14 +75,19 @@ export default function RootLayout({
         />
         <script src="/register-sw.js" defer></script>
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${nunito.className} antialiased`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <FeedbackProvider>
-              {children}
-              <Toaster />
-              <PWAInstallPrompt />
-            </FeedbackProvider>
+            <QueryProvider>
+              <GamificationProvider>
+                <FeedbackProvider>
+                  {children}
+                  <Toaster />
+                  <PWAInstallPrompt />
+                  <ErrorTrackingInit />
+                </FeedbackProvider>
+              </GamificationProvider>
+            </QueryProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

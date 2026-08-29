@@ -1,0 +1,106 @@
+/**
+ * Star Engine
+ *
+ * Handles star reward calculations for Live Mode component completions.
+ * Calculates base stars from accuracy percentage, speed bonuses for early
+ * completion, and penalties for timeouts.
+ */
+
+export interface StarCalculationInput {
+    /** Mode of the component attempt */
+    mode: 'practice' | 'live'
+    /** Percentage accuracy achieved (0 - 100) */
+    percentage: number
+    /** Total time limit in milliseconds if component has a timer */
+    timeLimitMs?: number | null
+    /** Actual time taken in milliseconds */
+    completionTimeMs?: number | null
+    /** Whether the component timed out before completion */
+    isTimeout?: boolean
+}
+
+export interface StarCalculationResult {
+    /** Total stars earned (always 0 in practice mode, non-negative in live mode) */
+    totalStars: number
+    /** Base stars awarded for score accuracy */
+    baseStars: number
+    /** Speed bonus stars awarded for fast completion */
+    speedBonusStars: number
+    /** Penalty stars deducted for timeout (-1 or 0) */
+    timeoutPenalty: number
+    /** Breakdown reason strings for UI toast feedback */
+    breakdown: string[]
+}
+
+/**
+ * Calculate stars earned for a component submission.
+ */
+export function calculateStarReward({
+    mode,
+    percentage,
+    timeLimitMs = null,
+    completionTimeMs = null,
+    isTimeout = false,
+}: StarCalculationInput): StarCalculationResult {
+    // Rule 1: Practice mode NEVER awards stars
+    if (mode === 'practice') {
+        return {
+            totalStars: 0,
+            baseStars: 0,
+            speedBonusStars: 0,
+            timeoutPenalty: 0,
+            breakdown: ['Practice mode does not award stars']
+        }
+    }
+
+    const breakdown: string[] = []
+
+    // Rule 2: Base Stars from Accuracy Percentage
+    let baseStars = 0
+    if (percentage >= 90) {
+        baseStars = 5
+    } else if (percentage >= 75) {
+        baseStars = 4
+    } else if (percentage >= 55) {
+        baseStars = 3
+    } else if (percentage >= 35) {
+        baseStars = 2
+    } else if (percentage > 0) {
+        baseStars = 1
+    } else {
+        baseStars = 0
+    }
+    breakdown.push(`${baseStars} Base Stars (${percentage}% score)`)
+
+    // Rule 3: Speed Bonus Stars (Live mode with timer)
+    let speedBonusStars = 0
+    if (!isTimeout && timeLimitMs && completionTimeMs && timeLimitMs > 0) {
+        const timeRatio = completionTimeMs / timeLimitMs
+        if (timeRatio < 0.5) {
+            speedBonusStars = 2
+            breakdown.push('+2 Speed Bonus (Completed in under 50% time!)')
+        } else if (timeRatio < 0.75) {
+            speedBonusStars = 1
+            breakdown.push('+1 Speed Bonus (Completed in under 75% time!)')
+        }
+    }
+
+    // Rule 4: Timeout Penalty (-1 Star)
+    let timeoutPenalty = 0
+    if (isTimeout) {
+        timeoutPenalty = -1
+        breakdown.push('-1 Timeout Penalty')
+    }
+
+    // Calculate final star reward with floor at 0
+    const rawTotal = baseStars + speedBonusStars + timeoutPenalty
+    const totalStars = Math.max(0, rawTotal)
+
+    return {
+        totalStars,
+        baseStars,
+        speedBonusStars,
+        timeoutPenalty,
+        breakdown
+    }
+}

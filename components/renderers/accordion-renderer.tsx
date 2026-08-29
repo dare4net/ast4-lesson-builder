@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { ChevronDown, CheckCircle2 } from "lucide-react"
 import { ListenButton } from "@/components/renderers/listen-button"
 import { useFeedback } from "@/hooks/use-feedback"
+import { canPlayLessonAudio, registerLessonAudio } from "@/lib/lesson-audio"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
@@ -105,9 +106,12 @@ const PASTEL_THEMES = [
 
 function useAccordionAudio() {
     const audioRef = useRef<HTMLAudioElement | null>(null)
+    const unregisterRef = useRef<(() => void) | null>(null)
     const [playingItemId, setPlayingItemId] = React.useState<string | null>(null)
 
     const stopAudio = useCallback(() => {
+        unregisterRef.current?.()
+        unregisterRef.current = null
         if (audioRef.current) {
             audioRef.current.pause()
             audioRef.current.currentTime = 0
@@ -118,12 +122,13 @@ function useAccordionAudio() {
     }, [])
 
     const playItemAudio = useCallback((itemId: string, audioUrl?: string) => {
-        if (!audioUrl) return
+        if (!audioUrl || !canPlayLessonAudio()) return
 
         stopAudio()
 
         const audio = new Audio(audioUrl)
         audioRef.current = audio
+        unregisterRef.current = registerLessonAudio(audio)
         setPlayingItemId(itemId)
 
         audio.onended = () => {
@@ -359,7 +364,7 @@ function AccordionContent({
     }
 
     return (
-        <div className="w-full my-6 flex flex-col items-center justify-center">
+        <div className="w-full my-2 md:my-6 flex flex-col items-stretch md:items-center justify-start md:justify-center">
             <div className="w-full max-w-4xl space-y-3">
                 {title && (
                     <div className="px-1 py-1 mb-2 flex items-end justify-between gap-3">

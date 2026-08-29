@@ -5,11 +5,14 @@ import { LessonCard } from "@/components/dashboard/student/lesson-card"
 import { useAuth } from "@/context/auth-context"
 import { lessonsListSync } from "@/lib/lesson-data-sync"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles } from "lucide-react"
+import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { OptimizedImage } from "@/components/ui/optimized-image"
+import { buildStudentViewerHref } from "@/lib/viewer-url"
+import { useGamification } from "@/context/gamification-context"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
@@ -20,8 +23,10 @@ export default function StudentDashboardPage() {
     const [error, setError] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState<FilterTab>('all')
     const [visibleCount, setVisibleCount] = useState<number>(8)
+    const { starBalance, level } = useGamification()
     const router = useRouter()
 
+    // ... inside StudentDashboardPage
     useEffect(() => {
         if (user?.user_id && token) {
             refreshLessons()
@@ -41,8 +46,8 @@ export default function StudentDashboardPage() {
     }
 
     const handleLessonRedirect = (lessonId: string) => {
-        const returnUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.pathname) : ''
-        router.push(`/viewer/${lessonId}?userId=${user?.user_id}&token=${token}&returnUrl=${returnUrl}`)
+        const returnUrl = typeof window !== 'undefined' ? window.location.pathname : ''
+        router.push(buildStudentViewerHref(lessonId, { returnUrl }))
     }
 
     const handleTabChange = (tab: FilterTab) => {
@@ -90,7 +95,7 @@ export default function StudentDashboardPage() {
         return filteredLessons.slice(0, visibleCount);
     }, [filteredLessons, visibleCount]);
 
-    const displayName = user?.email?.split('@')[0] || 'Learner'
+    const displayName = user?.full_name || user?.fullName || user?.email?.split('@')[0] || 'Learner'
 
     return (
         <div className="space-y-6 pb-12">
@@ -98,9 +103,25 @@ export default function StudentDashboardPage() {
             <section className="relative overflow-hidden p-6 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-2.5 max-w-xl">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/80 bg-emerald-50 dark:bg-emerald-950/60">
-                            <Zap className="w-3.5 h-3.5 text-[#58CC02]" />
-                            <span className="text-[11px] font-bold text-[#58CC02]">Active Student</span>
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/80 bg-emerald-50 dark:bg-emerald-950/60">
+                                <Zap className="w-3.5 h-3.5 text-[#58CC02]" />
+                                <span className="text-[11px] font-bold text-[#58CC02]">Active Student</span>
+                            </div>
+
+                            <Link href="/dashboard/student/progress">
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/80 bg-amber-50 dark:bg-amber-950/60 hover:scale-105 transition-transform cursor-pointer">
+                                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                                    <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-300">{starBalance} Stars</span>
+                                </div>
+                            </Link>
+
+                            <Link href="/dashboard/student/progress">
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-cyan-200 dark:border-cyan-800/80 bg-cyan-50 dark:bg-cyan-950/60 hover:scale-105 transition-transform cursor-pointer">
+                                    <Rocket className="w-3.5 h-3.5 text-cyan-500" />
+                                    <span className="text-[11px] font-extrabold text-cyan-600 dark:text-cyan-300">Level {level}</span>
+                                </div>
+                            </Link>
                         </div>
                         <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                             Welcome back, <span className="text-[#58CC02] capitalize">{displayName}</span>!
@@ -124,13 +145,12 @@ export default function StudentDashboardPage() {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <img
+                                <OptimizedImage
                                     src={currentOngoingLesson.thumbnail || "/logo.webp"}
-                                    alt="Cover"
+                                    alt=""
+                                    width={48}
+                                    height={48}
                                     className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-800 shrink-0 bg-slate-900"
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = "/logo.webp"
-                                    }}
                                 />
 
                                 <div className="min-w-0 flex-1">

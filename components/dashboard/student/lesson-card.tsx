@@ -1,6 +1,8 @@
 "use client"
 
-import { Clock, ArrowRight, BookOpen, CheckCircle2, PlayCircle, Zap } from "lucide-react"
+import Link from "next/link"
+import { Clock, ArrowRight, CheckCircle2, Zap } from "lucide-react"
+import { OptimizedImage } from "@/components/ui/optimized-image"
 
 interface LessonCardProps {
     lesson: {
@@ -13,34 +15,27 @@ interface LessonCardProps {
         progress: number
         duration?: string
     }
+    href?: string
     onClick?: () => void
 }
 
-export function LessonCard({ lesson, onClick }: LessonCardProps) {
+export function LessonCard({ lesson, href, onClick }: LessonCardProps) {
     const isCompleted = lesson.progress === 100;
     const isInProgress = lesson.progress > 0 && lesson.progress < 100;
     const displayThumbnail = lesson.thumbnail || "/logo.webp";
-    const categoryName = lesson.moduleName || lesson.programName || "Course Module";
 
-    return (
-        <div
-            onClick={onClick}
-            className="group relative h-full cursor-pointer"
-        >
+    const body = (
             <div className="relative h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-200 hover:border-[#58CC02]/40 hover:-translate-y-0.5 hover:shadow-md shadow-sm flex flex-col">
 
-                {/* Header Thumbnail Cover Image (Studio ModuleCard Style) */}
                 <div className="h-32 sm:h-36 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80">
-                    <img
+                    <OptimizedImage
                         src={displayThumbnail}
-                        alt={lesson.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = "/logo.webp"
-                        }}
+                        alt=""
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
 
-                    {/* Top Overlay Badges */}
                     <div className="absolute top-2.5 right-2.5 flex items-center justify-end pointer-events-none">
                         {isCompleted ? (
                             <span className="text-[10px] font-bold text-white bg-emerald-500 px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
@@ -57,7 +52,6 @@ export function LessonCard({ lesson, onClick }: LessonCardProps) {
                         )}
                     </div>
 
-                    {/* Duration Badge */}
                     {lesson.duration && (
                         <div className="absolute bottom-2 right-2.5 text-[10px] font-semibold text-white/90 bg-slate-950/70 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
                             <Clock className="w-3 h-3 text-slate-300" />
@@ -66,7 +60,6 @@ export function LessonCard({ lesson, onClick }: LessonCardProps) {
                     )}
                 </div>
 
-                {/* Card Content Body */}
                 <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
                     <div className="space-y-1.5 mb-3">
                         <h3 className="text-base font-extrabold text-slate-800 dark:text-white group-hover:text-[#58CC02] transition-colors line-clamp-1 leading-snug">
@@ -79,9 +72,7 @@ export function LessonCard({ lesson, onClick }: LessonCardProps) {
                         )}
                     </div>
 
-                    {/* Footer Section with Sleek Progress Bar & Action Link */}
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
-                        {/* Progress Bar Track */}
                         <div className="space-y-1">
                             <div className="flex justify-between items-center text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                                 <span>{isCompleted ? "Completed" : isInProgress ? "In Progress" : "Not Started"}</span>
@@ -102,7 +93,6 @@ export function LessonCard({ lesson, onClick }: LessonCardProps) {
                             </div>
                         </div>
 
-                        {/* Action Link */}
                         <div className="flex items-center justify-between pt-1">
                             <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-[#58CC02] transition-colors">
                                 {isCompleted ? "Review" : isInProgress ? "Resume" : "Start"}
@@ -114,6 +104,21 @@ export function LessonCard({ lesson, onClick }: LessonCardProps) {
                     </div>
                 </div>
             </div>
-        </div>
+    )
+
+    const className = "group relative h-full text-left"
+
+    if (href) {
+        return (
+            <Link href={href} className={`${className} block`} onClick={onClick}>
+                {body}
+            </Link>
+        )
+    }
+
+    return (
+        <button type="button" onClick={onClick} className={`${className} w-full cursor-pointer`}>
+            {body}
+        </button>
     )
 }

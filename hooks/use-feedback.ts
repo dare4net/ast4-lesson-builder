@@ -1,51 +1,28 @@
-import { useCallback, useEffect } from 'react';
-import { SoundEffects, SoundEffect } from '../lib/sound-effects';
+'use client'
 
-type FeedbackType = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'categorizeSlot' | 'categorizeBucketComplete' | 'softMiss' | 'blockedClick';
+import { useCallback, useContext } from 'react'
+import {
+  FeedbackScopeContext,
+  useFeedback as useFeedbackSettings,
+  type FeedbackOptions,
+} from '@/lib/feedback-context'
+import type { SoundEffect } from '@/lib/sound-effects'
 
-interface FeedbackOptions {
-  animation?: boolean;
-  sound?: boolean;
-}
+export type FeedbackType = SoundEffect
+export type { FeedbackOptions }
 
 export function useFeedback() {
-  // Preload sounds when the hook is first used
-  useEffect(() => {
-    SoundEffects.preloadAll();
-  }, []);
+  const settings = useFeedbackSettings()
+  const scope = useContext(FeedbackScopeContext)
 
-  const playFeedback = useCallback(async (type: FeedbackType, options: FeedbackOptions = {}) => {
-    const { animation = true, sound = true } = options;
-
-    // Play sound effect
-    if (sound) {
-      await SoundEffects.play(type as SoundEffect);
-    }
-
-    // Return animation class based on feedback type
-    if (animation) {
-      switch (type) {
-        case 'correct':
-          return 'duo-bounce';
-        case 'incorrect':
-          return 'duo-shake';
-        case 'complete':
-          return 'duo-celebrate';
-        case 'click':
-          return 'duo-pop';
-        case 'levelUp':
-          return 'duo-celebrate duo-pulse';
-        case 'streak':
-          return 'duo-bounce duo-pulse';
-        default:
-          return '';
-      }
-    }
-
-    return '';
-  }, []);
+  const playFeedback = useCallback(async (type: SoundEffect, options: FeedbackOptions = {}) => {
+    const className = await settings.playFeedback(type, options)
+    if (className) scope?.apply(className)
+    return className
+  }, [settings, scope])
 
   return {
+    ...settings,
     playFeedback,
-  };
-} 
+  }
+}

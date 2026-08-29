@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api-client";
 
 export type PollVotesMap = Record<string, { votes: Record<string, number>; totalVotes: number }>;
 
@@ -21,7 +22,7 @@ export function extractPollComponentIds(lesson: any): Array<{ componentId: strin
 /**
  * usePollStore — fetches all poll vote snapshots once at lesson start.
  * Returns a map of componentId -> {votes, totalVotes}.
- * Exposes `submitVote` which POSTs to /api/polls and updates the map.
+ * Exposes `submitVote` which POSTs to Express `/api/polls` and updates the map.
  * No real-time polling — snapshot is from lesson-start time.
  */
 export function usePollStore(lesson: any) {
@@ -46,18 +47,11 @@ export function usePollStore(lesson: any) {
             await Promise.all(
                 pollComponents.map(async ({ componentId }) => {
                     try {
-                        const res = await fetch(
-                            `/api/polls?lessonId=${encodeURIComponent(lessonId)}&componentId=${encodeURIComponent(componentId)}`
-                        );
-                        if (res.ok) {
-                            const data = await res.json();
-                            results[componentId] = {
-                                votes: data.votes || {},
-                                totalVotes: data.totalVotes || 0,
-                            };
-                        } else {
-                            results[componentId] = { votes: {}, totalVotes: 0 };
-                        }
+                        const data = await apiClient.live.getPoll(lessonId, componentId);
+                        results[componentId] = {
+                            votes: data.votes || {},
+                            totalVotes: data.totalVotes || 0,
+                        };
                     } catch {
                         results[componentId] = { votes: {}, totalVotes: 0 };
                     }
@@ -78,26 +72,18 @@ export function usePollStore(lesson: any) {
     }, [lesson, lessonId]);
 
     /**
-     * Submits a vote to /api/polls and updates local state with server-authoritative counts.
+     * Submits a vote to Express `/api/polls` and updates local state with server-authoritative counts.
      */
     const submitVote = async (componentId: string, optionId: string) => {
         try {
-            const res = await fetch("/api/polls", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ lessonId, componentId, optionId }),
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                setPollData(prev => ({
-                    ...prev,
-                    [componentId]: {
-                        votes: data.votes || {},
-                        totalVotes: data.totalVotes || 0,
-                    },
-                }));
-            }
+            const data = await apiClient.live.votePoll(lessonId, componentId, optionId);
+            setPollData(prev => ({
+                ...prev,
+                [componentId]: {
+                    votes: data.votes || {},
+                    totalVotes: data.totalVotes || 0,
+                },
+            }));
         } catch (err) {
             console.error("[usePollStore] Failed to submit vote:", err);
         }

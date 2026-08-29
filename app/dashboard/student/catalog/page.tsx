@@ -2,9 +2,15 @@
 
 import { useState, useEffect } from "react"
 import { apiClient } from "@/lib/api-client"
+import { appEventBus } from "@/lib/event-bus"
+import { useQueryClient } from "@tanstack/react-query"
+import { queryKeys } from "@/lib/query-keys"
+import { useMyPrograms, useProgramCatalog } from "@/hooks/use-my-programs"
 import { motion, AnimatePresence } from "framer-motion"
 import { BookOpen, Compass, Zap, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { PageHero } from "@/components/dashboard/page-hero"
+import { OptimizedImage } from "@/components/ui/optimized-image"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 
@@ -17,41 +23,27 @@ const DUO_THEME_PALETTES = [
 
 export default function CatalogPage() {
     const router = useRouter()
-    const [catalog, setCatalog] = useState<any[]>([])
-    const [myPrograms, setMyPrograms] = useState<any[]>([])
-    const [loading, setLoading] = useState(true)
+    const queryClient = useQueryClient()
+    const catalogQuery = useProgramCatalog()
+    const myProgramsQuery = useMyPrograms()
+    const catalog = catalogQuery.data || []
+    const myPrograms = myProgramsQuery.data || []
+    const loading = catalogQuery.isLoading || myProgramsQuery.isLoading
+    const error = catalogQuery.isError || myProgramsQuery.isError
+        ? "Unable to load course catalog right now. Please try again later."
+        : null
     const [registeringId, setRegisteringId] = useState<string | null>(null)
     const [selectedProgram, setSelectedProgram] = useState<any | null>(null)
     const [loadingDetails, setLoadingDetails] = useState(false)
     const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+    const [enrollError, setEnrollError] = useState<string | null>(null)
 
     useEffect(() => {
-        loadData()
-    }, [])
-
-    const loadData = async () => {
-        setLoading(true)
-        setError(null)
-        try {
-            const [rawCatalog, rawEnrolled] = await Promise.all([
-                apiClient.programs.getCatalog(),
-                apiClient.programs.getMyPrograms()
-            ])
-            const catalogData = Array.isArray(rawCatalog) ? rawCatalog : (rawCatalog?.data || rawCatalog?.programs || [])
-            const enrolledData = Array.isArray(rawEnrolled) ? rawEnrolled : (rawEnrolled?.data || rawEnrolled?.programs || [])
-            setCatalog(catalogData)
-            setMyPrograms(enrolledData)
-            if (catalogData.length > 0) {
-                selectProgram(catalogData[0])
-            }
-        } catch (err: any) {
-            console.error("Failed to load catalog data", err)
-            setError("Unable to load course catalog right now. Please try again later.")
-        } finally {
-            setLoading(false)
+        if (catalog.length > 0 && !selectedProgram) {
+            void selectProgram(catalog[0])
         }
-    }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- select first card once catalog arrives
+    }, [catalog])
 
     const selectProgram = async (program: any) => {
         setSelectedProgram(program)
@@ -73,13 +65,16 @@ export default function CatalogPage() {
     const handleRegister = async (programId: string, e?: React.MouseEvent) => {
         if (e) e.stopPropagation()
         setRegisteringId(programId)
+        setEnrollError(null)
         try {
             await apiClient.programs.register(programId)
-            const enrolled = await apiClient.programs.getMyPrograms()
-            setMyPrograms(Array.isArray(enrolled) ? enrolled : (enrolled?.data || enrolled?.programs || []))
+            await queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
+
+            // Emit Gamification Event for Level 1 Mission "Program Explorer"
+            appEventBus.emit('PROGRAM_ENROLLED', { programId })
         } catch (err: any) {
             console.error("Failed to enroll in course", err)
-            alert(err.message || "Failed to enroll in course")
+            setEnrollError(err.response?.data?.message || err.response?.data?.error || err.message || "Failed to enroll in course")
         } finally {
             setRegisteringId(null)
         }
@@ -174,6 +169,9 @@ export default function CatalogPage() {
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex flex-col gap-2">
+                    {enrollError && (
+                        <p className="text-xs font-bold text-red-600">{enrollError}</p>
+                    )}
                     {enrolled ? (
                         <Button
                             disabled={navigatingId === program._id}
@@ -212,29 +210,31 @@ export default function CatalogPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <Compass className="w-6 h-6 text-[#1CB0F6]" />
-                        <span>Explore Course Catalog</span>
-                    </h1>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">
-                        Discover new learning modules and enroll to build your tech skills.
-                    </p>
-                </div>
+            <PageHero
+                title={<><Compass className="w-6 h-6 text-[#1CB0F6]" /><span>Explore Course Catalog</span></>}
+                description="Discover new learning modules and enroll to build your tech skills."
+                badge={
+                    <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 text-xs font-bold text-[#1CB0F6] self-start sm:self-auto">
+                        <BookOpen className="w-4 h-4" />
+                        <span>{catalog.length} Available Courses</span>
+                    </div>
+                }
+            />
 
-                <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 text-xs font-bold text-[#1CB0F6] self-start sm:self-auto">
-                    <BookOpen className="w-4 h-4" />
-                    <span>{catalog.length} Available Courses</span>
+            {enrollError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-700">
+                    {enrollError}
                 </div>
-            </div>
-
+            )}
             {error ? (
                 <div className="p-8 rounded-3xl bg-red-50 border-2 border-red-200 text-center space-y-3">
                     <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
                     <p className="text-xs font-extrabold text-red-700">{error}</p>
                     <Button
-                        onClick={loadData}
+                        onClick={() => {
+                            void catalogQuery.refetch()
+                            void myProgramsQuery.refetch()
+                        }}
                         className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs h-9 rounded-xl inline-flex items-center gap-2"
                     >
                         <RefreshCw className="w-3.5 h-3.5" />
@@ -263,19 +263,25 @@ export default function CatalogPage() {
                                     transition={{ delay: idx * 0.05 }}
                                 >
                                     <div
-                                        onClick={() => handleCardClick(prog)}
-                                        className={`rounded-3xl bg-white border transition-all cursor-pointer group overflow-hidden h-full flex flex-col justify-between shadow-sm ${isSelected ? "border-[#1CB0F6] ring-2 ring-[#1CB0F6]/20" : "border-slate-200 hover:border-slate-300"
+                                        className={`rounded-3xl bg-white border transition-all group overflow-hidden h-full flex flex-col justify-between shadow-sm ${isSelected ? "border-[#1CB0F6] ring-2 ring-[#1CB0F6]/20" : "border-slate-200 hover:border-slate-300"
                                             }`}
                                     >
-                                        <div>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCardClick(prog)}
+                                            aria-pressed={isSelected}
+                                            aria-label={`View ${prog.name || prog.program_name || prog.title || "course"}`}
+                                            className="text-left w-full"
+                                        >
                                             {/* Edge-to-Edge Media Header */}
                                             {imageUrl ? (
                                                 <div className="h-44 w-full relative overflow-hidden bg-slate-100">
-                                                    <img
+                                                    <OptimizedImage
                                                         src={imageUrl}
                                                         alt={prog.name}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                        onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                                                        fill
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                     />
                                                     {enrolled && (
                                                         <span className="absolute top-3.5 right-3.5 text-xs font-extrabold text-[#58CC02] bg-white/95 backdrop-blur-md px-3 py-1 rounded-full border border-slate-200 shadow-sm flex items-center gap-1">
@@ -306,7 +312,7 @@ export default function CatalogPage() {
                                                     {prog.description || "Interactive learning course."}
                                                 </p>
                                             </div>
-                                        </div>
+                                        </button>
 
                                         <div className="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3 text-xs">
                                             <span className="text-slate-400 font-extrabold">
@@ -381,6 +387,8 @@ export default function CatalogPage() {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
+                                type="button"
+                                aria-label="Close course details"
                                 onClick={() => setIsMobileModalOpen(false)}
                                 className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500"
                             >

@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Mail, Lock, Loader2, ArrowRight, GraduationCap, BookOpenCheck, Sparkles, Zap, Flame, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 function LoginForm() {
     const router = useRouter();
@@ -114,10 +115,7 @@ function LoginForm() {
                         </div>
 
                         <div className="space-y-1.5">
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="password" className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Password</Label>
-                                <Link href="#" className="text-xs font-bold hover:underline" style={{ color: accent }}>Forgot password?</Link>
-                            </div>
+                            <Label htmlFor="password" className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Password</Label>
                             <div className="relative">
                                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                 <Input
@@ -182,6 +180,35 @@ function LoginForm() {
     );
 }
 
+function LoginFloatingBadges() {
+    const reduceMotion = useReducedMotion()
+    return (
+        <>
+            <motion.div
+                className="absolute top-12 left-10 p-3 bg-white border-2 border-[#FFC800] rounded-2xl hidden md:flex items-center gap-2"
+                animate={reduceMotion ? undefined : { y: [0, -8, 0], rotate: [-3, 3, -3] }}
+                transition={reduceMotion ? undefined : { duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+                <div className="w-7 h-7 rounded-xl bg-[#FFC800] flex items-center justify-center text-white font-black text-xs">
+                    <Zap className="w-3.5 h-3.5 fill-white" />
+                </div>
+                <span className="text-xs font-black text-slate-800">Ready to Learn</span>
+            </motion.div>
+
+            <motion.div
+                className="absolute bottom-16 right-10 p-3 bg-white border-2 border-[#FF4B4B] rounded-2xl hidden md:flex items-center gap-2"
+                animate={reduceMotion ? undefined : { y: [0, 8, 0], rotate: [3, -3, 3] }}
+                transition={reduceMotion ? undefined : { duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            >
+                <div className="w-7 h-7 rounded-xl bg-[#FF4B4B] flex items-center justify-center text-white font-black text-xs">
+                    <Flame className="w-3.5 h-3.5 fill-white" />
+                </div>
+                <span className="text-xs font-black text-slate-800">Streak On!</span>
+            </motion.div>
+        </>
+    )
+}
+
 export default function LoginPage() {
     return (
         <div className="min-h-screen bg-[#FAF9F5] flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden select-none">
@@ -204,27 +231,7 @@ export default function LoginPage() {
             />
 
             {/* Decorative Floating Badges */}
-            <motion.div
-                className="absolute top-12 left-10 p-3 bg-white border-2 border-[#FFC800] rounded-2xl hidden md:flex items-center gap-2"
-                animate={{ y: [0, -8, 0], rotate: [-3, 3, -3] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <div className="w-7 h-7 rounded-xl bg-[#FFC800] flex items-center justify-center text-white font-black text-xs">
-                    <Zap className="w-3.5 h-3.5 fill-white" />
-                </div>
-                <span className="text-xs font-black text-slate-800">Ready to Learn</span>
-            </motion.div>
-
-            <motion.div
-                className="absolute bottom-16 right-10 p-3 bg-white border-2 border-[#FF4B4B] rounded-2xl hidden md:flex items-center gap-2"
-                animate={{ y: [0, 8, 0], rotate: [3, -3, 3] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <div className="w-7 h-7 rounded-xl bg-[#FF4B4B] flex items-center justify-center text-white font-black text-xs">
-                    <Flame className="w-3.5 h-3.5 fill-white" />
-                </div>
-                <span className="text-xs font-black text-slate-800">Streak On!</span>
-            </motion.div>
+            <LoginFloatingBadges />
 
             <Suspense fallback={<div className="text-slate-600 text-xs font-extrabold">Loading...</div>}>
                 <LoginForm />

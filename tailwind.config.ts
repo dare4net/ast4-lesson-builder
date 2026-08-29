@@ -23,15 +23,27 @@ const config: Config = {
   			border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: {
+          DEFAULT: "hsl(var(--background))",
+          secondary: "hsl(var(--background-secondary))",
+          tertiary: "hsl(var(--background-tertiary))",
+        },
+        foreground: {
+          DEFAULT: "hsl(var(--foreground))",
+          secondary: "hsl(var(--foreground-secondary))",
+          tertiary: "hsl(var(--foreground-tertiary))",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
+          active: "hsl(var(--primary-active))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          hover: "hsl(var(--secondary-hover))",
+          active: "hsl(var(--secondary-active))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -53,6 +65,18 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        error: {
+          DEFAULT: "hsl(var(--error))",
+          foreground: "hsl(var(--error-foreground))",
+        },
   		},
   		borderRadius: {
   			lg: "var(--radius)",
@@ -64,7 +88,8 @@ const config: Config = {
   			full: duoTheme.borderRadius.full,
   		},
   		fontFamily: {
-  			sans: [duoTheme.typography.fontFamily],
+  			sans: ["var(--font-sans, ui-sans-serif)", "system-ui", "sans-serif"],
+  			heading: ["var(--font-heading, var(--font-sans, ui-sans-serif))", "system-ui", "sans-serif"],
   		},
   		fontSize: duoTheme.typography.fontSizes,
   		fontWeight: duoTheme.typography.fontWeights,
@@ -84,46 +109,13 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-  			"duo-bounce": {
-  				"0%, 100%": { transform: "translateY(0)" },
-  				"50%": { transform: "translateY(-10px)" },
-  			},
-  			"duo-shake": {
-  				"0%, 100%": { transform: "translateX(0)" },
-  				"25%": { transform: "translateX(-5px)" },
-  				"75%": { transform: "translateX(5px)" },
-  			},
-  			"duo-pop": {
-  				"0%": { transform: "scale(0.95)" },
-  				"50%": { transform: "scale(1.05)" },
-  				"100%": { transform: "scale(1)" },
-  			},
-  			"duo-float": {
-  				"0%, 100%": { transform: "translateY(0)" },
-  				"50%": { transform: "translateY(-5px)" },
-  			},
-  			"duo-pulse": {
-  				"0%, 100%": { opacity: "1" },
-  				"50%": { opacity: "0.5" },
-  			},
-  			"duo-celebrate": {
-  				"0%": { transform: "scale(0.95) rotate(0deg)" },
-  				"50%": { transform: "scale(1.05) rotate(5deg)" },
-  				"100%": { transform: "scale(1) rotate(0deg)" },
-  			},
   		},
   		animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-  			"duo-bounce": "duo-bounce 0.3s ease-in-out",
-  			"duo-shake": "duo-shake 0.3s ease-in-out",
-  			"duo-pop": "duo-pop 0.2s ease-out",
-  			"duo-float": "duo-float 3s ease-in-out infinite",
-  			"duo-pulse": "duo-pulse 2s ease-in-out infinite",
-  			"duo-celebrate": "duo-celebrate 0.5s ease-out",
   		},
   	}
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")], // eslint-disable-line @typescript-eslint/no-require-imports -- Tailwind CJS plugins; ticket G-04
 };
 export default config;

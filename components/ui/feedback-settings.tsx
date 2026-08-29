@@ -1,12 +1,43 @@
 "use client"
 
-import React from 'react';
-import { useFeedback } from '../../lib/feedback-context';
-import { SoundEffects } from '../../lib/sound-effects';
-import { Slider } from './slider';
-import { Switch } from './switch';
+import type { ReactNode } from 'react'
+import { Volume2, VolumeX, Sparkles } from 'lucide-react'
+import { useFeedback } from '@/hooks/use-feedback'
+import { SoundEffects } from '@/lib/sound-effects'
+import { Button } from './button'
+import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Slider } from './slider'
+import { Switch } from './switch'
+import { cn } from '@/lib/utils'
 
-export function FeedbackSettings() {
+function PreferenceRow({
+  icon,
+  iconClassName,
+  title,
+  description,
+  children,
+}: {
+  icon: ReactNode
+  iconClassName: string
+  title: string
+  description: string
+  children: ReactNode
+}) {
+  return (
+    <div className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 bg-white">
+      <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", iconClassName)}>
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <h4 className="text-sm font-extrabold text-slate-800 leading-tight">{title}</h4>
+        <p className="text-xs text-slate-500 font-medium mt-0.5">{description}</p>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+export function FeedbackSettings({ compact = false, showIntro = true }: { compact?: boolean; showIntro?: boolean }) {
   const {
     isSoundEnabled,
     soundVolume,
@@ -15,102 +46,121 @@ export function FeedbackSettings() {
     toggleAnimation,
     setVolume,
     playFeedback
-  } = useFeedback();
+  } = useFeedback()
 
   const handleVolumeChange = async (value: number) => {
-    setVolume(value);
+    setVolume(value)
     if (isSoundEnabled && value > 0) {
-      await playFeedback('click', { animation: false });
+      await playFeedback('click', { animation: false })
     }
-  };
-
-  const handleSoundToggle = async () => {
-    toggleSound();
-    if (!isSoundEnabled) { // Only play if we're enabling sound
-      await playFeedback('click', { animation: false });
-    }
-  };
+  }
 
   const handleAnimationToggle = async () => {
-    toggleAnimation();
-    await playFeedback('click', { animation: false });
-  };
+    toggleAnimation()
+    await playFeedback('click', { animation: false })
+  }
 
-  // Get sound loading status
-  const soundStatus = SoundEffects.getStatus();
-  const hasErrors = Object.values(soundStatus).some(status => status.error);
-  const isLoading = Object.values(soundStatus).some(status => !status.loaded && !status.error);
+  const soundStatus = SoundEffects.getStatus()
+  const hasErrors = Object.values(soundStatus).some(status => status.error)
+  const isLoading = Object.values(soundStatus).some(status => !status.loaded && !status.error)
+
+  const soundDescription = hasErrors
+    ? 'Some sounds failed to load'
+    : isLoading
+      ? 'Loading sounds…'
+      : 'Narration, Listen buttons, and answer sounds'
 
   return (
-    <div className="p-4 space-y-6 bg-white rounded-lg shadow-lg">
-      <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-gray-900">Feedback Settings</h3>
-        <p className="text-sm text-gray-500">Customize your learning experience</p>
-      </div>
-
-      {/* Sound Settings */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium text-gray-900">Sound Effects</h4>
-            <p className="text-sm text-gray-500">
-              {hasErrors ? 'Some sounds failed to load' : 
-               isLoading ? 'Loading sounds...' : 
-               'Enable or disable sound effects'}
-            </p>
-          </div>
-          <Switch
-            checked={isSoundEnabled}
-            onCheckedChange={handleSoundToggle}
-            disabled={isLoading}
-            className={hasErrors ? 'opacity-50' : ''}
-          />
+    <div className={cn("space-y-3", compact && "space-y-2.5")}>
+      {!compact && showIntro && (
+        <div className="space-y-1 pb-1">
+          <h3 className="text-base font-extrabold text-slate-800">How lessons feel</h3>
+          <p className="text-xs text-slate-500 font-medium">
+            These save on this device and apply the next time you open a lesson.
+          </p>
         </div>
+      )}
 
-        {isSoundEnabled && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">Volume</label>
-              <span className="text-sm text-gray-500">{Math.round(soundVolume * 100)}%</span>
+      <PreferenceRow
+        icon={<Volume2 className="w-5 h-5" />}
+        iconClassName="bg-[#1CB0F6]/10 text-[#1CB0F6]"
+        title="Lesson audio"
+        description={soundDescription}
+      >
+        <Switch
+          checked={isSoundEnabled}
+          onCheckedChange={toggleSound}
+          disabled={isLoading}
+          aria-label="Lesson audio"
+          className={cn("data-[state=checked]:bg-[#58CC02]", hasErrors && "opacity-50")}
+        />
+      </PreferenceRow>
+
+      {isSoundEnabled && (
+        <div className="flex items-center gap-4 p-4 rounded-2xl border-2 border-slate-200 bg-white">
+          <div className="w-11 h-11 rounded-xl bg-[#58CC02]/10 text-[#58CC02] flex items-center justify-center shrink-0">
+            <Volume2 className="w-5 h-5" />
+          </div>
+          <div className="min-w-0 flex-1 space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <h4 className="text-sm font-extrabold text-slate-800 leading-tight">Volume</h4>
+              <span className="text-xs font-extrabold text-slate-500 tabular-nums">{Math.round(soundVolume * 100)}%</span>
             </div>
             <Slider
               value={[soundVolume * 100]}
               onValueChange={([value]) => handleVolumeChange(value / 100)}
               max={100}
               step={1}
-              className="w-full"
+              aria-label="Lesson volume"
+              className="w-full [&_[role=slider]]:h-5 [&_[role=slider]]:w-5 [&>span:first-child]:h-2.5 [&>span:first-child>span]:bg-[#58CC02]"
             />
           </div>
-        )}
-      </div>
-
-      {/* Animation Settings */}
-      <div className="flex items-center justify-between pt-4 border-t">
-        <div>
-          <h4 className="font-medium text-gray-900">Animations</h4>
-          <p className="text-sm text-gray-500">Enable or disable visual feedback</p>
         </div>
+      )}
+
+      <PreferenceRow
+        icon={<Sparkles className="w-5 h-5" />}
+        iconClassName="bg-amber-100 text-amber-600"
+        title="Answer animations"
+        description="Bounce on correct answers, shake on misses"
+      >
         <Switch
           checked={isAnimationEnabled}
           onCheckedChange={handleAnimationToggle}
+          aria-label="Answer animations"
+          className="data-[state=checked]:bg-[#58CC02]"
         />
-      </div>
-
-      {/* Test Buttons */}
-      <div className="grid grid-cols-2 gap-2 pt-4 border-t">
-        <button
-          onClick={() => playFeedback('correct')}
-          className="px-3 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-        >
-          Test Correct
-        </button>
-        <button
-          onClick={() => playFeedback('incorrect')}
-          className="px-3 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-        >
-          Test Incorrect
-        </button>
-      </div>
+      </PreferenceRow>
     </div>
-  );
-} 
+  )
+}
+
+export function FeedbackSettingsButton({ tone = "light" }: { tone?: "light" | "dark" }) {
+  const { isSoundEnabled } = useFeedback()
+  const Icon = isSoundEnabled ? Volume2 : VolumeX
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Sound and animation settings"
+          aria-label="Sound and animation settings"
+          className={cn(
+            "min-h-11 min-w-11 rounded-xl border-2",
+            tone === "light"
+              ? "text-[#CE82FF] hover:text-white hover:bg-[#CE82FF] border-[#CE82FF]/30 bg-[#CE82FF]/10"
+              : "text-slate-300 hover:text-white hover:bg-slate-800 border-slate-700"
+          )}
+        >
+          <Icon className="h-4 w-4" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-[min(20rem,calc(100vw-1.5rem))] p-3 rounded-2xl border-2 border-slate-200 shadow-lg">
+        <FeedbackSettings compact />
+      </PopoverContent>
+    </Popover>
+  )
+}

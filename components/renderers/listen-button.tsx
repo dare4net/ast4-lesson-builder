@@ -35,7 +35,7 @@ export function ListenButton({
             onClick={handleClick}
             disabled={!hasAudio}
             className={cn(
-                "flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black transition-all border shadow-sm",
+                "flex items-center gap-1.5 px-3 py-2.5 min-h-11 rounded-xl text-xs font-black transition-all border shadow-sm",
                 hasAudio
                     ? "cursor-pointer active:scale-95"
                     : "cursor-not-allowed opacity-45",

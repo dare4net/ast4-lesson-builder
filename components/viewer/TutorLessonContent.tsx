@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Award, X, CheckCircle2, AlertCircle, Clock, Loader2, RotateCcw, CheckSquare, Square, Lock } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
@@ -8,6 +8,7 @@ import type { Lesson } from '@/types/lesson';
 import { isInteractiveComponent, formatSlideTitle } from '@/lib/lesson-utils';
 import { cn } from '@/lib/utils';
 import { apiClient } from '@/lib/api-client';
+import { interactionStorageKey } from '@/lib/lesson-ref';
 
 /**
  * Component types that support submittable answers (tutor-markable).
@@ -59,10 +60,10 @@ export function TutorLessonContent({
 
     const activeComponent = processedComponents[innerStepIndex];
 
-    // Reset step index when slide changes
-    useState(() => {
+    // Reset inner step when the tutor changes slide
+    useEffect(() => {
         setInnerStepIndex(0);
-    });
+    }, [currentSlideIndex]);
 
     const canGoNext = innerStepIndex < (processedComponents.length - 1) || currentSlideIndex < (lesson.slides.length - 1);
     const canGoPrev = innerStepIndex > 0 || currentSlideIndex > 0;
@@ -145,6 +146,7 @@ export function TutorLessonContent({
                                 setComponentState={() => { }} // No-op — tutor cannot modify student state
                                 isEditing={false}
                                 isTutorView={true}
+                                lessonId={lesson.id}
                             />
                         </div>
                     )}
@@ -408,7 +410,7 @@ function TutorMarkingBar({
                 correctAnswers: checkedItems
             });
             if (typeof window !== 'undefined') {
-                localStorage.removeItem(`ast_interaction_${studentId}_${lessonId}`);
+                localStorage.removeItem(interactionStorageKey(studentId, lessonId));
             }
             onMarkSuccess?.(calculatedScore, isApprovedMark, checkedItems);
             setMarkedResult({ isApproved: isApprovedMark, points: calculatedScore });
@@ -432,7 +434,7 @@ function TutorMarkingBar({
         try {
             await apiClient.studio.resetStudentResponse(studentId, lessonId, componentId);
             if (typeof window !== 'undefined') {
-                localStorage.removeItem(`ast_interaction_${studentId}_${lessonId}`);
+                localStorage.removeItem(interactionStorageKey(studentId, lessonId));
             }
             setMarkedResult(null);
             setIsDismissed(true);

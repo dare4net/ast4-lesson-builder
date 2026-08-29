@@ -40,6 +40,7 @@ type FlashcardQuizState = {
     scores: number[]
     status?: string
     isComplete?: boolean
+    score?: number
 }
 
 // ─── Inner content component ─────────────────────────────────────────────────
@@ -49,6 +50,7 @@ function FlashcardQuizContent({
     setState,
     handleScore,
     handlePoints,
+    recordAttempt,
     isDisabled,
     isLive,
     id,
@@ -164,10 +166,13 @@ function FlashcardQuizContent({
             scores: newScores,
             isComplete: allDone,
             status: allDone ? 'completed' : 'active',
+            score: newScores.reduce((a, b) => a + b, 0),
         }))
 
         if (allDone) {
-            handlePoints(newScores.reduce((a, b) => a + b, 0))
+            const total = newScores.reduce((a, b) => a + b, 0)
+            handlePoints(total)
+            recordAttempt(newCorrect.every(Boolean), total, points)
         }
     }
 
@@ -187,6 +192,7 @@ function FlashcardQuizContent({
             }))
             handleScore(false)
             handlePoints(0)
+            recordAttempt(false)
         }
     }
 

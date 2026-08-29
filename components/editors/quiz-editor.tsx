@@ -20,6 +20,7 @@ interface QuizQuestion {
   question: string
   options: QuizOption[]
   explanation?: string
+  timeLimit?: number
 }
 
 interface QuizEditorProps {

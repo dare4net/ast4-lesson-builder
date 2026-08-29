@@ -57,6 +57,7 @@ function CategoriseContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     categories,
@@ -139,6 +140,7 @@ function CategoriseContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {

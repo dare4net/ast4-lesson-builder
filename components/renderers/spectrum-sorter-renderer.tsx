@@ -464,6 +464,7 @@ function SpectrumSorterContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     leftLabel,
@@ -541,6 +542,7 @@ function SpectrumSorterContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {

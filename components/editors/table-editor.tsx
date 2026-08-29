@@ -24,7 +24,7 @@ export function TableEditor({ component, updateComponent }: TableEditorProps) {
 
   const handleRowsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newRows = Math.max(1, Math.min(10, Number(e.target.value)));
-    let newData = [...safeData];
+    const newData = [...safeData];
     while (newData.length < newRows) newData.push(Array(columns).fill(""));
     while (newData.length > newRows) newData.pop();
     updateComponent({ title, rows: newRows, columns, data: newData });
@@ -32,8 +32,8 @@ export function TableEditor({ component, updateComponent }: TableEditorProps) {
 
   const handleColumnsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newCols = Math.max(1, Math.min(10, Number(e.target.value)));
-    let newData = safeData.map((row) => {
-      let newRow = [...row];
+    const newData = safeData.map((row) => {
+      const newRow = [...row];
       while (newRow.length < newCols) newRow.push("");
       while (newRow.length > newCols) newRow.pop();
       return newRow;

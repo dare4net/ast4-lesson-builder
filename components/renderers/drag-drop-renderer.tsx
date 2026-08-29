@@ -46,6 +46,7 @@ type DragDropState = {
   isCorrect: boolean
   mode: 'practice' | 'live'
   status?: string
+  score?: number
 }
 
 const generatePastelColor = () => {
@@ -61,6 +62,7 @@ function DragDropContent({
   setState,
   handlePoints,
   handleRetry,
+  recordAttempt,
   isLive,
   isDisabled: disabledProp,
   onCheckSlideCompletion,
@@ -155,11 +157,13 @@ function DragDropContent({
 
     const isAllCorrect = correctCount === dragItems.length
 
+    const earnedPoints = correctCount * (props.points || 15)
     const newState = {
       dragItems,
       isSubmitted: true,
       isCorrect: isAllCorrect,
-      status: 'completed'
+      status: 'completed' as const,
+      score: earnedPoints,
     }
     setState(prev => ({ ...prev, ...newState }))
 
@@ -171,8 +175,8 @@ function DragDropContent({
       await playFeedback('incorrect')
     }
 
-    const earnedPoints = correctCount * (props.points || 15)
     handlePoints(earnedPoints)
+    recordAttempt(isAllCorrect, earnedPoints, dragItems.length * (props.points || 15))
 
     if (isLastSlideChild && (isLive || isAllCorrect)) {
       onCheckSlideCompletion?.()
@@ -255,7 +259,7 @@ function DragDropContent({
       </div>
 
       {/* CENTER SECTION: Interactive List (Full Canvas Width) */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+      <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center py-3 md:py-4 w-full">
         <div className="relative space-y-3 my-auto w-full">
           {dragItems.map((item, index) => (
             <div

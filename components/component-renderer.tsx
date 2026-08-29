@@ -2,95 +2,49 @@
 
 import dynamic from "next/dynamic"
 import * as React from 'react'
+import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Component } from "@/types/lesson"
 import type { PollVotesMap } from "@/hooks/use-poll-store"
-import { usesGamifiedRendererProps, usesInteractiveRendererProps } from "@/lib/component-registry"
+import { COMPONENT_REGISTRY, usesGamifiedRendererProps, usesInteractiveRendererProps } from "@/lib/component-registry"
+import { FALLBACK_RENDERER_LOADER, RENDERER_LOADERS } from "@/lib/component-renderer-loaders"
 import { resolveHotspotComponentProps } from "@/lib/hotspot-utils"
 
 type ComponentRenderers = Record<string, React.ComponentType<any>>;
 
-// Dynamically import all component renderers
-const componentRenderers: ComponentRenderers = {
-  // Content Components
-  paragraph: dynamic(() => import("@/components/renderers/paragraph-renderer").then((mod) => mod.ParagraphRenderer)),
-  heading: dynamic(() => import("@/components/renderers/heading-renderer").then((mod) => mod.HeadingRenderer)),
-  bulletList: dynamic(() =>
-    import("@/components/renderers/bullet-list-renderer").then((mod) => mod.BulletListRenderer),
-  ),
-  image: dynamic(() => import("@/components/renderers/image-renderer").then((mod) => mod.ImageRenderer)),
-  table: dynamic(() => import("@/components/renderers/table-renderer").then((mod) => mod.TableRenderer)),
-  video: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
-  videoClip: dynamic(() => import("@/components/renderers/video-renderer").then((mod) => mod.VideoRenderer)),
-  codeBlock: dynamic(() => import("@/components/renderers/code-block-renderer").then((mod) => mod.CodeBlockRenderer)),
-  quote: dynamic(() => import("@/components/renderers/quote-renderer").then((mod) => mod.QuoteRenderer)),
-  callout: dynamic(() => import("@/components/renderers/callout-renderer").then((mod) => mod.CalloutRenderer)),
-  accordion: dynamic(() => import("@/components/renderers/accordion-renderer").then((mod) => mod.AccordionRenderer)),
-
-  // Interactive Components
-  quiz: dynamic(() => import("@/components/renderers/quiz-renderer").then((mod) => mod.QuizRenderer)),
-  trueFalse: dynamic(() => import("@/components/renderers/true-false-renderer").then((mod) => mod.TrueFalseRenderer)),
-  annotateImage: dynamic(() => import("@/components/renderers/annotate-image-renderer").then((mod) => mod.AnnotateImageRenderer)),
-  categorise: dynamic(() => import("@/components/renderers/categorise-renderer").then((mod) => mod.CategoriseRenderer)),
-  timeline: dynamic(() => import("@/components/renderers/timeline-renderer").then((mod) => mod.TimelineRenderer)),
-  matchingPairs: dynamic(() =>
-    import("@/components/renderers/matching-pairs-renderer").then((mod) => mod.MatchingPairsRenderer),
-  ),
-  dragDrop: dynamic(() => import("@/components/renderers/drag-drop-renderer").then((mod) => mod.DragDropRenderer)),
-
-  // Additional Interactive Components
-  flashcards: dynamic(() => import("@/components/renderers/flashcards-renderer").then((mod) => mod.FlashcardsRenderer)),
-  hotspot: dynamic(() => import("@/components/renderers/hotspot-renderer").then((mod) => mod.HotspotRenderer)),
-
-  // New Interactive Components
-  shortAnswer: dynamic(() =>
-    import("@/components/renderers/short-answer-renderer").then((mod) => mod.ShortAnswerRenderer),
-  ),
-  fillInTheBlank: dynamic(() =>
-    import("@/components/renderers/fill-in-the-blank-renderer").then((mod) => mod.FillInTheBlankRenderer),
-  ),
-  codeEditor: dynamic(() =>
-    import("@/components/renderers/code-editor-renderer").then((mod) => mod.CodeEditorRenderer),
-  ),
-  poll: dynamic(() => import("@/components/renderers/poll-renderer").then((mod) => mod.PollRenderer)),
-  flashcardQuiz: dynamic(() =>
-    import("@/components/renderers/flashcard-quiz-renderer").then((mod) => mod.FlashcardQuizRenderer),
-  ),
-  multiSelectQuiz: dynamic(() =>
-    import("@/components/renderers/multi-select-quiz-renderer").then((mod) => mod.MultiSelectQuizRenderer),
-  ),
-  wordCloud: dynamic(() =>
-    import("@/components/renderers/word-cloud-renderer").then((mod) => mod.WordCloudRenderer),
-  ),
-  scaleSlider: dynamic(() =>
-    import("@/components/renderers/scale-slider-renderer").then((mod) => mod.ScaleSliderRenderer),
-  ),
-
-  // Gamified Components
-  annotationBoard: dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => (mod.AnnotationBoardRenderer || mod.default) as any)),
-  "annotation-board": dynamic(() => import("@/components/renderers/annotation-board-renderer").then((mod) => (mod.AnnotationBoardRenderer || mod.default) as any)),
-  anagram: dynamic(() => import("@/components/renderers/anagram-renderer").then((mod) => mod.AnagramRenderer as any)),
-  hangman: dynamic(() => import("@/components/renderers/hangman-renderer").then((mod) => mod.HangmanRenderer as any)),
-  swipeDeck: dynamic(() => import("@/components/renderers/swipe-deck-renderer").then((mod) => mod.SwipeDeckRenderer as any)),
-  "swipe-deck": dynamic(() => import("@/components/renderers/swipe-deck-renderer").then((mod) => mod.SwipeDeckRenderer as any)),
-  spectrumSorter: dynamic(() => import("@/components/renderers/spectrum-sorter-renderer").then((mod) => mod.SpectrumSorterRenderer as any)),
-  "spectrum-sorter": dynamic(() => import("@/components/renderers/spectrum-sorter-renderer").then((mod) => mod.SpectrumSorterRenderer as any)),
-  labScale: dynamic(() => import("@/components/renderers/spectrum-sorter-renderer").then((mod) => mod.SpectrumSorterRenderer as any)),
-  jigsaw: dynamic(() => import("@/components/renderers/jigsaw-renderer").then((mod) => mod.JigsawRenderer as any)),
-  crossword: dynamic(() => import("@/components/renderers/crossword-renderer").then((mod) => mod.CrosswordRenderer as any)),
-  wordScramble: dynamic(() => import("@/components/renderers/word-scramble-renderer").then((mod) => mod.WordScrambleRenderer as any)),
-  "word-scramble": dynamic(() => import("@/components/renderers/word-scramble-renderer").then((mod) => mod.WordScrambleRenderer as any)),
-  memoryGrid: dynamic(() => import("@/components/renderers/memory-grid-renderer").then((mod) => mod.MemoryGridRenderer as any)),
-  "memory-grid": dynamic(() => import("@/components/renderers/memory-grid-renderer").then((mod) => mod.MemoryGridRenderer as any)),
-  spinTheWheel: dynamic(() => import("@/components/renderers/spin-the-wheel-renderer").then((mod) => mod.SpinTheWheelRenderer as any)),
-  "spin-the-wheel": dynamic(() => import("@/components/renderers/spin-the-wheel-renderer").then((mod) => mod.SpinTheWheelRenderer as any)),
-
-  // Structure Components
-  slideTitle: dynamic(() => import("@/components/renderers/heading-renderer").then((mod) => mod.HeadingRenderer)),
-
-  // Fallback renderer for unimplemented components
-  fallback: dynamic(() => import("@/components/renderers/fallback-renderer").then((mod) => mod.FallbackRenderer)),
+function RendererLoading() {
+  return (
+    <div className="flex flex-1 min-h-[8rem] items-center justify-center" aria-busy="true">
+      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+    </div>
+  )
 }
+
+function loadRenderer(loader: () => Promise<React.ComponentType<any>>) {
+  return dynamic(loader, { loading: RendererLoading })
+}
+
+function buildComponentRenderers(): ComponentRenderers {
+  const map: ComponentRenderers = {
+    fallback: loadRenderer(FALLBACK_RENDERER_LOADER),
+  }
+
+  for (const [type, loader] of Object.entries(RENDERER_LOADERS)) {
+    map[type] = loadRenderer(loader)
+  }
+
+  for (const entry of COMPONENT_REGISTRY) {
+    const canonical = map[entry.type]
+    if (!canonical || !("aliases" in entry) || !entry.aliases) continue
+    for (const alias of entry.aliases) {
+      map[alias] = canonical
+    }
+  }
+
+  return map
+}
+
+const componentRenderers: ComponentRenderers = buildComponentRenderers()
 
 export function isSupportedRenderer(type: string): boolean {
   return !!type && type in componentRenderers && type !== 'fallback';
@@ -110,6 +64,7 @@ interface ComponentRendererProps {
     isLoaded: boolean;
     submitVote: (componentId: string, optionId: string) => Promise<void>;
   };
+  lessonId?: string;
 }
 
 // Wrapper component for decrypt/discovery mode (handles password encryption, timers, hints)
@@ -232,7 +187,8 @@ const ComponentRendererBase = function ComponentRenderer({
   onCheckSlideCompletion,
   isEditing = false,
   isTutorView = false,
-  pollStore
+  pollStore,
+  lessonId,
 }: ComponentRendererProps) {
   const Renderer: React.ComponentType<any> = componentRenderers[component.type] || componentRenderers.fallback;
   const isDisabled = component.state === "disabled";
@@ -254,9 +210,17 @@ const ComponentRendererBase = function ComponentRenderer({
     </DisabledWrapper>
   );
 
+  const pollBindings = component.type === 'poll' && pollStore ? {
+    initialVotes: pollStore.pollData[component.id]?.votes || {},
+    initialTotalVotes: pollStore.pollData[component.id]?.totalVotes || 0,
+    onVote: (optionId: string) => pollStore.submitVote(component.id, optionId),
+  } : {};
+
   if (usesGamifiedRendererProps(component.type)) {
     return renderComponent({
       ...component.props,
+      id: component.id,
+      lessonId,
       savedState,
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
@@ -275,32 +239,29 @@ const ComponentRendererBase = function ComponentRenderer({
     return renderComponent({
       ...resolvedProps,
       id: component.id,
+      lessonId,
       savedState,
       setComponentState: isDisabled ? undefined : setComponentState,
       status: component.status,
       disabled: isDisabled,
       isTutorView,
       isLastSlideChild,
-      onCheckSlideCompletion: isLastSlideChild ? onCheckSlideCompletion : undefined
+      onCheckSlideCompletion: isLastSlideChild ? onCheckSlideCompletion : undefined,
+      ...pollBindings
     });
   }
 
   return renderComponent({
     ...component.props,
     id: component.id,
-    lessonId: (component as any).lessonId,
+    lessonId: lessonId || (component as any).lessonId,
     savedState,
     setComponentState: isDisabled ? undefined : setComponentState,
     status: component.status,
     disabled: isDisabled,
     isTutorView,
     isEditing,
-    // Pass poll-specific store for real-time vote integration
-    ...(component.type === 'poll' && pollStore ? {
-      initialVotes: pollStore.pollData[component.id]?.votes || {},
-      initialTotalVotes: pollStore.pollData[component.id]?.totalVotes || 0,
-      onVote: (optionId: string) => pollStore.submitVote(component.id, optionId),
-    } : {})
+    ...pollBindings
   });
 }
 

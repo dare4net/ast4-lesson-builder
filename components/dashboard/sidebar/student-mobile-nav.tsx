@@ -10,6 +10,7 @@ import {
     Settings
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { isNavActive } from "@/lib/nav-active"
 
 const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard/student" },
@@ -25,7 +26,7 @@ export function StudentMobileNav() {
     return (
         <nav className="md:hidden fixed bottom-0 inset-x-0 h-15 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-50 flex items-center justify-around px-2 shadow-sm">
             {navItems.map((item) => {
-                const isActive = pathname === item.href
+                const isActive = isNavActive(pathname, item.href, "/dashboard/student")
                 return (
                     <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-1 group py-1.5 px-3">
                         <div className={cn(

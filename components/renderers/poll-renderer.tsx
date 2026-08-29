@@ -129,7 +129,7 @@ function PollContent({
 
     return (
         <div className={cn(
-            "w-full flex-1 flex flex-col bg-white transition-all duration-300 px-6 py-4 relative rounded-2xl border border-slate-100 shadow-sm",
+            "w-full flex flex-col bg-white transition-all duration-300 px-4 sm:px-6 py-4 relative rounded-2xl border border-slate-100 shadow-sm md:flex-1",
             disabledProp && "opacity-75"
         )}>
             {/* Visual Accent */}

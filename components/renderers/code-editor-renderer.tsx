@@ -57,6 +57,7 @@ function CodeEditorContent({
   setState,
   handleScore,
   handleRetry,
+  recordAttempt,
   isLive,
   isDisabled: disabledProp,
   props
@@ -193,6 +194,7 @@ function CodeEditorContent({
       if (allPassed && !isSubmitted) {
         handleScore(true)
       }
+      recordAttempt(allPassed, allPassed ? points : 0, points)
 
       const passedCount = Object.values(results).filter(Boolean).length
       // const allTestsPassed = passedCount === testCasesList.length
@@ -262,27 +264,27 @@ function CodeEditorContent({
 
   return (
     <div className={cn(
-      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/code transition-all duration-300 px-6",
+      "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/code transition-all duration-300 px-3 sm:px-6 relative",
       disabledProp && "opacity-75"
     )}>
       {/* Visual Accent */}
       <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
 
       {/* Header */}
-      <div className="shrink-0 relative flex items-center justify-between pt-2">
+      <div className="shrink-0 relative flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2">
         <div className="space-y-0.5">
-          <span className="text-[8px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Coding Challenge</span>
+          <span className="text-[10px] font-black text-emerald-600/60 uppercase tracking-[0.2em]">Coding Challenge</span>
           <h3 className="text-base font-black text-slate-900 tracking-tight uppercase leading-none">{title}</h3>
         </div>
         <div className="flex items-center gap-2">
           {isLive && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-600 rounded text-[7px] font-black border border-blue-200 uppercase tracking-widest">
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-600 rounded text-[10px] font-black border border-blue-200 uppercase tracking-widest">
               <CheckCircle2 className="h-2.5 w-2.5" />
               <span>Live</span>
             </div>
           )}
           {disabledProp && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[7px] font-black uppercase tracking-widest border border-slate-200">
+            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[10px] font-black uppercase tracking-widest border border-slate-200">
               <Lock className="h-2.5 w-2.5" />
               <span>Locked</span>
             </div>
@@ -291,7 +293,7 @@ function CodeEditorContent({
       </div>
 
       {/* CENTER SECTION: Editor Stage */}
-      <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-2">
+      <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center overflow-y-auto py-2">
         <div className="relative space-y-3 my-auto">
           <div className="relative rounded-2xl border-2 border-slate-900 bg-[#0A0D14] overflow-hidden shadow-xl shadow-black/20">
             <div className="px-4 py-2 bg-slate-900/50 border-b border-slate-800/50 flex items-center justify-between backdrop-blur-sm">
@@ -301,16 +303,16 @@ function CodeEditorContent({
                   <div className="w-2 h-2 rounded-full bg-amber-500 shadow-lg shadow-amber-500/20" />
                   <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/20" />
                 </div>
-                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
                   Execution Environment
                 </span>
               </div>
             </div>
-            <ScrollArea className="h-[140px]">
+            <ScrollArea className="h-[180px] sm:h-[220px] md:h-[280px]">
               <textarea
                 value={code}
                 onChange={handleCodeChange}
-                className="w-full min-h-[140px] p-4 font-mono text-[12px] bg-transparent text-emerald-400 focus:outline-none resize-none placeholder:text-slate-800 selection:bg-emerald-500/30 leading-relaxed"
+                className="w-full min-h-[180px] sm:min-h-[220px] md:min-h-[280px] p-4 font-mono text-[12px] bg-transparent text-emerald-400 focus:outline-none resize-none placeholder:text-slate-800 selection:bg-emerald-500/30 leading-relaxed"
                 readOnly={readOnly || disabledProp}
                 spellCheck={false}
                 placeholder="// Enter logic here..."
@@ -318,10 +320,10 @@ function CodeEditorContent({
             </ScrollArea>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* Output Panel */}
             <div className="space-y-1">
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Console Output</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Console Output</span>
               <div className="h-20 rounded-xl border-2 border-emerald-50 bg-emerald-50/20 p-3 font-mono text-[11px] relative overflow-hidden shadow-inner">
                 <ScrollArea className="h-full">
                   <pre className={cn(
@@ -336,7 +338,7 @@ function CodeEditorContent({
 
             {/* Test Results Panel */}
             <div className="space-y-1">
-              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Test Results</span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Test Results</span>
               <div className="h-20 rounded-xl border-2 border-slate-100 bg-slate-50/50 p-3 overflow-y-auto custom-scrollbar shadow-inner">
                 {testCases && testCases.length > 0 && isSubmitted ? (
                   <div className="space-y-1">
@@ -354,7 +356,7 @@ function CodeEditorContent({
                     ))}
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center italic text-[#94A3B8] text-[8px]">Pending...</div>
+                  <div className="h-full flex items-center justify-center italic text-[#94A3B8] text-[10px]">Pending...</div>
                 )}
               </div>
             </div>
@@ -364,11 +366,11 @@ function CodeEditorContent({
 
       {/* BOTTOM SECTION: Control Plane */}
       <div className="shrink-0 space-y-2 pb-4 pt-1">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <button
             onClick={runCode}
             disabled={isRunning || disabledProp}
-            className="h-10 flex-1 rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest transition-all transform active:scale-95 hover:bg-emerald-500 disabled:opacity-50 flex items-center justify-center shadow-lg shadow-emerald-500/20 p-0"
+            className="min-h-11 h-11 flex-1 rounded-xl bg-emerald-600 text-white font-black uppercase text-[10px] tracking-widest transition-all transform active:scale-95 hover:bg-emerald-500 disabled:opacity-50 flex items-center justify-center shadow-lg shadow-emerald-500/20 p-0"
           >
             <Play className="h-3.5 w-3.5 mr-2 stroke-[3]" />
             Run Code
@@ -378,7 +380,7 @@ function CodeEditorContent({
               onClick={runTests}
               disabled={isRunning || (isSubmitted && isLive) || disabledProp}
               className={cn(
-                "h-10 flex-1 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all transform active:scale-95 flex items-center justify-center p-0 shadow-lg",
+                "min-h-11 h-11 flex-1 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all transform active:scale-95 flex items-center justify-center p-0 shadow-lg",
                 isSubmitted && Object.values(testResults).every(Boolean)
                   ? "bg-emerald-700 text-white shadow-emerald-700/20"
                   : "bg-slate-100 text-slate-400 shadow-black/5"
@@ -391,7 +393,8 @@ function CodeEditorContent({
           <button
             onClick={onLocalRetry}
             disabled={disabledProp || (isLive && isSubmitted)}
-            className="h-10 w-10 rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all transform active:scale-95 flex items-center justify-center p-0 shadow-sm"
+            aria-label="Retry"
+            className="min-h-11 min-w-11 h-11 w-full sm:w-11 rounded-xl bg-white border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 transition-all transform active:scale-95 flex items-center justify-center p-0 shadow-sm"
           >
             <RefreshCw className="h-4 w-4 stroke-[3]" />
           </button>

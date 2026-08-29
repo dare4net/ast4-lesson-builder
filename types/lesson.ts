@@ -1,3 +1,6 @@
+import type { ComponentType, ComponentType_Category } from "@/lib/component-registry"
+export type { ComponentType, ComponentType_Category }
+
 export interface Lesson {
   id: string
   title: string
@@ -40,68 +43,9 @@ export interface Component {
 }
 
 
-export type ComponentType_Category =
-  | "interactive"
-  | "gamified"
-  | "content"
-  | "visual-guide"
-  | "media"
-  | "utility"
-  | "structure"
-
 export type ComponentState = "active" | "disabled"
 export type ComponentStatus = "completed" | "uncompleted"
 export type ComponentMode = "practice" | "live"
-
-export type ComponentType =
-  // Content Components
-  | "paragraph"
-  | "heading"
-  | "bulletList"
-  | "table"
-  | "image"
-  | "video"
-  | "callout"
-  | "accordion"
-  | "quote"
-  | "tabsPanel"
-  | "embed"
-
-  // Interactive & Gamified Components
-  | "quiz"
-  | "trueFalse"
-  | "shortAnswer"
-  | "annotateImage"
-  | "categorise"
-  | "timeline"
-  | "scaleSlider"
-  | "wordCloud"
-  | "dragDrop"
-  | "matchingPairs"
-  | "fillInTheBlank"
-  | "flashcards"
-  | "codeEditor"
-  | "hotspot"
-  | "poll"
-  | "flashcardQuiz"
-  | "multiSelectQuiz"
-  | "wordScramble"
-  | "spinTheWheel"
-  | "memoryGrid"
-  | "wordCloud"
-  | "annotationBoard"
-  | "anagram"
-  | "hangman"
-  | "swipeDeck"
-  | "spectrumSorter"
-  | "jigsaw"
-  | "crossword"
-
-  // Media
-  | "audioPlayer"
-
-  // Lesson Structure Components
-  | "slideTitle"
 
 export interface ComponentDefinition {
   type: ComponentType

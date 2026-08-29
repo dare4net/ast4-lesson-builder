@@ -26,7 +26,7 @@
 /* Visual feedback for interactive elements */
 .disabled-component button:not([disabled]),
 .disabled-component [role="button"]:not([disabled]) {
-  background-color: var(--muted) !important;
-  border-color: var(--border) !important;
-  color: var(--muted-foreground) !important;
+  background-color: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--muted-foreground)) !important;
 }

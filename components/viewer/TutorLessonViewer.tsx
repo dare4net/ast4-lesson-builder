@@ -201,7 +201,7 @@ export function TutorLessonViewer({
 
     if (!lessonData) {
         return (
-            <div className="h-screen w-screen flex items-center justify-center p-4 bg-slate-950">
+            <div className="h-dvh w-screen flex items-center justify-center p-4 bg-slate-950">
                 <div className="flex flex-col items-center gap-3">
                     <div className="w-8 h-8 border-2 border-slate-800 border-t-amber-500 rounded-full animate-spin" />
                     <span className="text-slate-400 font-medium text-xs">Loading student lesson...</span>
@@ -211,9 +211,14 @@ export function TutorLessonViewer({
     }
 
     return (
-        <ScoringProvider lesson={lessonData} initialScore={resolvedInteraction?.lessonState?.score || 0}>
+        <ScoringProvider
+            lesson={lessonData}
+            initialScore={resolvedInteraction?.lessonState?.score || 0}
+            componentsState={resolvedInteraction?.componentsState}
+            initialAttemptsMap={resolvedInteraction?.attemptsMap}
+        >
             <NavigationLockProvider>
-                    <div className="h-screen w-screen flex overflow-hidden bg-slate-950">
+                    <div className="h-dvh w-screen flex overflow-hidden bg-slate-950">
                         {/* Desktop Sidebar */}
                         <div className={cn(
                             "hidden md:flex flex-col shrink-0 h-full transition-all duration-300 ease-in-out overflow-hidden",

@@ -10,7 +10,7 @@ export function ScoreDisplay({ className }: { className?: string }) {
     const { currentScore, totalScore, percentage, isPerfect } = useScoring()
 
     return (
-        <div className={cn("space-y-4", className)}>
+        <div className={cn("space-y-4", className)} aria-live="polite" aria-atomic="true">
             <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                     <div className={cn(

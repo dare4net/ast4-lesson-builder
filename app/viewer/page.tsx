@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/auth-context';
-import { LessonViewer } from '@/components/viewer/LessonViewerUpload';
+import { LessonViewer } from '@/components/viewer/LessonViewer';
 import { apiClient } from '@/lib/api-client';
 import { fetchUserInteraction } from '@/lib/user-interactions';
 import { Loader2 } from 'lucide-react';
@@ -11,7 +11,7 @@ import type { Lesson } from '@/types/lesson';
 
 function ViewerContent() {
   const searchParams = useSearchParams();
-  const lessonId = searchParams.get('lessonId');
+  const lessonId = searchParams?.get('lessonId') ?? null;
   const { user, loading: authLoading } = useAuth();
 
   const [initialLesson, setInitialLesson] = useState<Lesson | undefined>();
@@ -48,7 +48,7 @@ function ViewerContent() {
 
   if (authLoading || (loading && !initialLesson)) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center p-4 bg-[#0F172A]">
+      <div className="h-dvh w-screen flex flex-col items-center justify-center p-4 bg-[#0F172A]">
         <div className="flex flex-col items-center gap-6">
           <Loader2 className="w-16 h-16 text-emerald-500 animate-spin" />
           <h2 className="text-xs font-black text-emerald-400 uppercase tracking-[0.3em] animate-pulse">
@@ -61,7 +61,7 @@ function ViewerContent() {
 
   if (error) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center p-4 bg-[#0F172A] text-white">
+      <div className="h-dvh w-screen flex flex-col items-center justify-center p-4 bg-[#0F172A] text-white">
         <p className="text-rose-500 font-black uppercase tracking-widest">{error}</p>
       </div>
     );
@@ -78,9 +78,9 @@ function ViewerContent() {
 
 export default function ViewerPage() {
   return (
-    <div className="h-screen w-screen overflow-hidden">
+    <div className="h-dvh w-screen overflow-hidden">
       <Suspense fallback={
-        <div className="h-screen w-screen flex items-center justify-center bg-[#0F172A]">
+        <div className="h-dvh w-screen flex items-center justify-center bg-[#0F172A]">
           <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
         </div>
       }>

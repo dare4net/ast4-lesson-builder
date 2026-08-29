@@ -52,6 +52,7 @@ function ScaleSliderContent({
     state,
     setState,
     handlePoints,
+    recordAttempt,
     isLive,
     isDisabled: disabledProp,
     props
@@ -110,6 +111,7 @@ function ScaleSliderContent({
         void playFeedback("click", { sound: true, animation: false })
         await playFeedback("quizSuccess")
         handlePoints(props.points || 10)
+        recordAttempt(true, props.points || 10, props.points || 10)
 
         setState(prev => ({
             ...prev,
@@ -171,7 +173,7 @@ function ScaleSliderContent({
             </div>
 
             {/* Center Slider Display */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-4 space-y-6">
+            <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center overflow-y-auto py-4 space-y-6">
                 <div className="p-4 bg-sky-50/50 border-2 border-sky-100 rounded-2xl text-center">
                     <FormattedText content={prompt || "Slide to indicate your rating or confidence level:"} as="p" className="text-sm md:text-base font-bold text-slate-900 leading-relaxed" />
                 </div>

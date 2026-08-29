@@ -1,0 +1,105 @@
+import type { ComponentDefinition } from "@/types/lesson"
+
+export const fillInTheBlankDefinition: ComponentDefinition = {
+    type: "fillInTheBlank",
+    label: "Fill in Blank",
+    category: "interactive",
+    description: "Complete missing words...",
+    icon: "✏️",
+    defaultProps: {
+      title: "Fill in the blanks",
+      text: "The capital of France is {{blank}} and the capital of Japan is {{blank}}.",
+      blanks: [
+        { id: "b1", answer: "Paris", alternatives: ["paris"] },
+        { id: "b2", answer: "Tokyo", alternatives: ["tokyo"] },
+      ],
+      caseSensitive: false,
+      points: 10,
+      mode: "practice",
+      state: "active",
+    },
+    propDefinitions: [
+      {
+        name: "title",
+        label: "Title",
+        type: "string",
+        required: false,
+        defaultValue: "Fill in the blanks",
+      },
+      {
+        name: "text",
+        label: "Text with Blanks",
+        type: "string",
+        required: true,
+        defaultValue: "The capital of France is {{blank}} and the capital of Japan is {{blank}}.",
+      },
+      {
+        name: "blanks",
+        label: "Blanks",
+        type: "componentArray",
+        required: true,
+        defaultValue: [
+          { id: "b1", answer: "Paris", alternatives: ["paris"] },
+          { id: "b2", answer: "Tokyo", alternatives: ["tokyo"] },
+        ],
+      },
+      {
+        name: "caseSensitive",
+        label: "Case Sensitive",
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+      },
+      {
+        name: "points",
+        label: "Points",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 0,
+        max: 100,
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
+      {
+        name: "state",
+        label: "State",
+        type: "select",
+        required: false,
+        defaultValue: "active",
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Disabled", value: "disabled" },
+        ],
+      },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 10,
+        min: 5,
+        max: 300,
+      },
+      {
+        name: "markingMode",
+        label: "Marking Mode",
+        type: "select",
+        required: false,
+        defaultValue: "self-mark",
+        options: [
+          { label: "Self Mark (Auto)", value: "self-mark" },
+          { label: "Tutor Mark (Manual)", value: "tutor-mark" },
+        ],
+      },
+    ],
+  }

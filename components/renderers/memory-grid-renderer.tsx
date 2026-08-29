@@ -64,6 +64,7 @@ function MemoryGridContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     pairs,
@@ -107,6 +108,7 @@ function MemoryGridContent({
                         const allDone = nextMatched.length === pairs.length
                         if (allDone) {
                             handlePoints(points)
+                            recordAttempt(true, points, points)
                         }
                         return {
                             ...prev,
@@ -151,7 +153,7 @@ function MemoryGridContent({
     }
 
     return (
-        <div className="w-full h-full flex-1 flex flex-col justify-center px-4 sm:px-6 py-4 relative min-h-0 overflow-y-auto text-slate-900">
+        <div className="w-full h-auto md:h-full md:flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-6 py-4 relative min-h-0 overflow-y-auto text-slate-900">
             <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
                 <div className="flex items-center gap-2 px-3 py-1 bg-pink-50 border border-pink-200 rounded-xl">
                     <span className="text-[9px] font-black uppercase tracking-widest text-pink-600">

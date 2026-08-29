@@ -56,6 +56,7 @@ function JigsawContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     image = "/placeholder.svg?height=400&width=600",
@@ -186,6 +187,7 @@ function JigsawContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {

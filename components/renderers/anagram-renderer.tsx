@@ -50,6 +50,7 @@ function AnagramContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     targetWord = "ALGORITHM",
@@ -218,6 +219,7 @@ function AnagramContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {

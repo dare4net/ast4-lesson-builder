@@ -74,6 +74,7 @@ function AnnotationBoardContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     instruction,
@@ -259,6 +260,7 @@ function AnnotationBoardContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {

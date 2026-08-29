@@ -2,12 +2,14 @@
 
 import { useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
+import { FeedbackSettingsButton } from '@/components/ui/feedback-settings';
 import { ChevronLeft, ChevronRight, LogOut, Loader2 } from 'lucide-react';
 import { ComponentRenderer } from '@/components/component-renderer';
 import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
 import type { Lesson } from '@/types/lesson';
 import { getComponentCategory, formatSlideTitle, isInteractiveComponent } from '@/lib/lesson-utils';
+import { isComponentCompleted } from '@/domain/component-status';
 import isEqual from 'lodash.isequal';
 import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
@@ -15,7 +17,8 @@ import { SlideTransitionOverlay } from '@/components/viewer/SlideTransitionOverl
 import { LessonIntroCueOverlay } from '@/components/viewer/LessonIntroCueOverlay';
 import { LessonCompletionOverlay } from '@/components/viewer/LessonCompletionOverlay';
 import { IncompleteLessonModal } from '@/components/viewer/IncompleteLessonModal';
-import { getSlideTheme } from '@/lib/slide-themes';
+import { getSlideTheme, getLessonPattern } from '@/lib/slide-themes';
+import { GraphicBackground } from '@/components/viewer/cue-overlay-shell';
 import { usePollStore } from '@/hooks/use-poll-store';
 import { useLessonPreloader } from '@/hooks/use-lesson-preloader';
 
@@ -35,6 +38,7 @@ interface LessonContentProps {
   suppressCues?: boolean;
   /** Builder preview: exit label + direct exit without completion modals */
   previewMode?: boolean;
+  hideChromeHeader?: boolean;
 }
 
 export interface LessonContentRef {
@@ -65,6 +69,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     onNextLesson,
     suppressCues = false,
     previewMode = false,
+    hideChromeHeader = false,
   }, ref) {
     const { playFeedback } = useFeedback();
     const { currentScore: score, totalScore: totalPossible } = useScoring();
@@ -97,7 +102,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       );
       if (interactiveComponents.length === 0) return 100;
       const completedCount = interactiveComponents.filter(
-        (comp: any) => componentStates[comp.id]?.status === "completed"
+        (comp: any) => isComponentCompleted(componentStates[comp.id])
       ).length;
       return (completedCount / interactiveComponents.length) * 100;
     }, [currentSlide, componentStates]);
@@ -170,8 +175,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           return true;
         }
 
-        const stateStatus = componentStates[activeComponent.id]?.status;
-        return stateStatus === "completed" || activeComponent.status === "completed";
+        return isComponentCompleted(componentStates[activeComponent.id]) || isComponentCompleted(activeComponent);
       }
       return true;
     }, [activeComponent, componentStates]);
@@ -218,7 +222,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       let slideProgress = 100;
       if (interactiveComponents.length > 0) {
         const completedCount = interactiveComponents.filter(
-          (comp: any) => componentStates[comp.id]?.status === "completed"
+          (comp: any) => isComponentCompleted(componentStates[comp.id])
         ).length;
         slideProgress = (completedCount / interactiveComponents.length) * 100;
       }
@@ -262,7 +266,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       }
 
       const allCompleted = interactiveComponents.every(
-        comp => componentStates[comp.id]?.status === "completed"
+        comp => isComponentCompleted(componentStates[comp.id])
       );
 
       const completionKey = `${slide.id}-completed`;
@@ -335,51 +339,61 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     }, [currentSlideIndex, innerStepIndex, activeComponent, previewMode]);
 
     return (
-      <div className="flex flex-col h-full relative bg-white dark:bg-slate-950 overflow-hidden font-sans">
-        {/* Header */}
-        <header className="shrink-0 w-full bg-slate-900 border-b border-slate-800 px-5 py-3 z-30 flex items-center justify-between gap-6 shadow-sm">
-          {/* Progress Bar */}
-          <div className="flex-1 flex flex-col gap-1 max-w-sm">
+      <div className="flex flex-col h-full relative bg-white overflow-hidden font-sans">
+        <span className="sr-only" aria-live="polite">{score}</span>
+        {!hideChromeHeader && (
+        <header className="relative shrink-0 w-full bg-white px-4 sm:px-5 py-3 z-30 flex items-center justify-between gap-4 shadow-[0_8px_20px_-14px_rgba(15,23,42,0.18)]">
+          <div className="pointer-events-none absolute inset-x-8 bottom-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+          <div className="flex-1 flex flex-col gap-1 max-w-sm min-w-0">
             <div className="flex justify-between items-center px-0.5">
-              <span className="text-xs font-semibold text-slate-300">Slide Tasks Progress</span>
-              <span className="text-xs font-bold text-emerald-400 tabular-nums">{Math.round(currentSlideProgress)}%</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#1CB0F6]">This slide</span>
+              <span className="text-xs font-extrabold text-[#58CC02] tabular-nums">{Math.round(currentSlideProgress)}%</span>
             </div>
-            <div className="h-2 w-full bg-slate-950 rounded-full overflow-hidden border border-slate-800 p-0.5">
+            <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200">
               <div
-                className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(52,211,153,0.5)]"
+                className="h-full bg-gradient-to-r from-[#58CC02] to-[#1CB0F6] rounded-full transition-all duration-700 ease-out"
                 style={{ width: `${currentSlideProgress}%` }}
               />
             </div>
           </div>
 
-          {/* Current Slide Title Badge */}
           {currentSlide?.title && (
-            <div className="hidden md:flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 shadow-inner">
-              <span className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
-              <span className="text-xs font-semibold text-slate-200 truncate max-w-[220px]">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#CE82FF]/10 border-2 border-[#CE82FF]/30">
+              <span className="w-2 h-2 rounded-full bg-[#CE82FF] shrink-0" />
+              <span className="text-xs font-extrabold text-slate-700 truncate max-w-[220px]">
                 {formatSlideTitle(currentSlide.title, 20)}
               </span>
             </div>
           )}
 
-          {/* Metrics & Controls */}
-          <div className="flex gap-4 shrink-0 items-center">
+          <div className="flex gap-3 shrink-0 items-center">
             <div className="flex flex-col items-end justify-center">
-              <span className="text-[10px] font-medium text-slate-400">Score</span>
-              <span className="text-sm font-bold text-white tabular-nums">{score}</span>
+              <span className="text-[10px] font-bold text-[#FF9600] uppercase tracking-wider">Score</span>
+              <span className="text-sm font-extrabold text-slate-800 tabular-nums">{score}</span>
             </div>
-            <div className="flex flex-col items-end justify-center border-l border-slate-800 pl-4 h-6">
-              <span className="text-[10px] font-medium text-slate-400">Slide</span>
-              <span className="text-sm font-bold text-white tabular-nums">
-                {currentSlideIndex + 1} <span className="text-slate-600">/</span> {lesson.slides.length}
+            <div className="flex flex-col items-end justify-center border-l-2 border-slate-100 pl-3">
+              <span className="text-[10px] font-bold text-[#1CB0F6] uppercase tracking-wider">Slide</span>
+              <span className="text-sm font-extrabold text-slate-800 tabular-nums">
+                {currentSlideIndex + 1} <span className="text-slate-400">/</span> {lesson.slides.length}
               </span>
             </div>
+            <FeedbackSettingsButton />
           </div>
         </header>
+        )}
 
         {/* Content Area */}
-        <main className="flex-1 min-h-0 relative overflow-y-auto bg-slate-50 dark:bg-slate-950 z-10 flex flex-col">
-          <div className="w-full flex-1 flex flex-col pb-24">
+        <main className="flex-1 min-h-0 relative overflow-y-auto z-10 flex flex-col bg-white">
+          <div className="absolute inset-0 pointer-events-none">
+            <GraphicBackground
+              pattern={getLessonPattern(lesson.id)}
+              theme={getSlideTheme(currentSlideIndex)}
+              idPrefix="lesson-bg"
+              intensity="whisper"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/88 to-white/80" />
+          </div>
+          <div className="relative z-10 w-full flex-1 flex flex-col pb-24 pt-4 px-1 sm:px-2 md:pt-6">
             {activeComponent && (
               <div
                 key={`${currentSlideIndex}-${innerStepIndex}`}
@@ -431,13 +445,14 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
           return (
             <footer className={cn(
-              "absolute bottom-0 left-0 right-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30 py-3.5 px-6 transition-all duration-500",
+              "absolute bottom-0 left-0 right-0 w-full bg-white z-30 py-3 px-4 sm:px-6 transition-all duration-500 shadow-[0_-8px_20px_-14px_rgba(15,23,42,0.18)]",
               shouldHideFooter ? "motion-nav-hidden" : "motion-nav-visible"
             )}>
-              <div className="max-w-md mx-auto flex items-center justify-center gap-3">
+              <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+              <div className="max-w-lg mx-auto flex items-center justify-center gap-3">
                 <Button
                   variant="outline"
-                  className="h-10 px-5 w-full rounded-xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs flex items-center justify-center"
+                  className="min-h-11 h-11 px-5 w-full rounded-xl border-2 border-[#1CB0F6]/30 text-[#1CB0F6] hover:bg-[#1CB0F6]/10 font-extrabold text-xs"
                   onClick={handleRecall}
                   disabled={!canGoPrev || isNavigating}
                 >
@@ -447,19 +462,18 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
                 {currentSlideIndex === lesson.slides.length - 1 && innerStepIndex >= (processedComponents.length - 1) ? (
                   <Button
-                    variant="default"
-                    className="h-10 px-5 w-full rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black uppercase text-[10px] tracking-wider shadow-md shadow-rose-600/20 flex items-center justify-center gap-1.5 transition-all"
+                    variant="duo"
+                    className="min-h-11 w-full bg-slate-800 hover:bg-slate-900 border-slate-800 border-b-black text-white"
                     onClick={() => {
                       playFeedback('uiClick');
                       handleEndLessonTrigger();
                     }}
                     disabled={isNavigating || (!previewMode && !isCurrentComponentCompleted)}
                   >
-                    {isNavigating ? <Loader2 className="h-3.5 w-3.5 animate-spin ml-1" /> : <LogOut className="h-3.5 w-3.5 ml-1" />}
+                    {isNavigating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <LogOut className="h-3.5 w-3.5" />}
                     {previewMode ? "Back to Editor" : "End Lesson"}
                   </Button>
                 ) : (() => {
-                  // Detect if we are on the last component of the current slide (not the last slide)
                   const isLastComponentOfSlide =
                     innerStepIndex >= processedComponents.length - 1 &&
                     currentSlideIndex < lesson.slides.length - 1;
@@ -468,14 +482,15 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
                     : null;
                   return (
                     <Button
-                      variant="default"
+                      variant="duo"
                       className={cn(
-                        "h-10 px-5 w-full rounded-xl font-semibold text-xs shadow-sm disabled:opacity-40 flex items-center justify-center transition-all duration-200",
-                        !isLastComponentOfSlide && "bg-green-600 hover:bg-green-500 text-white"
+                        "min-h-11 w-full",
+                        !isLastComponentOfSlide && "bg-[#58CC02] hover:bg-[#46a302] border-[#58CC02] border-b-[#3B8C00] text-white"
                       )}
                       style={isLastComponentOfSlide && nextSlideTheme ? {
                         backgroundColor: nextSlideTheme.btnBgHex,
                         color: nextSlideTheme.btnTextHex,
+                        borderColor: nextSlideTheme.btnBgHex,
                       } : undefined}
                       onClick={handleAdvance}
                       disabled={!canGoNext || isNavigating}

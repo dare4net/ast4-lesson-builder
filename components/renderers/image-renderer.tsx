@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
+import { OptimizedImage } from "@/components/ui/optimized-image"
 import { playReveal } from "@/lib/sound-effects"
 
 interface ImageRendererProps {
@@ -57,16 +58,18 @@ export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isE
 
       <div
         className={cn(
-          "w-full flex-1 min-h-0 flex justify-center items-center overflow-hidden transition-all duration-500",
+          "relative w-full flex-1 min-h-0 flex justify-center items-center overflow-hidden transition-all duration-500",
           !isRevealed && "blur-md grayscale opacity-30",
           isRevealed && "animate-in fade-in slide-in-from-bottom-2 duration-500"
         )}
         style={{ width }}
       >
-        <img
+        <OptimizedImage
           src={src || "/placeholder.svg"}
           alt={alt}
-          className="max-h-full max-w-full w-auto h-auto object-contain rounded-2xl transition-transform duration-700 group-hover/image:scale-[1.01]"
+          fill
+          className="object-contain rounded-2xl transition-transform duration-700 group-hover/image:scale-[1.01]"
+          sizes="(max-width: 768px) 100vw, 896px"
         />
       </div>
 
@@ -75,7 +78,7 @@ export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isE
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Tap to reveal the image</p>
           <button
             onClick={handleAcknowledge}
-            className="group relative px-6 py-2.5 bg-[#58CC02] text-white rounded-xl font-extrabold text-xs shadow-lg shadow-emerald-500/20 hover:bg-[#46a302] hover:scale-105 active:scale-95 transition-all border-b-4 border-[#3B8C00] active:border-b-0 active:translate-y-[2px]"
+            className="group relative min-h-11 px-6 py-2.5 bg-[#58CC02] text-white rounded-xl font-extrabold text-xs shadow-lg shadow-emerald-500/20 hover:bg-[#46a302] hover:scale-105 active:scale-95 transition-all border-b-4 border-[#3B8C00] active:border-b-0 active:translate-y-[2px]"
           >
             <span>Show Image</span>
           </button>

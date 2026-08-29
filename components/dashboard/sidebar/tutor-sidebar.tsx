@@ -15,6 +15,7 @@ import {
     UserCheck
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { isNavActive } from "@/lib/nav-active"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
 
@@ -73,6 +74,7 @@ export function TutorSidebar() {
                 <Button
                     variant="ghost"
                     size="icon"
+                    aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                     onClick={() => setIsCollapsed(!isCollapsed)}
                     className="h-7 w-7 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 absolute -right-3.5 top-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full z-10 shadow-sm"
                 >
@@ -83,7 +85,7 @@ export function TutorSidebar() {
             {/* Navigation Items */}
             <nav className="flex-1 py-6 px-3 space-y-1.5 overflow-y-auto no-scrollbar">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href
+                    const isActive = isNavActive(pathname, item.href, "/dashboard/tutor")
                     return (
                         <Link key={item.href} href={item.href}>
                             <div className={cn(

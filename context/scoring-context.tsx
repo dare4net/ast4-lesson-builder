@@ -4,6 +4,12 @@ import * as React from "react"
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from "react"
 import { Lesson } from "@/types/lesson"
 import { ScoringService } from "@/services/scoring-service"
+import { calculateLessonScore } from "@/domain/scoring"
+
+export interface ComponentAttemptRecord {
+    firstAttemptCount: number | null
+    bestAttemptCount: number | null
+}
 
 interface ScoringContextType {
     currentScore: number
@@ -12,6 +18,9 @@ interface ScoringContextType {
     addPoints: (points: number) => void
     resetScore: () => void
     isPerfect: boolean
+    /** Map of componentId -> { firstAttemptCount, bestAttemptCount } */
+    attemptsMap: Record<string, ComponentAttemptRecord>
+    recordComponentAttempt: (componentId: string, record: ComponentAttemptRecord) => void
 }
 
 const ScoringContext = createContext<ScoringContextType | undefined>(undefined)
@@ -19,21 +28,41 @@ const ScoringContext = createContext<ScoringContextType | undefined>(undefined)
 export function ScoringProvider({
     children,
     lesson,
-    initialScore = 0
+    initialScore = 0,
+    componentsState,
+    initialAttemptsMap,
+    onAttemptsMapChange,
 }: {
     children: React.ReactNode
     lesson: Lesson | null
     initialScore?: number
+    componentsState?: Record<string, unknown> | null
+    initialAttemptsMap?: Record<string, ComponentAttemptRecord>
+    onAttemptsMapChange?: (map: Record<string, ComponentAttemptRecord>) => void
 }) {
-    const [currentScore, setCurrentScore] = useState(initialScore)
+    const pulledScore = useMemo(
+        () => calculateLessonScore(lesson, componentsState, initialScore),
+        [lesson, componentsState, initialScore]
+    )
+    const [currentScore, setCurrentScore] = useState(pulledScore)
     const [totalScore, setTotalScore] = useState(0)
+    const [attemptsMap, setAttemptsMap] = useState<Record<string, ComponentAttemptRecord>>(initialAttemptsMap ?? {})
 
-    // Sync initialScore when loaded asynchronously
     useEffect(() => {
-        if (initialScore !== undefined) {
-            setCurrentScore(initialScore)
+        setCurrentScore(pulledScore)
+        // Hydrate from saved component state / lessonState only. Live addPoints owns the score after that.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [componentsState, initialScore])
+
+    useEffect(() => {
+        if (initialAttemptsMap) {
+            setAttemptsMap(initialAttemptsMap)
         }
-    }, [initialScore])
+    }, [initialAttemptsMap])
+
+    useEffect(() => {
+        onAttemptsMapChange?.(attemptsMap)
+    }, [attemptsMap, onAttemptsMapChange])
 
     // Calculate total possible points whenever the lesson changes
     useEffect(() => {
@@ -51,6 +80,23 @@ export function ScoringProvider({
         setCurrentScore(0)
     }, [])
 
+    const recordComponentAttempt = useCallback((componentId: string, record: ComponentAttemptRecord) => {
+        setAttemptsMap(prev => {
+            const existing = prev[componentId]
+            if (
+                existing &&
+                existing.firstAttemptCount === record.firstAttemptCount &&
+                existing.bestAttemptCount === record.bestAttemptCount
+            ) {
+                return prev
+            }
+            return {
+                ...prev,
+                [componentId]: record
+            }
+        })
+    }, [])
+
     const percentage = useMemo(() => {
         if (totalScore === 0) return 0
         return Math.round((currentScore / totalScore) * 100)
@@ -66,8 +112,10 @@ export function ScoringProvider({
         percentage,
         addPoints,
         resetScore,
-        isPerfect
-    }), [currentScore, totalScore, percentage, addPoints, resetScore, isPerfect])
+        isPerfect,
+        attemptsMap,
+        recordComponentAttempt
+    }), [currentScore, totalScore, percentage, addPoints, resetScore, isPerfect, attemptsMap, recordComponentAttempt])
 
     return (
         <ScoringContext.Provider value={value}>
@@ -83,3 +131,4 @@ export function useScoring() {
     }
     return context
 }
+

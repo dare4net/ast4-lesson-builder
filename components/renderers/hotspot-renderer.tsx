@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle2, Lock, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
+import { ACTION_LABELS } from "@/lib/action-labels"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
@@ -256,6 +257,7 @@ function HotspotContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     isLive,
     isDisabled: disabledProp,
     props,
@@ -366,7 +368,7 @@ function HotspotContent({
         void playFeedback("blockedClick", { sound: true, animation: false })
     }
 
-    const useDiscoverClick = (hotspot: HotspotNode | null, clickX?: number, clickY?: number) => {
+    const applyDiscoverClick = (hotspot: HotspotNode | null, clickX?: number, clickY?: number) => {
         if (isDiscover && !isRevealed && !isSubmitted && !inputsLocked && clicksRemaining <= 0) {
             playBlockedClick()
             return
@@ -417,7 +419,7 @@ function HotspotContent({
         }
         if (!canClick) return
 
-        useDiscoverClick(hit, clickX, clickY)
+        applyDiscoverClick(hit, clickX, clickY)
     }
 
     const handlePinClick = (hotspotId: string) => {
@@ -438,7 +440,7 @@ function HotspotContent({
             return
         }
         const spot = hotspots.find(h => h.id === hotspotId)
-        if (spot) useDiscoverClick(spot)
+        if (spot) applyDiscoverClick(spot)
     }
 
     const handleSubmit = async () => {
@@ -475,6 +477,7 @@ function HotspotContent({
         if (isLive) {
             handlePoints(earned)
         }
+        recordAttempt(correctFound === totalCorrect && totalCorrect > 0, earned, points)
 
         setState(prev => ({
             ...prev,
@@ -596,7 +599,7 @@ function HotspotContent({
             </div>
 
             {/* CENTER SECTION: Interactive Image Stage */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-visible py-2 w-full">
+            <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center overflow-visible py-2 w-full">
                 <div className="flex items-center justify-center w-full h-full my-auto">
                     {/* Stage wrapper: overflow-visible so popovers/tooltips don't clip */}
                     <div
@@ -699,7 +702,7 @@ function HotspotContent({
                             {isPendingMarking && !tutorMarkedFlag ? (
                                 <div className="space-y-1">
                                     <span className="text-[10px] font-black text-amber-700 dark:text-amber-400 uppercase tracking-widest">
-                                        Submitted — Pending Tutor Review
+                                        {ACTION_LABELS.pendingTutorReview}
                                     </span>
                                     <p className="text-[10px] font-medium text-slate-700 dark:text-slate-300 mt-0.5">
                                         Tap any pin to read its explanation. Your tutor will score this attempt.

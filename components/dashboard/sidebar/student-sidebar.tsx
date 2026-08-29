@@ -16,6 +16,7 @@ import {
     User
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { isNavActive } from "@/lib/nav-active"
 import { useAuth } from "@/context/auth-context"
 
 const NAV_ITEMS = [
@@ -66,6 +67,7 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                             onClick={handleToggle}
                             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                             title="Collapse sidebar"
+                            aria-label="Collapse sidebar"
                         >
                             <PanelLeftClose className="w-4 h-4 text-slate-500" />
                         </button>
@@ -77,6 +79,7 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                             onClick={handleToggle}
                             className="p-1.5 rounded-xl text-slate-400 hover:text-[#58CC02] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group relative flex items-center justify-center cursor-pointer"
                             title="Expand sidebar"
+                            aria-label="Expand sidebar"
                         >
                             <Image
                                 src="/icons/icon-192x192.png"
@@ -96,7 +99,7 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
             {/* Navigation List - overflow-visible allows tooltips to float on top */}
             <div className="flex-1 py-4 px-2.5 space-y-1.5 overflow-visible">
                 {NAV_ITEMS.map((item) => {
-                    const isActive = pathname === item.href || (item.href !== "/dashboard/student" && pathname?.startsWith(item.href))
+                    const isActive = isNavActive(pathname, item.href, "/dashboard/student")
                     return (
                         <Link key={item.href} href={item.href} className="block">
                             <div

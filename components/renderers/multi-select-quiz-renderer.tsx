@@ -51,6 +51,7 @@ type MultiSelectQuizState = {
     showResultByQuestion: boolean[]
     status?: string
     isComplete?: boolean
+    score?: number
 }
 
 // ─── Inner content ────────────────────────────────────────────────────────────
@@ -63,6 +64,7 @@ function MultiSelectContent({
     handleScore,
     handlePoints,
     handleRetry,
+    recordAttempt,
     isDisabled,
     isLive,
     id,
@@ -161,11 +163,14 @@ function MultiSelectContent({
                 showResultByQuestion: nextShowResult,
                 isComplete: allDone,
                 status: allDone ? 'completed' : 'active',
+                score: newScores.reduce((a, b) => a + b, 0),
             }
         })
 
         if (allDone) {
-            handlePoints(newScores.reduce((a, b) => a + b, 0))
+            const total = newScores.reduce((a, b) => a + b, 0)
+            handlePoints(total)
+            recordAttempt(newCorrect.every(Boolean), total, pointsPerQ * questions.length)
         }
     }
 
@@ -199,6 +204,7 @@ function MultiSelectContent({
             }))
             handleScore(false)
             handlePoints(0)
+            recordAttempt(false)
         }
     }
 
@@ -255,7 +261,7 @@ function MultiSelectContent({
             </div>
 
             {/* CENTER SECTION: Question + Options (Full Canvas Width) */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center py-4 w-full">
+            <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center py-3 md:py-4 w-full">
                 <div className="relative space-y-4 my-auto w-full">
                     <div className="space-y-1.5">
                         <div className="flex items-center gap-2">

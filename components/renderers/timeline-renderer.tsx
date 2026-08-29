@@ -6,7 +6,7 @@ import { Calendar, CheckCircle2 } from "lucide-react"
 import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
 import { useFeedback } from "@/hooks/use-feedback"
-import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
+import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -25,6 +25,7 @@ interface TimelineRendererProps {
     events: TimelineEvent[]
     interactive?: boolean
     points?: number
+    mode?: "practice" | "live"
     savedState?: TimelineState
     setComponentState?: (state: TimelineState) => void
     isEditing?: boolean
@@ -41,12 +42,14 @@ type TimelineState = {
 function TimelineContent({
     state,
     setState,
+    handlePoints,
+    recordAttempt,
     title,
     events,
     interactive,
     points,
     isEditing,
-}: InteractiveRenderProps<TimelineState> & {
+}: ScoredRenderProps<TimelineState> & {
     title: string
     events: TimelineEvent[]
     interactive: boolean
@@ -77,6 +80,8 @@ function TimelineContent({
         playFeedback("click", { sound: true })
 
         if (willComplete) {
+            handlePoints(points)
+            recordAttempt(true, points, points)
             playFeedback("quizSuccess", { sound: true })
         }
     }
@@ -86,7 +91,7 @@ function TimelineContent({
     }
 
     return (
-        <div className="w-full h-full flex-1 flex flex-col justify-center px-4 sm:px-6 py-4 relative min-h-0 overflow-hidden text-slate-900">
+        <div className="w-full h-auto md:h-full md:flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-6 py-4 relative min-h-0 overflow-hidden text-slate-900">
             <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
                 <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-200 rounded-xl">
                     <span className="text-[9px] font-black uppercase tracking-widest text-amber-600">
@@ -193,6 +198,7 @@ export function TimelineRenderer({
     savedState,
     setComponentState,
     isEditing = false,
+    mode = "practice",
 }: TimelineRendererProps) {
     const component: Component = {
         id,
@@ -209,11 +215,13 @@ export function TimelineRenderer({
     }
 
     return (
-        <InteractiveRenderer<TimelineState>
+        <ScoredRenderer<TimelineState>
             component={component}
             initialState={initialState}
             savedState={savedState}
             setComponentState={setComponentState}
+            points={points}
+            mode={mode}
             onRender={(renderProps) => (
                 <TimelineContent
                     {...renderProps}

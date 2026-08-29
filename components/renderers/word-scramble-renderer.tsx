@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils"
 import { HelpCircle, RefreshCw, Delete, Shuffle, ChevronRight, Wand2, Zap, Anchor, Lightbulb } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { Button } from "@/components/ui/button"
+import { ACTION_LABELS } from "@/lib/action-labels"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -166,6 +168,7 @@ function SingleWordContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     targetWord,
     hint,
     title,
@@ -180,6 +183,7 @@ function SingleWordContent({
     setState: (fn: (prev: WordScrambleState) => WordScrambleState) => void
     handlePoints: (pts: number) => void
     handleRetry: () => void
+    recordAttempt: (isCorrect: boolean, score?: number, maxScore?: number) => void
     targetWord: string
     hint: string
     title: string
@@ -278,8 +282,10 @@ function SingleWordContent({
 
         if (isCorrect) {
             handlePoints(points)
+            recordAttempt(true, points, points)
             playFeedback("correct", { sound: true })
         } else {
+            recordAttempt(false)
             playFeedback("incorrect", { sound: true })
         }
     }
@@ -297,18 +303,18 @@ function SingleWordContent({
     const isIncorrectGrade = submitted && !state.isCorrect
 
     return (
-        <div className="flex flex-col h-full p-5 max-w-xl mx-auto w-full justify-between">
+        <div className="flex flex-col h-full p-4 sm:p-5 max-w-xl mx-auto w-full justify-between overflow-y-auto">
             {/* Header */}
-            <div className="flex items-center justify-between gap-3 mb-3 shrink-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 shrink-0">
                 <FormattedText content={title} as="h3" className="text-sm font-black text-slate-800 uppercase tracking-wider" />
-                <div className="flex items-center gap-1.5">
+                <div className="flex flex-wrap items-center gap-1.5">
                     {/* Text Clue Button */}
                     {allowTextClue && hint && (
                         <button
                             type="button"
                             onClick={() => setState(prev => ({ ...prev, showHintText: !prev.showHintText }))}
                             className={cn(
-                                "flex items-center gap-1 px-3 py-1.5 rounded-xl border-2 text-xs font-bold transition-all cursor-pointer",
+                                "flex items-center gap-1 px-3 py-1.5 min-h-11 rounded-xl border-2 text-xs font-bold transition-all cursor-pointer",
                                 showHintText
                                     ? "bg-amber-400 text-slate-900 border-amber-400"
                                     : "bg-slate-100 text-slate-600 border-slate-200 hover:border-amber-400"
@@ -325,7 +331,7 @@ function SingleWordContent({
                             type="button"
                             onClick={handleRevealLetter}
                             disabled={submitted || isEditing || disabled || revealsUsed >= maxLetterReveals}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-xl border-2 bg-sky-50 text-[#1CB0F6] border-sky-200 hover:bg-sky-100 font-bold text-xs transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                            className="flex items-center gap-1 px-3 py-1.5 min-h-11 rounded-xl border-2 bg-sky-50 text-[#1CB0F6] border-sky-200 hover:bg-sky-100 font-bold text-xs transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                             title={`Auto-place 1 correct letter (${maxLetterReveals - revealsUsed} left)`}
                         >
                             <Wand2 className="w-3.5 h-3.5" />
@@ -411,28 +417,30 @@ function SingleWordContent({
             {/* Action button */}
             <div className="mt-auto flex items-center justify-between gap-4 shrink-0">
                 {submitted ? (
-                    <button
+                    <Button
                         type="button"
+                        variant="outline"
                         onClick={handleReset}
-                        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
+                        className="w-full h-11 rounded-2xl border-2 border-b-4 border-slate-200 font-black text-xs uppercase tracking-wider"
                     >
                         <RefreshCw className="w-4 h-4" />
-                        <span>Retry</span>
-                    </button>
+                        <span>{ACTION_LABELS.tryAgain}</span>
+                    </Button>
                 ) : (
-                    <button
+                    <Button
                         type="button"
+                        variant="duo"
                         onClick={handleCheck}
                         disabled={!isFull || isEditing || disabled}
                         className={cn(
-                            "w-full h-11 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
+                            "w-full h-11",
                             isFull
-                                ? "bg-[#1CB0F6] hover:bg-sky-500 text-white border-[#1CB0F6] border-b-[#0090CC] cursor-pointer"
-                                : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
+                                ? "bg-[#1CB0F6] hover:bg-sky-500 border-[#1CB0F6] border-b-[#0090CC]"
+                                : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200"
                         )}
                     >
-                        Check Word
-                    </button>
+                        {ACTION_LABELS.checkAnswer}
+                    </Button>
                 )}
             </div>
         </div>
@@ -446,6 +454,7 @@ function MultiWordContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     wordList,
     hint,
     title,
@@ -464,6 +473,7 @@ function MultiWordContent({
     setState: (fn: (prev: WordScrambleState) => WordScrambleState) => void
     handlePoints: (pts: number) => void
     handleRetry: () => void
+    recordAttempt: (isCorrect: boolean, score?: number, maxScore?: number) => void
     wordList: string[]
     hint: string
     title: string
@@ -662,8 +672,10 @@ function MultiWordContent({
 
         if (allCorrect) {
             handlePoints(points)
+            recordAttempt(true, points, points)
             playFeedback("correct", { sound: true })
         } else {
+            recordAttempt(false)
             playFeedback("incorrect", { sound: true })
         }
     }
@@ -677,9 +689,9 @@ function MultiWordContent({
     }
 
     return (
-        <div className="flex flex-col h-full p-4 max-w-2xl mx-auto w-full justify-between">
+        <div className="flex flex-col h-full p-3 sm:p-4 md:p-5 max-w-2xl mx-auto w-full justify-between overflow-y-auto">
             {/* Header */}
-            <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2 shrink-0">
                 <FormattedText content={title} as="h3" className="text-sm font-black text-slate-800 uppercase tracking-wider" />
 
                 {/* Helper Toolbar */}
@@ -690,7 +702,7 @@ function MultiWordContent({
                             type="button"
                             onClick={() => setState(prev => ({ ...prev, showHintText: !prev.showHintText }))}
                             className={cn(
-                                "flex items-center gap-1 px-2.5 py-1 rounded-xl border-2 text-[11px] font-bold transition-all cursor-pointer",
+                                "flex items-center gap-1 px-2.5 py-1 min-h-11 rounded-xl border-2 text-[11px] font-bold transition-all cursor-pointer",
                                 showHintText
                                     ? "bg-amber-400 text-slate-900 border-amber-400"
                                     : "bg-slate-100 text-slate-600 border-slate-200 hover:border-amber-400"
@@ -707,7 +719,7 @@ function MultiWordContent({
                             type="button"
                             onClick={handleRevealLetter}
                             disabled={submitted || isEditing || disabled || revealsUsed >= maxLetterReveals}
-                            className="flex items-center gap-1 px-2.5 py-1 rounded-xl border-2 bg-sky-50 text-[#1CB0F6] border-sky-200 hover:bg-sky-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                            className="flex items-center gap-1 px-2.5 py-1 min-h-11 rounded-xl border-2 bg-sky-50 text-[#1CB0F6] border-sky-200 hover:bg-sky-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                             title={`Place 1 letter (${maxLetterReveals - revealsUsed} left)`}
                         >
                             <Wand2 className="w-3.5 h-3.5" />
@@ -721,7 +733,7 @@ function MultiWordContent({
                             type="button"
                             onClick={handleSolveNextWord}
                             disabled={submitted || isEditing || disabled || wordSolvesUsed >= maxWordSolves}
-                            className="flex items-center gap-1 px-2.5 py-1 rounded-xl border-2 bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                            className="flex items-center gap-1 px-2.5 py-1 min-h-11 rounded-xl border-2 bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                             title={`Solve next word (${maxWordSolves - wordSolvesUsed} left)`}
                         >
                             <Zap className="w-3.5 h-3.5" />
@@ -735,7 +747,7 @@ function MultiWordContent({
                             type="button"
                             onClick={handleFirstLetterAnchors}
                             disabled={submitted || isEditing || disabled || anchorsUsed}
-                            className="flex items-center gap-1 px-2.5 py-1 rounded-xl border-2 bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                            className="flex items-center gap-1 px-2.5 py-1 min-h-11 rounded-xl border-2 bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                             title="Reveal first letter of every word"
                         >
                             <Anchor className="w-3.5 h-3.5" />
@@ -793,7 +805,7 @@ function MultiWordContent({
                                         onClick={() => handleSlotClick(wi, si)}
                                         disabled={submitted || isEditing || disabled || isLocked || (!isFilled && !selectedTileId)}
                                         className={cn(
-                                            "w-10 h-11 rounded-xl border-2 border-b-4 flex items-center justify-center font-black text-base select-none transition-all duration-150 relative",
+                                            "min-w-11 min-h-11 w-11 h-11 rounded-xl border-2 border-b-4 flex items-center justify-center font-black text-base select-none transition-all duration-150 relative",
                                             !isFilled && "bg-white border-slate-200 border-b-slate-300 text-slate-300",
                                             !isFilled && !!selectedTileId && !submitted && "border-[#1CB0F6] border-dashed animate-pulse cursor-pointer",
                                             isFilled && !submitted && !isLocked && "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] cursor-pointer hover:opacity-80",
@@ -833,7 +845,7 @@ function MultiWordContent({
                                 onClick={() => handleSelectTile(tile.id)}
                                 disabled={isPlaced || isEditing || disabled}
                                 className={cn(
-                                    "w-10 h-10 rounded-xl border-2 border-b-4 font-black text-sm transition-all duration-150 shadow-sm",
+                                    "min-w-11 min-h-11 w-11 h-11 rounded-xl border-2 border-b-4 font-black text-sm transition-all duration-150 shadow-sm",
                                     !isPlaced && !isSel && "bg-white hover:bg-sky-50 border-slate-200 border-b-slate-300 text-slate-800 hover:border-[#1CB0F6] cursor-pointer active:border-b-2 active:translate-y-[2px]",
                                     !isPlaced && isSel && "bg-[#1CB0F6] text-white border-[#1CB0F6] border-b-[#0090CC] scale-110 shadow-lg shadow-sky-400/30 cursor-pointer",
                                     isPlaced && "opacity-20 bg-slate-100 border-slate-200 border-b-slate-200 text-slate-400 cursor-not-allowed"
@@ -847,7 +859,7 @@ function MultiWordContent({
                         type="button"
                         onClick={handleReshuffle}
                         disabled={isEditing || disabled}
-                        className="w-10 h-10 rounded-xl border-2 border-b-4 bg-white hover:bg-sky-50 border-slate-200 border-b-slate-300 hover:border-[#1CB0F6] text-[#1CB0F6] flex items-center justify-center transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
+                        className="min-w-11 min-h-11 w-11 h-11 rounded-xl border-2 border-b-4 bg-white hover:bg-sky-50 border-slate-200 border-b-slate-300 hover:border-[#1CB0F6] text-[#1CB0F6] flex items-center justify-center transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
                         title="Reshuffle Pool"
                     >
                         <Shuffle className="w-3.5 h-3.5" />
@@ -858,28 +870,30 @@ function MultiWordContent({
             {/* Action */}
             <div className="mt-auto flex gap-3 shrink-0">
                 {submitted ? (
-                    <button
+                    <Button
                         type="button"
+                        variant="outline"
                         onClick={handleReset}
-                        className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-2 border-slate-200 border-b-4 font-black text-xs uppercase tracking-wider transition-all cursor-pointer"
+                        className="w-full h-11 rounded-2xl border-2 border-b-4 border-slate-200 font-black text-xs uppercase tracking-wider"
                     >
                         <RefreshCw className="w-4 h-4" />
-                        <span>Retry</span>
-                    </button>
+                        <span>{ACTION_LABELS.tryAgain}</span>
+                    </Button>
                 ) : (
-                    <button
+                    <Button
                         type="button"
+                        variant="duo"
                         onClick={handleCheck}
                         disabled={!allSlotsFilled || isEditing || disabled}
                         className={cn(
-                            "w-full h-11 rounded-2xl font-black uppercase text-xs tracking-[0.15em] transition-all duration-200 border-2 border-b-4 active:border-b-0 active:translate-y-[2px]",
+                            "w-full h-11",
                             allSlotsFilled
-                                ? "bg-[#1CB0F6] hover:bg-sky-500 text-white border-[#1CB0F6] border-b-[#0090CC] cursor-pointer"
-                                : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200 cursor-not-allowed"
+                                ? "bg-[#1CB0F6] hover:bg-sky-500 border-[#1CB0F6] border-b-[#0090CC]"
+                                : "bg-slate-100 text-slate-400 border-slate-200 border-b-slate-200"
                         )}
                     >
-                        Check Answer
-                    </button>
+                        {ACTION_LABELS.checkAnswer}
+                    </Button>
                 )}
             </div>
         </div>
@@ -956,7 +970,7 @@ export function WordScrambleRenderer({
             points={points}
             mode={mode}
             disabled={disabled}
-            onRender={({ state, setState, handlePoints, handleRetry }) => {
+            onRender={({ state, setState, handlePoints, handleRetry, recordAttempt }) => {
                 if (variant === "single") {
                     return (
                         <SingleWordContent
@@ -964,6 +978,7 @@ export function WordScrambleRenderer({
                             setState={setState}
                             handlePoints={handlePoints}
                             handleRetry={handleRetry}
+                            recordAttempt={recordAttempt}
                             targetWord={wordList[0] ?? ""}
                             hint={hint}
                             title={title}
@@ -982,6 +997,7 @@ export function WordScrambleRenderer({
                         setState={setState}
                         handlePoints={handlePoints}
                         handleRetry={handleRetry}
+                        recordAttempt={recordAttempt}
                         wordList={wordList}
                         hint={hint}
                         title={title}

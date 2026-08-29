@@ -235,6 +235,7 @@ function HangmanContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     secretWord,
@@ -313,6 +314,7 @@ function HangmanContent({
             }))
 
             handlePoints(earnedPoints)
+            recordAttempt(nextIsGuessed, earnedPoints, points)
         } else {
             setState(prev => ({
                 ...prev,

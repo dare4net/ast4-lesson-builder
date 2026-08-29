@@ -23,14 +23,30 @@ import {
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useRouter } from "next/navigation"
-import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Plus, Loader2, LayoutDashboard, Mic, Volume2 } from "lucide-react"
+import { Save, Upload, Download, Settings, Play, Pencil, ChevronDown, Menu, Loader2, LayoutDashboard, Mic, Volume2, Undo2, Redo2, FolderOpen } from "lucide-react"
 import type { Lesson } from "@/types/lesson"
 import type { AudioGenerationProgress } from "@/lib/audio-generator"
 import { defaultLesson } from "@/lib/default-lesson"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { VoiceSelector } from "@/components/ui/voice-selector"
+
+/** Retained for a future new-lesson control. Not mounted in the current editor chrome. */
+export function createNewLesson(importLesson: (lesson: Lesson) => void) {
+  if (typeof window === "undefined") return
+  if (!window.confirm("Create a new lesson? Any unsaved changes will be lost.")) return
+
+  const newLesson = {
+    ...defaultLesson,
+    id: `lesson-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+
+  localStorage.removeItem("currentLesson")
+  importLesson(newLesson)
+}
 
 interface LessonControlsProps {
   lesson: Lesson
@@ -51,6 +67,10 @@ interface LessonControlsProps {
   canPublish?: boolean
   hasUnpublishedChanges?: boolean
   hasValidationErrors?: boolean
+  onUndo?: () => void
+  onRedo?: () => void
+  canUndo?: boolean
+  canRedo?: boolean
 }
 
 export function LessonControls({
@@ -72,6 +92,10 @@ export function LessonControls({
   canPublish = false,
   hasUnpublishedChanges = false,
   hasValidationErrors = false,
+  onUndo,
+  onRedo,
+  canUndo = false,
+  canRedo = false,
 }: LessonControlsProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isImportOpen, setIsImportOpen] = useState(false)
@@ -81,6 +105,7 @@ export function LessonControls({
   const router = useRouter()
 
   const publishDisabled = !canPublish || isGeneratingAudio || hasValidationErrors
+  const saveDisabled = isSaving || !hasUnpublishedChanges || hasValidationErrors
   const progressPercent = audioGenerationProgress?.percent ?? 0
   const progressLabel = isGeneratingAudio && audioGenerationProgress
     ? audioGenerationProgress.total > 0
@@ -159,32 +184,6 @@ export function LessonControls({
     e.target.value = ""
   }
 
-  const createNewLesson = () => {
-    if (window.confirm("Create a new lesson? Any unsaved changes will be lost.")) {
-      const newLesson = {
-        ...defaultLesson,
-        id: `lesson-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("currentLesson")
-      }
-
-      importLesson(newLesson)
-
-      toast({
-        title: "New lesson created",
-        description: "Started a fresh lesson",
-      })
-
-      if (isMobile) {
-        setIsMobileMenuOpen(false)
-      }
-    }
-  }
-
   // Mobile UI
   if (isMobile) {
     return (
@@ -192,7 +191,7 @@ export function LessonControls({
         <div className="flex items-center gap-2 min-w-0">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-slate-300 h-9 w-9 shrink-0">
+              <Button variant="ghost" size="icon" aria-label="Open lesson menu" className="text-slate-300 h-9 w-9 shrink-0">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
@@ -221,7 +220,7 @@ export function LessonControls({
                 {onSaveToDatabase && (
                   <Button
                     variant="outline"
-                    disabled={isSaving || !hasUnpublishedChanges}
+                    disabled={saveDisabled}
                     className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800 text-slate-200"
                     onClick={() => { setIsMobileMenuOpen(false); onSaveToDatabase(); }}
                   >
@@ -233,10 +232,12 @@ export function LessonControls({
                   <LayoutDashboard className="h-4 w-4 mr-3 text-emerald-400" />
                   Creator Studio
                 </Button>
-                <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={createNewLesson}>
-                  <Plus className="h-4 w-4 mr-3 text-emerald-500" />
-                  New Lesson
-                </Button>
+                {onLoadFromDatabase && (
+                  <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={() => { setIsMobileMenuOpen(false); onLoadFromDatabase(); }}>
+                    <FolderOpen className="h-4 w-4 mr-3 text-emerald-500" />
+                    Load from Cloud
+                  </Button>
+                )}
                 <Button variant="outline" className="w-full justify-start border-slate-800 bg-slate-900/50 hover:bg-slate-800" onClick={() => { setIsMobileMenuOpen(false); setIsSettingsOpen(true); }}>
                   <Settings className="h-4 w-4 mr-3 text-emerald-500" />
                   Studio Settings
@@ -290,10 +291,10 @@ export function LessonControls({
                 variant={isSaving ? "secondary" : "default"}
                 size="sm"
                 onClick={onSaveToDatabase}
-                disabled={isSaving || !hasUnpublishedChanges}
+                disabled={saveDisabled}
                 className={cn(
                   "rounded-full px-3 h-8 text-[11px] font-bold shadow-md transition-all flex items-center gap-1",
-                  !hasUnpublishedChanges
+                  saveDisabled
                     ? "bg-slate-800/80 text-slate-500 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-500 text-white"
                 )}
@@ -409,6 +410,31 @@ export function LessonControls({
         <nav className="flex items-center gap-1 bg-slate-950/50 p-1 rounded-full border border-slate-800">
           <Button
             variant="ghost"
+            size="icon"
+            aria-label="Undo"
+            title="Undo (Ctrl+Z)"
+            disabled={!canUndo}
+            onClick={onUndo}
+            className="h-8 w-8 rounded-full text-slate-400 hover:text-white disabled:opacity-30"
+          >
+            <Undo2 className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Redo"
+            title="Redo (Ctrl+Y)"
+            disabled={!canRedo}
+            onClick={onRedo}
+            className="h-8 w-8 rounded-full text-slate-400 hover:text-white disabled:opacity-30"
+          >
+            <Redo2 className="h-4 w-4" />
+          </Button>
+        </nav>
+
+        <nav className="flex items-center gap-1 bg-slate-950/50 p-1 rounded-full border border-slate-800">
+          <Button
+            variant="ghost"
             size="sm"
             className={cn(
               "rounded-full px-4 h-8 text-xs font-bold transition-all",
@@ -440,6 +466,7 @@ export function LessonControls({
             onClick={() => setIsSettingsOpen(true)}
             className="text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-full"
             title="Studio Settings"
+            aria-label="Studio Settings"
           >
             <Settings className="h-5 w-5" />
           </Button>
@@ -499,10 +526,10 @@ export function LessonControls({
                 variant={isSaving ? "secondary" : "default"}
                 size="sm"
                 onClick={onSaveToDatabase}
-                disabled={isSaving || !hasUnpublishedChanges}
+                disabled={saveDisabled}
                 className={cn(
                   "rounded-full px-4 font-bold shadow-md transition-all",
-                  !hasUnpublishedChanges
+                  saveDisabled
                     ? "bg-slate-800/80 text-slate-500 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-500 text-white"
                 )}
@@ -529,10 +556,10 @@ export function LessonControls({
               {onSaveToDatabase && (
                 <DropdownMenuItem
                   onClick={onSaveToDatabase}
-                  disabled={!hasUnpublishedChanges || isSaving}
+                  disabled={saveDisabled}
                   className={cn(
                     "cursor-pointer",
-                    !hasUnpublishedChanges && "opacity-50 cursor-not-allowed"
+                    saveDisabled && "opacity-50 cursor-not-allowed"
                   )}
                 >
                   <Save className="h-4 w-4 mr-3 text-blue-400" />
@@ -547,11 +574,15 @@ export function LessonControls({
                 <Upload className="h-4 w-4 mr-3 text-emerald-500" />
                 Import Project (.json)
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-slate-800" />
-              <DropdownMenuItem onClick={createNewLesson} className="hover:bg-slate-800 cursor-pointer">
-                <Plus className="h-4 w-4 mr-3 text-emerald-500" />
-                New Lesson
-              </DropdownMenuItem>
+              {onLoadFromDatabase && (
+                <>
+                  <DropdownMenuSeparator className="bg-slate-800" />
+                  <DropdownMenuItem onClick={onLoadFromDatabase} className="hover:bg-slate-800 cursor-pointer">
+                    <FolderOpen className="h-4 w-4 mr-3 text-emerald-500" />
+                    Load from Cloud
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

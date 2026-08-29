@@ -118,7 +118,7 @@ export function BulletListRenderer({
   const ListComponent = type === "ordered" ? "ol" : "ul"
 
   return (
-    <div className="space-y-4 my-4 w-full px-6 sm:px-10 md:px-12">
+    <div className="space-y-4 my-4 w-full px-6 sm:px-10 md:px-12 flex-1 flex flex-col justify-center">
       <div className="flex items-center justify-between px-2">
         <span className="text-[9px] font-black text-emerald-600/70 dark:text-emerald-400/70 uppercase tracking-[0.2em]">Key Takeaways</span>
         {hasAudio && (

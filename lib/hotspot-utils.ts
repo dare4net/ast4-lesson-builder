@@ -88,13 +88,14 @@ export function normalizeHotspotNodes(raw: unknown[]): HotspotNode[] {
  * Safe to call on already-normalized extended-format components.
  */
 export function resolveHotspotComponentProps(
-    component: { props?: Record<string, unknown>; [key: string]: unknown },
+    component: { props?: Record<string, unknown> },
 ): Record<string, unknown> {
     const merged: Record<string, unknown> = { ...(component.props ?? {}) }
+    const root = component as Record<string, unknown>
 
     for (const key of HOTSPOT_ROOT_PROP_KEYS) {
-        if (merged[key] === undefined && component[key] !== undefined) {
-            merged[key] = component[key]
+        if (merged[key] === undefined && root[key] !== undefined) {
+            merged[key] = root[key]
         }
     }
 

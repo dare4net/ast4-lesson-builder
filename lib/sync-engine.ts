@@ -5,6 +5,8 @@
 
 import { offlineStore, SyncTask } from './offline-store';
 import { saveUserInteraction as apiSaveInteraction } from './user-interactions';
+import { nextBackoffMs } from './backoff';
+import { tabSync } from './tab-sync';
 
 export type SyncStatus = 'synced' | 'syncing' | 'offline' | 'error';
 
@@ -14,6 +16,8 @@ class SyncEngine {
     private statusListeners: ((status: SyncStatus, lastSync: number | null, error: string | null) => void)[] = [];
     private currentStatus: SyncStatus = 'synced';
     private errorDetails: string | null = null;
+    private failureCount = 0;
+    private retryTimer: ReturnType<typeof setTimeout> | null = null;
 
     constructor() {
         if (typeof window !== 'undefined') {
@@ -64,6 +68,10 @@ class SyncEngine {
         if (!userId || !lessonId) return;
 
         console.log(`[SyncEngine] Saving interaction for ${lessonId}`);
+        if (tabSync.shouldSuppressWrite(userId, lessonId)) {
+            return;
+        }
+        tabSync.publishInteraction(userId, lessonId, data?.version ?? 0);
         // 1. Update local storage immediately for instant UI responsiveness
         await offlineStore.saveInteraction(userId, lessonId, data, false);
 
@@ -112,16 +120,18 @@ class SyncEngine {
 
                     try {
                         console.log(`[SyncEngine] Pushing state to server for ${task.lessonId}`);
-                        const { success, error } = await apiSaveInteraction(task.userId, task.lessonId, task.data);
+                        const result = await apiSaveInteraction(task.userId, task.lessonId, task.data);
 
-                        if (success) {
-                            // Successfully synced! Clear the queue for this lesson up to this update
+                        if (result.success) {
+                            this.failureCount = 0;
+                            this.clearRetry();
                             await offlineStore.clearQueueByLesson(task.userId, task.lessonId, task.timestamp);
-                            // Also mark the interaction as synced in the local store
                             await offlineStore.saveInteraction(task.userId, task.lessonId, task.data, true);
+                        } else if (result.conflict) {
+                            await offlineStore.clearQueueByLesson(task.userId, task.lessonId, task.timestamp);
                         } else {
-                            lastErrorMessage = error || 'Server rejected update';
-                            console.warn(`[SyncEngine] Server rejected update for ${task.lessonId}: ${lastErrorMessage}. Will retry in next cycle.`);
+                            lastErrorMessage = result.error || 'Server rejected update';
+                            console.warn(`[SyncEngine] Server rejected update for ${task.lessonId}: ${lastErrorMessage}. Will retry with backoff.`);
                             cycleHasError = true;
                         }
                     } catch (pushErr: any) {
@@ -140,7 +150,9 @@ class SyncEngine {
                     await new Promise(r => setTimeout(r, 500)); // Brief pause before next cycle
                 } else {
                     if (cycleHasError) {
+                        this.failureCount += 1;
                         this.setStatus('error', lastErrorMessage || 'One or more tasks failed to sync. Check network/payload.');
+                        this.scheduleRetry();
                     }
                     break;
                 }
@@ -152,7 +164,9 @@ class SyncEngine {
             }
         } catch (err: any) {
             console.error('[SyncEngine] Critical terminal sync failure:', err);
+            this.failureCount += 1;
             this.setStatus('error', err.message || 'Critical sync failure');
+            this.scheduleRetry();
         } finally {
             this.isSyncing = false;
             this.notifyListeners();
@@ -163,9 +177,31 @@ class SyncEngine {
      * Force a sync operation immediately.
      */
     async forceSync() {
+        this.clearRetry();
         if (navigator.onLine) {
             await this.sync();
         }
+    }
+
+    private clearRetry() {
+        if (this.retryTimer) {
+            clearTimeout(this.retryTimer);
+            this.retryTimer = null;
+        }
+    }
+
+    private scheduleRetry() {
+        if (this.retryTimer) return;
+        const delay = nextBackoffMs(this.failureCount);
+        this.retryTimer = setTimeout(() => {
+            this.retryTimer = null;
+            this.sync();
+        }, delay);
+    }
+
+    resetBackoff() {
+        this.clearRetry();
+        this.failureCount = 0;
     }
 
     /**

@@ -55,6 +55,7 @@ function CrosswordContent({
     setState,
     handlePoints,
     handleRetry,
+    recordAttempt,
     mode,
     title,
     gridSize = { rows: 5, cols: 5 },
@@ -204,6 +205,7 @@ function CrosswordContent({
         }))
 
         handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
     const handleReset = () => {

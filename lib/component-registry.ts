@@ -1,26 +1,19 @@
-import type { ComponentType, ComponentType_Category } from "@/types/lesson"
+export type ComponentType_Category =
+    | "interactive"
+    | "gamified"
+    | "content"
+    | "visual-guide"
+    | "media"
+    | "utility"
+    | "structure"
 
 export type ComponentWrapper = "content" | "interactive" | "scored"
 
-export interface ComponentRegistryEntry {
-    type: ComponentType | string
-    /** Maps to `ComponentType_Category` in lesson-utils */
-    category: ComponentType_Category
-    /** Blocks Next until complete */
-    gated: boolean
-    /** Can earn points in live mode */
-    scored: boolean
-    /** Which base wrapper the renderer should use */
-    wrapper: ComponentWrapper
-    /** Uses server-side aggregate store (polls, etc.) */
-    collaborative?: boolean
-}
-
 /**
  * Single source of truth for component behaviour capabilities.
- * Drives gating (lesson-utils), scoring (scoring-service), and renderer prop wiring (component-renderer).
+ * `ComponentType` and the viewer renderer map are derived from this list.
  */
-export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
+export const COMPONENT_REGISTRY = [
     // Content
     { type: "paragraph", category: "content", gated: false, scored: false, wrapper: "content" },
     { type: "heading", category: "content", gated: false, scored: false, wrapper: "content" },
@@ -31,7 +24,7 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
     { type: "callout", category: "visual-guide", gated: false, scored: false, wrapper: "content" },
     { type: "accordion", category: "structure", gated: true, scored: false, wrapper: "interactive" },
     { type: "image", category: "media", gated: false, scored: false, wrapper: "content" },
-    { type: "video", category: "media", gated: false, scored: false, wrapper: "content" },
+    { type: "video", category: "media", gated: false, scored: false, wrapper: "content", aliases: ["videoClip"] },
 
     // Interactive (scored)
     { type: "quiz", category: "interactive", gated: true, scored: true, wrapper: "scored" },
@@ -55,14 +48,14 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
     { type: "flashcards", category: "gamified", gated: true, scored: false, wrapper: "interactive" },
 
     // Gamified (scored)
-    { type: "wordScramble", category: "gamified", gated: true, scored: true, wrapper: "scored" },
-    { type: "memoryGrid", category: "gamified", gated: true, scored: true, wrapper: "scored" },
-    { type: "spinTheWheel", category: "gamified", gated: true, scored: true, wrapper: "scored" },
-    { type: "annotationBoard", category: "interactive", gated: true, scored: true, wrapper: "scored" },
+    { type: "wordScramble", category: "gamified", gated: true, scored: true, wrapper: "scored", aliases: ["word-scramble"] },
+    { type: "memoryGrid", category: "gamified", gated: true, scored: true, wrapper: "scored", aliases: ["memory-grid"] },
+    { type: "spinTheWheel", category: "gamified", gated: true, scored: true, wrapper: "scored", aliases: ["spin-the-wheel"] },
+    { type: "annotationBoard", category: "interactive", gated: true, scored: true, wrapper: "scored", aliases: ["annotation-board"] },
     { type: "anagram", category: "gamified", gated: true, scored: true, wrapper: "scored" },
     { type: "hangman", category: "gamified", gated: true, scored: true, wrapper: "scored" },
-    { type: "swipeDeck", category: "gamified", gated: true, scored: true, wrapper: "scored" },
-    { type: "spectrumSorter", category: "interactive", gated: true, scored: true, wrapper: "scored" },
+    { type: "swipeDeck", category: "gamified", gated: true, scored: true, wrapper: "scored", aliases: ["swipe-deck"] },
+    { type: "spectrumSorter", category: "interactive", gated: true, scored: true, wrapper: "scored", aliases: ["spectrum-sorter", "labScale"] },
     { type: "jigsaw", category: "gamified", gated: true, scored: true, wrapper: "scored" },
     { type: "crossword", category: "gamified", gated: true, scored: true, wrapper: "scored" },
 
@@ -71,7 +64,6 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
 
     // Legacy / studio types not yet implemented in viewer
     { type: "clickableImage", category: "interactive", gated: true, scored: true, wrapper: "scored" },
-    { type: "crossword", category: "interactive", gated: true, scored: false, wrapper: "interactive" },
     { type: "audioRecording", category: "interactive", gated: true, scored: false, wrapper: "interactive" },
     { type: "drawingCanvas", category: "interactive", gated: true, scored: false, wrapper: "interactive" },
     { type: "divider", category: "visual-guide", gated: false, scored: false, wrapper: "content" },
@@ -91,11 +83,29 @@ export const COMPONENT_REGISTRY: ComponentRegistryEntry[] = [
     { type: "themeSwitch", category: "utility", gated: false, scored: false, wrapper: "content" },
     { type: "hint", category: "utility", gated: false, scored: false, wrapper: "content" },
     { type: "notePad", category: "utility", gated: false, scored: false, wrapper: "content" },
-]
+] as const
 
-const REGISTRY_MAP = new Map<string, ComponentRegistryEntry>(
-    COMPONENT_REGISTRY.map(entry => [entry.type, entry])
-)
+export type ComponentType = typeof COMPONENT_REGISTRY[number]["type"]
+
+export type ComponentRegistryEntry = {
+    type: ComponentType
+    category: ComponentType_Category
+    gated: boolean
+    scored: boolean
+    wrapper: ComponentWrapper
+    collaborative?: boolean
+    aliases?: readonly string[]
+}
+
+const REGISTRY_MAP = new Map<string, ComponentRegistryEntry>()
+for (const entry of COMPONENT_REGISTRY) {
+    REGISTRY_MAP.set(entry.type, entry)
+    if ("aliases" in entry && entry.aliases) {
+        for (const alias of entry.aliases) {
+            REGISTRY_MAP.set(alias, entry)
+        }
+    }
+}
 
 export function getRegistryEntry(type: ComponentType | string): ComponentRegistryEntry | undefined {
     return REGISTRY_MAP.get(type)
@@ -130,6 +140,10 @@ export function usesInteractiveRendererProps(type: ComponentType | string): bool
 
 export function getScoredComponentTypes(): ComponentType[] {
     return COMPONENT_REGISTRY
-        .filter(e => e.scored)
-        .map(e => e.type as ComponentType)
+        .filter((e) => e.scored)
+        .map((e) => e.type)
+}
+
+export function getCanonicalComponentType(type: string): ComponentType | undefined {
+    return getRegistryEntry(type)?.type
 }

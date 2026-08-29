@@ -12,6 +12,7 @@ import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
+import { apiClient } from "@/lib/api-client"
 
 interface WordCloudRendererProps {
     title?: string
@@ -27,6 +28,8 @@ interface WordCloudRendererProps {
     setComponentState?: (state: any) => void
     id?: string
     status?: string
+    lessonId?: string
+    isTutorView?: boolean
 }
 
 type WordEntry = {
@@ -59,6 +62,7 @@ function WordCloudContent({
     state,
     setState,
     handlePoints,
+    recordAttempt,
     isLive,
     isDisabled: disabledProp,
     props
@@ -77,6 +81,8 @@ function WordCloudContent({
     const [inputWord, setInputWord] = useState("")
 
     const timeLimit = (props as any).timeLimit || 20
+    const lessonId = props.lessonId
+    const componentId = props.id
 
     const {
         submittedWords,
@@ -87,6 +93,21 @@ function WordCloudContent({
     useEffect(() => {
         setMounted(true)
     }, [])
+
+    useEffect(() => {
+        if (!lessonId || !componentId) return
+        let cancelled = false
+        apiClient.live.getWordCloud(lessonId, componentId)
+            .then((data) => {
+                if (cancelled || !data?.counts) return
+                setState((prev) => ({
+                    ...prev,
+                    wordCounts: { ...data.counts, ...prev.wordCounts },
+                }))
+            })
+            .catch(() => { /* keep local counts if the class cloud is unreachable */ })
+        return () => { cancelled = true }
+    }, [lessonId, componentId, setState])
 
     useEffect(() => {
         const isComplete = isSubmitted || state.status === "completed"
@@ -104,15 +125,24 @@ function WordCloudContent({
 
         const normalized = word.toLowerCase()
         const newSubmitted = [...submittedWords, word]
-        const newCounts = { ...wordCounts, [normalized]: (wordCounts[normalized] || 0) + 1 }
 
         await playFeedback("click")
         setInputWord("")
 
+        let nextCounts = { ...wordCounts, [normalized]: (wordCounts[normalized] || 0) + 1 }
+        if (lessonId && componentId && !props.isTutorView) {
+            try {
+                const data = await apiClient.live.addWordCloudWord(lessonId, componentId, word)
+                if (data?.counts) nextCounts = data.counts
+            } catch {
+                /* keep optimistic local counts */
+            }
+        }
+
         setState(prev => ({
             ...prev,
             submittedWords: newSubmitted,
-            wordCounts: newCounts
+            wordCounts: nextCounts
         }))
     }
 
@@ -121,6 +151,7 @@ function WordCloudContent({
 
         await playFeedback("quizSuccess")
         handlePoints(props.points || 10)
+        recordAttempt(true, props.points || 10, props.points || 10)
 
         setState(prev => ({
             ...prev,
@@ -183,7 +214,7 @@ function WordCloudContent({
             </div>
 
             {/* Question Prompt & Input */}
-            <div className="flex-1 min-h-0 flex flex-col justify-center overflow-y-auto py-3 space-y-3">
+            <div className="flex-1 min-h-0 flex flex-col justify-start md:justify-center overflow-y-auto py-3 space-y-3">
                 <div className="p-3.5 bg-purple-50/50 border-2 border-purple-100 rounded-2xl">
                     <FormattedText content={question || "Type words or short key concepts to build the word cloud:"} as="p" className="text-sm md:text-base font-bold text-slate-900 leading-relaxed" />
                 </div>

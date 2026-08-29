@@ -42,9 +42,6 @@ export function QuizRenderer({ quiz, onComplete, viewOnly = false }: QuizProps) 
 
     if (correct) {
       await playFeedback('complete');
-      if (scoreContext && currentQuestionIndex === quiz.questions.length - 1) {
-        scoreContext.addPoints(points);
-      }
     } else {
       await playFeedback('incorrect');
     }

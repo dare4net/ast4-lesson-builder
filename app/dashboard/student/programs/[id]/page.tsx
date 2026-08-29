@@ -1,66 +1,69 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 import { apiClient } from "@/lib/api-client"
-import { useAuth } from "@/context/auth-context"
+import { queryKeys } from "@/lib/query-keys"
+import { useMyPrograms, useProgramDetails } from "@/hooks/use-my-programs"
 import {
     BookOpen,
     ArrowLeft,
     Folder,
     ChevronRight,
     Loader2,
-    Zap,
     Trash2
 } from "lucide-react"
 import { motion } from "framer-motion"
-import { Card } from "@/components/ui/card"
+import { CourseHero } from "@/components/dashboard/course-hero"
+import { StudentCard } from "@/components/dashboard/student-card"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 export default function StudentCourseDetailPage() {
     const params = useParams()
     const id = params?.id as string
     const router = useRouter()
-    const { token } = useAuth()
+    const queryClient = useQueryClient()
+    const myProgramsQuery = useMyPrograms()
+    const detailsQuery = useProgramDetails(id)
 
-    const [program, setProgram] = useState<any | null>(null)
-    const [loading, setLoading] = useState(true)
+    const program = useMemo(() => {
+        const details = detailsQuery.data
+        if (!details) return null
+        const enrolledReg = (myProgramsQuery.data || []).find(
+            (p: any) => p._id === id || p.program_id === id
+        )
+        return {
+            ...details,
+            registration: enrolledReg
+        }
+    }, [detailsQuery.data, myProgramsQuery.data, id])
+
+    const loading = detailsQuery.isLoading || myProgramsQuery.isLoading
     const [unregistering, setUnregistering] = useState(false)
+    const [unenrollOpen, setUnenrollOpen] = useState(false)
+    const [unenrollError, setUnenrollError] = useState<string | null>(null)
     const [openingModuleId, setOpeningModuleId] = useState<string | null>(null)
 
-    useEffect(() => {
-        if (id && token) fetchCourseDetails()
-    }, [id, token])
-
-    const fetchCourseDetails = async () => {
-        setLoading(true)
-        try {
-            const myPrograms = await apiClient.programs.getMyPrograms()
-            const rawPrograms = Array.isArray(myPrograms) ? myPrograms : (myPrograms?.data || myPrograms?.programs || [])
-            const enrolledReg = rawPrograms.find(
-                (p: any) => p._id === id || p.program_id === id
-            )
-
-            const details = await apiClient.programs.getDetails(id)
-            setProgram({
-                ...details,
-                registration: enrolledReg
-            })
-        } catch (err) {
-            console.error("Failed to load course details", err)
-        } finally {
-            setLoading(false)
-        }
-    }
-
     const handleUnenroll = async () => {
-        if (!confirm("Are you sure you want to unenroll from this course? Your progress will be reset.")) return
         setUnregistering(true)
+        setUnenrollError(null)
         try {
             await apiClient.programs.unregister(id)
+            await queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
             router.push('/dashboard/student/programs')
-        } catch (err) {
+        } catch (err: any) {
             console.error("Failed to unenroll", err)
-        } finally {
+            setUnenrollError(err.response?.data?.message || err.response?.data?.error || err.message || "Failed to unenroll")
             setUnregistering(false)
         }
     }
@@ -136,6 +139,8 @@ export default function StudentCourseDetailPage() {
             {/* Header Navigation */}
             <div className="flex items-center justify-between">
                 <button
+                    type="button"
+                    aria-label="Back to my courses"
                     onClick={() => router.push('/dashboard/student/programs')}
                     className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#58CC02] transition-colors"
                 >
@@ -145,7 +150,7 @@ export default function StudentCourseDetailPage() {
 
                 <button
                     disabled={unregistering}
-                    onClick={handleUnenroll}
+                    onClick={() => setUnenrollOpen(true)}
                     className="h-9 px-4 rounded-xl text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 flex items-center gap-1.5 transition-colors"
                 >
                     {unregistering ? (
@@ -159,32 +164,11 @@ export default function StudentCourseDetailPage() {
                 </button>
             </div>
 
-            {/* Hero Course Card */}
-            <Card className="p-8 md:p-10 rounded-3xl bg-white border-2 border-slate-200 shadow-sm flex flex-col md:flex-row gap-8 justify-between items-center">
-                <div className="space-y-3 text-center md:text-left">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#58CC02]/20 bg-[#58CC02]/10 w-fit mx-auto md:mx-0">
-                        <Zap className="w-3.5 h-3.5 text-[#58CC02]" />
-                        <span className="text-xs font-extrabold text-[#58CC02]">Enrolled Course</span>
-                    </div>
-                    <h1 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
-                        {program.program_name || program.name || program.title || "Course"}
-                    </h1>
-                    <p className="text-xs text-slate-500 font-medium max-w-xl leading-relaxed">
-                        {program.description || "Select a module below to view detailed lesson topics."}
-                    </p>
-                </div>
-
-                <div className="flex flex-col items-center md:items-end gap-2 min-w-[160px]">
-                    <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Overall Progress</span>
-                    <span className="text-4xl font-extrabold text-[#58CC02]">{progressPct}%</span>
-                    <div className="h-2 w-36 bg-slate-100 border border-slate-200 rounded-full overflow-hidden">
-                        <div
-                            className="h-full bg-[#58CC02] rounded-full transition-all duration-500"
-                            style={{ width: `${progressPct}%` }}
-                        />
-                    </div>
-                </div>
-            </Card>
+            <CourseHero
+                title={program.program_name || program.name || program.title || "Course"}
+                description={program.description || "Select a module below to view detailed lesson topics."}
+                progressPct={progressPct}
+            />
 
             {/* Modules Grid */}
             <div className="space-y-4">
@@ -206,50 +190,30 @@ export default function StudentCourseDetailPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: idx * 0.05 }}
                             >
-                                <div
+                                <StudentCard
+                                    href={`/dashboard/student/programs/${id}/modules/${mod._id}`}
                                     onClick={() => handleOpenModule(mod._id)}
-                                    className="group relative h-full cursor-pointer"
-                                >
-                                    <div className="relative h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-200 hover:border-[#1CB0F6]/50 hover:-translate-y-0.5 hover:shadow-md shadow-sm flex flex-col justify-between">
-                                        <div>
-                                            {/* Header Thumbnail Cover Image */}
-                                            <div className="h-32 sm:h-36 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800/80">
-                                                <img
-                                                    src={modThumbnail}
-                                                    alt={moduleTitle}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    onError={(e) => {
-                                                        (e.target as HTMLImageElement).src = "/logo.webp"
-                                                    }}
-                                                />
-
-                                                {/* Module Number Badge */}
-                                                <div className="absolute top-2.5 right-2.5 flex items-center justify-end pointer-events-none">
-                                                    <span className="text-[10px] font-bold text-white bg-[#1CB0F6] px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                                                        Module {idx + 1}
-                                                    </span>
-                                                </div>
-
-                                                {/* Lesson Count Pill */}
-                                                <div className="absolute bottom-2 left-2.5 text-[10px] font-semibold text-white/90 bg-slate-950/70 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
-                                                    <BookOpen className="w-3 h-3 text-slate-300" />
-                                                    <span>{lessonCount} {lessonCount === 1 ? 'Lesson' : 'Lessons'}</span>
-                                                </div>
-                                            </div>
-
-                                            {/* Module Body */}
-                                            <div className="p-4 sm:p-5 space-y-2">
-                                                <h3 className="text-base font-extrabold text-slate-800 dark:text-white group-hover:text-[#1CB0F6] transition-colors line-clamp-1 leading-snug">
-                                                    {moduleTitle}
-                                                </h3>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
-                                                    {mod.description || "Click to view detailed interactive lessons in this module."}
-                                                </p>
-                                            </div>
+                                    imageUrl={modThumbnail}
+                                    imageAlt={moduleTitle}
+                                    title={moduleTitle}
+                                    badge={
+                                        <span className="text-[10px] font-bold text-white bg-[#1CB0F6] px-2.5 py-0.5 rounded-full shadow-sm">
+                                            Module {idx + 1}
+                                        </span>
+                                    }
+                                    overlay={
+                                        <div className="text-[10px] font-semibold text-white/90 bg-slate-950/70 backdrop-blur-sm px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1">
+                                            <BookOpen className="w-3 h-3 text-slate-300" />
+                                            <span>{lessonCount} {lessonCount === 1 ? 'Lesson' : 'Lessons'}</span>
                                         </div>
-
-                                        {/* Card Footer */}
-                                        <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                                    }
+                                    subtitle={
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed font-medium">
+                                            {mod.description || "Click to view detailed interactive lessons in this module."}
+                                        </p>
+                                    }
+                                    footer={
+                                        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
                                             <span className="text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-[#1CB0F6] transition-colors">
                                                 Explore Module
                                             </span>
@@ -264,8 +228,8 @@ export default function StudentCourseDetailPage() {
                                                 )}
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    }
+                                />
                             </motion.div>
                         )
                     })}
@@ -278,6 +242,25 @@ export default function StudentCourseDetailPage() {
                     </div>
                 )}
             </div>
+
+            {unenrollError && (
+                <p className="text-xs font-bold text-red-600">{unenrollError}</p>
+            )}
+
+            <AlertDialog open={unenrollOpen} onOpenChange={setUnenrollOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Unenroll from this course?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Your progress in this course will be reset. This cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleUnenroll}>Unenroll</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }

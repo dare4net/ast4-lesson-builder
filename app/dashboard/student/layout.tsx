@@ -1,6 +1,8 @@
 "use client"
 
 import { ReactNode, useState } from "react"
+import { GamificationEventListener } from "@/components/gamification/GamificationEventListener"
+import { GamificationToastContainer } from "@/components/ui/gamification-toast"
 import { StudentSidebar } from "@/components/dashboard/sidebar/student-sidebar"
 import { StudentMobileNav } from "@/components/dashboard/sidebar/student-mobile-nav"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
@@ -16,6 +18,8 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-sans">
+            <GamificationEventListener />
+            <GamificationToastContainer />
             {/* Navigation */}
             <StudentSidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
             <StudentMobileNav />
