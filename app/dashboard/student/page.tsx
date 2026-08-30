@@ -114,7 +114,7 @@ export default function StudentDashboardPage() {
                                 <span className="text-[11px] font-bold text-[#58CC02]">Active Student</span>
                             </div>
 
-                            <Link href="/dashboard/student/store">
+                            <Link href="/dashboard/student/streak">
                                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-800/80 bg-orange-50 dark:bg-orange-950/60 hover:scale-105 transition-transform cursor-pointer">
                                     <Flame className="w-3.5 h-3.5 text-[#FF9600] fill-[#FF9600]" />
                                     <span className="text-[11px] font-extrabold text-[#FF9600]">{loginStreak || 0} day streak</span>

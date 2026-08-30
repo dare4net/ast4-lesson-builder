@@ -38,7 +38,11 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-sans">
             <GamificationEventListener />
             <GamificationToastContainer />
-            <LoginStreakModal stats={statsQuery.data?.stats} />
+            <LoginStreakModal
+                stats={statsQuery.data?.stats}
+                userId={user?.user_id}
+                enabled={!needsOnboarding(user)}
+            />
             {/* Navigation */}
             <StudentSidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
             <StudentMobileNav />

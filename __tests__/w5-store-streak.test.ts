@@ -19,8 +19,13 @@ describe('W5 store and login streak', () => {
 
     it('shows a dramatic login streak and a pride board for it', () => {
         expect(read('components/store/login-streak-modal.tsx')).toContain('Day streak')
+        expect(read('components/store/login-streak-modal.tsx')).toContain('streakModalStorageKey')
+        expect(read('lib/streak.ts')).toContain('ast-streak-modal')
         expect(read('app/dashboard/student/layout.tsx')).toContain('LoginStreakModal')
-        expect(read('app/dashboard/student/page.tsx')).toContain('day streak')
+        expect(read('app/dashboard/student/page.tsx')).toContain('/dashboard/student/streak')
+        expect(read('app/dashboard/student/page.tsx')).not.toContain('href="/dashboard/student/store"')
+        expect(read('app/dashboard/student/streak/page.tsx')).toContain('Milestone stars')
+        expect(read('lib/streak.ts')).toContain('5 * (2 ** index)')
         expect(read('context/gamification-context.tsx')).toContain('loginStreak')
     })
 })

@@ -13,6 +13,7 @@ describe('F1 accessibility floor', () => {
         expect(read('components/auth/auth-playground.tsx')).toContain('useReducedMotion')
         expect(read('components/onboarding/onboarding-flow.tsx')).toContain('useReducedMotion')
         expect(read('app/dashboard/tutor/page.tsx')).toContain('useReducedMotion')
+        expect(read('components/store/login-streak-modal.tsx')).toContain('useReducedMotion')
         expect(read('components/auth/auth-playground.tsx')).toContain('reduceMotion ? undefined')
         expect(read('components/onboarding/first-win.tsx')).toContain('reduceMotion')
         expect(read('app/dashboard/tutor/page.tsx')).toContain('reduceMotion ? undefined')
