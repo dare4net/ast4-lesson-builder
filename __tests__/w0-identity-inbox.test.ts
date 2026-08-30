@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { avatarUrl, resolveAvatarId } from '@/lib/avatar'
 import { handleSchema } from '@/lib/contracts'
 import { shouldToastInboxItem } from '@/lib/inbox'
 
@@ -13,6 +14,8 @@ describe('W0 identity and inbox', () => {
         expect(settings).toContain('isPublicProfile')
         expect(settings).toContain('Make my profile public')
         expect(settings).toContain('Handle color')
+        expect(settings).toContain('Choose your avatar')
+        expect(settings).toContain('AVATAR_IDS')
         expect(settings).toContain('ACCENT_COLORS')
         expect(settings).toContain('Pick a handle first')
         expect(settings).toContain('Email stays private')
@@ -26,6 +29,8 @@ describe('W0 identity and inbox', () => {
         expect(page).toContain('PublicProfileView')
         expect(profile).toContain('usePeopleProfile')
         expect(profile).toContain('displayName')
+        expect(profile).toContain('HandleAvatar')
+        expect(profile).toContain('avatarId')
         expect(profile).not.toContain('profile.email')
         expect(profile).not.toContain('user.email')
         expect(missing).toContain('private or doesn')
@@ -40,6 +45,9 @@ describe('W0 identity and inbox', () => {
         expect(header).toContain('NotificationBell')
         expect(header).toContain('!isTutor && <NotificationBell')
         expect(header).toContain('PrideSearch')
+        expect(header).toContain('HandleAvatar')
+        expect(header).toContain('avatarId')
+        expect(header).not.toContain('api.dicebear.com')
         expect(header).toContain('!isTutor && (')
         expect(bell).toContain('aria-label')
         expect(bell).toContain('shouldToastInboxItem')
@@ -57,5 +65,14 @@ describe('W0 identity and inbox', () => {
         expect(shouldToastInboxItem({ id: '1', actorId: 'someone' }, 'me')).toBe(true)
         expect(handleSchema.safeParse('maya_codes').success).toBe(true)
         expect(handleSchema.safeParse('ab').success).toBe(false)
+    })
+
+    it('uses one chosen avatar for handle, header, and public profile', () => {
+        expect(resolveAvatarId('maya_codes', 'kiwi')).toBe('kiwi')
+        expect(resolveAvatarId('maya_codes', null)).toBe(resolveAvatarId('maya_codes'))
+        expect(avatarUrl('maya_codes', 'rocket')).toContain('seed=rocket')
+        expect(read('components/pride/student-name.tsx')).toContain('HandleAvatar')
+        expect(read('components/pride/pride-search.tsx')).toContain('HandleAvatar')
+        expect(read('lib/api-client.ts')).toContain('avatarId')
     })
 })

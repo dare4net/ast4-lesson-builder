@@ -17,11 +17,12 @@ interface ImageRendererProps {
   isEditing?: boolean
   savedState?: any
   setComponentState?: (state: any) => void
+  id?: string
 }
 
-export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isEditing = false, savedState, setComponentState }: ImageRendererProps) {
+export function ImageRenderer({ src, alt, caption, audioUrl, width = "100%", isEditing = false, savedState, setComponentState, id = 'image' }: ImageRendererProps) {
   const { playFeedback } = useFeedback()
-  const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
+  const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl, componentId: id })
   const [localRevealed, setLocalRevealed] = useState(false)
 
   const isAcknowledged = savedState?.status === "completed"

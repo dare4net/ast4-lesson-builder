@@ -67,12 +67,15 @@ export const ACHIEVEMENT_EVENT_TYPES = [
     'PROGRAM_ENROLLED',
     'STARS_SPENT',
     'STARS_AWARDED',
+    'AUDIO_REPLAYED',
+    'HINT_USED',
+    'POLL_VOTED',
 ] as const
 
 export type AchievementEventType = (typeof ACHIEVEMENT_EVENT_TYPES)[number]
 
 export const ACHIEVEMENT_FIELDS_BY_EVENT: Record<AchievementEventType, string[]> = {
-    COMPONENT_SUBMITTED: ['type', 'mode', 'score', 'maxScore', 'percentage', 'attemptCount', 'isFirstAttempt', 'completionTimeMs', 'componentId', 'lessonId', 'programId'],
+    COMPONENT_SUBMITTED: ['type', 'mode', 'score', 'maxScore', 'percentage', 'attemptCount', 'isFirstAttempt', 'completionTimeMs', 'componentId', 'lessonId', 'programId', 'wrongGuesses', 'memoryFlips', 'jigsawMoves', 'testsPassed'],
     LIVE_EARLY_FINISH: ['type', 'completionTimeMs', 'timeLimitMs', 'componentId', 'lessonId'],
     LIVE_TIMEOUT: ['type', 'componentId', 'lessonId'],
     LESSON_COMPLETED: ['lessonId', 'programId', 'score', 'maxScore', 'percentage'],
@@ -81,6 +84,9 @@ export const ACHIEVEMENT_FIELDS_BY_EVENT: Record<AchievementEventType, string[]>
     PROGRAM_ENROLLED: ['programId'],
     STARS_SPENT: ['amount', 'itemType'],
     STARS_AWARDED: ['amount', 'reason', 'componentId'],
+    AUDIO_REPLAYED: ['componentId', 'lessonId'],
+    HINT_USED: ['type', 'componentId', 'lessonId', 'hintKind'],
+    POLL_VOTED: ['optionId', 'componentId', 'lessonId'],
 }
 
 export const RULE_OPS = ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'exists', 'ratioLt'] as const
@@ -139,6 +145,9 @@ export const ACHIEVEMENT_EVENT_LABELS: Record<AchievementEventType, string> = {
     PROGRAM_ENROLLED: 'A program is enrolled',
     STARS_SPENT: 'Stars are spent',
     STARS_AWARDED: 'Stars are awarded',
+    AUDIO_REPLAYED: 'Audio is replayed',
+    HINT_USED: 'A hint is used',
+    POLL_VOTED: 'A poll vote is cast',
 }
 
 export const MISSION_PRESETS = [
@@ -241,6 +250,16 @@ export const ACHIEVEMENT_PRESETS = [
         description: 'Spend any stars in the store',
         eventType: 'STARS_SPENT' as const,
         rules: [{ field: 'amount', op: 'gte' as const, value: 1 }],
+    },
+    {
+        label: 'Hangman with 2 misses',
+        title: 'Sharp Guesser',
+        description: 'Finish hangman with 2 or fewer wrong guesses',
+        eventType: 'COMPONENT_SUBMITTED' as const,
+        rules: [
+            { field: 'type', op: 'eq' as const, value: 'hangman' },
+            { field: 'wrongGuesses', op: 'lte' as const, value: 2 },
+        ],
     },
 ]
 

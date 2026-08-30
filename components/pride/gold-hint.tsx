@@ -8,6 +8,7 @@ export type GoldHolder = {
     displayName?: string
     value?: number | null
     accentColor?: string | null
+    avatarId?: string | null
     bestCrown?: string | null
     following?: boolean
 }
@@ -23,6 +24,7 @@ export function GoldHint({ gold, unit }: { gold?: GoldHolder | null; unit?: stri
                 handle={gold.handle}
                 displayName={gold.displayName}
                 accentColor={gold.accentColor}
+                avatarId={gold.avatarId}
                 bestCrown={gold.bestCrown || 'gold'}
                 following={gold.following}
                 className="text-[11px]"

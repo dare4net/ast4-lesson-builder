@@ -19,5 +19,6 @@ describe('E4 polls and word clouds on Express', () => {
         expect(source).toContain('apiClient.live.addWordCloudWord')
         expect(read('lib/api-client.ts')).toContain("this.post('/wordclouds'")
         expect(read('lib/api-client.ts')).toContain("this.post('/polls'")
+        expect(read('lib/api-client.ts')).toContain("this.post('/scales'")
     })
 })

@@ -20,17 +20,15 @@ export function extractPollComponentIds(lesson: any): Array<{ componentId: strin
 }
 
 /**
- * usePollStore — fetches all poll vote snapshots once at lesson start.
+ * usePollStore — fetches class poll votes and keeps them fresh while the lesson is open.
  * Returns a map of componentId -> {votes, totalVotes}.
  * Exposes `submitVote` which POSTs to Express `/api/polls` and updates the map.
- * No real-time polling — snapshot is from lesson-start time.
  */
 export function usePollStore(lesson: any) {
     const lessonId = lesson?.id || "default";
     const [pollData, setPollData] = useState<PollVotesMap>({});
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Pre-fetch all poll data once when the lesson loads (during intro cue)
     useEffect(() => {
         if (!lesson) return;
         const pollComponents = extractPollComponentIds(lesson);
@@ -65,9 +63,11 @@ export function usePollStore(lesson: any) {
         };
 
         fetchAll();
+        const timer = window.setInterval(fetchAll, 4000);
 
         return () => {
             cancelled = true;
+            window.clearInterval(timer);
         };
     }, [lesson, lessonId]);
 

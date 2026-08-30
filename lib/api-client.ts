@@ -246,6 +246,7 @@ class APIClient {
     };
 
     lessons = {
+        listMine: (userId: string) => this.get(`/lessons/my/interactions/${userId}`),
         getModuleLessons: (moduleId: string) => this.get(`/lessons/module/${moduleId}/lessons`),
         getLessonDetails: async (lessonId: string) => {
             const data = await this.get(`/lessons/${lessonId}`);
@@ -274,6 +275,20 @@ class APIClient {
             this.get(`/wordclouds?lessonId=${encodeURIComponent(lessonId)}&componentId=${encodeURIComponent(componentId)}`),
         addWordCloudWord: (lessonId: string, componentId: string, word: string) =>
             this.post('/wordclouds', { lessonId, componentId, word }),
+        getScale: (lessonId: string, componentId: string) =>
+            this.get(`/scales?lessonId=${encodeURIComponent(lessonId)}&componentId=${encodeURIComponent(componentId)}`),
+        rateScale: (lessonId: string, componentId: string, value: number) =>
+            this.post('/scales', { lessonId, componentId, value }),
+    };
+
+    store = {
+        get: () => this.get('/store'),
+        buy: (sku: string) => this.post('/store/buy', { sku }),
+        upgrade: (sku: string) => this.post('/store/upgrade', { sku }),
+        activate: (sku: string) => this.post('/store/activate', { sku }),
+        quoteReset: (lessonId: string) =>
+            this.get(`/store/reset-quote?lessonId=${encodeURIComponent(lessonId)}`),
+        resetLesson: (lessonId: string) => this.post('/store/reset-lesson', { lessonId }),
     };
 
     gamification = {
@@ -303,6 +318,7 @@ class APIClient {
             programId?: string
             componentId?: string
             completionTimeMs?: number
+            extras?: Record<string, number | boolean | string>
         }) =>
             this.post('/stats/event', statsEventBodySchema.parse({ eventType, ...payload })),
     };
@@ -314,8 +330,13 @@ class APIClient {
 
     profile = {
         get: () => this.get('/profile'),
-        update: (data: { full_name?: string; handle?: string; isPublicProfile?: boolean; accentColor?: string }) =>
+        update: (data: { full_name?: string; handle?: string; isPublicProfile?: boolean; accentColor?: string; avatarId?: string }) =>
             this.put('/profile', data),
+    };
+
+    onboarding = {
+        complete: (data: { skipped?: boolean; full_name?: string; handle?: string; accentColor?: string; avatarId?: string }) =>
+            this.post('/onboarding/complete', data),
     };
 
     people = {

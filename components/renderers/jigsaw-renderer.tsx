@@ -42,6 +42,7 @@ export type JigsawState = {
     status?: "active" | "completed"
     score?: number
     maxScore?: number
+    moves?: number
 }
 
 interface JigsawTile {
@@ -141,6 +142,7 @@ function JigsawContent({
                 placements: nextPlacements,
                 trayTileIds: nextTray,
                 selectedTileId: null,
+                moves: (prev.moves || 0) + 1,
             }))
 
             void playFeedback("categorizeSlot", { sound: true, animation: false })
@@ -154,6 +156,7 @@ function JigsawContent({
                 ...prev,
                 placements: nextPlacements,
                 trayTileIds: nextTray,
+                moves: (prev.moves || 0) + 1,
             }))
 
             void playFeedback("click", { sound: true, animation: false })
@@ -187,7 +190,7 @@ function JigsawContent({
         }))
 
         handlePoints(earnedPoints)
-        recordAttempt(isAllCorrect, earnedPoints, points)
+        recordAttempt(isAllCorrect, earnedPoints, points, undefined, { jigsawMoves: state.moves || 0 })
     }
 
     const handleReset = () => {

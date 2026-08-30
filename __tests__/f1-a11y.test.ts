@@ -9,11 +9,12 @@ describe('F1 accessibility floor', () => {
     it('respects prefers-reduced-motion globally and on idle loops', () => {
         expect(read('app/globals.css')).toContain('prefers-reduced-motion: reduce')
         expect(read('hooks/use-reduced-motion.ts')).toContain('useReducedMotion')
-        expect(read('app/auth/login/page.tsx')).toContain('useReducedMotion')
-        expect(read('app/auth/signup/page.tsx')).toContain('useReducedMotion')
+        expect(read('components/auth/auth-shell.tsx')).toContain('useReducedMotion')
+        expect(read('components/auth/auth-playground.tsx')).toContain('useReducedMotion')
+        expect(read('components/onboarding/onboarding-flow.tsx')).toContain('useReducedMotion')
         expect(read('app/dashboard/tutor/page.tsx')).toContain('useReducedMotion')
-        expect(read('app/auth/login/page.tsx')).toContain('reduceMotion ? undefined')
-        expect(read('app/auth/signup/page.tsx')).toContain('reduceMotion ? undefined')
+        expect(read('components/auth/auth-playground.tsx')).toContain('reduceMotion ? undefined')
+        expect(read('components/onboarding/first-win.tsx')).toContain('reduceMotion')
         expect(read('app/dashboard/tutor/page.tsx')).toContain('reduceMotion ? undefined')
     })
 

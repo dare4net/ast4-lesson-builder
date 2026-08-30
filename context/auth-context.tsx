@@ -14,6 +14,9 @@ export interface User {
     handle?: string | null;
     isPublicProfile?: boolean;
     accentColor?: string | null;
+    avatarId?: string | null;
+    onboardingCompletedAt?: string | Date | null;
+    onboardingSkippedAt?: string | Date | null;
 }
 
 interface AuthContextType {
@@ -53,6 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                             full_name: storedUser?.full_name || storedUser?.fullName || decoded.full_name || decoded.fullName,
                             handle: storedUser?.handle ?? decoded.handle ?? null,
                             isPublicProfile: storedUser?.isPublicProfile === true,
+                            accentColor: storedUser?.accentColor ?? null,
+                            avatarId: storedUser?.avatarId ?? null,
+                            onboardingCompletedAt: storedUser?.onboardingCompletedAt ?? null,
+                            onboardingSkippedAt: storedUser?.onboardingSkippedAt ?? null,
                         };
                         setUser(fullUser);
                         setToken(storedToken);
@@ -74,6 +81,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         initAuth();
     }, []);
 
+    useEffect(() => {
+        if (!token) return
+        let cancelled = false
+        apiClient.profile.get().then((profile) => {
+            if (cancelled || !profile) return
+            setUser((current) => {
+                if (!current) return current
+                const next = {
+                    ...current,
+                    full_name: profile.full_name || current.full_name,
+                    fullName: profile.full_name || current.fullName,
+                    handle: profile.handle ?? current.handle ?? null,
+                    isPublicProfile: profile.isPublicProfile === true,
+                    accentColor: profile.accentColor ?? current.accentColor ?? null,
+                    avatarId: profile.avatarId ?? current.avatarId ?? null,
+                    onboardingCompletedAt: profile.onboardingCompletedAt ?? current.onboardingCompletedAt ?? null,
+                    onboardingSkippedAt: profile.onboardingSkippedAt ?? current.onboardingSkippedAt ?? null,
+                }
+                apiClient.setUser(next)
+                return next
+            })
+        }).catch(() => {})
+        return () => {
+            cancelled = true
+        }
+    }, [token])
+
     const login = async (email: string, password: string): Promise<User> => {
         try {
             const data = await apiClient.login(email, password);
@@ -89,6 +123,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 full_name: responseUser?.full_name || responseUser?.fullName || decoded.full_name || decoded.fullName,
                 handle: responseUser?.handle || null,
                 isPublicProfile: responseUser?.isPublicProfile === true,
+                accentColor: responseUser?.accentColor || null,
+                avatarId: responseUser?.avatarId || null,
+                onboardingCompletedAt: responseUser?.onboardingCompletedAt || null,
+                onboardingSkippedAt: responseUser?.onboardingSkippedAt || null,
             };
 
             apiClient.setUser(fullUserData);
@@ -115,6 +153,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 full_name: fullName || responseUser?.full_name || decoded.full_name,
                 handle: responseUser?.handle || null,
                 isPublicProfile: responseUser?.isPublicProfile === true,
+                accentColor: responseUser?.accentColor || null,
+                avatarId: responseUser?.avatarId || null,
+                onboardingCompletedAt: responseUser?.onboardingCompletedAt || null,
+                onboardingSkippedAt: responseUser?.onboardingSkippedAt || null,
             };
 
             apiClient.setUser(fullUserData);

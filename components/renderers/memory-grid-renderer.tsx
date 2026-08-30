@@ -108,7 +108,7 @@ function MemoryGridContent({
                         const allDone = nextMatched.length === pairs.length
                         if (allDone) {
                             handlePoints(points)
-                            recordAttempt(true, points, points)
+                            recordAttempt(true, points, points, undefined, { memoryFlips: prev.attempts })
                         }
                         return {
                             ...prev,

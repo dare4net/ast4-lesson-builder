@@ -5,7 +5,7 @@ import { LessonCard } from "@/components/dashboard/student/lesson-card"
 import { useAuth } from "@/context/auth-context"
 import { lessonsListSync } from "@/lib/lesson-data-sync"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket } from "lucide-react"
+import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket, Flame } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -25,7 +25,8 @@ export default function StudentDashboardPage() {
     const [error, setError] = useState<string | null>(null)
     const [activeTab, setActiveTab] = useState<FilterTab>('all')
     const [visibleCount, setVisibleCount] = useState<number>(8)
-    const { starBalance, level } = useGamification()
+    const { starBalance, level, missionStats } = useGamification()
+    const loginStreak = Number(missionStats.loginStreak) || 0
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
@@ -112,6 +113,13 @@ export default function StudentDashboardPage() {
                                 <Zap className="w-3.5 h-3.5 text-[#58CC02]" />
                                 <span className="text-[11px] font-bold text-[#58CC02]">Active Student</span>
                             </div>
+
+                            <Link href="/dashboard/student/store">
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-800/80 bg-orange-50 dark:bg-orange-950/60 hover:scale-105 transition-transform cursor-pointer">
+                                    <Flame className="w-3.5 h-3.5 text-[#FF9600] fill-[#FF9600]" />
+                                    <span className="text-[11px] font-extrabold text-[#FF9600]">{loginStreak || 0} day streak</span>
+                                </div>
+                            </Link>
 
                             <Link href="/dashboard/student/progress">
                                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/80 bg-amber-50 dark:bg-amber-950/60 hover:scale-105 transition-transform cursor-pointer">

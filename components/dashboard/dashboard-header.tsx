@@ -14,7 +14,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { HandleAvatar } from "@/components/pride/handle-avatar"
 import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
 import { NotificationBell } from "@/components/dashboard/notification-bell"
@@ -94,12 +94,12 @@ export function DashboardHeader({ sidebarIsCollapsed = true, hasSidebar = true }
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" aria-label="Account menu" className="h-9 w-9 sm:w-auto sm:px-3 sm:gap-2.5 rounded-xl hover:bg-slate-100 transition-colors">
-                                <Avatar className="h-7 w-7 border-2 border-[#1CB0F6]/30">
-                                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.user_id}`} />
-                                    <AvatarFallback className="bg-[#EAF6FE] text-[#1CB0F6] font-black text-xs">
-                                        {user?.email?.[0]?.toUpperCase() || 'U'}
-                                    </AvatarFallback>
-                                </Avatar>
+                                <HandleAvatar
+                                    handle={user?.handle || user?.user_id}
+                                    avatarId={user?.avatarId}
+                                    displayName={user?.full_name || user?.email}
+                                    className="h-7 w-7 border-[#1CB0F6]/30"
+                                />
                                 <div className="hidden sm:flex flex-col items-start leading-tight">
                                     <span className="text-xs font-black text-slate-800">{user?.email?.split('@')[0] || 'User'}</span>
                                     <span className="text-[10px] text-slate-400 font-medium capitalize">{user?.role || 'Student'}</span>

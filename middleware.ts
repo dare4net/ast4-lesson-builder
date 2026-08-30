@@ -5,6 +5,7 @@ import { requireJwtSecret } from '@/lib/jwt-secret';
 function isProtectedPath(pathname: string) {
   return (
     pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/onboarding') ||
     pathname.startsWith('/studio') ||
     pathname.startsWith('/editor') ||
     pathname.startsWith('/builder') ||
@@ -64,6 +65,10 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard/tutor', request.url));
     }
 
+    if (pathname.startsWith('/onboarding') && isAuthoringRole(role)) {
+      return NextResponse.redirect(new URL('/dashboard/tutor', request.url));
+    }
+
     return NextResponse.next();
   } catch (err: any) {
     console.error('[Middleware] Token invalid:', err.message);
@@ -74,6 +79,8 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/dashboard/:path*',
+    '/onboarding',
+    '/onboarding/:path*',
     '/studio/:path*',
     '/studio',
     '/editor/:path*',

@@ -60,6 +60,13 @@ describe('edge middleware', () => {
         expect(res.headers.get('location')).toBe('http://localhost/dashboard/tutor')
     })
 
+    it('sends tutors away from onboarding', async () => {
+        process.env.JWT_SECRET = SECRET
+        const res = await middleware(await authedRequest('/onboarding', { user_id: 't1', role: 'tutor' }))
+        expect(res.status).toBe(307)
+        expect(res.headers.get('location')).toBe('http://localhost/dashboard/tutor')
+    })
+
     it('lets a student through to the student dashboard', async () => {
         process.env.JWT_SECRET = SECRET
         const res = await middleware(await authedRequest('/dashboard/student', { user_id: 's1', role: 'student' }))

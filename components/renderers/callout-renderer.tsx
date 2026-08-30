@@ -16,6 +16,7 @@ interface CalloutRendererProps {
     isEditing?: boolean
     isBuilder?: boolean
     autoPlayAudio?: boolean
+    id?: string
 }
 
 export function CalloutRenderer({
@@ -26,11 +27,13 @@ export function CalloutRenderer({
     isEditing = false,
     isBuilder = false,
     autoPlayAudio,
+    id = 'callout',
 }: CalloutRendererProps) {
     const shouldAutoPlay = autoPlayAudio ?? (!isBuilder && !isEditing)
     const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({
         audioUrl,
         autoPlay: shouldAutoPlay && !!audioUrl,
+        componentId: id,
     })
 
     const variantStyles = {

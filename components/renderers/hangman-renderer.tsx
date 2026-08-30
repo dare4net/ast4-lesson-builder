@@ -314,7 +314,7 @@ function HangmanContent({
             }))
 
             handlePoints(earnedPoints)
-            recordAttempt(nextIsGuessed, earnedPoints, points)
+            recordAttempt(nextIsGuessed, earnedPoints, points, undefined, { wrongGuesses: nextWrongCount })
         } else {
             setState(prev => ({
                 ...prev,

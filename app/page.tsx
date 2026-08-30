@@ -6,6 +6,7 @@ import { useAuth } from '@/context/auth-context';
 import { SplashScreen } from '@/components/splash-screen';
 import { AnimatePresence } from 'framer-motion';
 import { IdentitySelection } from '@/components/identity-selection';
+import { needsOnboarding } from '@/lib/onboarding';
 
 export default function Home() {
   const router = useRouter();
@@ -15,7 +16,9 @@ export default function Home() {
   // Trigger route redirect as soon as splash finishes if authenticated
   useEffect(() => {
     if (!showSplash && isAuthenticated) {
-      const targetPath = user?.role === 'tutor' ? '/dashboard/tutor' : '/dashboard/student';
+      const targetPath = user?.role === 'tutor'
+        ? '/dashboard/tutor'
+        : needsOnboarding(user) ? '/onboarding' : '/dashboard/student';
       router.replace(targetPath);
     }
   }, [showSplash, isAuthenticated, user, router]);
@@ -23,7 +26,9 @@ export default function Home() {
   const handleSplashFinished = () => {
     setShowSplash(false);
     if (isAuthenticated) {
-      const targetPath = user?.role === 'tutor' ? '/dashboard/tutor' : '/dashboard/student';
+      const targetPath = user?.role === 'tutor'
+        ? '/dashboard/tutor'
+        : needsOnboarding(user) ? '/onboarding' : '/dashboard/student';
       router.replace(targetPath);
     }
   };

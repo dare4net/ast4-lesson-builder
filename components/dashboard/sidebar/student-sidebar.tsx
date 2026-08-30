@@ -12,19 +12,21 @@ import {
     TrendingUp,
     Settings,
     Crown,
+    Store,
     PanelLeftClose,
     PanelLeftOpen,
-    User
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
 import { useAuth } from "@/context/auth-context"
+import { HandleAvatar } from "@/components/pride/handle-avatar"
 
 const NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard/student" },
     { label: "My Courses", icon: BookOpen, href: "/dashboard/student/programs" },
     { label: "Explore Courses", icon: Compass, href: "/dashboard/student/catalog" },
     { label: "My Progress", icon: TrendingUp, href: "/dashboard/student/progress" },
+    { label: "Store", icon: Store, href: "/dashboard/student/store" },
     { label: "Pride", icon: Crown, href: "/dashboard/student/pride" },
     { label: "Settings", icon: Settings, href: "/dashboard/student/settings" },
 ]
@@ -140,12 +142,15 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
             <div className="p-3 border-t border-slate-100 dark:border-slate-800 shrink-0">
                 {!isCollapsed ? (
                     <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-[#58CC02]/10 text-[#58CC02] flex items-center justify-center font-bold text-xs shrink-0">
-                            <User className="w-3.5 h-3.5" />
-                        </div>
+                        <HandleAvatar
+                            handle={user?.handle || user?.user_id}
+                            avatarId={user?.avatarId}
+                            displayName={user?.full_name || user?.email}
+                            className="h-7 w-7"
+                        />
                         <div className="flex flex-col min-w-0 leading-tight">
                             <span className="text-xs font-bold text-slate-800 dark:text-white truncate">
-                                {user?.email?.split('@')[0] || 'Student'}
+                                {user?.full_name || user?.handle || user?.email?.split('@')[0] || 'Student'}
                             </span>
                             <span className="text-[10px] font-medium text-slate-400 truncate">
                                 Student
@@ -154,9 +159,12 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                     </div>
                 ) : (
                     <div className="flex justify-center">
-                        <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500">
-                            <User className="w-4 h-4" />
-                        </div>
+                        <HandleAvatar
+                            handle={user?.handle || user?.user_id}
+                            avatarId={user?.avatarId}
+                            displayName={user?.full_name || user?.email}
+                            className="h-8 w-8"
+                        />
                     </div>
                 )}
             </div>

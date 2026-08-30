@@ -6,6 +6,7 @@ import { CheckCircle2, BarChart2, Check, Lock } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { InteractiveRenderer, InteractiveRenderProps } from "./base/interactive-renderer"
 import { useFeedback } from "@/hooks/use-feedback"
+import { appEventBus } from "@/lib/event-bus"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -62,10 +63,9 @@ function PollContent({
         setMounted(true)
     }, [])
 
-    // Merge server-fetched votes into local state once they arrive
+    // Keep class totals in sync — including after you vote, so later votes show up.
     useEffect(() => {
-        if (!props.initialVotes || hasVoted) return
-        // Seed display votes from the server snapshot (don't mark as voted)
+        if (!props.initialVotes) return
         setState(prev => ({
             ...prev,
             votes: props.initialVotes!,
@@ -92,13 +92,15 @@ function PollContent({
 
         void playFeedback("dngClick", { sound: true, animation: false })
 
-        // POST vote to server
+        appEventBus.emit('POLL_VOTED', {
+            componentId: props.id || 'poll',
+            lessonId: props.lessonId,
+            optionId,
+        })
+
         if (props.onVote) {
             try {
                 await props.onVote(optionId)
-                // On success the parent pollStore updates pollData, but since this
-                // component already marked hasVoted=true, the server counts will be
-                // reflected next time via initialVotes (next lesson session).
             } catch {
                 // Vote was optimistically counted locally — acceptable fallback
             }

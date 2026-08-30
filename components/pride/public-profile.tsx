@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Crown, MoreHorizontal, UserPlus, UserCheck } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { HandleAvatar } from '@/components/pride/handle-avatar'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -64,12 +64,14 @@ export function PublicProfileView({ handle }: { handle: string }) {
                 <div className="h-3" style={{ backgroundColor: accent }} />
                 <div className="p-6 sm:p-8 space-y-6">
                     <div className="flex flex-col lg:flex-row lg:items-end gap-6">
-                        <Avatar className="h-28 w-28 border-4 shrink-0" style={{ borderColor: `${accent}55` }}>
-                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.handle}`} />
-                            <AvatarFallback className="text-3xl font-extrabold" style={{ color: accent, backgroundColor: `${accent}22` }}>
-                                {displayName[0]?.toUpperCase() || 'S'}
-                            </AvatarFallback>
-                        </Avatar>
+                        <HandleAvatar
+                            handle={profile.handle}
+                            avatarId={profile.avatarId}
+                            displayName={displayName}
+                            accentColor={accent}
+                            className="h-28 w-28 border-4"
+                            fallbackClassName="text-3xl"
+                        />
                         <div className="min-w-0 flex-1 space-y-2">
                             <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: accent }}>
                                 Public handle

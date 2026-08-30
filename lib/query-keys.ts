@@ -12,6 +12,8 @@ export const queryKeys = {
     prideBoard: (statKey: string) => ['pride', 'board', statKey] as const,
     peopleSearch: (q: string) => ['people', 'search', q] as const,
     peopleProfile: (handle: string) => ['people', 'profile', handle] as const,
+    store: ['store', 'inventory'] as const,
+    storeResetLessons: ['store', 'reset-lessons'] as const,
 }
 
 export function parseProgramList(raw: unknown): any[] {

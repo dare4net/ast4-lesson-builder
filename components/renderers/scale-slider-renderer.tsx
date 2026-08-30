@@ -13,6 +13,7 @@ import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
+import { apiClient } from "@/lib/api-client"
 
 interface ScaleSliderRendererProps {
     title?: string
@@ -32,6 +33,7 @@ interface ScaleSliderRendererProps {
     setComponentState?: (state: any) => void
     id?: string
     status?: string
+    lessonId?: string
 }
 
 type ScaleSliderState = {
@@ -39,6 +41,9 @@ type ScaleSliderState = {
     isSubmitted: boolean
     score: number
     status?: string
+    classAverage?: number
+    classTotal?: number
+    classBuckets?: Record<string, number>
 }
 
 function ScaleSliderContent({
@@ -76,8 +81,38 @@ function ScaleSliderContent({
 
     const {
         selectedValue,
-        isSubmitted
+        isSubmitted,
+        classAverage,
+        classTotal,
+        classBuckets,
     } = state
+
+    const lessonId = (props as any).lessonId
+    const componentId = props.id
+
+    useEffect(() => {
+        if (!lessonId || !componentId) return
+        let cancelled = false
+        const pull = () => {
+            apiClient.live.getScale(lessonId, componentId)
+                .then((data) => {
+                    if (cancelled || !data) return
+                    setState((prev) => ({
+                        ...prev,
+                        classAverage: data.average,
+                        classTotal: data.total,
+                        classBuckets: data.buckets || {},
+                    }))
+                })
+                .catch(() => { /* keep local rating if class scale is unreachable */ })
+        }
+        pull()
+        const timer = window.setInterval(pull, 4000)
+        return () => {
+            cancelled = true
+            window.clearInterval(timer)
+        }
+    }, [lessonId, componentId, setState])
 
     useEffect(() => {
         setMounted(true)
@@ -113,11 +148,26 @@ function ScaleSliderContent({
         handlePoints(props.points || 10)
         recordAttempt(true, props.points || 10, props.points || 10)
 
+        let classStats = { classAverage, classTotal, classBuckets }
+        if (lessonId && componentId) {
+            try {
+                const data = await apiClient.live.rateScale(lessonId, componentId, selectedValue)
+                classStats = {
+                    classAverage: data.average,
+                    classTotal: data.total,
+                    classBuckets: data.buckets || {},
+                }
+            } catch {
+                /* keep local rating */
+            }
+        }
+
         setState(prev => ({
             ...prev,
             isSubmitted: true,
             score: props.points || 10,
-            status: "completed"
+            status: "completed",
+            ...classStats,
         }))
     }
 
@@ -217,9 +267,26 @@ function ScaleSliderContent({
                         <Send className="w-4 h-4 mr-2" /> Confirm Rating ({selectedValue})
                     </Button>
                 ) : (
-                    <div className="p-3 bg-emerald-50 border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] rounded-2xl flex items-center justify-center gap-2 text-emerald-950">
-                        <CheckCircle2 className="w-5 h-5 text-[#58CC02]" />
-                        <span className="text-xs font-black uppercase tracking-wider">Rating Recorded (+{props.points || 10} pts)</span>
+                    <div className="space-y-2">
+                        <div className="p-3 bg-emerald-50 border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] rounded-2xl flex items-center justify-center gap-2 text-emerald-950">
+                            <CheckCircle2 className="w-5 h-5 text-[#58CC02]" />
+                            <span className="text-xs font-black uppercase tracking-wider">Rating Recorded (+{props.points || 10} pts)</span>
+                        </div>
+                        {typeof classAverage === 'number' && (classTotal || 0) > 0 ? (
+                            <p className="text-center text-[11px] font-bold text-slate-500">
+                                Class average {classAverage} · {classTotal} ratings
+                                {classBuckets && Object.keys(classBuckets).length > 1 ? (
+                                    <span className="block mt-1 text-slate-400">
+                                        {Object.entries(classBuckets)
+                                            .sort((a, b) => Number(a[0]) - Number(b[0]))
+                                            .map(([value, count]) => `${value}×${count}`)
+                                            .join('  ')}
+                                    </span>
+                                ) : null}
+                            </p>
+                        ) : (
+                            <p className="text-center text-[11px] font-bold text-slate-400">Waiting for more class ratings…</p>
+                        )}
                     </div>
                 )}
             </div>

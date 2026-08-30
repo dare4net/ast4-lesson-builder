@@ -14,7 +14,7 @@ export type PrideStat = {
     group: string
     featured?: boolean
     you?: { value: number | null; rank: number | null; crown: string | null; listed?: boolean } | null
-    leaders?: Array<{ rank: number; handle: string | null; displayName: string; value: number; crown: string | null; accentColor?: string | null; bestCrown?: string | null; following?: boolean }>
+    leaders?: Array<{ rank: number; handle: string | null; displayName: string; value: number; crown: string | null; accentColor?: string | null; avatarId?: string | null; bestCrown?: string | null; following?: boolean }>
 }
 
 export type PrideBoardPayload = {
@@ -26,6 +26,7 @@ export type PrideBoardPayload = {
         value: number
         crown: string | null
         accentColor?: string | null
+        avatarId?: string | null
         bestCrown?: string | null
         following?: boolean
     }>
@@ -35,7 +36,7 @@ export type PrideBoardPayload = {
         crown: string | null
         listed?: boolean
         handle?: string | null
-        gapToNext?: { handle: string | null; displayName: string; amount: number; accentColor?: string | null; bestCrown?: string | null; crown?: string | null; following?: boolean } | null
+        gapToNext?: { handle: string | null; displayName: string; amount: number; accentColor?: string | null; avatarId?: string | null; bestCrown?: string | null; crown?: string | null; following?: boolean } | null
     } | null
 }
 
@@ -65,6 +66,7 @@ export type PridePerson = {
     handle: string
     displayName?: string
     accentColor?: string | null
+    avatarId?: string | null
     bestCrown?: string | null
     following?: boolean
     value?: number | null

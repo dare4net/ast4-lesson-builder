@@ -194,10 +194,8 @@ function CodeEditorContent({
       if (allPassed && !isSubmitted) {
         handleScore(true)
       }
-      recordAttempt(allPassed, allPassed ? points : 0, points)
-
       const passedCount = Object.values(results).filter(Boolean).length
-      // const allTestsPassed = passedCount === testCasesList.length
+      recordAttempt(allPassed, allPassed ? points : 0, points, undefined, { testsPassed: passedCount })
 
       setState(prev => ({
         ...prev,

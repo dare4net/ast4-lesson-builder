@@ -110,6 +110,11 @@ export default function ProgressPage() {
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
+                        <Link href="/dashboard/student/store">
+                            <Button variant="outline" size="sm" className="h-9 border-amber-200 text-amber-700 rounded-xl text-xs font-bold">
+                                Star store
+                            </Button>
+                        </Link>
                         <Button onClick={fetchAllData} variant="outline" size="sm" className="h-9 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold gap-2 cursor-pointer">
                             <RefreshCw className={cn("w-3.5 h-3.5", loading && "animate-spin text-[#58CC02]")} />
                             <span>Refresh Live Stats</span>

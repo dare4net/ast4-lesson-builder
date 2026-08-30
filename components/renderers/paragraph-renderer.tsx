@@ -34,7 +34,8 @@ export function ParagraphRenderer({
   const shouldAutoPlay = (autoPlayAudio ?? (!isBuilder && !isEditing))
   const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({
     audioUrl,
-    autoPlay: shouldAutoPlay && !!audioUrl
+    autoPlay: shouldAutoPlay && !!audioUrl,
+    componentId: id,
   })
 
   const {

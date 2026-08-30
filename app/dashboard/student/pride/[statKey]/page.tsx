@@ -51,6 +51,7 @@ export default function PrideBoardPage() {
                                 handle={you.gapToNext.handle}
                                 displayName={you.gapToNext.displayName}
                                 accentColor={you.gapToNext.accentColor}
+                                avatarId={you.gapToNext.avatarId}
                                 bestCrown={you.gapToNext.bestCrown}
                                 crown={you.gapToNext.crown}
                                 following={you.gapToNext.following}
@@ -80,6 +81,7 @@ export default function PrideBoardPage() {
                                         handle={row.handle}
                                         displayName={row.displayName}
                                         accentColor={row.accentColor}
+                                        avatarId={row.avatarId}
                                         bestCrown={row.bestCrown}
                                         crown={row.crown}
                                         following={row.following}

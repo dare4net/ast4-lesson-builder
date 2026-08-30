@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Crown } from 'lucide-react'
 import { useAuth } from '@/context/auth-context'
 import { useFollowHandle } from '@/hooks/use-people'
+import { HandleAvatar } from '@/components/pride/handle-avatar'
 import { crownClass, resolveAccentColor } from '@/lib/pride-format'
 import { publicProfilePath } from '@/lib/pride-paths'
 import { cn } from '@/lib/utils'
@@ -71,6 +72,7 @@ export function StudentName({
     handle,
     displayName,
     accentColor,
+    avatarId,
     bestCrown,
     crown,
     following,
@@ -79,6 +81,7 @@ export function StudentName({
     handle?: string | null
     displayName?: string
     accentColor?: string | null
+    avatarId?: string | null
     bestCrown?: string | null
     crown?: string | null
     following?: boolean
@@ -88,9 +91,19 @@ export function StudentName({
     const name = displayName || handle || 'Student'
     const medal = bestCrown || crown
     const crownIcon = <CrownTier crown={medal} />
+    const face = (
+        <HandleAvatar
+            handle={handle}
+            avatarId={avatarId}
+            displayName={name}
+            accentColor={color}
+            className="h-7 w-7"
+        />
+    )
     if (!handle) {
         return (
             <span className="inline-flex items-center gap-1.5 min-w-0">
+                {face}
                 {crownIcon}
                 <span className={cn('text-sm font-bold text-slate-800 dark:text-white truncate', className)}>{name}</span>
             </span>
@@ -98,6 +111,7 @@ export function StudentName({
     }
     return (
         <span className="inline-flex items-center gap-1.5 min-w-0 max-w-full">
+            {face}
             {crownIcon}
             <Link
                 href={publicProfilePath(handle)}

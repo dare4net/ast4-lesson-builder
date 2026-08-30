@@ -97,16 +97,23 @@ function WordCloudContent({
     useEffect(() => {
         if (!lessonId || !componentId) return
         let cancelled = false
-        apiClient.live.getWordCloud(lessonId, componentId)
-            .then((data) => {
-                if (cancelled || !data?.counts) return
-                setState((prev) => ({
-                    ...prev,
-                    wordCounts: { ...data.counts, ...prev.wordCounts },
-                }))
-            })
-            .catch(() => { /* keep local counts if the class cloud is unreachable */ })
-        return () => { cancelled = true }
+        const pull = () => {
+            apiClient.live.getWordCloud(lessonId, componentId)
+                .then((data) => {
+                    if (cancelled || !data?.counts) return
+                    setState((prev) => ({
+                        ...prev,
+                        wordCounts: { ...data.counts, ...prev.wordCounts },
+                    }))
+                })
+                .catch(() => { /* keep local counts if the class cloud is unreachable */ })
+        }
+        pull()
+        const timer = window.setInterval(pull, 4000)
+        return () => {
+            cancelled = true
+            window.clearInterval(timer)
+        }
     }, [lessonId, componentId, setState])
 
     useEffect(() => {

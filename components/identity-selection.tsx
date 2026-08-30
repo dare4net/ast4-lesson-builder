@@ -10,7 +10,7 @@ const containerVariants = {
     hidden: { opacity: 0 },
     show: {
         opacity: 1,
-        transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+        transition: { staggerChildren: 0.15, delayChildren: 0.12 }
     }
 }
 
@@ -23,58 +23,51 @@ export function IdentitySelection() {
     const roles = [
         {
             id: "student",
-            title: "Student Portal",
-            subtitle: "Learn & Grow",
-            description: "Access interactive lessons, complete engaging modules, and track your learning progress.",
+            title: "I'm a student",
+            subtitle: "Learn & play",
+            description: "Interactive lessons, live timers, stars, and a public pride wall you opt into.",
             icon: GraduationCap,
             href: "/auth/login?role=student",
             accentColor: "#1CB0F6",
             activeBorderColor: "#1899D6",
-            badgeBg: "bg-[#1CB0F6]/10",
-            badgeBorder: "border-[#1CB0F6]/30",
-            badgeText: "text-[#1CB0F6]",
-            iconBg: "bg-[#1CB0F6]/10 border border-[#1CB0F6]/20",
-            iconColor: "text-[#1CB0F6]",
-            cardHover: "hover:border-[#1CB0F6]/40",
         },
         {
             id: "tutor",
-            title: "Instructor Studio",
-            subtitle: "Create & Empower",
-            description: "Design interactive courses, build engaging learning activities, and inspire your students.",
+            title: "I'm a teacher",
+            subtitle: "Create & teach",
+            description: "Build live courses, drop lessons, and watch your class light up the boards.",
             icon: BookOpenCheck,
             href: "/auth/login?role=tutor",
             accentColor: "#58CC02",
             activeBorderColor: "#3B8C00",
-            badgeBg: "bg-[#58CC02]/10",
-            badgeBorder: "border-[#58CC02]/30",
-            badgeText: "text-[#58CC02]",
-            iconBg: "bg-[#58CC02]/10 border border-[#58CC02]/20",
-            iconColor: "text-[#58CC02]",
-            cardHover: "hover:border-[#58CC02]/40",
         }
     ]
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-            {/* Top green stripe */}
-            <div className="absolute top-0 inset-x-0 h-1.5 bg-[#58CC02]" />
-
-            {/* Subtle background blobs */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] bg-[#1CB0F6]/5 rounded-full blur-[100px]" />
-                <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-[#58CC02]/5 rounded-full blur-[100px]" />
+        <div className="min-h-screen bg-[#FAF9F5] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-2.5 flex z-20">
+                <div className="flex-1 bg-[#58CC02]" />
+                <div className="flex-1 bg-[#1CB0F6]" />
+                <div className="flex-1 bg-[#FFC800]" />
+                <div className="flex-1 bg-[#FF4B4B]" />
+                <div className="flex-1 bg-[#CE82FF]" />
             </div>
 
-            {/* Header */}
+            <div
+                className="absolute inset-0 opacity-[0.18] pointer-events-none"
+                style={{
+                    backgroundImage: 'radial-gradient(#1CB0F6 1.5px, transparent 1.5px)',
+                    backgroundSize: '28px 28px',
+                }}
+            />
+
             <motion.div
                 initial={{ opacity: 0, y: -15 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="relative z-10 text-center mb-10 max-w-lg"
             >
-                {/* Logo */}
                 <div className="flex justify-center mb-5">
-                    <div className="w-16 h-16 rounded-2xl bg-white border-2 border-slate-200 shadow-md flex items-center justify-center overflow-hidden">
+                    <div className="w-16 h-16 rounded-2xl bg-white border-2 border-slate-200 flex items-center justify-center overflow-hidden">
                         <Image
                             src="/icons/icon-192x192.png"
                             alt="AST Logo"
@@ -86,15 +79,14 @@ export function IdentitySelection() {
                     </div>
                 </div>
 
-                <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">
-                    Choose Your Portal
+                <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-2">
+                    Who&apos;s playing?
                 </h1>
                 <p className="text-slate-500 text-sm font-medium leading-relaxed">
-                    Select your role to access your personalized learning or teaching workspace.
+                    Pick a portal. Students get the full run. Teachers open the studio.
                 </p>
             </motion.div>
 
-            {/* Role Cards */}
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -105,17 +97,22 @@ export function IdentitySelection() {
                     <motion.div key={role.id} variants={itemVariants}>
                         <Link href={role.href} className="group block h-full">
                             <div className={cn(
-                                "relative h-full p-7 rounded-3xl border-2 border-slate-200 bg-white transition-all duration-200 shadow-sm",
-                                role.cardHover,
-                                "hover:-translate-y-0.5 hover:shadow-md"
+                                "relative h-full p-7 rounded-3xl border-2 border-slate-200 bg-white transition-all duration-200",
+                                "hover:-translate-y-0.5"
                             )}>
                                 <div className="flex flex-col h-full gap-5">
                                     <div>
                                         <div className="flex items-center justify-between mb-5">
-                                            <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center", role.iconBg)}>
-                                                <role.icon className={cn("w-6 h-6", role.iconColor)} />
+                                            <div
+                                                className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                                                style={{ backgroundColor: `${role.accentColor}18`, color: role.accentColor }}
+                                            >
+                                                <role.icon className="w-6 h-6" />
                                             </div>
-                                            <span className={cn("text-[11px] font-bold px-3 py-1 rounded-full border", role.badgeBg, role.badgeBorder, role.badgeText)}>
+                                            <span
+                                                className="text-[11px] font-bold px-3 py-1 rounded-full border"
+                                                style={{ color: role.accentColor, borderColor: `${role.accentColor}40`, backgroundColor: `${role.accentColor}12` }}
+                                            >
                                                 {role.subtitle}
                                             </span>
                                         </div>
@@ -128,15 +125,14 @@ export function IdentitySelection() {
                                         </p>
                                     </div>
 
-                                    {/* 3D Duo-style button */}
                                     <div
-                                        className="mt-auto w-full py-3 px-5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all duration-150 border-b-4 active:border-b-0 active:translate-y-[2px] group-hover:opacity-90"
+                                        className="mt-auto w-full py-3 px-5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 border-b-4 active:border-b-0 active:translate-y-[2px]"
                                         style={{
                                             backgroundColor: role.accentColor,
                                             borderColor: role.activeBorderColor,
                                         }}
                                     >
-                                        Enter Portal
+                                        Let&apos;s go
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                                     </div>
                                 </div>

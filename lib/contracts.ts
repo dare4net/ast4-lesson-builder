@@ -47,6 +47,7 @@ export const statsEventBodySchema = z.object({
     programId: z.string().min(1).max(128).optional(),
     componentId: z.string().min(1).max(128).optional(),
     completionTimeMs: z.number().min(0).max(3600000).optional(),
+    extras: z.record(z.union([z.number(), z.string(), z.boolean()])).optional(),
 })
 
 export const claimMissionBodySchema = z.object({
@@ -78,11 +79,27 @@ export const handleSchema = z.string().min(3).max(24).regex(
 
 export const accentColorSchema = z.enum(['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B'])
 
+export const avatarIdSchema = z.enum([
+    'nova', 'pixel', 'comet', 'mango', 'kiwi', 'blaze',
+    'frost', 'luna', 'orbit', 'zest', 'coral', 'mint',
+    'rocket', 'wave', 'spark', 'ember', 'sage', 'sunny',
+    'jazz', 'pebble',
+])
+
 export const updateProfileBodySchema = z.object({
     full_name: z.string().min(2).max(80).optional(),
     handle: handleSchema.optional(),
     isPublicProfile: z.boolean().optional(),
     accentColor: accentColorSchema.optional(),
+    avatarId: avatarIdSchema.optional(),
+})
+
+export const completeOnboardingBodySchema = z.object({
+    skipped: z.boolean().optional(),
+    full_name: z.string().min(2).max(80).optional(),
+    handle: handleSchema.optional(),
+    accentColor: accentColorSchema.optional(),
+    avatarId: avatarIdSchema.optional(),
 })
 
 export const markNotificationsBodySchema = z.object({
@@ -98,7 +115,7 @@ export type MarkNotificationsBody = z.infer<typeof markNotificationsBodySchema>
 export const CONTRACT_KEYS = {
     awardStars: ['amount', 'reason', 'componentId'],
     spendStars: ['amount', 'itemType'],
-    statsEvent: ['eventType', 'isFirstAttempt', 'percentage', 'mode', 'type', 'amount', 'lessonId', 'programId', 'componentId', 'completionTimeMs'],
+    statsEvent: ['eventType', 'isFirstAttempt', 'percentage', 'mode', 'type', 'amount', 'lessonId', 'programId', 'componentId', 'completionTimeMs', 'extras'],
     claimMission: ['missionId'],
     interactionGet: ['lessonId', 'userId'],
     interactionSave: ['userId', 'lessonId', 'componentsState', 'lessonState', 'attemptsMap', 'version'],

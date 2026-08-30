@@ -40,6 +40,8 @@ export interface ComponentSubmittedPayload {
     isFirstAttempt: boolean
     lessonId?: string
     programId?: string
+    /** Optional bag for Superadmin rules: wrongGuesses, memoryFlips, jigsawMoves, testsPassed */
+    extras?: Record<string, number | boolean | string>
 }
 
 export interface ComponentResetPayload {
@@ -62,6 +64,20 @@ export interface LiveEarlyFinishPayload {
 
 export interface AudioReplayedPayload {
     componentId: string
+    lessonId?: string
+}
+
+export interface HintUsedPayload {
+    componentId: string
+    type: string
+    lessonId?: string
+    hintKind?: string
+}
+
+export interface PollVotedPayload {
+    componentId: string
+    optionId: string
+    lessonId?: string
 }
 
 export interface LessonCompletedPayload {
@@ -130,6 +146,10 @@ export interface SystemEventMap {
     LIVE_EARLY_FINISH: LiveEarlyFinishPayload
     /** Emitted when a student replays audio on a component */
     AUDIO_REPLAYED: AudioReplayedPayload
+    /** Emitted when a student uses a hint on a block */
+    HINT_USED: HintUsedPayload
+    /** Emitted when a student casts a class poll vote */
+    POLL_VOTED: PollVotedPayload
     /** Emitted when all slides in a lesson are completed */
     LESSON_COMPLETED: LessonCompletedPayload
     /** Emitted when a student opens a previously completed lesson to review it */

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ACTION_LABELS } from "@/lib/action-labels"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
+import { appEventBus } from "@/lib/event-bus"
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -178,6 +179,7 @@ function SingleWordContent({
     allowTextClue = true,
     allowLetterReveal = true,
     maxLetterReveals = 3,
+    componentId = 'word-scramble',
 }: {
     state: WordScrambleState
     setState: (fn: (prev: WordScrambleState) => WordScrambleState) => void
@@ -193,6 +195,7 @@ function SingleWordContent({
     allowTextClue?: boolean
     allowLetterReveal?: boolean
     maxLetterReveals?: number
+    componentId?: string
 }) {
     const { pool, slotGrid, lockedGrid, submitted, showHintText, revealsUsed } = state
     const { playFeedback } = useFeedback()
@@ -264,6 +267,7 @@ function SingleWordContent({
             revealsUsed: prev.revealsUsed + 1,
         }))
         playFeedback("click", { sound: true })
+        appEventBus.emit('HINT_USED', { componentId, type: 'wordScramble', hintKind: 'letter' })
     }
 
     const handleCheck = async () => {
@@ -468,6 +472,7 @@ function MultiWordContent({
     allowWordSolve = true,
     maxWordSolves = 1,
     allowFirstLetterAnchors = true,
+    componentId = 'word-scramble',
 }: {
     state: WordScrambleState
     setState: (fn: (prev: WordScrambleState) => WordScrambleState) => void
@@ -487,6 +492,7 @@ function MultiWordContent({
     allowWordSolve?: boolean
     maxWordSolves?: number
     allowFirstLetterAnchors?: boolean
+    componentId?: string
 }) {
     const { pool, slotGrid, lockedGrid, selectedTileId, submitted, showHintText, revealsUsed, wordSolvesUsed, anchorsUsed } = state
     const { playFeedback } = useFeedback()
@@ -573,6 +579,7 @@ function MultiWordContent({
             selectedTileId: null,
         }))
         playFeedback("click", { sound: true })
+        appEventBus.emit('HINT_USED', { componentId, type: 'wordScramble', hintKind: 'letter' })
     }
 
     // ⚡ HINT 2: Auto-Solve Next Word
@@ -617,6 +624,7 @@ function MultiWordContent({
             selectedTileId: null,
         }))
         playFeedback("click", { sound: true })
+        appEventBus.emit('HINT_USED', { componentId, type: 'wordScramble', hintKind: 'word' })
     }
 
     // ⚓ HINT 3: Lock First Letter of Every Word
@@ -649,6 +657,7 @@ function MultiWordContent({
             selectedTileId: null,
         }))
         playFeedback("click", { sound: true })
+        appEventBus.emit('HINT_USED', { componentId, type: 'wordScramble', hintKind: 'anchor' })
     }
 
     // Check answers
@@ -988,6 +997,7 @@ export function WordScrambleRenderer({
                             allowTextClue={allowTextClue}
                             allowLetterReveal={allowLetterReveal}
                             maxLetterReveals={maxLetterReveals}
+                            componentId={id}
                         />
                     )
                 }
@@ -1011,6 +1021,7 @@ export function WordScrambleRenderer({
                         allowWordSolve={allowWordSolve}
                         maxWordSolves={maxWordSolves}
                         allowFirstLetterAnchors={allowFirstLetterAnchors}
+                        componentId={id}
                     />
                 )
             }}

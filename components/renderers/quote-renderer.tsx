@@ -20,9 +20,10 @@ export function QuoteRenderer({
     author = "Author Name",
     source = "",
     audioUrl,
-    isEditing
+    isEditing,
+    id = 'quote',
 }: QuoteRendererProps) {
-    const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl })
+    const { isPlaying, hasAudio, play: playAudio } = useAudioPlayer({ audioUrl, componentId: id })
 
     const handleSpeak = () => {
         playAudio()

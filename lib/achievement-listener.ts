@@ -73,6 +73,7 @@ function persistProgressEvent(eventType: string, payload?: {
     programId?: string
     componentId?: string
     completionTimeMs?: number
+    extras?: Record<string, number | boolean | string>
 }) {
     void apiClient.gamification.recordProgressEvent(eventType, payload).then((result) => {
         const golds = Array.isArray(result?.golds) ? result.golds : []
@@ -98,8 +99,9 @@ function awardFromSubmitted(payload: ComponentSubmittedPayload) {
         programId: payload.programId,
         componentId: payload.componentId,
         completionTimeMs: payload.completionTimeMs,
+        extras: payload.extras,
     })
-    evaluateAchievements('COMPONENT_SUBMITTED', { ...payload })
+    evaluateAchievements('COMPONENT_SUBMITTED', { ...payload, ...(payload.extras || {}) })
     const stars = calculateStarReward({
         mode: payload.mode,
         percentage: payload.percentage,
@@ -175,6 +177,15 @@ export function initAchievementListener(userId: string) {
     const unsubStarsSpent = appEventBus.on('STARS_SPENT', (payload) => {
         evaluateAchievements('STARS_SPENT', { ...payload })
     })
+    const unsubAudio = appEventBus.on('AUDIO_REPLAYED', (payload) => {
+        evaluateAchievements('AUDIO_REPLAYED', { ...payload })
+    })
+    const unsubHint = appEventBus.on('HINT_USED', (payload) => {
+        evaluateAchievements('HINT_USED', { ...payload })
+    })
+    const unsubPoll = appEventBus.on('POLL_VOTED', (payload) => {
+        evaluateAchievements('POLL_VOTED', { ...payload })
+    })
 
     return () => {
         unsubSubmitted()
@@ -185,5 +196,8 @@ export function initAchievementListener(userId: string) {
         unsubEarlyFinish()
         unsubTimeout()
         unsubStarsSpent()
+        unsubAudio()
+        unsubHint()
+        unsubPoll()
     }
 }

@@ -19,6 +19,8 @@ export type MissionStats = EngineMissionStats & {
     lessonsReviewed: number
     completedLessonsCount: number
     totalBaselineScore: number
+    loginStreak: number
+    longestLoginStreak: number
 }
 
 export interface StudentAchievement {
@@ -80,6 +82,8 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
         submitsByType: stats.submitsByType || {},
         submitsByLesson: stats.submitsByLesson || {},
         submitsByComponent: stats.submitsByComponent || {},
+        loginStreak: stats.loginStreak || 0,
+        longestLoginStreak: stats.longestLoginStreak || 0,
     }), [stats, starBalance])
 
     const level = typeof stats.level === 'number' && stats.level > 0 ? stats.level : 1

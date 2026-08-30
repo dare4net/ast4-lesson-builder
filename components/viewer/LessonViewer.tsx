@@ -28,6 +28,8 @@ import { useGamification } from '@/context/gamification-context';
 import { apiClient } from '@/lib/api-client';
 import { buildStudentViewerHref } from '@/lib/viewer-url';
 import { resolveLessonModuleId, resolveNextLesson, type NextLesson } from '@/lib/next-lesson';
+import { LivePowerupsProvider } from '@/context/live-powerups-context';
+import { LivePowerupBar } from '@/components/store/live-powerup-bar';
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
@@ -56,6 +58,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const { starBalance, level } = useGamification();
   const lessonContentRef = useRef<any>(null);
   const lessonCompletedEmittedRef = useRef(false);
+  const lessonReviewedEmittedRef = useRef(false);
   const resolvedInteraction = initialInteraction;
   const attemptsMapRef = useRef<Record<string, ComponentAttemptRecord>>(resolvedInteraction?.attemptsMap || {});
   const interactionVersionRef = useRef<number>(Number(resolvedInteraction?.version) || 0);
@@ -78,6 +81,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     if (!userId) return;
     return initAchievementListener(userId);
   }, [userId]);
+
+  useEffect(() => {
+    if (!lessonData?.id || lessonReviewedEmittedRef.current) return;
+    const alreadyDone = (lessonData.slides || []).every((slide) => slide.status === 'completed');
+    if (!alreadyDone) return;
+    lessonReviewedEmittedRef.current = true;
+    appEventBus.emit('LESSON_REVIEWED', { lessonId: lessonData.id });
+  }, [lessonData?.id]);
 
   const currentLessonId = lessonData?.id
   const moduleId = resolveLessonModuleId(lessonData)
@@ -475,7 +486,14 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     );
   }
 
+  const currentLive = Boolean(
+    lessonData?.slides?.[currentSlideIndex]?.components?.some((comp: any) =>
+      comp.mode === 'live' || comp.props?.mode === 'live' || Number(comp.props?.timeLimit) > 0
+    )
+  );
+
   return (
+    <LivePowerupsProvider>
     <ScoringProvider
       lesson={lessonData}
       initialScore={resolvedInteraction?.lessonState?.score || 0}
@@ -537,6 +555,7 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                 onNextLesson={handleNextLesson}
                 hideChromeHeader
               />
+              <LivePowerupBar visible={currentLive} />
             </div>
           </div>
         </div>
@@ -549,5 +568,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
         />
       </NavigationLockProvider>
     </ScoringProvider>
+    </LivePowerupsProvider>
   );
 }

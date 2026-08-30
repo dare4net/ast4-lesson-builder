@@ -6,17 +6,21 @@ import {
     registerLessonAudio,
     subscribeLessonAudioPrefs,
 } from '@/lib/lesson-audio'
+import { appEventBus } from '@/lib/event-bus'
 
 interface UseAudioPlayerOptions {
     audioUrl?: string
     autoPlay?: boolean
     onEnded?: () => void
+    componentId?: string
+    lessonId?: string
 }
 
-export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudioPlayerOptions) {
+export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded, componentId, lessonId }: UseAudioPlayerOptions) {
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const onEndedRef = useRef(onEnded)
     const autoPlayRef = useRef(autoPlay)
+    const playCountRef = useRef(0)
     const [isPlaying, setIsPlaying] = useState(false)
     const [hasAudio, setHasAudio] = useState(false)
 
@@ -52,6 +56,7 @@ export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudio
         }
 
         if (autoPlay && canPlayLessonAudio()) {
+            playCountRef.current = 1
             audio.play().catch(() => {
                 // Autoplay blocked — overlay timer still unlocks the cue.
             })
@@ -76,10 +81,17 @@ export function useAudioPlayer({ audioUrl, autoPlay = false, onEnded }: UseAudio
     const play = useCallback(() => {
         if (!audioRef.current || !canPlayLessonAudio()) return
         audioRef.current.currentTime = 0
+        playCountRef.current += 1
+        if (playCountRef.current > 1 && componentId) {
+            appEventBus.emit('AUDIO_REPLAYED', {
+                componentId,
+                ...(lessonId ? { lessonId } : {}),
+            })
+        }
         audioRef.current.play().catch((err) => {
             console.warn('[useAudioPlayer] play() blocked:', err)
         })
-    }, [])
+    }, [componentId, lessonId])
 
     const pause = useCallback(() => {
         audioRef.current?.pause()

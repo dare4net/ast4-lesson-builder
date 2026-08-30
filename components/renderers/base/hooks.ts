@@ -83,7 +83,7 @@ export interface UseAttemptTrackingReturn {
      * @param maxScore - max possible points
      * @param completionTimeMs - elapsed ms since component was first shown
      */
-    recordAttempt: (isCorrect: boolean, score?: number, maxScore?: number, completionTimeMs?: number) => void
+    recordAttempt: (isCorrect: boolean, score?: number, maxScore?: number, completionTimeMs?: number, extras?: Record<string, number | boolean | string>) => void
     /** 
      * Resets running attemptCount to 0 so the student can challenge their best.
      * Only callable after first completion. Does NOT mutate firstAttemptCount.
@@ -122,7 +122,8 @@ export function useAttemptTracking({
         isCorrect: boolean,
         score = 0,
         maxScore = 0,
-        completionTimeMs?: number
+        completionTimeMs?: number,
+        extras?: Record<string, number | boolean | string>
     ) => {
         if (isLive) {
             if (!isCorrect) return
@@ -140,6 +141,7 @@ export function useAttemptTracking({
                 isFirstAttempt: true,
                 ...(lessonId ? { lessonId } : {}),
                 ...(programId ? { programId } : {}),
+                ...(extras ? { extras } : {}),
             })
             return
         }
@@ -174,6 +176,7 @@ export function useAttemptTracking({
             isFirstAttempt,
             ...(lessonId ? { lessonId } : {}),
             ...(programId ? { programId } : {}),
+            ...(extras ? { extras } : {}),
         })
     }, [attemptCount, bestAttemptCount, hasCompleted, componentId, componentType, mode, isLive, lessonId, programId])
 

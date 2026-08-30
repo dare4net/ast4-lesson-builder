@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Bell } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { InboxTypeIcon } from "@/lib/inbox-icons"
 import { useQueryClient } from "@tanstack/react-query"
 import { formatDistanceToNow } from "date-fns"
 import { useAuth } from "@/context/auth-context"
@@ -89,11 +90,11 @@ export function NotificationBell() {
                 <Button
                     variant="ghost"
                     aria-label={unreadCount ? `Notifications, ${unreadCount} unread` : "Notifications"}
-                    className="relative h-9 w-9 rounded-xl hover:bg-slate-100"
+                    className="relative h-11 w-11 rounded-xl hover:bg-slate-100"
                 >
-                    <Bell className="w-4 h-4 text-slate-600" />
+                    <Bell className="w-6 h-6 text-slate-700" />
                     {unreadCount > 0 && (
-                        <span className="absolute top-1.5 right-1.5 min-w-4 h-4 px-1 rounded-full bg-[#FF4B4B] text-white text-[9px] font-black leading-4 text-center">
+                        <span className="absolute top-1 right-1 min-w-4 h-4 px-1 rounded-full bg-[#FF4B4B] text-white text-[9px] font-black leading-4 text-center">
                             {unreadCount > 9 ? "9+" : unreadCount}
                         </span>
                     )}
@@ -125,19 +126,22 @@ export function NotificationBell() {
                                 key={item.id}
                                 type="button"
                                 onClick={() => openItem(item)}
-                                className={`w-full text-left px-4 py-3 border-b border-slate-50 hover:bg-slate-50 transition-colors ${
+                                className={`w-full text-left px-4 py-3 border-b border-slate-50 hover:bg-slate-50 transition-colors flex items-start gap-3 ${
                                     item.read ? "opacity-70" : "bg-[#1CB0F6]/5"
                                 }`}
                             >
-                                <p className="text-xs font-extrabold text-slate-800">{item.title}</p>
-                                {item.body ? (
-                                    <p className="text-[11px] font-medium text-slate-500 mt-0.5">{item.body}</p>
-                                ) : null}
-                                {item.createdAt ? (
-                                    <p className="text-[10px] font-semibold text-slate-400 mt-1">
-                                        {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
-                                    </p>
-                                ) : null}
+                                <InboxTypeIcon type={item.type} />
+                                <span className="min-w-0 flex-1">
+                                    <p className="text-xs font-extrabold text-slate-800">{item.title}</p>
+                                    {item.body ? (
+                                        <p className="text-[11px] font-medium text-slate-500 mt-0.5">{item.body}</p>
+                                    ) : null}
+                                    {item.createdAt ? (
+                                        <p className="text-[10px] font-semibold text-slate-400 mt-1">
+                                            {formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
+                                        </p>
+                                    ) : null}
+                                </span>
                             </button>
                         ))
                     )}

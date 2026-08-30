@@ -7,7 +7,7 @@ import {
     BookOpen,
     Compass,
     TrendingUp,
-    Settings,
+    Store,
     Crown
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -18,8 +18,8 @@ const navItems = [
     { label: "Courses", icon: BookOpen, href: "/dashboard/student/programs" },
     { label: "Explore", icon: Compass, href: "/dashboard/student/catalog" },
     { label: "Progress", icon: TrendingUp, href: "/dashboard/student/progress" },
+    { label: "Store", icon: Store, href: "/dashboard/student/store" },
     { label: "Pride", icon: Crown, href: "/dashboard/student/pride" },
-    { label: "Settings", icon: Settings, href: "/dashboard/student/settings" },
 ]
 
 export function StudentMobileNav() {

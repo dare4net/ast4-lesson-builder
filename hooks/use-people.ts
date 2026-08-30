@@ -24,7 +24,7 @@ export type PrideWallItem = {
     value?: number | null
     rank?: number | null
     crown?: string | null
-    gold?: { handle?: string | null; displayName?: string; value?: number | null; accentColor?: string | null; bestCrown?: string | null; following?: boolean } | null
+    gold?: { handle?: string | null; displayName?: string; value?: number | null; accentColor?: string | null; avatarId?: string | null; bestCrown?: string | null; following?: boolean } | null
 }
 
 export type PublicProfilePayload = {
@@ -33,6 +33,7 @@ export type PublicProfilePayload = {
         handle?: string
         displayName?: string
         accentColor?: string | null
+        avatarId?: string | null
         bestCrown?: string | null
         followerCount?: number
         followingCount?: number

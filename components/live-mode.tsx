@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { SoundEffects } from "@/lib/sound-effects"
 import { emitLiveTimerEvent, resolveLiveTimerEvent } from "@/lib/live-events"
+import { useLivePowerups } from "@/context/live-powerups-context"
 
 const LiveComponentMetaContext = React.createContext<{ componentId: string; type: string } | null>(null)
 
@@ -72,9 +73,11 @@ export function LiveTimer({
     onTimeout?: () => void
 }) {
     const [secondsRemaining, setSecondsRemaining] = useState(duration)
+    const [frozen, setFrozen] = useState(false)
     const meta = React.useContext(LiveComponentMetaContext)
     const wasIncompleteAtStartRef = useRef(!isCompleted)
     const alreadyEmittedRef = useRef(false)
+    const powerups = useLivePowerups()
 
     const onTimeoutRef = useRef(onTimeout)
     useEffect(() => {
@@ -86,14 +89,36 @@ export function LiveTimer({
     }, [duration])
 
     useEffect(() => {
-        if (isCompleted) return
+        if (!powerups?.extraSeconds) return
+        setSecondsRemaining((value) => value + powerups.extraSeconds)
+        powerups.consumeExtra()
+    }, [powerups?.extraSeconds, powerups])
+
+    useEffect(() => {
+        if (!powerups?.freezeSeconds || frozen) return
+        setFrozen(true)
+        const hold = powerups.freezeSeconds
+        powerups.consumeFreeze()
+        const timer = window.setTimeout(() => setFrozen(false), hold * 1000)
+        return () => window.clearTimeout(timer)
+    }, [powerups?.freezeSeconds, powerups, frozen])
+
+    useEffect(() => {
+        if (!powerups?.secondWind) return
+        setSecondsRemaining(duration)
+        alreadyEmittedRef.current = false
+        powerups.consumeSecondWind()
+    }, [powerups?.secondWind, powerups, duration])
+
+    useEffect(() => {
+        if (isCompleted || frozen) return
 
         const interval = setInterval(() => {
             setSecondsRemaining(prev => (prev <= 1 ? 0 : prev - 1))
         }, 1000)
 
         return () => clearInterval(interval)
-    }, [isCompleted])
+    }, [isCompleted, frozen])
 
     useEffect(() => {
         if (!isCompleted && secondsRemaining > 0 && secondsRemaining < duration) {

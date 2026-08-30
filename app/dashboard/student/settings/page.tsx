@@ -19,9 +19,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { FeedbackSettings } from "@/components/ui/feedback-settings"
+import { HandleAvatar } from "@/components/pride/handle-avatar"
 import { apiClient } from "@/lib/api-client"
+import { AVATAR_IDS, resolveAvatarId } from "@/lib/avatar"
 import { handleSchema } from "@/lib/contracts"
 import { ACCENT_COLORS, resolveAccentColor } from "@/lib/pride-format"
 import { publicProfilePath } from "@/lib/pride-paths"
@@ -33,6 +34,7 @@ export default function SettingsPage() {
     const [handle, setHandle] = useState(user?.handle || "")
     const [isPublic, setIsPublic] = useState(user?.isPublicProfile === true)
     const [accentColor, setAccentColor] = useState<string | null>(user?.accentColor || null)
+    const [avatarId, setAvatarId] = useState<string | null>(user?.avatarId || null)
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -47,12 +49,14 @@ export default function SettingsPage() {
             setHandle(nextHandle)
             setIsPublic(nextPublic)
             setAccentColor(profile.accentColor || null)
+            setAvatarId(profile.avatarId || null)
             updateUser({
                 full_name: profile.full_name,
                 fullName: profile.full_name,
                 handle: profile.handle || null,
                 isPublicProfile: nextPublic,
                 accentColor: profile.accentColor || null,
+                avatarId: profile.avatarId || null,
             })
         }).catch(() => {})
         return () => {
@@ -85,12 +89,13 @@ export default function SettingsPage() {
         setError(null)
         setSaved(false)
         try {
-            const payload: { full_name: string; handle?: string; isPublicProfile: boolean; accentColor?: string } = {
+            const payload: { full_name: string; handle?: string; isPublicProfile: boolean; accentColor?: string; avatarId?: string } = {
                 full_name: fullName,
                 isPublicProfile: isPublic && Boolean(nextHandle),
             }
             if (nextHandle) payload.handle = nextHandle
             if (accentColor) payload.accentColor = accentColor
+            if (avatarId) payload.avatarId = avatarId
             const result = await apiClient.profile.update(payload)
             updateUser({
                 full_name: fullName,
@@ -98,6 +103,7 @@ export default function SettingsPage() {
                 handle: result.handle ?? nextHandle ?? null,
                 isPublicProfile: result.isPublicProfile === true,
                 accentColor: result.accentColor ?? accentColor,
+                avatarId: result.avatarId ?? avatarId,
             })
             setIsPublic(result.isPublicProfile === true)
             if (result.handle) setHandle(result.handle)
@@ -122,12 +128,14 @@ export default function SettingsPage() {
 
             <div className="grid md:grid-cols-3 gap-5">
                 <Card className="md:col-span-1 p-6 bg-white border-2 border-slate-200 rounded-3xl flex flex-col items-center gap-4 h-fit shadow-sm">
-                    <Avatar className="h-24 w-24 border-4 border-[#1CB0F6]/20 shadow-sm">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.user_id}`} />
-                        <AvatarFallback className="bg-[#1CB0F6]/10 text-2xl font-extrabold text-[#1CB0F6]">
-                            {name[0]?.toUpperCase() || "S"}
-                        </AvatarFallback>
-                    </Avatar>
+                    <HandleAvatar
+                        handle={handle || user?.user_id}
+                        avatarId={avatarId}
+                        displayName={name}
+                        accentColor={accentColor}
+                        className="h-24 w-24 border-[#1CB0F6]/20 shadow-sm"
+                        fallbackClassName="text-2xl"
+                    />
                     <div className="text-center space-y-1 min-w-0 w-full">
                         <h2 className="text-lg font-extrabold text-slate-800 capitalize truncate">{name}</h2>
                         {handle ? (
@@ -189,6 +197,38 @@ export default function SettingsPage() {
                                 <p className="text-[11px] text-slate-400 font-medium">
                                     3–24 characters. This is how people find you. Email stays private.
                                 </p>
+                            </div>
+                            <div className="space-y-2">
+                                <Label className="text-xs font-extrabold text-slate-700">Choose your avatar</Label>
+                                <p className="text-[11px] text-slate-500 font-medium">
+                                    This face shows on your handle, search, pride boards, and public profile.
+                                </p>
+                                <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+                                    {AVATAR_IDS.map((id) => {
+                                        const current = resolveAvatarId(handle || user?.user_id, avatarId)
+                                        const selected = current === id
+                                        return (
+                                            <button
+                                                key={id}
+                                                type="button"
+                                                aria-label={`Choose ${id} avatar`}
+                                                aria-pressed={selected}
+                                                onClick={() => setAvatarId(id)}
+                                                className="rounded-full p-0.5"
+                                                style={{
+                                                    boxShadow: selected ? `0 0 0 2px ${resolveAccentColor(handle, accentColor)}` : undefined,
+                                                }}
+                                            >
+                                                <HandleAvatar
+                                                    handle={id}
+                                                    avatarId={id}
+                                                    displayName={id}
+                                                    className="h-10 w-10"
+                                                />
+                                            </button>
+                                        )
+                                    })}
+                                </div>
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-xs font-extrabold text-slate-700">Handle color</Label>

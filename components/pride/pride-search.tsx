@@ -3,6 +3,7 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { Crown, Search, Sparkles, UserRound, X } from 'lucide-react'
+import { HandleAvatar } from '@/components/pride/handle-avatar'
 import { FollowChip, CrownTier } from '@/components/pride/student-name'
 import { usePrideSearch } from '@/hooks/use-pride'
 import { resolveAccentColor } from '@/lib/pride-format'
@@ -137,7 +138,7 @@ export function PrideSearch() {
                 <div
                     id={`${inputId}-results`}
                     role="listbox"
-                    className="absolute left-0 right-0 top-[calc(100%+8px)] z-40 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl overflow-hidden"
+                    className="absolute z-40 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl overflow-hidden left-0 right-0 top-[calc(100%+8px)] max-sm:fixed max-sm:left-3 max-sm:right-3 max-sm:top-[3.75rem] max-sm:max-h-[min(75vh,520px)]"
                 >
                     <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                         <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9600]">
@@ -161,11 +162,14 @@ export function PrideSearch() {
                                             onClick={() => go(publicProfilePath(person.handle))}
                                             className="flex flex-col items-center gap-1 w-full"
                                         >
-                                            <span
-                                                className="h-10 w-10 rounded-full text-sm font-black flex items-center justify-center border-2 relative"
-                                                style={{ color, backgroundColor: `${color}22`, borderColor: `${color}55` }}
-                                            >
-                                                {(person.displayName || person.handle)[0]?.toUpperCase()}
+                                            <span className="relative">
+                                                <HandleAvatar
+                                                    handle={person.handle}
+                                                    avatarId={person.avatarId}
+                                                    displayName={person.displayName}
+                                                    accentColor={color}
+                                                    className="h-10 w-10"
+                                                />
                                                 <span className="absolute -bottom-1 -right-1">
                                                     <CrownTier crown={person.bestCrown} />
                                                 </span>
@@ -200,12 +204,12 @@ export function PrideSearch() {
                                 )}
                             >
                                 <button type="button" onClick={() => go(publicProfilePath(person.handle))} className="flex items-center gap-3 min-w-0 flex-1 text-left">
-                                    <span
-                                        className="h-8 w-8 rounded-full text-xs font-black flex items-center justify-center"
-                                        style={{ color, backgroundColor: `${color}22` }}
-                                    >
-                                        {(person.displayName || person.handle)[0]?.toUpperCase()}
-                                    </span>
+                                    <HandleAvatar
+                                        handle={person.handle}
+                                        avatarId={person.avatarId}
+                                        displayName={person.displayName}
+                                        accentColor={color}
+                                    />
                                     <span className="min-w-0">
                                         <span className="flex items-center gap-1.5">
                                             <span className="block text-sm font-extrabold truncate" style={{ color }}>{person.displayName}</span>
@@ -237,16 +241,16 @@ export function PrideSearch() {
                                 >
                                     <button type="button" onClick={() => go(prideBoardPath(board.key))} className="flex items-center gap-3 min-w-0 flex-1 text-left">
                                         <Crown className="w-4 h-4 text-[#FF9600] shrink-0" />
-                                        <span className="min-w-0 text-sm font-bold text-slate-800 dark:text-white truncate">
+                                        <span className="min-w-0 text-sm font-bold text-slate-800 dark:text-white">
                                             {board.gold ? (
-                                                <>
-                                                    <span className="font-black" style={{ color: resolveAccentColor(board.gold.handle, board.gold.accentColor) }}>
-                                                        {board.gold.displayName}
-                                                    </span>
-                                                    <span className="text-slate-400"> · </span>
-                                                </>
+                                                <span className="block font-black truncate" style={{ color: resolveAccentColor(board.gold.handle, board.gold.accentColor) }}>
+                                                    {board.gold.displayName}
+                                                </span>
                                             ) : null}
-                                            {board.label}
+                                            <span className={cn('block', board.gold ? 'text-[11px] font-bold text-slate-500 sm:inline sm:text-sm sm:font-bold sm:text-slate-800 dark:sm:text-white' : 'truncate')}>
+                                                {board.gold ? <span className="hidden sm:inline text-slate-400"> · </span> : null}
+                                                {board.label}
+                                            </span>
                                         </span>
                                     </button>
                                     {board.gold?.handle && (
