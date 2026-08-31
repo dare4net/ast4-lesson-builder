@@ -10,6 +10,7 @@ import { useAuth } from '@/context/auth-context'
 import { useGamification } from '@/context/gamification-context'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { SoundEffects } from '@/lib/sound-effects'
 
 const ICONS: Record<string, typeof Clock> = {
     live_time: Clock,
@@ -65,12 +66,18 @@ export default function StudentStorePage() {
 
     const buy = useMutation({
         mutationFn: (sku: string) => apiClient.store.buy(sku),
-        onSuccess: (data) => void refresh(data.starBalance),
+        onSuccess: (data) => {
+            void SoundEffects.play('complete')
+            void refresh(data.starBalance)
+        },
         onError: (err: any) => setError(err.response?.data?.error || 'Could not buy that.'),
     })
     const upgrade = useMutation({
         mutationFn: (sku: string) => apiClient.store.upgrade(sku),
-        onSuccess: (data) => void refresh(data.starBalance),
+        onSuccess: (data) => {
+            void SoundEffects.play('quizSuccess')
+            void refresh(data.starBalance)
+        },
         onError: (err: any) => setError(err.response?.data?.error || 'Could not upgrade that.'),
     })
     const resetLesson = useMutation({
@@ -201,27 +208,29 @@ function Section({
                                 Level {item.level}/{item.maxLevel} · {item.effect} {item.effectLabel} · {item.charges} ready
                             </p>
                             <div className="flex gap-2">
-                                <button
+                                <Button
                                     type="button"
+                                    variant="duo"
                                     disabled={buy.isPending}
                                     onClick={() => buy.mutate(item.sku)}
-                                    className="flex-1 h-9 rounded-xl bg-[#58CC02] text-white text-[11px] font-black uppercase"
+                                    className="flex-1 h-11 bg-[#58CC02] hover:bg-[#46A302] border-[#58CC02] border-b-[#3B8C00] text-white text-[11px]"
                                 >
                                     Buy {item.chargeCost}
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     type="button"
+                                    variant="duo"
                                     disabled={!item.canUpgrade || upgrade.isPending}
                                     onClick={() => upgrade.mutate(item.sku)}
                                     className={cn(
-                                        'h-9 px-3 rounded-xl text-[11px] font-black uppercase border-2',
+                                        'h-11 px-3 text-[11px]',
                                         item.canUpgrade
-                                            ? 'border-[#1CB0F6] text-[#1CB0F6]'
-                                            : 'border-slate-200 text-slate-400'
+                                            ? 'bg-[#1CB0F6] hover:bg-[#0d9de0] border-[#1CB0F6] border-b-[#0a7cb3] text-white'
+                                            : 'bg-slate-200 text-slate-400 border-slate-300 border-b-slate-400'
                                     )}
                                 >
                                     {item.canUpgrade ? `Up ${item.upgradeCost}` : 'Max'}
-                                </button>
+                                </Button>
                             </div>
                         </div>
                     )

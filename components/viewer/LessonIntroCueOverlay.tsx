@@ -10,6 +10,7 @@ import {
 } from "@/lib/slide-themes";
 import { ChevronRight, Loader2, BookOpen, Layers } from "lucide-react";
 import { CueOverlayShell } from "@/components/viewer/cue-overlay-shell";
+import { Button } from "@/components/ui/button";
 
 interface LessonIntroCueOverlayProps {
     isVisible: boolean;
@@ -90,8 +91,8 @@ export function LessonIntroCueOverlay({
     };
 
     return (
-        <CueOverlayShell theme={theme} pattern={pattern} idPrefix="intro" className="p-4 md:p-6">
-            <div className="relative z-10 flex flex-col justify-between items-center text-center max-w-lg w-full h-auto max-h-[85vh] sm:max-h-[90vh] my-auto bg-white/85 backdrop-blur-md rounded-[2rem] p-5 sm:p-7 md:p-8 overflow-y-auto space-y-4 sm:space-y-5 shadow-[0_24px_60px_-28px_rgba(15,23,42,0.35)]">
+        <CueOverlayShell theme={theme} pattern={pattern} idPrefix="intro" variant="patterned" className="p-4 md:p-6">
+            <div className="relative z-10 flex flex-col justify-between items-center text-center max-w-lg w-full h-auto max-h-full my-auto bg-white border-2 border-slate-200 rounded-2xl p-5 sm:p-6 overflow-y-auto space-y-4">
                 <div
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-wider"
                     style={{ backgroundColor: theme.shapeHex, color: theme.textHex }}
@@ -152,33 +153,34 @@ export function LessonIntroCueOverlay({
                 )}
 
                 <div className="w-full pt-1 shrink-0">
-                    <button
+                    <Button
+                        variant="duo"
                         disabled={!canBegin || isStarting}
                         onClick={handleBegin}
                         className={cn(
-                            "w-full min-h-11 h-11 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 transition-all border-b-4",
+                            "w-full",
                             canBegin && !isStarting
-                                ? "bg-[#58CC02] hover:bg-[#46A302] text-white border-[#3B8C00] cursor-pointer active:translate-y-px active:border-b-0"
-                                : "bg-slate-200 text-slate-400 border-slate-300 cursor-not-allowed opacity-80"
+                                ? "bg-[#58CC02] hover:bg-[#46A302] border-[#58CC02] border-b-[#3B8C00] text-white"
+                                : "bg-slate-200 text-slate-400 border-slate-300 border-b-slate-400"
                         )}
                     >
                         {canBegin && !isStarting ? (
                             <>
-                                <span>Start Lesson Now</span>
+                                Start lesson
                                 <ChevronRight className="w-4 h-4" />
                             </>
                         ) : isStarting ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                <span>Starting Lesson&hellip;</span>
+                                Starting
                             </>
                         ) : (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                <span>Get ready {secondsLeft}s</span>
+                                Get ready {secondsLeft}s
                             </>
                         )}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </CueOverlayShell>

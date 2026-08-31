@@ -238,6 +238,8 @@ class APIClient {
     programs = {
         list: () => this.get('/programs'),
         getCatalog: () => this.get('/programs'),
+        searchCurriculum: (q: string) =>
+            this.get(`/programs/search?q=${encodeURIComponent(q)}`),
         getMyPrograms: () => this.get('/programs/my/programs'),
         getDetails: (id: string) => this.get(`/programs/${id}`),
         getMyProgramProgress: (id: string) => this.get(`/programs/my/programs/${id}/progress`),

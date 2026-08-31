@@ -4,6 +4,8 @@ export const queryKeys = {
     missionCatalog: ['gamification', 'missions'] as const,
     achievements: ['gamification', 'achievements'] as const,
     myPrograms: ['programs', 'mine'] as const,
+    lessonsList: ['lessons', 'mine'] as const,
+    curriculumSearch: (q: string) => ['curriculum', 'search', q] as const,
     catalog: ['programs', 'catalog'] as const,
     programDetails: (id: string) => ['programs', 'detail', id] as const,
     notifications: ['notifications', 'inbox'] as const,

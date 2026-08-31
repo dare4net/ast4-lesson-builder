@@ -409,37 +409,35 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
               </div>
             )}
           </div>
+          {!suppressCues && (
+            <LessonIntroCueOverlay
+              isVisible={showIntroCue}
+              lessonData={lesson}
+              moduleTitle={(lesson as any).moduleTitle || "Course Module"}
+              lessonNumber={(lesson as any).lessonNumber || 1}
+              onBegin={() => setShowIntroCue(false)}
+            />
+          )}
+          {!suppressCues && (
+            <SlideTransitionOverlay
+              isVisible={showOverlay}
+              lessonId={lesson.id}
+              lessonTitle={lesson.title}
+              slideIndex={currentSlideIndex}
+              slideTitle={lesson.slides[currentSlideIndex]?.title || `Slide ${currentSlideIndex + 1}`}
+              titleAudioUrl={lesson.slides[currentSlideIndex]?.titleAudioUrl}
+              totalSlides={lesson.slides.length}
+              onBegin={() => setShowOverlay(false)}
+            />
+          )}
         </main>
-
-        {/* Overall Lesson Starting Cue Overlay */}
-        {!suppressCues && (
-          <LessonIntroCueOverlay
-            isVisible={showIntroCue}
-            lessonData={lesson}
-            moduleTitle={(lesson as any).moduleTitle || "Course Module"}
-            lessonNumber={(lesson as any).lessonNumber || 1}
-            onBegin={() => setShowIntroCue(false)}
-          />
-        )}
-
-        {/* Slide Transition Overlay */}
-        {!suppressCues && (
-          <SlideTransitionOverlay
-            isVisible={showOverlay}
-            lessonId={lesson.id}
-            lessonTitle={lesson.title}
-            slideIndex={currentSlideIndex}
-            slideTitle={lesson.slides[currentSlideIndex]?.title || `Slide ${currentSlideIndex + 1}`}
-            titleAudioUrl={lesson.slides[currentSlideIndex]?.titleAudioUrl}
-            totalSlides={lesson.slides.length}
-            onBegin={() => setShowOverlay(false)}
-          />
-        )}
 
         {/* Footer Navigation */}
         {(() => {
           const isInteractive = activeComponent && isInteractiveComponent(activeComponent.type);
           const shouldHideFooter =
+            showIntroCue ||
+            showOverlay ||
             (isInteractive && !isCurrentComponentCompleted) ||
             (!isInteractive && isContentReadingDelayActive);
 

@@ -114,24 +114,38 @@ export function CueOverlayShell({
     idPrefix,
     className,
     children,
+    variant = "patterned",
 }: {
     theme: SlideTheme
     pattern: GraphicPatternStyle
     idPrefix?: string
     className?: string
     children: ReactNode
+    variant?: "patterned" | "simple"
 }) {
     return (
         <div
             className={cn(
-                "fixed inset-0 z-50 flex items-center justify-center animate-in fade-in duration-200 select-none overflow-hidden",
+                "absolute inset-0 z-20 flex items-center justify-center animate-in fade-in duration-200 select-none overflow-hidden",
                 className
             )}
             style={{
-                background: `linear-gradient(165deg, ${theme.solidBgHex} 0%, #ffffff 58%, ${theme.shapeHex} 130%)`,
+                background: variant === "simple"
+                    ? theme.solidBgHex
+                    : `linear-gradient(165deg, ${theme.solidBgHex} 0%, #ffffff 58%, ${theme.shapeHex} 130%)`,
             }}
         >
-            <GraphicBackground pattern={pattern} theme={theme} idPrefix={idPrefix} />
+            {variant === "patterned" ? (
+                <GraphicBackground pattern={pattern} theme={theme} idPrefix={idPrefix} />
+            ) : (
+                <div
+                    className="absolute inset-0 pointer-events-none opacity-40"
+                    style={{
+                        backgroundImage: `radial-gradient(${theme.shapeHex} 1.4px, transparent 1.4px)`,
+                        backgroundSize: "22px 22px",
+                    }}
+                />
+            )}
             {children}
         </div>
     )

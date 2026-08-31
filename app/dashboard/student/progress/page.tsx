@@ -92,7 +92,9 @@ export default function ProgressPage() {
 
                             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/80 bg-amber-50 dark:bg-amber-950/60">
                                 <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                                <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-300 tabular-nums">{starBalance} Stars</span>
+                                <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-300 tabular-nums">
+                                    {starBalance} wallet · {Number(liveStats.lifetimeStarsEarned) || 0} lifetime
+                                </span>
                             </div>
 
                             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-cyan-200 dark:border-cyan-800/80 bg-cyan-50 dark:bg-cyan-950/60">

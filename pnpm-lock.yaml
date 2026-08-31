@@ -98,18 +98,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.102.8
         version: 5.102.8(react@19.2.8)
-      '@types/hoist-non-react-statics':
-        specifier: latest
-        version: 3.3.7(@types/react@19.0.0)
       '@types/howler':
         specifier: ^2.2.11
         version: 2.2.12
-      '@types/react-dnd':
-        specifier: ^3.0.2
-        version: 3.0.2(@types/hoist-non-react-statics@3.3.7(@types/react@19.0.0))(@types/node@22.0.0)(@types/react@19.0.0)(react@19.2.8)
-      '@types/react-dnd-html5-backend':
-        specifier: ^3.0.2
-        version: 3.0.2
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.0)
@@ -152,9 +143,6 @@ importers:
       jwt-decode:
         specifier: ^4.0.0
         version: 4.0.0
-      latest:
-        specifier: ^0.2.0
-        version: 0.2.0
       lodash.isequal:
         specifier: ^4.5.0
         version: 4.5.0
@@ -170,18 +158,12 @@ importers:
       next-themes:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      nextjs:
-        specifier: ^0.0.3
-        version: 0.0.3
       node-edge-tts:
         specifier: ^1.2.10
         version: 1.2.10(supports-color@7.2.0)
       node-gtts:
         specifier: ^2.0.2
         version: 2.0.2
-      pnpm:
-        specifier: ^11.17.0
-        version: 11.17.0
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -189,13 +171,13 @@ importers:
         specifier: 8.10.1
         version: 8.10.1(date-fns@3.6.0)(react@19.2.8)
       react-dnd:
-        specifier: latest
+        specifier: ^16.0.1
         version: 16.0.1(@types/hoist-non-react-statics@3.3.7(@types/react@19.0.0))(@types/node@22.0.0)(@types/react@19.0.0)(react@19.2.8)
       react-dnd-html5-backend:
-        specifier: latest
+        specifier: ^16.0.1
         version: 16.0.1
       react-dnd-touch-backend:
-        specifier: latest
+        specifier: ^16.0.1
         version: 16.0.1
       react-dom:
         specifier: ^19.2.8
@@ -1774,14 +1756,6 @@ packages:
   '@types/node@22.0.0':
     resolution: {integrity: sha512-VT7KSYudcPOzP5Q0wfbowyNLaVR8QWUdw+088uFWwfvpY6uCWaXpqV6ieLAu9WBcnTa7H4Z5RLK8I5t2FuOcqw==}
 
-  '@types/react-dnd-html5-backend@3.0.2':
-    resolution: {integrity: sha512-sLKCHGGoXrxbx3QX9Jerg51dRjeUKD+c+HL59ZTkut5GevxJFC8PxsVpcoMchBRd9X+GUyrsaBSXGteWCpMISw==}
-    deprecated: This is a stub types definition. react-dnd-html5-backend provides its own type definitions, so you do not need this installed.
-
-  '@types/react-dnd@3.0.2':
-    resolution: {integrity: sha512-Z1BqHYGFtfSPfWs+kgX4b6wQmwwtqq4/pLo4zdO9xcDUB1ZQP8iWTAYNf3EJ2f0WiVQpSLN8UytP+ILzZHDLYw==}
-    deprecated: This is a stub types definition. react-dnd provides its own type definitions, so you don't need this installed.
-
   '@types/react-dom@19.0.0':
     resolution: {integrity: sha512-1KfiQKsH1o00p9m5ag12axHQSb3FOU9H20UTrujVSkNhuCrRHiQWFqgEnTNK5ZNfnzZv8UWrnXVqCmCF9fgY3w==}
 
@@ -3225,10 +3199,6 @@ packages:
     resolution: {integrity: sha512-MbjN408fEndfiQXbFQ1vnd+1NoLDsnQW41410oQBXiyXDMYH5z505juWa4KUE1LqxRC7DgOgZDbKLxHIwm27hA==}
     engines: {node: '>=0.10'}
 
-  latest@0.2.0:
-    resolution: {integrity: sha512-nsIM/FjwLcsKZ1KDAw5CivnM26zzMs3zGBL4SdjYXHI5tMcOWjGhFDMBKIum4WNAkZmeVw7zU1jR2H2UiKoQVA==}
-    hasBin: true
-
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -3518,10 +3488,6 @@ packages:
       sass:
         optional: true
 
-  nextjs@0.0.3:
-    resolution: {integrity: sha512-mYbDUo4/sRAZ8TqK63PCpYnFiLg7BICG/ot9+guOrUKd4/Fo71ZmEQ41IZbH6nqbQvG7SXTBuofJXAIWfNho0w==}
-    engines: {node: '>=0.8.21'}
-
   node-edge-tts@1.2.10:
     resolution: {integrity: sha512-bV2i4XU54D45+US0Zm1HcJRkifuB3W438dWyuJEHLQdKxnuqlI1kim2MOvR6Q3XUQZvfF9PoDyR1Rt7aeXhPdQ==}
     hasBin: true
@@ -3544,82 +3510,6 @@ packages:
   normalize-range@0.1.2:
     resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
     engines: {node: '>=0.10.0'}
-
-  npm@2.15.12:
-    resolution: {integrity: sha512-WMoAJ518W0vHjWy1abYnTeyG9YQpSoYGPxAx7d0C0L7U7Jo44bZsrvTjccmDohCJGxpasdKfqsKsl6o/RUPx6A==}
-    hasBin: true
-    bundledDependencies:
-      - abbrev
-      - ansi
-      - ansi-regex
-      - ansicolors
-      - ansistyles
-      - archy
-      - async-some
-      - block-stream
-      - char-spinner
-      - chmodr
-      - chownr
-      - cmd-shim
-      - columnify
-      - config-chain
-      - dezalgo
-      - editor
-      - fs-vacuum
-      - fs-write-stream-atomic
-      - fstream
-      - fstream-npm
-      - github-url-from-git
-      - github-url-from-username-repo
-      - glob
-      - graceful-fs
-      - hosted-git-info
-      - imurmurhash
-      - inflight
-      - inherits
-      - ini
-      - init-package-json
-      - lockfile
-      - lru-cache
-      - minimatch
-      - mkdirp
-      - node-gyp
-      - nopt
-      - normalize-git-url
-      - normalize-package-data
-      - npm-cache-filename
-      - npm-install-checks
-      - npm-package-arg
-      - npm-registry-client
-      - npm-user-validate
-      - npmlog
-      - once
-      - opener
-      - osenv
-      - path-is-inside
-      - read
-      - read-installed
-      - read-package-json
-      - readable-stream
-      - realize-package-specifier
-      - request
-      - retry
-      - rimraf
-      - semver
-      - sha
-      - slide
-      - sorted-object
-      - spdx-license-ids
-      - strip-ansi
-      - tar
-      - text-table
-      - uid-number
-      - umask
-      - validate-npm-package-license
-      - validate-npm-package-name
-      - which
-      - wrappy
-      - write-file-atomic
 
   oauth-sign@0.9.0:
     resolution: {integrity: sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==}
@@ -3726,11 +3616,6 @@ packages:
   pirates@4.0.7:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
-
-  pnpm@11.17.0:
-    resolution: {integrity: sha512-zKPOozKtJUu4QUX5ZtGfSHlhUhA0b8kseaBH8joNezzKPDeS8AdrofGDHSd++88KkRmzGppg7Kf7PWIx8zHvcg==}
-    engines: {node: '>=22.13'}
-    hasBin: true
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
@@ -5909,6 +5794,7 @@ snapshots:
     dependencies:
       '@types/react': 19.0.0
       hoist-non-react-statics: 3.3.2
+    optional: true
 
   '@types/howler@2.2.12': {}
 
@@ -5932,19 +5818,6 @@ snapshots:
   '@types/node@22.0.0':
     dependencies:
       undici-types: 6.11.1
-
-  '@types/react-dnd-html5-backend@3.0.2':
-    dependencies:
-      react-dnd-html5-backend: 16.0.1
-
-  '@types/react-dnd@3.0.2(@types/hoist-non-react-statics@3.3.7(@types/react@19.0.0))(@types/node@22.0.0)(@types/react@19.0.0)(react@19.2.8)':
-    dependencies:
-      react-dnd: 16.0.1(@types/hoist-non-react-statics@3.3.7(@types/react@19.0.0))(@types/node@22.0.0)(@types/react@19.0.0)(react@19.2.8)
-    transitivePeerDependencies:
-      - '@types/hoist-non-react-statics'
-      - '@types/node'
-      - '@types/react'
-      - react
 
   '@types/react-dom@19.0.0':
     dependencies:
@@ -7579,10 +7452,6 @@ snapshots:
     dependencies:
       language-subtag-registry: 0.3.23
 
-  latest@0.2.0:
-    dependencies:
-      npm: 2.15.12
-
   levn@0.4.1:
     dependencies:
       prelude-ls: 1.2.1
@@ -7801,8 +7670,6 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  nextjs@0.0.3: {}
-
   node-edge-tts@1.2.10(supports-color@7.2.0):
     dependencies:
       https-proxy-agent: 7.0.6(supports-color@7.2.0)
@@ -7833,8 +7700,6 @@ snapshots:
   normalize-path@3.0.0: {}
 
   normalize-range@0.1.2: {}
-
-  npm@2.15.12: {}
 
   oauth-sign@0.9.0: {}
 
@@ -7938,8 +7803,6 @@ snapshots:
   pify@2.3.0: {}
 
   pirates@4.0.7: {}
-
-  pnpm@11.17.0: {}
 
   possible-typed-array-names@1.1.0: {}
 

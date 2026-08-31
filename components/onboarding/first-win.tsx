@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import { SoundEffects } from '@/lib/sound-effects'
 
 const TARGET = ['S', 'T', 'A', 'R']
 
@@ -31,12 +32,14 @@ export function FirstWin({ onWon, accent }: { onWon: () => void; accent: string 
     const tap = (letter: string, id: string) => {
         if (done || picked.includes(id)) return
         if (letter !== nextLetter) {
+            void SoundEffects.play('incorrect')
             setWrong(true)
             window.setTimeout(() => setWrong(false), 280)
             return
         }
         const next = [...picked, id]
         setPicked(next)
+        void SoundEffects.play(next.length === TARGET.length ? 'quizSuccess' : 'click')
         if (next.length === TARGET.length) {
             window.setTimeout(onWon, 400)
         }

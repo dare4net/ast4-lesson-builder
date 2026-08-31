@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Crown, Loader2, Star, Timer } from 'lucide-react'
+import { ArrowRight, BookOpen, Crown, Loader2, Star, Timer } from 'lucide-react'
+import { SoundEffects } from '@/lib/sound-effects'
 import { useAuth } from '@/context/auth-context'
 import { HandleAvatar } from '@/components/pride/handle-avatar'
 import { FirstWin } from '@/components/onboarding/first-win'
@@ -15,7 +16,7 @@ import { ACCENT_COLORS, resolveAccentColor } from '@/lib/pride-format'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 
-const STEPS = ['name', 'face', 'world', 'win'] as const
+const STEPS = ['name', 'face', 'world', 'lesson', 'win'] as const
 
 export function OnboardingFlow() {
     const { user, updateUser } = useAuth()
@@ -34,11 +35,13 @@ export function OnboardingFlow() {
     const [error, setError] = useState<string | null>(null)
     const [done, setDone] = useState(false)
     const [bonus, setBonus] = useState(0)
+    const [lessonPick, setLessonPick] = useState<string | null>(null)
 
     const accent = resolveAccentColor(handle, accentColor)
     const face = resolveAvatarId(handle || user?.user_id, avatarId)
     const first = name.trim().split(/\s+/)[0] || 'there'
     const worldReady = flipped.stars && flipped.live && flipped.pride
+    const lessonReady = lessonPick === 'live'
 
     const payload = useMemo(() => {
         const body: { full_name?: string; handle?: string; accentColor?: string; avatarId?: string } = {}
@@ -69,6 +72,7 @@ export function OnboardingFlow() {
                 router.replace(next)
                 return
             }
+            void SoundEffects.play('levelUp')
             setDone(true)
         } catch (err: any) {
             setError(err.response?.data?.error || err.message || 'Could not save. Try again.')
@@ -255,6 +259,15 @@ export function OnboardingFlow() {
                                         onFlip={() => setFlipped((current) => ({ ...current, pride: true }))}
                                     />
                                 </div>
+                            ) : step === 3 ? (
+                                <LessonPlaybook
+                                    accent={accent}
+                                    pick={lessonPick}
+                                    onPick={(value) => {
+                                        setLessonPick(value)
+                                        void SoundEffects.play(value === 'live' ? 'correct' : 'incorrect')
+                                    }}
+                                />
                             ) : (
                                 <FirstWin accent={accent} onWon={() => finish(false)} />
                             )}
@@ -263,11 +276,14 @@ export function OnboardingFlow() {
                     {error && <p className="mt-4 text-xs font-bold text-red-600">{error}</p>}
                 </div>
 
-                {!done && step < 3 && (
+                {!done && step < 4 && (
                     <button
                         type="button"
-                        disabled={saving || (step === 0 && name.trim().length < 2) || (step === 2 && !worldReady)}
-                        onClick={() => setStep((value) => value + 1)}
+                        disabled={saving || (step === 0 && name.trim().length < 2) || (step === 2 && !worldReady) || (step === 3 && !lessonReady)}
+                        onClick={() => {
+                            void SoundEffects.play('uiClick')
+                            setStep((value) => value + 1)
+                        }}
                         className="mt-4 w-full h-12 rounded-2xl font-black text-white border-b-4 active:border-b-0 active:translate-y-[2px] disabled:opacity-50 inline-flex items-center justify-center gap-2"
                         style={{ backgroundColor: accent, borderColor: '#0090CC' }}
                     >
@@ -298,7 +314,10 @@ function WorldCard({
     return (
         <button
             type="button"
-            onClick={onFlip}
+            onClick={() => {
+                void SoundEffects.play('uiClick')
+                onFlip()
+            }}
             className="w-full text-left rounded-2xl border-2 p-4 transition-colors"
             style={{
                 borderColor: open ? color : '#e2e8f0',
@@ -311,5 +330,72 @@ function WorldCard({
             </span>
             {open && <p className="mt-1.5 text-sm font-semibold text-slate-600">{copy}</p>}
         </button>
+    )
+}
+
+function LessonPlaybook({
+    accent,
+    pick,
+    onPick,
+}: {
+    accent: string
+    pick: string | null
+    onPick: (value: string) => void
+}) {
+    return (
+        <div className="space-y-4">
+            <div>
+                <p className="text-[11px] font-black uppercase tracking-widest" style={{ color: accent }}>How a lesson works</p>
+                <h2 className="text-3xl font-black text-slate-900 tracking-tight mt-1">Play it like this.</h2>
+            </div>
+            <div className="rounded-2xl border-2 p-4 text-left" style={{ borderColor: `${accent}55`, backgroundColor: `${accent}10` }}>
+                <p className="text-[11px] font-black uppercase tracking-widest" style={{ color: accent }}>Intro cue</p>
+                <p className="mt-1 text-lg font-black text-slate-900">Every lesson starts on the canvas.</p>
+                <p className="mt-1 text-sm font-semibold text-slate-600">You hear what the lesson is about. Images and audio load while you read. Then you tap Start.</p>
+            </div>
+            <div className="space-y-2">
+                <TeachRow icon={<BookOpen className="w-4 h-4" />} title="Slide cues" copy="A short card on the canvas tells you when you moved. Bottom nav hides until you begin." />
+                <TeachRow icon={<Timer className="w-4 h-4" />} title="Live vs practice" copy="Live has a timer and pays stars. Practice is untimed so you can learn the move." />
+                <TeachRow icon={<Star className="w-4 h-4" />} title="Check your answer" copy="Tap Check. Wrong is fine. Try again. Stars come from finishing a live block." />
+            </div>
+            <div className="space-y-2">
+                <p className="text-xs font-extrabold text-slate-700">When do you earn stars?</p>
+                {[
+                    { id: 'open', label: 'Just opening a lesson' },
+                    { id: 'live', label: 'Finishing a live block' },
+                    { id: 'avatar', label: 'Changing your avatar' },
+                ].map((option) => {
+                    const selected = pick === option.id
+                    const correct = option.id === 'live'
+                    return (
+                        <button
+                            key={option.id}
+                            type="button"
+                            onClick={() => onPick(option.id)}
+                            className="w-full text-left rounded-xl border-2 px-3 py-2.5 text-sm font-extrabold border-b-4 active:border-b-0 active:translate-y-[2px]"
+                            style={{
+                                borderColor: selected ? (correct ? '#58CC02' : '#FF4B4B') : '#e2e8f0',
+                                backgroundColor: selected ? (correct ? '#58CC0214' : '#FF4B4B14') : '#fff',
+                                color: selected && correct ? '#3B8C00' : '#0f172a',
+                            }}
+                        >
+                            {option.label}
+                        </button>
+                    )
+                })}
+            </div>
+        </div>
+    )
+}
+
+function TeachRow({ icon, title, copy }: { icon: React.ReactNode; title: string; copy: string }) {
+    return (
+        <div className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5">
+            <span className="mt-0.5 text-[#1CB0F6]">{icon}</span>
+            <div>
+                <p className="text-sm font-black text-slate-800">{title}</p>
+                <p className="text-xs font-semibold text-slate-500">{copy}</p>
+            </div>
+        </div>
     )
 }

@@ -26,6 +26,9 @@ describe('F5 shared UI + renderer vocabulary', () => {
         expect(read('components/studio/edit-module-dialog.tsx')).toContain('EntityEditDialog')
         expect(read('components/viewer/LessonIntroCueOverlay.tsx')).toContain('CueOverlayShell')
         expect(read('components/viewer/SlideTransitionOverlay.tsx')).toContain('CueOverlayShell')
+        expect(read('components/viewer/cue-overlay-shell.tsx')).toContain('absolute inset-0')
+        expect(read('components/viewer/cue-overlay-shell.tsx')).not.toContain('fixed inset-0')
+        expect(read('components/viewer/LessonContent.tsx')).toContain('showIntroCue ||')
     })
 
     it('does not keep a local RenderGraphicBackground in cue overlays', () => {

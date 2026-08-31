@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { needsOnboarding, safeNextPath, studentPostAuthPath, suggestHandle } from '@/lib/onboarding'
+import { isOnboardingReplay, needsOnboarding, safeNextPath, studentPostAuthPath, suggestHandle } from '@/lib/onboarding'
 
 const read = (relative: string) => readFileSync(join(process.cwd(), relative), 'utf8')
 
@@ -15,6 +15,11 @@ describe('student onboarding', () => {
         expect(studentPostAuthPath({ user_id: '1', role: 'student', onboardingCompletedAt: 'x' }, '/viewer/abc')).toBe('/viewer/abc')
         expect(safeNextPath('https://evil.test')).toBe(null)
         expect(suggestHandle('Maya Codes')).toBe('maya')
+        expect(isOnboardingReplay('replay=1')).toBe(true)
+        expect(isOnboardingReplay('preview=true')).toBe(true)
+        expect(isOnboardingReplay('')).toBe(false)
+        expect(read('app/onboarding/page.tsx')).toContain('isOnboardingReplay')
+        expect(read('app/dashboard/student/settings/page.tsx')).toContain('/onboarding?replay=1')
     })
 
     it('wires auth shell, skip, first-win, and no pride events', () => {
@@ -26,6 +31,8 @@ describe('student onboarding', () => {
         expect(read('app/dashboard/student/layout.tsx')).toContain('needsOnboarding')
         expect(read('components/onboarding/onboarding-flow.tsx')).toContain('Skip')
         expect(read('components/onboarding/onboarding-flow.tsx')).toContain('AVATAR_IDS')
+        expect(read('components/onboarding/onboarding-flow.tsx')).toContain('How a lesson works')
+        expect(read('components/onboarding/onboarding-flow.tsx')).toContain('Finishing a live block')
         expect(read('components/onboarding/first-win.tsx')).toContain('Spell STAR')
         expect(read('components/onboarding/onboarding-flow.tsx')).not.toContain('COMPONENT_SUBMITTED')
         expect(read('components/onboarding/first-win.tsx')).not.toContain('appEventBus')

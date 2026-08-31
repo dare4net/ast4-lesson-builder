@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { extractYouTubeVideoId } from "@/components/renderers/video-renderer";
+import { cloudinaryDeliveryUrl } from "@/lib/cloudinary-delivery";
 
 const CACHE_NAME = "ast-lesson-media-v1";
 const CACHE_TTL_MS = 60 * 60 * 1000;
@@ -82,7 +83,11 @@ function addUrl(
     const type = forceType ?? classifyUrl(url);
     if (type === "audio") audios.add(url);
     else if (type === "video") videos.add(url);
-    else images.add(url);
+    else {
+        images.add(url);
+        const delivered = cloudinaryDeliveryUrl(url);
+        if (delivered !== url) images.add(delivered);
+    }
 }
 
 function walkMediaNode(

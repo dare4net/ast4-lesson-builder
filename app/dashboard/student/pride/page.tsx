@@ -105,7 +105,10 @@ function StatRow({ stat, onPrefetch }: { stat: PrideStat; onPrefetch: () => void
                 {stat.label}
             </Link>
             {mine ? (
-                <span className="text-xs font-extrabold text-slate-800 dark:text-white shrink-0">{formatPrideValue(stat.you?.value, stat.unit)}</span>
+                <span className="inline-flex items-center gap-2 shrink-0">
+                    <CrownMark crown={stat.you?.crown} rank={stat.you?.rank} />
+                    <span className="text-xs font-extrabold text-slate-800 dark:text-white">{formatPrideValue(stat.you?.value, stat.unit)}</span>
+                </span>
             ) : (
                 <GoldHint gold={gold} unit={stat.unit} />
             )}

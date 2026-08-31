@@ -43,15 +43,15 @@ function lessonWith(components: Component[]): Lesson {
 }
 
 describe('E6 pull-model scoring', () => {
-    it('does not score practice mode even when state has points', () => {
+    it('counts practice mode toward obtainable points and hydrated score', () => {
         const quiz = liveComponent({
             id: 'q1',
             type: 'quiz',
             mode: 'practice',
             props: { points: 15, mode: 'practice', questions: [{}, {}] },
         })
-        expect(calculateComponentScore(quiz, { score: 30, status: 'completed' })).toBe(0)
-        expect(getTotalPossiblePoints(lessonWith([quiz]))).toBe(0)
+        expect(calculateComponentScore(quiz, { score: 30, status: 'completed' })).toBe(30)
+        expect(getTotalPossiblePoints(lessonWith([quiz]))).toBe(30)
     })
 
     it('prefers persisted state.score for live components', () => {

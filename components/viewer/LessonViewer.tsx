@@ -25,13 +25,16 @@ import { GamificationHeader } from '@/components/gamification/GamificationHeader
 import { GamificationHubModal } from '@/components/gamification/GamificationHubModal';
 import { GamificationToastContainer } from '@/components/ui/gamification-toast';
 import { useGamification } from '@/context/gamification-context';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/query-keys';
+import { invalidateLessonsListCache } from '@/lib/lesson-data-sync';
 import { apiClient } from '@/lib/api-client';
 import { buildStudentViewerHref } from '@/lib/viewer-url';
 import { resolveLessonModuleId, resolveNextLesson, type NextLesson } from '@/lib/next-lesson';
 import { LivePowerupsProvider } from '@/context/live-powerups-context';
-import { LivePowerupBar } from '@/components/store/live-powerup-bar';
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [lessonData, setLessonData] = useState<Lesson | null>(() => {
     if (initialLesson && initialInteraction?.lessonState?.slides) {
       const normalizedSlides = normalizeSlides(initialLesson.slides);
@@ -174,8 +177,13 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       if (result.version != null) {
         interactionVersionRef.current = result.version;
       }
+      if (userId) {
+        void invalidateLessonsListCache(userId)
+        void queryClient.invalidateQueries({ queryKey: queryKeys.lessonsList })
+        void queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
+      }
     }
-  }, [userId]);
+  }, [userId, queryClient]);
 
   const handleSlidesUpdate = useCallback((updatedSlides: any[]) => {
     if (lessonData && userId) {
@@ -486,12 +494,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
     );
   }
 
-  const currentLive = Boolean(
-    lessonData?.slides?.[currentSlideIndex]?.components?.some((comp: any) =>
-      comp.mode === 'live' || comp.props?.mode === 'live' || Number(comp.props?.timeLimit) > 0
-    )
-  );
-
   return (
     <LivePowerupsProvider>
     <ScoringProvider
@@ -555,7 +557,6 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
                 onNextLesson={handleNextLesson}
                 hideChromeHeader
               />
-              <LivePowerupBar visible={currentLive} />
             </div>
           </div>
         </div>

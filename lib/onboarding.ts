@@ -11,6 +11,13 @@ export function hasExperiencedOnboarding(user?: Pick<User, 'onboardingCompletedA
     return Boolean(user?.onboardingCompletedAt || user?.onboardingSkippedAt)
 }
 
+export function isOnboardingReplay(search?: string | null) {
+    if (!search) return false
+    const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search)
+    const value = params.get('replay') || params.get('preview')
+    return value === '1' || value === 'true'
+}
+
 export function needsOnboarding(user?: User | null) {
     if (!user) return false
     if (!isStudentRole(user.role)) return false

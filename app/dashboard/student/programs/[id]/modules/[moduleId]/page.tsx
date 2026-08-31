@@ -20,7 +20,9 @@ import {
     Zap,
     RotateCcw,
     ChevronRight,
-    HelpCircle
+    HelpCircle,
+    Star,
+    ChevronDown
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
@@ -46,6 +48,7 @@ export default function StudentModuleDetailPage() {
     const [loading, setLoading] = useState(true)
     const [programName, setProgramName] = useState<string>("Course")
     const [selectedLesson, setSelectedLesson] = useState<any | null>(null)
+    const [showHunt, setShowHunt] = useState(false)
 
     useEffect(() => {
         if (moduleId && token) {
@@ -53,8 +56,16 @@ export default function StudentModuleDetailPage() {
         }
     }, [moduleId, token])
 
-    const fetchModuleDetails = async () => {
-        setLoading(true)
+    useEffect(() => {
+        const onFocus = () => {
+            if (moduleId && token) fetchModuleDetails({ silent: true })
+        }
+        window.addEventListener('focus', onFocus)
+        return () => window.removeEventListener('focus', onFocus)
+    }, [moduleId, token])
+
+    const fetchModuleDetails = async (opts?: { silent?: boolean }) => {
+        if (!opts?.silent) setLoading(true)
         try {
             // Fetch program details for breadcrumbs
             if (programId) {
@@ -282,8 +293,13 @@ export default function StudentModuleDetailPage() {
             </div>
 
             {/* Lesson Details Modal */}
-            <Dialog open={!!selectedLesson} onOpenChange={(open) => !open && setSelectedLesson(null)}>
-                <DialogContent className="max-w-md rounded-3xl bg-white border-2 border-slate-200 p-6 space-y-6">
+            <Dialog open={!!selectedLesson} onOpenChange={(open) => {
+                if (!open) {
+                    setSelectedLesson(null)
+                    setShowHunt(false)
+                }
+            }}>
+                <DialogContent className="max-w-lg rounded-3xl bg-white border-2 border-slate-200 p-6 space-y-6 max-h-[90vh] overflow-y-auto">
                     {selectedLesson && (
                         <>
                             <DialogHeader className="space-y-2 text-left">
@@ -350,11 +366,86 @@ export default function StudentModuleDetailPage() {
                                     <div>
                                         <p className="text-[10px] font-extrabold text-slate-400 uppercase">Score</p>
                                         <p className="text-xs font-extrabold text-slate-700">
-                                            {selectedLesson.score || 0} / {selectedLesson.totalScore || 0} pts
+                                            {selectedLesson.score || 0} / {selectedLesson.totalScore || selectedLesson.obtainablePoints || 0} pts
                                         </p>
                                     </div>
                                 </div>
                             </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
+                                        <Star className="w-4 h-4 fill-amber-400" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-extrabold text-amber-600/70 uppercase">Stars</p>
+                                        <p className="text-xs font-extrabold text-slate-700">
+                                            up to {selectedLesson.obtainableStars || 0} live
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-xl bg-[#1CB0F6]/10 text-[#1CB0F6] flex items-center justify-center font-bold">
+                                        <Zap className="w-4 h-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-extrabold text-slate-400 uppercase">Points</p>
+                                        <p className="text-xs font-extrabold text-slate-700">
+                                            {selectedLesson.obtainablePoints || selectedLesson.totalScore || 0} obtainable
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setShowHunt((open) => !open)}
+                                className="w-full h-11 border-2 border-slate-200 hover:border-[#1CB0F6] text-slate-700 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2"
+                            >
+                                <HelpCircle className="w-4 h-4" />
+                                {showHunt ? "Hide hunt details" : "See stars, points, and all blocks"}
+                                <ChevronDown className={`w-4 h-4 transition-transform ${showHunt ? "rotate-180" : ""}`} />
+                            </button>
+
+                            {showHunt && (
+                                <div className="space-y-2">
+                                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                                        {(selectedLesson.activities || []).length} blocks · {selectedLesson.livePoints || 0} live pts · {selectedLesson.practicePoints || 0} practice pts
+                                    </p>
+                                    {(selectedLesson.activities || []).length === 0 ? (
+                                        <p className="text-xs font-medium text-slate-500">No scored or interactive blocks in this lesson yet.</p>
+                                    ) : (
+                                        <ul className="space-y-1.5">
+                                            {(selectedLesson.activities as Array<{
+                                                type: string
+                                                label?: string
+                                                slideTitle?: string
+                                                mode?: string
+                                                points?: number
+                                                maxStars?: number
+                                            }>).map((activity, index) => (
+                                                <li
+                                                    key={`${activity.type}-${index}`}
+                                                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2"
+                                                >
+                                                    <span className="min-w-0">
+                                                        <span className="block text-xs font-extrabold text-slate-800 truncate">
+                                                            {activity.label || activity.type}
+                                                        </span>
+                                                        <span className="block text-[10px] font-bold text-slate-400 truncate">
+                                                            {activity.slideTitle || "Slide"} · {activity.mode === "live" ? "Live" : "Practice"}
+                                                        </span>
+                                                    </span>
+                                                    <span className="shrink-0 text-[11px] font-black text-slate-600">
+                                                        {activity.points || 0} pts
+                                                        {activity.maxStars ? ` · ${activity.maxStars}★` : ""}
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            )}
 
                             {/* Action Buttons */}
                             <DialogFooter className="pt-2 flex flex-col gap-2 sm:flex-col">

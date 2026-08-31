@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Clock, Pause, RefreshCw, Shield, Sparkles, Zap } from 'lucide-react'
+import { Clock, Pause, RefreshCw, Shield, Sparkles } from 'lucide-react'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import { useLivePowerups } from '@/context/live-powerups-context'
@@ -27,28 +27,29 @@ export function LivePowerupBar({ visible }: { visible: boolean }) {
 
     if (!visible || !powerups) return null
 
+    const owned = LIVE_SKUS.filter((item) => (Number(data?.inventory?.items?.[item.sku]?.charges) || 0) > 0)
+    if (owned.length === 0) return null
+
     return (
-        <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 px-2 py-1.5 rounded-2xl bg-slate-900/95 border border-slate-700 shadow-xl">
-            <Zap className="w-3.5 h-3.5 text-[#FF9600] ml-1" />
-            {LIVE_SKUS.map((item) => {
+        <div className="inline-flex items-center gap-1">
+            {owned.map((item) => {
                 const charges = Number(data?.inventory?.items?.[item.sku]?.charges) || 0
                 const Icon = item.icon
                 return (
                     <button
                         key={item.sku}
                         type="button"
-                        disabled={charges < 1}
+                        aria-label={`Use ${item.label}`}
                         onClick={() => void powerups.activate(item.sku).then(() => queryClient.invalidateQueries({ queryKey: queryKeys.store }))}
                         className={cn(
-                            'h-9 px-2 rounded-xl text-[10px] font-black uppercase tracking-wide flex items-center gap-1',
-                            charges > 0
-                                ? 'bg-white/10 text-white hover:bg-white/20'
-                                : 'text-slate-500 cursor-not-allowed'
+                            'h-9 min-w-9 px-1.5 rounded-xl border-2 border-b-4 border-slate-200 bg-white text-slate-700',
+                            'inline-flex items-center justify-center gap-1 text-[10px] font-black uppercase',
+                            'active:border-b-0 active:translate-y-[2px]'
                         )}
                     >
-                        <Icon className={cn('w-3.5 h-3.5', item.color)} />
-                        {item.label}
+                        <Icon className={cn('w-4 h-4', item.color)} />
                         <span className="tabular-nums">{charges}</span>
+                        <span className="hidden lg:inline">{item.label}</span>
                     </button>
                 )
             })}

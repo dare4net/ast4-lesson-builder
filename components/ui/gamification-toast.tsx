@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { appEventBus } from '@/lib/event-bus'
+import { SoundEffects } from '@/lib/sound-effects'
 import { Star, Trophy, Target, Rocket, X, Crown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -59,6 +60,7 @@ export function GamificationToastContainer() {
         })
 
         const unsubAchievement = appEventBus.on('ACHIEVEMENT_EARNED', (payload) => {
+            void SoundEffects.play('quizSuccess')
             addToast({
                 type: 'achievement',
                 title: payload.title || 'Achievement unlocked',
@@ -70,6 +72,7 @@ export function GamificationToastContainer() {
         })
 
         const unsubMission = appEventBus.on('MISSION_CLAIMED', (payload) => {
+            void SoundEffects.play('complete')
             addToast({
                 type: 'mission',
                 title: payload.title || 'Mission complete',
@@ -81,6 +84,7 @@ export function GamificationToastContainer() {
         })
 
         const unsubLevel = appEventBus.on('LEVEL_UP', (payload) => {
+            void SoundEffects.play('levelUp')
             addToast({
                 type: 'level',
                 title: `Level ${payload.level} unlocked`,
@@ -89,6 +93,7 @@ export function GamificationToastContainer() {
         })
 
         const unsubCrown = appEventBus.on('CROWN_GOLD', (payload) => {
+            void SoundEffects.play('streak')
             addToast({
                 type: 'crown',
                 title: `Gold crown: ${payload.label}`,

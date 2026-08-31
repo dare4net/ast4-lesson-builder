@@ -150,6 +150,12 @@ export default function SettingsPage() {
                         <Mail className="w-4 h-4 text-[#1CB0F6] shrink-0" />
                         <span className="truncate">{user?.email}</span>
                     </p>
+                    <Link
+                        href="/onboarding?replay=1"
+                        className="w-full min-h-11 py-2.5 px-4 rounded-xl font-bold text-xs text-[#58CC02] bg-[#58CC02]/10 hover:bg-[#58CC02]/15 border-2 border-[#58CC02]/30 transition-colors flex items-center justify-center"
+                    >
+                        Replay intro
+                    </Link>
                     <button
                         type="button"
                         onClick={logout}

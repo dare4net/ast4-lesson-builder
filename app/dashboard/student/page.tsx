@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { LessonCard } from "@/components/dashboard/student/lesson-card"
 import { useAuth } from "@/context/auth-context"
-import { lessonsListSync } from "@/lib/lesson-data-sync"
+import { useLessonsList } from "@/hooks/use-lessons-list"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, ArrowRight, Loader2, Zap, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket, Flame } from "lucide-react"
+import { BookOpen, ArrowRight, Loader2, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket, Flame } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -19,36 +19,19 @@ import { programProgressPercent } from "@/lib/program-progress"
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
 export default function StudentDashboardPage() {
-    const { user, token } = useAuth()
-    const [lessons, setLessons] = useState<any[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    const { user } = useAuth()
+    const lessonsQuery = useLessonsList()
+    const lessons = lessonsQuery.data || []
+    const loading = lessonsQuery.isLoading && lessons.length === 0
+    const error = lessonsQuery.isError ? 'Failed to fetch lesson list' : null
     const [activeTab, setActiveTab] = useState<FilterTab>('all')
     const [visibleCount, setVisibleCount] = useState<number>(8)
     const { starBalance, level, missionStats } = useGamification()
     const loginStreak = Number(missionStats.loginStreak) || 0
+    const lifetimeStars = Number(missionStats.lifetimeStarsEarned) || 0
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
-
-    // ... inside StudentDashboardPage
-    useEffect(() => {
-        if (user?.user_id && token) {
-            refreshLessons()
-        }
-    }, [user, token])
-
-    const refreshLessons = () => {
-        if (user?.user_id && token) {
-            lessonsListSync({
-                userId: user.user_id,
-                token: token,
-                setLessons,
-                setLoading,
-                setError
-            })
-        }
-    }
 
     const handleLessonRedirect = (lessonId: string) => {
         const returnUrl = typeof window !== 'undefined' ? window.location.pathname : ''
@@ -109,31 +92,48 @@ export default function StudentDashboardPage() {
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-2.5 max-w-xl">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/80 bg-emerald-50 dark:bg-emerald-950/60">
-                                <Zap className="w-3.5 h-3.5 text-[#58CC02]" />
-                                <span className="text-[11px] font-bold text-[#58CC02]">Active Student</span>
+                            <div className="flex items-stretch gap-2 w-full sm:w-auto">
+                                <Link
+                                    href="/dashboard/student/streak"
+                                    className="flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 border-[#FF9600]/30 bg-orange-50 px-3 py-2 hover:border-[#FF9600] transition-colors"
+                                >
+                                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[#FF9600]">
+                                        <Flame className="w-3.5 h-3.5 fill-[#FF9600]" />
+                                        Streak
+                                    </span>
+                                    <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">
+                                        {loginStreak || 0}
+                                        <span className="ml-1 text-[11px] font-extrabold text-slate-500">days</span>
+                                    </span>
+                                </Link>
+                                <Link
+                                    href="/dashboard/student/progress"
+                                    className="flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 border-amber-300/60 bg-amber-50 px-3 py-2 hover:border-amber-400 transition-colors"
+                                >
+                                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-600">
+                                        <Star className="w-3.5 h-3.5 fill-amber-400" />
+                                        Stars
+                                    </span>
+                                    <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">
+                                        {starBalance}
+                                    </span>
+                                    <span className="block mt-1 text-[10px] font-bold text-amber-700/70">
+                                        {lifetimeStars} lifetime
+                                    </span>
+                                </Link>
+                                <Link
+                                    href="/dashboard/student/progress"
+                                    className="flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 border-cyan-200 bg-cyan-50 px-3 py-2 hover:border-[#1CB0F6] transition-colors"
+                                >
+                                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-cyan-600">
+                                        <Rocket className="w-3.5 h-3.5" />
+                                        Level
+                                    </span>
+                                    <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">
+                                        {level}
+                                    </span>
+                                </Link>
                             </div>
-
-                            <Link href="/dashboard/student/streak">
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-800/80 bg-orange-50 dark:bg-orange-950/60 hover:scale-105 transition-transform cursor-pointer">
-                                    <Flame className="w-3.5 h-3.5 text-[#FF9600] fill-[#FF9600]" />
-                                    <span className="text-[11px] font-extrabold text-[#FF9600]">{loginStreak || 0} day streak</span>
-                                </div>
-                            </Link>
-
-                            <Link href="/dashboard/student/progress">
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/80 bg-amber-50 dark:bg-amber-950/60 hover:scale-105 transition-transform cursor-pointer">
-                                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-                                    <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-300">{starBalance} Stars</span>
-                                </div>
-                            </Link>
-
-                            <Link href="/dashboard/student/progress">
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-cyan-200 dark:border-cyan-800/80 bg-cyan-50 dark:bg-cyan-950/60 hover:scale-105 transition-transform cursor-pointer">
-                                    <Rocket className="w-3.5 h-3.5 text-cyan-500" />
-                                    <span className="text-[11px] font-extrabold text-cyan-600 dark:text-cyan-300">Level {level}</span>
-                                </div>
-                            </Link>
                         </div>
                         <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                             Welcome back, <span className="text-[#58CC02] capitalize">{displayName}</span>!

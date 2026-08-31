@@ -27,6 +27,7 @@ describe('F7 performance / responsive', () => {
         expect(canOptimizeImageSrc('/placeholder.svg')).toBe(false)
         expect(canOptimizeImageSrc('/logo.webp')).toBe(true)
         expect(canOptimizeImageSrc('https://res.cloudinary.com/demo/image/upload/v1/photo.jpg')).toBe(true)
+        expect(read('hooks/use-lesson-preloader.ts')).toContain('cloudinaryDeliveryUrl')
         expect(canOptimizeImageSrc('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfGALHUv7ZwLcozN3B5hWt0jY7Wu4RaMLgfIVygnf8kg&s=10')).toBe(false)
     })
 

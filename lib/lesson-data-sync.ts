@@ -1,4 +1,13 @@
-import { idb } from './indexed-db';
+import { idb, STORES } from './indexed-db';
+
+export function lessonsListCacheKey(userId: string) {
+    return `lessons_list_${userId}`
+}
+
+export async function invalidateLessonsListCache(userId: string) {
+    if (!userId) return
+    await idb.delete(STORES.CACHED_RESPONSES, lessonsListCacheKey(userId))
+}
 
 interface SyncOptions<T> {
     cacheKey: string;
@@ -85,7 +94,7 @@ export async function lessonsListSync({
     if (!userId || !token) return;
 
     return staleWhileRevalidateSync<any[]>({
-        cacheKey: `lessons_list_${userId}`,
+        cacheKey: lessonsListCacheKey(userId),
         fetcher: async () => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api'}/lessons/my/interactions/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` },

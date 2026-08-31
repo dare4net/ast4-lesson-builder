@@ -40,7 +40,7 @@ export function getTotalPossiblePoints(lesson: Lesson): number {
     let total = 0
     for (const slide of lesson.slides || []) {
         for (const component of slide.components || []) {
-            if (isScoredLiveComponent(component)) {
+            if (isScoredComponent(component)) {
                 total += getComponentMaxPoints(component)
             }
         }
@@ -100,11 +100,11 @@ function scoreFromAnswers(component: Component, state: Record<string, unknown>):
 }
 
 /**
- * Points this live scored component contributes, derived from persisted state.
- * Practice mode and unscored types return 0.
+ * Points this scored component contributes, derived from persisted state.
+ * Unscored types return 0. Practice and live both count toward the lesson total.
  */
 export function calculateComponentScore(component: Component, state: unknown): number {
-    if (!isScoredLiveComponent(component) || !state || typeof state !== 'object') return 0
+    if (!isScoredComponent(component) || !state || typeof state !== 'object') return 0
 
     const max = getComponentMaxPoints(component)
     const record = state as Record<string, unknown>
@@ -119,8 +119,9 @@ export function calculateComponentScore(component: Component, state: unknown): n
 }
 
 /**
- * Sum of live component scores. When no component state exists yet, `fallback`
- * (typically `lessonState.score`) is used so older saves still resume.
+ * Sum of scored component scores (practice and live). When no component state
+ * exists yet, `fallback` (typically `lessonState.score`) is used so older saves
+ * still resume.
  */
 export function calculateLessonScore(
     lesson: Lesson | null | undefined,

@@ -227,17 +227,13 @@ export function useScoring({
 
     const handleScore = useCallback((isCorrect: boolean) => {
         if (isCorrect) {
-            if (isLive) {
-                scoreContext?.addPoints(points)
-            }
+            scoreContext?.addPoints(points)
         }
-    }, [isLive, points, scoreContext])
+    }, [points, scoreContext])
 
     const handlePoints = useCallback((p: number) => {
-        if (isLive) {
-            scoreContext?.addPoints(p)
-        }
-    }, [isLive, scoreContext])
+        scoreContext?.addPoints(p)
+    }, [scoreContext])
 
     const handleRetry = useCallback(() => {
         if (isLive) return // No retry in live mode

@@ -1,91 +1,47 @@
-# Afterschool Tech Lesson Builder
+# After-school.tech lesson builder
 
-An interactive lesson builder for creating engaging educational content with Duolingo-style feedback and gamification.
+Next.js app for authoring lessons and the student / tutor dashboards. Domain data (wallet, missions, pride, interactions) lives on the Express API in `afterschool-tech-backend`.
 
-## Features
+## Setup
 
-- Drag-and-drop lesson building
-- Interactive components (quizzes, matching pairs, code editors, etc.)
-- Duolingo-style animations and sound effects
-- Real-time preview mode
-- Progress tracking and scoring
-- Export/import lessons as JSON
+Use **pnpm** only. Do not add an npm lockfile.
 
-## Sound Effects System
+```bash
+pnpm install
+cp .env.example .env.local
+```
 
-The application uses a robust sound effects system powered by Howler.js. Sound effects include:
+Fill `JWT_SECRET` with the same value as the backend. Point `NEXT_PUBLIC_API_URL` at `http://localhost:5001/api` for local work.
 
-- `correct.mp3`: Played when an answer is correct
-- `incorrect.mp3`: Played when an answer is incorrect
-- `click.mp3`: Played for general UI interactions
-- `complete.mp3`: Played when a lesson or section is completed
-- `levelUp.mp3`: Played when achieving a milestone
-- `streak.mp3`: Played when maintaining a streak
+In a second terminal, start the API (`afterschool-tech-backend`: copy `.env.example` → `.env`, then `npm install` and `npm run dev`).
 
-Sound effects can be customized by placing MP3 files in the `/public/sounds` directory. The system will automatically fall back to hosted versions if local files are not found.
+```bash
+pnpm dev
+```
 
-## Animations
+Open [http://localhost:3000](http://localhost:3000).
 
-The application includes a variety of Duolingo-style animations:
+```bash
+pnpm typecheck
+pnpm lint
+pnpm test
+```
 
-- `duo-bounce`: Bouncy feedback for correct answers
-- `duo-shake`: Shake effect for incorrect answers
-- `duo-celebrate`: Celebration animation for completing lessons
-- `duo-pop`: Pop effect for button clicks
-- `duo-float`: Floating animation for hints and tooltips
-- `duo-pulse`: Pulsing effect for streaks and achievements
-- `duo-flip`: Card flip animation
-- `duo-wiggle`: Wiggle animation for hints
-- `duo-zoom`: Zoom animation for focus
+Env is validated on boot (`lib/env.ts` via `instrumentation.ts`). Missing `JWT_SECRET` fails closed.
 
-Animations can be combined and customized using utility classes:
-- `duo-delay-[100-500]`: Add animation delays
-- `duo-duration-[100-500]`: Customize animation duration
+## Architecture
 
-## Getting Started
+Do not invent a new order. Execute against:
 
-1. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   ```
+| File | Role |
+|------|------|
+| [`../IMPLEMENTATION_ORDER.md`](../IMPLEMENTATION_ORDER.md) | Numbered A–G checklist (this repo + the backend) |
+| [`platform_architecture_audit.md`](./platform_architecture_audit.md) | Why gamification used to fail (dual viewer, ephemeral state) |
+| [`ui_ux_audit.md`](./ui_ux_audit.md) | Tokens, a11y, renderer polish |
+| [`docs/adr/`](./docs/adr/) | Service boundary, lesson identity, server state |
 
-2. Run the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
-   ```
+Express owns domain data. This app owns session cookies, the viewer, and media upload routes. The frontend never opens Mongo for product traffic.
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Sounds
 
-## Customizing Feedback
-
-The feedback system can be customized through the settings panel:
-
-- Enable/disable sound effects
-- Adjust sound volume
-- Enable/disable animations
-- Test different feedback types
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Sound effects from [Mixkit](https://mixkit.co/free-sound-effects/)
-- Animations inspired by Duolingo's gamification system
+Drop MP3s in `/public/sounds` (`correct`, `incorrect`, `click`, `complete`, `levelUp`, `streak`). Missing files fall back to hosted / synthesized audio.

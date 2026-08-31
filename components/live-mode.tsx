@@ -5,6 +5,7 @@ import { Play, Clock, AlertCircle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { SoundEffects } from "@/lib/sound-effects"
+import { LivePowerupBar } from "@/components/store/live-powerup-bar"
 import { emitLiveTimerEvent, resolveLiveTimerEvent } from "@/lib/live-events"
 import { useLivePowerups } from "@/context/live-powerups-context"
 
@@ -154,32 +155,35 @@ export function LiveTimer({
     const isUrgent = !isCompleted && secondsRemaining <= 5 && secondsRemaining > 0
 
     return (
-        <div className={cn(
-            "inline-flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-sm transition-all duration-300 select-none",
-            isCompleted
-                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600"
-                : isUrgent
-                    ? "bg-rose-500/15 border-rose-500/50 text-rose-600 animate-pulse shadow-rose-500/20"
-                    : "bg-slate-900 border-slate-700 text-emerald-400 shadow-slate-900/40"
-        )}>
-            {isCompleted ? (
-                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
-            ) : isUrgent ? (
-                <AlertCircle className="h-4 w-4 text-rose-500 animate-spin shrink-0" />
-            ) : (
-                <Clock className="h-4 w-4 text-emerald-400 shrink-0" />
-            )}
-
-            <span
-                aria-live="polite"
-                className={cn(
-                    "font-mono font-black text-sm md:text-base tracking-widest leading-none",
-                    isCompleted && "text-xs font-bold text-emerald-600 tracking-wider",
-                    isUrgent && "text-rose-600 text-base"
+        <div className="inline-flex items-center gap-2 flex-wrap">
+            <div className={cn(
+                "inline-flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-sm transition-all duration-300 select-none",
+                isCompleted
+                    ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600"
+                    : isUrgent
+                        ? "bg-rose-500/15 border-rose-500/50 text-rose-600 animate-pulse shadow-rose-500/20"
+                        : "bg-slate-900 border-slate-700 text-emerald-400 shadow-slate-900/40"
+            )}>
+                {isCompleted ? (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                ) : isUrgent ? (
+                    <AlertCircle className="h-4 w-4 text-rose-500 animate-spin shrink-0" />
+                ) : (
+                    <Clock className="h-4 w-4 text-emerald-400 shrink-0" />
                 )}
-            >
-                {isCompleted ? "COMPLETED" : fmt(secondsRemaining)}
-            </span>
+
+                <span
+                    aria-live="polite"
+                    className={cn(
+                        "font-mono font-black text-sm md:text-base tracking-widest leading-none",
+                        isCompleted && "text-xs font-bold text-emerald-600 tracking-wider",
+                        isUrgent && "text-rose-600 text-base"
+                    )}
+                >
+                    {isCompleted ? "COMPLETED" : fmt(secondsRemaining)}
+                </span>
+            </div>
+            {!isCompleted ? <LivePowerupBar visible /> : null}
         </div>
     )
 }

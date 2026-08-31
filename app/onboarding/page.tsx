@@ -1,14 +1,16 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { OnboardingFlow } from '@/components/onboarding/onboarding-flow'
 import { useAuth } from '@/context/auth-context'
-import { isStudentRole, needsOnboarding } from '@/lib/onboarding'
+import { isOnboardingReplay, isStudentRole, needsOnboarding } from '@/lib/onboarding'
 
 function OnboardingGate() {
     const { user, loading, isAuthenticated } = useAuth()
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const replay = isOnboardingReplay(searchParams?.toString())
     const [started, setStarted] = useState(false)
 
     useEffect(() => {
@@ -21,12 +23,12 @@ function OnboardingGate() {
             router.replace('/dashboard/tutor')
             return
         }
-        if (needsOnboarding(user)) {
+        if (needsOnboarding(user) || replay) {
             setStarted(true)
             return
         }
         if (!started) router.replace('/dashboard/student')
-    }, [loading, isAuthenticated, user, router, started])
+    }, [loading, isAuthenticated, user, router, started, replay])
 
     if (started) return <OnboardingFlow />
 

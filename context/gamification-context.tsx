@@ -64,7 +64,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
 
     const missionStats = useMemo<MissionStats>(() => ({
         programsEnrolled: stats.enrolledProgramsCount || stats.programsEnrolled || 0,
-        starsEarned: starBalance,
+        starsEarned: stats.lifetimeStarsEarned || 0,
         lifetimeStarsEarned: stats.lifetimeStarsEarned || 0,
         componentsReset: stats.componentsReset || 0,
         starsSpent: stats.starsSpent || 0,
@@ -124,6 +124,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
                 ...(prev || {}),
                 starBalance: balance,
             }))
+            void queryClient.invalidateQueries({ queryKey: queryKeys.stats })
         })
         const unsubAchievement = appEventBus.on('ACHIEVEMENT_EARNED', () => {
             void queryClient.invalidateQueries({ queryKey: queryKeys.achievements })

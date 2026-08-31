@@ -2,10 +2,11 @@
 
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { Crown, Search, Sparkles, UserRound, X } from 'lucide-react'
+import { BookOpen, Crown, Folder, Search, Sparkles, UserRound, X } from 'lucide-react'
 import { HandleAvatar } from '@/components/pride/handle-avatar'
 import { FollowChip, CrownTier } from '@/components/pride/student-name'
 import { usePrideSearch } from '@/hooks/use-pride'
+import { useCurriculumSearch } from '@/hooks/use-curriculum-search'
 import { resolveAccentColor } from '@/lib/pride-format'
 import { prideBoardPath, publicProfilePath } from '@/lib/pride-paths'
 import { cn } from '@/lib/utils'
@@ -27,8 +28,9 @@ export function PrideSearch() {
     }, [query])
 
     const { data, isFetching, isError } = usePrideSearch(debounced, open)
-    const error = isError ? 'Could not search right now.' : ''
-    const loading = isFetching && !data
+    const curriculum = useCurriculumSearch(debounced, open && debounced.length >= 2)
+    const error = isError && curriculum.isError ? 'Could not search right now.' : ''
+    const loading = (isFetching && !data) || (curriculum.isFetching && !curriculum.data)
 
     useEffect(() => {
         setActive(0)
@@ -55,6 +57,10 @@ export function PrideSearch() {
 
     const popular = !query.trim()
 
+    const programs = curriculum.data?.programs || []
+    const modules = curriculum.data?.modules || []
+    const lessons = curriculum.data?.lessons || []
+
     const items = useMemo(() => {
         const peopleItems = popular
             ? []
@@ -66,8 +72,11 @@ export function PrideSearch() {
             id: `board:${board.key}`,
             href: prideBoardPath(board.key),
         }))
-        return [...peopleItems, ...boardItems]
-    }, [data, popular])
+        const programItems = programs.map((item) => ({ id: `program:${item.id}`, href: item.href }))
+        const moduleItems = modules.map((item) => ({ id: `module:${item.id}`, href: item.href }))
+        const lessonItems = lessons.map((item) => ({ id: `lesson:${item.id}`, href: item.href }))
+        return [...peopleItems, ...boardItems, ...programItems, ...moduleItems, ...lessonItems]
+    }, [data, popular, programs, modules, lessons])
 
     const go = (href: string) => {
         setOpen(false)
@@ -102,7 +111,7 @@ export function PrideSearch() {
 
     return (
         <div ref={rootRef} className="relative w-full max-w-xl">
-            <label htmlFor={inputId} className="sr-only">Search people and pride boards</label>
+            <label htmlFor={inputId} className="sr-only">Search courses, lessons, people, and boards</label>
             <div className={cn(
                 'flex items-center gap-2 h-10 px-3 rounded-2xl border-2 bg-slate-50 dark:bg-slate-950 transition-colors',
                 open ? 'border-[#FF9600] bg-white dark:bg-slate-900' : 'border-slate-200 dark:border-slate-800'
@@ -118,7 +127,7 @@ export function PrideSearch() {
                     }}
                     onFocus={() => setOpen(true)}
                     onKeyDown={onKeyDown}
-                    placeholder="Search people and boards"
+                    placeholder="Search courses, lessons, people…"
                     autoComplete="off"
                     aria-expanded={open}
                     aria-controls={`${inputId}-results`}
@@ -263,14 +272,96 @@ export function PrideSearch() {
                             )
                         })}
 
+                        {!popular && programs.length > 0 && (
+                            <SectionLabel icon={BookOpen} label="Courses" />
+                        )}
+                        {!popular && programs.map((program, index) => {
+                            const itemIndex = (popular ? 0 : people.length) + boards.length + index
+                            return (
+                                <button
+                                    key={`program:${program.id}`}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={active === itemIndex}
+                                    onMouseEnter={() => setActive(itemIndex)}
+                                    onClick={() => go(program.href)}
+                                    className={cn(
+                                        'w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors',
+                                        active === itemIndex ? 'bg-[#FF9600]/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800'
+                                    )}
+                                >
+                                    <BookOpen className="w-4 h-4 text-[#58CC02] shrink-0" />
+                                    <span className="min-w-0 text-sm font-bold text-slate-800 dark:text-white truncate">{program.title}</span>
+                                </button>
+                            )
+                        })}
+
+                        {!popular && modules.length > 0 && (
+                            <SectionLabel icon={Folder} label="Modules" />
+                        )}
+                        {!popular && modules.map((mod, index) => {
+                            const itemIndex = (popular ? 0 : people.length) + boards.length + programs.length + index
+                            return (
+                                <button
+                                    key={`module:${mod.id}`}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={active === itemIndex}
+                                    onMouseEnter={() => setActive(itemIndex)}
+                                    onClick={() => go(mod.href)}
+                                    className={cn(
+                                        'w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors',
+                                        active === itemIndex ? 'bg-[#FF9600]/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800'
+                                    )}
+                                >
+                                    <Folder className="w-4 h-4 text-[#1CB0F6] shrink-0" />
+                                    <span className="min-w-0">
+                                        <span className="block text-sm font-bold text-slate-800 dark:text-white truncate">{mod.title}</span>
+                                        {mod.programTitle ? (
+                                            <span className="block text-[11px] font-bold text-slate-500 truncate">{mod.programTitle}</span>
+                                        ) : null}
+                                    </span>
+                                </button>
+                            )
+                        })}
+
+                        {!popular && lessons.length > 0 && (
+                            <SectionLabel icon={BookOpen} label="Lessons" />
+                        )}
+                        {!popular && lessons.map((lesson, index) => {
+                            const itemIndex = (popular ? 0 : people.length) + boards.length + programs.length + modules.length + index
+                            return (
+                                <button
+                                    key={`lesson:${lesson.id}`}
+                                    type="button"
+                                    role="option"
+                                    aria-selected={active === itemIndex}
+                                    onMouseEnter={() => setActive(itemIndex)}
+                                    onClick={() => go(lesson.href)}
+                                    className={cn(
+                                        'w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors',
+                                        active === itemIndex ? 'bg-[#FF9600]/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800'
+                                    )}
+                                >
+                                    <Sparkles className="w-4 h-4 text-[#CE82FF] shrink-0" />
+                                    <span className="min-w-0">
+                                        <span className="block text-sm font-bold text-slate-800 dark:text-white truncate">{lesson.title}</span>
+                                        <span className="block text-[11px] font-bold text-slate-500 truncate">
+                                            {[lesson.programTitle, lesson.moduleTitle].filter(Boolean).join(' · ')}
+                                        </span>
+                                    </span>
+                                </button>
+                            )
+                        })}
+
                         {!loading && !error && items.length === 0 && (
                             <div className="px-4 py-8 text-center space-y-1">
                                 <Sparkles className="w-5 h-5 text-[#FF9600] mx-auto" />
                                 <p className="text-sm font-extrabold text-slate-700 dark:text-slate-200">
-                                    {popular ? 'Boards are empty for now' : 'No public matches'}
+                                    {popular ? 'Boards are empty for now' : 'No matches'}
                                 </p>
                                 <p className="text-xs font-medium text-slate-500">
-                                    {popular ? 'Completions from here on count. Gold holders will show up first.' : 'Try a handle, a name, or a board like quizzes.'}
+                                    {popular ? 'Completions from here on count. Gold holders will show up first.' : 'Try a course, lesson, handle, or a board like quizzes.'}
                                 </p>
                             </div>
                         )}

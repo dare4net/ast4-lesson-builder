@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
 import { cn } from "@/lib/utils";
 import {
@@ -8,8 +9,10 @@ import {
     getLessonPattern,
     type GraphicPatternStyle,
 } from "@/lib/slide-themes";
-import { ChevronRight, Sparkles, Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { CueOverlayShell } from "@/components/viewer/cue-overlay-shell";
+import { Button } from "@/components/ui/button";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface SlideTransitionOverlayProps {
     isVisible: boolean;
@@ -18,7 +21,6 @@ interface SlideTransitionOverlayProps {
     slideIndex: number;
     slideTitle: string;
     totalSlides: number;
-    /** Pre-generated audio URL from lesson-builder publish step */
     titleAudioUrl?: string;
     onBegin: () => void;
 }
@@ -35,6 +37,7 @@ export function SlideTransitionOverlay({
 }: SlideTransitionOverlayProps) {
     const theme = getSlideTheme(slideIndex);
     const pattern: GraphicPatternStyle = getLessonPattern(lessonId);
+    const reduceMotion = useReducedMotion();
 
     const [canBegin, setCanBegin] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(10);
@@ -77,7 +80,6 @@ export function SlideTransitionOverlay({
         }, 1000);
 
         return () => clearInterval(interval);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible, slideIndex]);
 
     const [isStarting, setIsStarting] = useState(false);
@@ -92,25 +94,50 @@ export function SlideTransitionOverlay({
         setTimeout(() => setIsStarting(false), 500);
     };
 
+    const enter = reduceMotion
+        ? { opacity: 0 }
+        : { opacity: 0, y: 14 };
+    const shown = { opacity: 1, y: 0 };
+
     return (
-        <CueOverlayShell theme={theme} pattern={pattern} idPrefix="slide">
-            <div className="relative z-10 flex flex-col items-center gap-6 text-center max-w-lg w-full mx-6 px-8 py-10 sm:px-10 sm:py-12 bg-white/85 backdrop-blur-md rounded-[2rem] shadow-[0_24px_60px_-28px_rgba(15,23,42,0.35)]">
-                <p
-                    className="text-[11px] font-black uppercase tracking-[0.2em]"
-                    style={{ color: theme.subtleTextHex }}
+        <CueOverlayShell theme={theme} pattern={pattern} idPrefix="slide" variant="simple" className="p-6">
+            <div className="relative z-10 flex flex-col items-center gap-4 text-center max-w-md w-full">
+                <motion.p
+                    initial={enter}
+                    animate={shown}
+                    transition={{ duration: 0.28 }}
+                    className="text-[11px] font-black uppercase tracking-[0.22em] text-slate-500"
                 >
                     {lessonTitle}
-                </p>
+                </motion.p>
 
-                <div
-                    className="w-20 h-20 rounded-[1.6rem] flex items-center justify-center text-3xl font-black text-white"
-                    style={{ backgroundColor: theme.btnBgHex }}
+                <motion.p
+                    initial={enter}
+                    animate={shown}
+                    transition={{ duration: 0.28, delay: 0.06 }}
+                    className="text-xs font-extrabold uppercase tracking-widest"
+                    style={{ color: theme.btnBgHex }}
+                >
+                    Slide {slideIndex + 1} of {totalSlides}
+                </motion.p>
+
+                <motion.p
+                    initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
+                    className="text-6xl font-black tabular-nums leading-none"
+                    style={{ color: theme.textHex }}
                 >
                     {slideIndex + 1}
-                </div>
+                </motion.p>
 
                 {totalSlides <= 12 && (
-                    <div className="flex items-center justify-center flex-wrap gap-1.5">
+                    <motion.div
+                        initial={enter}
+                        animate={shown}
+                        transition={{ duration: 0.28, delay: 0.14 }}
+                        className="flex items-center justify-center flex-wrap gap-1.5"
+                    >
                         {Array.from({ length: totalSlides }).map((_, index) => {
                             const dotTheme = getSlideTheme(index);
                             return (
@@ -118,63 +145,60 @@ export function SlideTransitionOverlay({
                                     key={index}
                                     className={cn(
                                         "h-2 rounded-full transition-all",
-                                        index === slideIndex ? "w-6" : "w-2 opacity-50"
+                                        index === slideIndex ? "w-6" : "w-2 opacity-40"
                                     )}
                                     style={{ backgroundColor: dotTheme.btnBgHex }}
                                 />
                             );
                         })}
-                    </div>
+                    </motion.div>
                 )}
 
-                <div className="space-y-2">
-                    <div
-                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"
-                        style={{ backgroundColor: theme.shapeHex, color: theme.textHex }}
-                    >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Slide {slideIndex + 1} of {totalSlides}
-                    </div>
-                    <h1
-                        className="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight"
-                        style={{ color: theme.textHex }}
-                    >
-                        {slideTitle}
-                    </h1>
-                </div>
-
-                <button
-                    disabled={!canBegin || isStarting}
-                    onClick={handleBegin}
-                    className={cn(
-                        "mt-2 min-h-11 min-w-[220px] px-10 py-3.5 rounded-2xl text-sm font-black tracking-wide uppercase flex items-center justify-center gap-2 border-b-4 transition-all",
-                        canBegin && !isStarting
-                            ? "cursor-pointer active:translate-y-px active:border-b-0"
-                            : "opacity-70 cursor-not-allowed"
-                    )}
-                    style={{
-                        backgroundColor: theme.btnBgHex,
-                        color: theme.btnTextHex,
-                        borderBottomColor: theme.textHex,
-                    }}
+                <motion.h1
+                    initial={enter}
+                    animate={shown}
+                    transition={{ duration: 0.32, delay: 0.18 }}
+                    className="text-2xl md:text-3xl font-black leading-tight tracking-tight"
+                    style={{ color: theme.textHex }}
                 >
-                    {canBegin && !isStarting ? (
-                        <>
-                            <span>Begin Slide</span>
-                            <ChevronRight className="w-5 h-5" />
-                        </>
-                    ) : isStarting ? (
-                        <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Starting&hellip;</span>
-                        </>
-                    ) : (
-                        <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Get ready {secondsLeft}s</span>
-                        </>
-                    )}
-                </button>
+                    {slideTitle}
+                </motion.h1>
+
+                <motion.div
+                    initial={enter}
+                    animate={shown}
+                    transition={{ duration: 0.28, delay: 0.24 }}
+                    className="w-full max-w-xs pt-2"
+                >
+                    <Button
+                        variant="duo"
+                        disabled={!canBegin || isStarting}
+                        onClick={handleBegin}
+                        className="w-full"
+                        style={{
+                            backgroundColor: theme.btnBgHex,
+                            color: theme.btnTextHex,
+                            borderColor: theme.btnBgHex,
+                        }}
+                    >
+                        {canBegin && !isStarting ? (
+                            <>
+                                Begin
+                                <ChevronRight className="w-4 h-4" />
+                            </>
+                        ) : isStarting ? (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Starting
+                            </>
+                        ) : (
+                            <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Get ready {secondsLeft}s
+                            </>
+                        )}
+                    </Button>
+                </motion.div>
             </div>
         </CueOverlayShell>
     );
