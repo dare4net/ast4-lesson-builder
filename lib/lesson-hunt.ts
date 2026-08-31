@@ -73,17 +73,39 @@ function slidesFrom(value: unknown): Array<{ title?: string; components?: Compon
     return Array.isArray(value) ? value : undefined
 }
 
-export function mergeLessonHunt(lesson: Record<string, unknown>, slides?: Array<{ title?: string; components?: Component[] }>) {
-    const hunt = summarizeLessonHunt(slides || slidesFrom(lesson.slides))
+export type LessonHuntOverlay = {
+    activities: LessonHuntActivity[]
+    obtainablePoints: number
+    livePoints: number
+    practicePoints: number
+    obtainableStars: number
+    totalScore: number
+    totalSlides: number
+    interactiveCount: number
+}
+
+function asNumber(value: unknown, fallback: number) {
+    if (value == null || value === '') return fallback
+    const n = Number(value)
+    return Number.isFinite(n) ? n : fallback
+}
+
+export function mergeLessonHunt<T extends object>(
+    lesson: T,
+    slides?: Array<{ title?: string; components?: Component[] }>,
+): T & LessonHuntOverlay {
+    const record = lesson as T & Record<string, unknown>
+    const hunt = summarizeLessonHunt(slides || slidesFrom(record.slides))
+    const slideCount = slides?.length ?? slidesFrom(record.slides)?.length ?? 0
     return {
         ...lesson,
-        activities: lesson.activities || hunt.activities,
-        obtainablePoints: lesson.obtainablePoints ?? hunt.totalPoints,
-        livePoints: lesson.livePoints ?? hunt.livePoints,
-        practicePoints: lesson.practicePoints ?? hunt.practicePoints,
-        obtainableStars: lesson.obtainableStars ?? hunt.maxStars,
-        totalScore: lesson.totalScore || hunt.totalPoints,
-        totalSlides: lesson.totalSlides ?? (slides?.length ?? slidesFrom(lesson.slides)?.length ?? 0),
-        interactiveCount: lesson.interactiveCount ?? hunt.interactiveCount,
+        activities: Array.isArray(record.activities) ? record.activities as LessonHuntActivity[] : hunt.activities,
+        obtainablePoints: asNumber(record.obtainablePoints, hunt.totalPoints),
+        livePoints: asNumber(record.livePoints, hunt.livePoints),
+        practicePoints: asNumber(record.practicePoints, hunt.practicePoints),
+        obtainableStars: asNumber(record.obtainableStars, hunt.maxStars),
+        totalScore: asNumber(record.totalScore, hunt.totalPoints),
+        totalSlides: asNumber(record.totalSlides, slideCount),
+        interactiveCount: asNumber(record.interactiveCount, hunt.interactiveCount),
     }
 }

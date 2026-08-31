@@ -25,7 +25,9 @@ import {
 import { useGamification } from '@/context/gamification-context'
 import { cn } from '@/lib/utils'
 
-export type CertificateStudioPayload = Omit<CertificatePayload, 'printedAt'> & {
+type WithoutPrintStamp<T> = T extends CertificatePayload ? Omit<T, 'printedAt'> : never
+
+export type CertificateStudioPayload = WithoutPrintStamp<CertificatePayload> & {
     lessonId?: string
     statKey?: string
 }

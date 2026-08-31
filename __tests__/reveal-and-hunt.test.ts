@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { CERTIFICATE_PRINT_COST, certificateFileStem, formatPrintDay } from '@/lib/certificates'
 import { shouldRevealAnswer } from '@/lib/reveal'
-import { summarizeLessonHunt } from '@/lib/lesson-hunt'
+import { mergeLessonHunt, summarizeLessonHunt } from '@/lib/lesson-hunt'
 import type { Component } from '@/types/lesson'
 
 describe('shouldRevealAnswer', () => {
@@ -42,6 +42,17 @@ describe('summarizeLessonHunt', () => {
         expect(hunt.activities).toHaveLength(2)
         expect(hunt.activities[0].mode).toBe('practice')
         expect(hunt.activities[1].maxStars).toBe(5)
+    })
+})
+
+describe('mergeLessonHunt', () => {
+    it('returns numbers the lesson details modal can store', () => {
+        const merged = mergeLessonHunt({ lessonId: 'L1', title: 'Hello' }, [])
+        expect(merged.lessonId).toBe('L1')
+        expect(merged.totalSlides).toBe(0)
+        expect(merged.obtainablePoints).toBe(0)
+        expect(merged.interactiveCount).toBe(0)
+        expect(Array.isArray(merged.activities)).toBe(true)
     })
 })
 
