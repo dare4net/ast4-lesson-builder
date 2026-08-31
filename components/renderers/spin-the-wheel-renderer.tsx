@@ -12,6 +12,7 @@ import {
     type WheelQuestion,
 } from "@/lib/spin-the-wheel-utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
 
 export type { QuestionType, WheelQuestion }
@@ -59,10 +60,12 @@ function MultipleChoiceCard({
     question,
     onAnswer,
     disabled,
+    revealAnswers,
 }: {
     question: WheelQuestion
     onAnswer: (correct: boolean) => void
     disabled: boolean
+    revealAnswers: boolean
 }) {
     const [selected, setSelected] = useState<number | null>(null)
     const [submitted, setSubmitted] = useState(false)
@@ -80,7 +83,7 @@ function MultipleChoiceCard({
             <FormattedText content={question.prompt} as="p" className="text-base font-black text-slate-900 leading-snug" />
             <div className="space-y-2">
                 {(question.options || []).map((opt, idx) => {
-                    const isCorrect = submitted && idx === question.correctOptionIndex
+                    const isCorrect = submitted && idx === question.correctOptionIndex && (revealAnswers || selected === idx)
                     const isWrong = submitted && selected === idx && idx !== question.correctOptionIndex
                     return (
                         <button
@@ -106,7 +109,7 @@ function MultipleChoiceCard({
                     )
                 })}
             </div>
-            {submitted && question.explanation && (
+            {submitted && question.explanation && (revealAnswers || selected === question.correctOptionIndex) && (
                 <p className="text-xs font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 animate-in fade-in">
                     💡 {question.explanation}
                 </p>
@@ -119,10 +122,12 @@ function InputAnswerCard({
     question,
     onAnswer,
     disabled,
+    revealAnswers,
 }: {
     question: WheelQuestion
     onAnswer: (correct: boolean) => void
     disabled: boolean
+    revealAnswers: boolean
 }) {
     const [value, setValue] = useState("")
     const [submitted, setSubmitted] = useState(false)
@@ -172,10 +177,10 @@ function InputAnswerCard({
                     correct ? "bg-emerald-50 border-[#58CC02] text-emerald-700" : "bg-rose-50 border-[#FF4B4B] text-rose-700"
                 )}>
                     {correct ? <CheckCircle2 className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
-                    {correct ? "Correct!" : `Needs keyword: "${(question.keywords || [])[0] || ""}"`}
+                    {correct ? "Correct!" : revealAnswers ? `Needs keyword: "${(question.keywords || [])[0] || ""}"` : "Incorrect"}
                 </div>
             )}
-            {submitted && question.explanation && (
+            {submitted && question.explanation && (correct || revealAnswers) && (
                 <p className="text-xs font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 animate-in fade-in">
                     💡 {question.explanation}
                 </p>
@@ -188,10 +193,12 @@ function TrueFalseCard({
     question,
     onAnswer,
     disabled,
+    revealAnswers,
 }: {
     question: WheelQuestion
     onAnswer: (correct: boolean) => void
     disabled: boolean
+    revealAnswers: boolean
 }) {
     const [selected, setSelected] = useState<boolean | null>(null)
     const [submitted, setSubmitted] = useState(false)
@@ -212,7 +219,7 @@ function TrueFalseCard({
                     const isCorrectChoice = question.isTrue === choice
                     const correct = submitted && isSelected && isCorrectChoice
                     const wrong = submitted && isSelected && !isCorrectChoice
-                    const reveal = submitted && !isSelected && isCorrectChoice
+                    const reveal = submitted && !isSelected && isCorrectChoice && revealAnswers
                     return (
                         <button
                             key={String(choice)}
@@ -235,7 +242,7 @@ function TrueFalseCard({
                     )
                 })}
             </div>
-            {submitted && question.explanation && (
+            {submitted && question.explanation && (selected === question.isTrue || revealAnswers) && (
                 <p className="text-xs font-bold text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200 animate-in fade-in">
                     💡 {question.explanation}
                 </p>
@@ -259,7 +266,9 @@ function SpinTheWheelPlayfield({
     handlePoints,
     handleRetry,
     recordAttempt,
+    mode = "practice",
 }: SpinTheWheelRendererProps & Pick<ScoredRenderProps<Record<string, unknown>>, "handlePoints" | "handleRetry" | "recordAttempt">) {
+    const revealAnswers = shouldRevealAnswer(mode)
     const [rotation, setRotation] = useState(savedState?.rotation ?? 0)
     const [isSpinning, setIsSpinning] = useState(false)
     const safeQuestions = React.useMemo(
@@ -579,6 +588,7 @@ function SpinTheWheelPlayfield({
                                         question={currentQuestion}
                                         onAnswer={handleAnswer}
                                         disabled={answerSubmitted}
+                                        revealAnswers={revealAnswers}
                                     />
                                 )}
                                 {currentQuestion.type === "inputAnswer" && (
@@ -587,6 +597,7 @@ function SpinTheWheelPlayfield({
                                         question={currentQuestion}
                                         onAnswer={handleAnswer}
                                         disabled={answerSubmitted}
+                                        revealAnswers={revealAnswers}
                                     />
                                 )}
                                 {currentQuestion.type === "trueFalse" && (
@@ -595,6 +606,7 @@ function SpinTheWheelPlayfield({
                                         question={currentQuestion}
                                         onAnswer={handleAnswer}
                                         disabled={answerSubmitted}
+                                        revealAnswers={revealAnswers}
                                     />
                                 )}
 
@@ -687,6 +699,7 @@ export function SpinTheWheelRenderer(props: SpinTheWheelRendererProps) {
             onRender={(renderProps) => (
                 <SpinTheWheelPlayfield
                     {...props}
+                    mode={mode}
                     handlePoints={renderProps.handlePoints}
                     handleRetry={renderProps.handleRetry}
                     recordAttempt={renderProps.recordAttempt}

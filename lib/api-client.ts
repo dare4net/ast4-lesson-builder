@@ -228,10 +228,10 @@ class APIClient {
         getStudents: () => this.get('/studio/students'),
         getStudentDetail: (id: string) => this.get(`/studio/students/${id}`),
         getStudentProgramBreakdown: (id: string, programId: string) => this.get(`/studio/students/${id}/programs/${programId}`),
-        markStudentResponse: (studentId: string, lessonId: string, componentId: string, data: { score: number; isApproved: boolean; mode?: string; correctAnswers?: Record<string, boolean> }) =>
+        markStudentResponse: (studentId: string, lessonId: string, componentId: string, data: { score: number; isApproved: boolean; mode?: string; type?: string; maxScore?: number; correctAnswers?: Record<string, boolean> }) =>
             this.post(`/studio/students/${studentId}/lessons/${lessonId}/components/${componentId}/mark`, data),
-        resetStudentResponse: (studentId: string, lessonId: string, componentId: string) =>
-            this.post(`/studio/students/${studentId}/lessons/${lessonId}/components/${componentId}/reset`),
+        resetStudentResponse: (studentId: string, lessonId: string, componentId: string, data?: { type?: string }) =>
+            this.post(`/studio/students/${studentId}/lessons/${lessonId}/components/${componentId}/reset`, data || {}),
     };
 
     // Programs (Student access)
@@ -291,6 +291,14 @@ class APIClient {
         quoteReset: (lessonId: string) =>
             this.get(`/store/reset-quote?lessonId=${encodeURIComponent(lessonId)}`),
         resetLesson: (lessonId: string) => this.post('/store/reset-lesson', { lessonId }),
+        printCertificate: (body: { kind: 'lesson' | 'pride'; lessonId?: string; statKey?: string }) =>
+            this.post('/store/print-certificate', body),
+        consume: (body: { sku: 'hint_pack' | 'live_block_reset' | 'reference_credit' }) =>
+            this.post('/store/consume', body),
+        resetBlock: (body: { lessonId: string; componentId: string }) =>
+            this.post('/store/reset-block', body),
+        openReference: (body: { kind: 'practice' | 'live'; componentId?: string; questionId?: string }) =>
+            this.post('/store/open-reference', body),
     };
 
     gamification = {
@@ -332,7 +340,7 @@ class APIClient {
 
     profile = {
         get: () => this.get('/profile'),
-        update: (data: { full_name?: string; handle?: string; isPublicProfile?: boolean; accentColor?: string; avatarId?: string }) =>
+        update: (data: { full_name?: string; handle?: string; isPublicProfile?: boolean; accentColor?: string; avatarId?: string; avatarFrame?: 'gold' | ''; nameplate?: 'duo' | ''; pinnedStatKey?: string | null }) =>
             this.put('/profile', data),
     };
 

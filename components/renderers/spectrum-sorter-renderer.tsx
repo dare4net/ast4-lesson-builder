@@ -24,6 +24,7 @@ import {
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
+import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
 
 export type ControlType = "slider" | "knob" | "stepper" | "toggle"
@@ -750,7 +751,7 @@ function SpectrumSorterContent({
                                     />
                                 )}
 
-                                {submitted && (
+                                {submitted && (shouldRevealAnswer(mode) || isItemCorrect) && (
                                     <p className="text-xs font-semibold text-slate-500 pt-0.5">
                                         Target rule: {getOperatorDisplay(item)} {item.explanation ? `(${item.explanation})` : ""}
                                     </p>

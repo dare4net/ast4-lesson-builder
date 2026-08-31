@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSlideTheme, getLessonPattern } from "@/lib/slide-themes";
 import { SoundEffects } from "@/lib/sound-effects";
+import { useAuth } from "@/context/auth-context";
+import { CertificateStudio } from "@/components/certificates/certificate-studio";
+import { CERTIFICATE_PRINT_COST } from "@/lib/certificates";
 
 interface LessonCompletionOverlayProps {
     isVisible: boolean;
@@ -70,6 +73,9 @@ export function LessonCompletionOverlay({
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [isExiting, setIsExiting] = useState(false);
     const [isNavigatingNext, setIsNavigatingNext] = useState(false);
+    const [showCertificate, setShowCertificate] = useState(false);
+    const { user } = useAuth();
+    const studentName = user?.full_name || user?.fullName || user?.email?.split("@")[0] || "Student";
 
     useEffect(() => {
         if (!isVisible) {
@@ -221,6 +227,7 @@ export function LessonCompletionOverlay({
     if (!isVisible) return null;
 
     return (
+        <>
         <AnimatePresence>
             <div
                 className="fixed inset-0 z-50 flex items-center justify-center select-none overflow-hidden sm:p-4 md:p-6"
@@ -347,6 +354,18 @@ export function LessonCompletionOverlay({
                         <span>Lesson Completed & Progress Saved!</span>
                     </motion.div>
 
+                    <motion.button
+                        type="button"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        onClick={() => setShowCertificate(true)}
+                        className="w-full h-12 rounded-2xl bg-[#FFC800] hover:bg-[#e6b400] border-b-4 border-[#D9A000] text-slate-900 text-xs font-extrabold flex items-center justify-center gap-2 active:border-b-0 active:translate-y-[2px]"
+                    >
+                        <Award className="w-4 h-4" />
+                        Print certificate · {CERTIFICATE_PRINT_COST}★
+                    </motion.button>
+
                     {/* Action Buttons (Horizontal layout for wide modal) */}
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -409,5 +428,18 @@ export function LessonCompletionOverlay({
                 </motion.div>
             </div>
         </AnimatePresence>
+        <CertificateStudio
+            open={showCertificate}
+            onOpenChange={setShowCertificate}
+            payload={{
+                kind: 'lesson',
+                lessonId,
+                studentName,
+                lessonTitle,
+                score,
+                totalPossible: totalPossibleScore,
+            }}
+        />
+        </>
     );
 }

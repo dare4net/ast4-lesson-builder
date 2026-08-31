@@ -31,6 +31,8 @@ const SUBMITTABLE_TYPES = [
     'matchingPairs',
     'wordScramble',
     'memoryGrid',
+    'hotspot',
+    'anagram',
 ];
 
 interface TutorLessonContentProps {
@@ -98,6 +100,8 @@ export function TutorLessonContent({
         activeState.response ||
         activeState.answers ||
         activeState.placements ||
+        activeState.assignments ||
+        activeState.selectedIds ||
         activeState.selectedOption ||
         activeState.selectedAnswer ||
         (activeState.status === 'completed' && Object.keys(activeState).length > 1)
@@ -181,16 +185,7 @@ export function TutorLessonContent({
                         onResetSuccess={() => {
                             setComponentStates(prev => ({
                                 ...prev,
-                                [activeComponent.id]: {
-                                    wasReset: true,
-                                    status: 'uncompleted',
-                                    isSubmitted: false,
-                                    isPendingMarking: false,
-                                    userResponse: '',
-                                    userAnswers: {},
-                                    score: 0,
-                                    tutorMarked: false
-                                }
+                                [activeComponent.id]: tutorClientResetState(activeComponent.type)
                             }));
                         }}
                     />
@@ -221,6 +216,24 @@ export function TutorLessonContent({
             </footer>
         </div>
     );
+}
+
+function tutorClientResetState(type: string) {
+    const base: Record<string, unknown> = {
+        wasReset: true,
+        status: 'uncompleted',
+        isSubmitted: false,
+        isPendingMarking: false,
+        userResponse: '',
+        userAnswers: {},
+        score: 0,
+        tutorMarked: false,
+    };
+    if (type === 'categorise') return { ...base, assignments: {}, selectedItemId: null, placements: {} };
+    if (type === 'hotspot') return { ...base, selectedIds: [], isRevealed: false, revealed: false };
+    if (type === 'matchingPairs') return { ...base, matches: {}, selectedLeft: null };
+    if (type === 'wordScramble' || type === 'anagram') return { ...base, submitted: false, revealedIndices: [], revealsUsed: 0 };
+    return base;
 }
 
 // ─── Surgical Sub-Item Extraction ───────────────────────────────────────────
@@ -263,14 +276,14 @@ function extractSurgicalItems(componentType: string, componentProps: any, compon
     if (componentType === 'categorise' && componentProps?.items) {
         const items = componentProps.items || [];
         const categories = componentProps.categories || [];
-        const placements = componentState.placements || {};
+        const assignments = componentState.assignments || componentState.placements || {};
         const unitPts = Math.max(1, Math.floor(maxPoints / (items.length || 1)));
 
         return items.map((it: any, idx: number) => {
-            const placedCatId = placements[it.id];
+            const placedCatId = assignments[it.id];
             const placedCat = categories.find((c: any) => c.id === placedCatId)?.title || '(Unplaced)';
-            const expectedCat = categories.find((c: any) => c.id === it.correctCategoryId)?.title || 'N/A';
-            const isCorrect = placedCatId === it.correctCategoryId;
+            const expectedCat = categories.find((c: any) => c.id === it.correctCategoryId || c.id === it.categoryId)?.title || 'N/A';
+            const isCorrect = placedCatId === it.correctCategoryId || placedCatId === it.categoryId;
             return {
                 id: it.id || `item-${idx}`,
                 label: it.text || `Item ${idx + 1}`,
@@ -280,6 +293,18 @@ function extractSurgicalItems(componentType: string, componentProps: any, compon
                 isCorrectInitially: isCorrect
             };
         });
+    }
+
+    if (componentType === 'hotspot') {
+        const selected = componentState.selectedIds || componentState.selectedHotspots || [];
+        return [{
+            id: 'hotspot-response',
+            label: 'Hotspots',
+            studentAns: Array.isArray(selected) && selected.length ? selected.join(', ') : '(No pins)',
+            expectedAns: 'Tutor review',
+            unitPoints: maxPoints,
+            isCorrectInitially: false,
+        }];
     }
 
     // 3. Multi-Select Quiz
@@ -403,10 +428,12 @@ function TutorMarkingBar({
         setLoading(true);
         setActiveLockError(null);
         try {
-            await apiClient.studio.markStudentResponse(studentId, lessonId, componentId, {
+                            await apiClient.studio.markStudentResponse(studentId, lessonId, componentId, {
                 score: calculatedScore,
                 isApproved: isApprovedMark,
                 mode: componentMode,
+                type: componentType,
+                maxScore: maxPoints,
                 correctAnswers: checkedItems
             });
             if (typeof window !== 'undefined') {
@@ -432,7 +459,7 @@ function TutorMarkingBar({
         setResetting(true);
         setActiveLockError(null);
         try {
-            await apiClient.studio.resetStudentResponse(studentId, lessonId, componentId);
+            await apiClient.studio.resetStudentResponse(studentId, lessonId, componentId, { type: componentType });
             if (typeof window !== 'undefined') {
                 localStorage.removeItem(interactionStorageKey(studentId, lessonId));
             }

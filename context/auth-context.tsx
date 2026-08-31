@@ -15,6 +15,9 @@ export interface User {
     isPublicProfile?: boolean;
     accentColor?: string | null;
     avatarId?: string | null;
+    avatarFrame?: string | null;
+    nameplate?: string | null;
+    pinnedStatKey?: string | null;
     onboardingCompletedAt?: string | Date | null;
     onboardingSkippedAt?: string | Date | null;
 }
@@ -96,6 +99,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     isPublicProfile: profile.isPublicProfile === true,
                     accentColor: profile.accentColor ?? current.accentColor ?? null,
                     avatarId: profile.avatarId ?? current.avatarId ?? null,
+                    avatarFrame: profile.avatarFrame ?? current.avatarFrame ?? null,
+                    nameplate: profile.nameplate ?? current.nameplate ?? null,
+                    pinnedStatKey: profile.pinnedStatKey ?? current.pinnedStatKey ?? null,
                     onboardingCompletedAt: profile.onboardingCompletedAt ?? current.onboardingCompletedAt ?? null,
                     onboardingSkippedAt: profile.onboardingSkippedAt ?? current.onboardingSkippedAt ?? null,
                 }

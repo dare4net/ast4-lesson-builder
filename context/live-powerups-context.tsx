@@ -2,6 +2,7 @@
 
 import React, { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import { apiClient } from '@/lib/api-client'
+import { SoundEffects } from '@/lib/sound-effects'
 
 type LivePowerupsContextType = {
     extraSeconds: number
@@ -23,9 +24,12 @@ export function LivePowerupsProvider({ children }: { children: ReactNode }) {
     const activate = useCallback(async (sku: string) => {
         const result = await apiClient.store.activate(sku)
         const effect = Number(result?.effect) || 0
+        if (effect > 0 || result) {
+            void SoundEffects.play('powerupUsed')
+        }
         if (sku === 'live_time') setExtraSeconds((value) => value + effect)
         if (sku === 'live_freeze') setFreezeSeconds((value) => value + effect)
-        if (sku === 'second_chance') setSecondWind((value) => value + 1)
+        if (sku === 'second_chance') setSecondWind((value) => value + Math.max(1, effect))
         return result ? { effect, sku } : null
     }, [])
 

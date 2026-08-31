@@ -1,8 +1,12 @@
 'use client'
 
 import Link from 'next/link'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Flame, Shield, Star, Trophy } from 'lucide-react'
 import { useStudentStats } from '@/hooks/use-student-stats'
+import { apiClient } from '@/lib/api-client'
+import { queryKeys } from '@/lib/query-keys'
+import { SoundEffects } from '@/lib/sound-effects'
 import { prideBoardPath } from '@/lib/pride-paths'
 import {
     STREAK_MILESTONE_COPY,
@@ -24,12 +28,26 @@ function weekdayLetter(isoDay: string) {
 }
 
 export default function StudentStreakPage() {
+    const queryClient = useQueryClient()
     const statsQuery = useStudentStats()
     const stats = statsQuery.data?.stats || {}
     const streak = Number(stats.loginStreak) || 0
     const longest = Number(stats.longestLoginStreak) || streak
     const lastLoginDate = typeof stats.lastLoginDate === 'string' ? stats.lastLoginDate : utcDay()
     const freezeRemaining = Number(stats.streakFreezeRemaining) || 0
+    const storeQuery = useQuery({
+        queryKey: queryKeys.store,
+        queryFn: () => apiClient.store.get(),
+    })
+    const freezeCharges = Number(storeQuery.data?.inventory?.items?.streak_freeze?.charges) || 0
+    const armFreeze = useMutation({
+        mutationFn: () => apiClient.store.activate('streak_freeze'),
+        onSuccess: () => {
+            void SoundEffects.play('powerupUsed')
+            void queryClient.invalidateQueries({ queryKey: queryKeys.store })
+            void queryClient.invalidateQueries({ queryKey: queryKeys.stats })
+        },
+    })
     const nextMark = Number(stats.nextStreakMilestone) || nextStreakMilestone(streak)
     const nextReward = Number(stats.nextStreakMilestoneReward) || (nextMark ? streakMilestoneReward(nextMark) : 0)
     const lit = new Set(inferredStreakDays(streak, lastLoginDate))
@@ -143,6 +161,20 @@ export default function StudentStreakPage() {
                     })}
                 </ol>
             </section>
+
+            {freezeCharges > 0 ? (
+                <button
+                    type="button"
+                    disabled={armFreeze.isPending}
+                    onClick={() => armFreeze.mutate()}
+                    className="w-full rounded-2xl border-2 border-[#1CB0F6] bg-[#1CB0F6]/10 p-4 text-left hover:bg-[#1CB0F6]/15 disabled:opacity-60"
+                >
+                    <p className="text-sm font-extrabold text-slate-800 dark:text-white">Arm a freeze</p>
+                    <p className="text-xs font-medium text-slate-500">
+                        Move {freezeCharges} bought freeze{freezeCharges === 1 ? '' : 's'} into protection for a missed day.
+                    </p>
+                </button>
+            ) : null}
 
             <div className="grid gap-3 sm:grid-cols-2">
                 <Link

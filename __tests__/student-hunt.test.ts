@@ -34,12 +34,43 @@ describe('Student hunt, search, and dashboard hygiene', () => {
     })
 
     it('shows obtainable stars, points, and every block in lesson details', () => {
-        const modal = read('app/dashboard/student/programs/[id]/modules/[moduleId]/page.tsx')
+        const modal = read('components/dashboard/student/lesson-details-modal.tsx')
         expect(modal).toContain('See stars, points, and all blocks')
         expect(modal).toContain('obtainableStars')
         expect(modal).toContain('obtainablePoints')
         expect(modal).toContain('activities')
         expect(modal).toContain('practicePoints')
+        expect(read('app/dashboard/student/programs/[id]/modules/[moduleId]/page.tsx')).toContain('LessonDetailsModal')
+        expect(read('app/dashboard/student/page.tsx')).toContain('onDetails')
+        expect(read('app/dashboard/student/page.tsx')).toContain('openLessonDetails')
+        expect(read('components/dashboard/student/lesson-card.tsx')).toContain('Details')
+        expect(read('components/dashboard/student/lesson-card.tsx')).toContain('stopPropagation')
+    })
+
+    it('plays a synthesized powerup sound when a charge is activated', () => {
+        const sounds = read('lib/sound-effects.ts')
+        expect(sounds).toContain("'powerupUsed'")
+        expect(sounds).toContain('playPowerupUsedSound')
+        expect(read('context/live-powerups-context.tsx')).toContain("SoundEffects.play('powerupUsed')")
+        expect(read('context/live-powerups-context.tsx')).toContain('setSecondWind((value) => value + Math.max(1, effect))')
+        expect(read('app/dashboard/student/store/page.tsx')).toContain('activate')
+        expect(read('app/dashboard/student/store/page.tsx')).toContain('Activate')
+        expect(read('app/dashboard/student/streak/page.tsx')).toContain('Arm a freeze')
+        expect(read('app/dashboard/student/streak/page.tsx')).toContain("activate('streak_freeze')")
+    })
+
+    it('grades practice without revealing the correct answer', () => {
+        expect(read('lib/reveal.ts')).toContain("return mode === 'live'")
+        expect(read('components/renderers/quiz-renderer.tsx')).toContain('shouldRevealAnswer(mode)')
+        expect(read('components/renderers/true-false-renderer.tsx')).toContain('revealAnswers')
+        expect(read('components/renderers/true-false-renderer.tsx')).toContain('Incorrect')
+        expect(read('components/renderers/multi-select-quiz-renderer.tsx')).toContain('isLive || isSelected')
+        expect(read('components/renderers/flashcard-quiz-renderer.tsx')).toContain('!isCorrect && isLive')
+        expect(read('components/renderers/fill-in-the-blank-renderer.tsx')).toContain('!isBlankCorrect && isLive')
+        expect(read('components/renderers/swipe-deck-renderer.tsx')).toContain('shouldRevealAnswer(mode)')
+        expect(read('components/renderers/spin-the-wheel-renderer.tsx')).toContain('revealAnswers')
+        expect(read('components/renderers/spectrum-sorter-renderer.tsx')).toContain('shouldRevealAnswer(mode) || isItemCorrect')
+        expect(read('components/renderers/hotspot-renderer.tsx')).toContain('isRevealed: isLive')
     })
 
     it('refetches lesson lists from the viewer even when the dashboard is closed', () => {

@@ -20,11 +20,13 @@ export function hasPrideRecord(you?: { value?: number | null; rank?: number | nu
 }
 
 export const ACCENT_COLORS = ['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B'] as const
+export const PREMIUM_ACCENT_COLORS = ['#14B8A6', '#F472B6', '#0EA5E9'] as const
+export const ALL_ACCENT_COLORS = [...ACCENT_COLORS, ...PREMIUM_ACCENT_COLORS] as const
 
-export type AccentColor = (typeof ACCENT_COLORS)[number]
+export type AccentColor = (typeof ALL_ACCENT_COLORS)[number]
 
 export function isAccentColor(value?: string | null): value is AccentColor {
-    return ACCENT_COLORS.includes(String(value || '') as AccentColor)
+    return ALL_ACCENT_COLORS.includes(String(value || '') as AccentColor)
 }
 
 export function handleAccent(handle?: string | null) {

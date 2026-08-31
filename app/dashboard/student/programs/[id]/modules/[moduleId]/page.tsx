@@ -15,26 +15,12 @@ import {
     Clock,
     BookOpen,
     Info,
-    Award,
     Layers,
     Zap,
-    RotateCcw,
-    ChevronRight,
-    HelpCircle,
-    Star,
-    ChevronDown
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import { LessonDetailsModal } from "@/components/dashboard/student/lesson-details-modal"
 
 export default function StudentModuleDetailPage() {
     const params = useParams()
@@ -48,7 +34,6 @@ export default function StudentModuleDetailPage() {
     const [loading, setLoading] = useState(true)
     const [programName, setProgramName] = useState<string>("Course")
     const [selectedLesson, setSelectedLesson] = useState<any | null>(null)
-    const [showHunt, setShowHunt] = useState(false)
 
     useEffect(() => {
         if (moduleId && token) {
@@ -292,188 +277,18 @@ export default function StudentModuleDetailPage() {
                 )}
             </div>
 
-            {/* Lesson Details Modal */}
-            <Dialog open={!!selectedLesson} onOpenChange={(open) => {
-                if (!open) {
+            <LessonDetailsModal
+                lesson={selectedLesson}
+                open={!!selectedLesson}
+                onOpenChange={(open) => {
+                    if (!open) setSelectedLesson(null)
+                }}
+                onLaunch={(lesson) => {
                     setSelectedLesson(null)
-                    setShowHunt(false)
-                }
-            }}>
-                <DialogContent className="max-w-lg rounded-3xl bg-white border-2 border-slate-200 p-6 space-y-6 max-h-[90vh] overflow-y-auto">
-                    {selectedLesson && (
-                        <>
-                            <DialogHeader className="space-y-2 text-left">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#1CB0F6]">
-                                        Lesson {selectedLesson.index + 1}
-                                    </span>
-                                    <span className={`text-[11px] font-extrabold px-3 py-1 rounded-full border ${selectedLesson.completed
-                                        ? "bg-[#58CC02]/10 border-[#58CC02]/20 text-[#58CC02]"
-                                        : (selectedLesson.progress || 0) > 0
-                                            ? "bg-[#FFC800]/10 border-[#FFC800]/20 text-[#D9A000]"
-                                            : "bg-slate-100 border-slate-200 text-slate-500"
-                                        }`}>
-                                        {selectedLesson.completed ? "Completed" : (selectedLesson.progress || 0) > 0 ? `${selectedLesson.progress}% Done` : "Not Started"}
-                                    </span>
-                                </div>
-
-                                <DialogTitle className="text-xl font-extrabold text-slate-800 leading-snug">
-                                    {selectedLesson.titleComputed}
-                                </DialogTitle>
-                                <DialogDescription className="text-xs text-slate-500 font-medium leading-relaxed">
-                                    {selectedLesson.description || "Interactive slide lesson designed with guided practice and real-time feedback."}
-                                </DialogDescription>
-                            </DialogHeader>
-
-                            {/* Lesson Stats 4-Tile Grid */}
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-[#1CB0F6]/10 text-[#1CB0F6] flex items-center justify-center font-bold">
-                                        <Clock className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-extrabold text-slate-400 uppercase">Duration</p>
-                                        <p className="text-xs font-extrabold text-slate-700">{selectedLesson.duration || 10} Mins</p>
-                                    </div>
-                                </div>
-
-                                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-[#CE82FF]/10 text-[#CE82FF] flex items-center justify-center font-bold">
-                                        <Layers className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-extrabold text-slate-400 uppercase">Slides</p>
-                                        <p className="text-xs font-extrabold text-slate-700">{selectedLesson.totalSlides ?? 0} Total</p>
-                                    </div>
-                                </div>
-
-                                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-[#FFC800]/10 text-[#D9A000] flex items-center justify-center font-bold">
-                                        <Zap className="w-4 h-4 fill-[#D9A000]" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-extrabold text-slate-400 uppercase">Activities</p>
-                                        <p className="text-xs font-extrabold text-slate-700">
-                                            {selectedLesson.interactiveCount || 0} {(selectedLesson.categoryCounts?.gamified > 0) ? `(${selectedLesson.categoryCounts.interactive || 0} int / ${selectedLesson.categoryCounts.gamified} gami)` : "Interactive"}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-[#58CC02]/10 text-[#58CC02] flex items-center justify-center font-bold">
-                                        <Award className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-extrabold text-slate-400 uppercase">Score</p>
-                                        <p className="text-xs font-extrabold text-slate-700">
-                                            {selectedLesson.score || 0} / {selectedLesson.totalScore || selectedLesson.obtainablePoints || 0} pts
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold">
-                                        <Star className="w-4 h-4 fill-amber-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-extrabold text-amber-600/70 uppercase">Stars</p>
-                                        <p className="text-xs font-extrabold text-slate-700">
-                                            up to {selectedLesson.obtainableStars || 0} live
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-xl bg-[#1CB0F6]/10 text-[#1CB0F6] flex items-center justify-center font-bold">
-                                        <Zap className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-[10px] font-extrabold text-slate-400 uppercase">Points</p>
-                                        <p className="text-xs font-extrabold text-slate-700">
-                                            {selectedLesson.obtainablePoints || selectedLesson.totalScore || 0} obtainable
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={() => setShowHunt((open) => !open)}
-                                className="w-full h-11 border-2 border-slate-200 hover:border-[#1CB0F6] text-slate-700 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2"
-                            >
-                                <HelpCircle className="w-4 h-4" />
-                                {showHunt ? "Hide hunt details" : "See stars, points, and all blocks"}
-                                <ChevronDown className={`w-4 h-4 transition-transform ${showHunt ? "rotate-180" : ""}`} />
-                            </button>
-
-                            {showHunt && (
-                                <div className="space-y-2">
-                                    <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                                        {(selectedLesson.activities || []).length} blocks · {selectedLesson.livePoints || 0} live pts · {selectedLesson.practicePoints || 0} practice pts
-                                    </p>
-                                    {(selectedLesson.activities || []).length === 0 ? (
-                                        <p className="text-xs font-medium text-slate-500">No scored or interactive blocks in this lesson yet.</p>
-                                    ) : (
-                                        <ul className="space-y-1.5">
-                                            {(selectedLesson.activities as Array<{
-                                                type: string
-                                                label?: string
-                                                slideTitle?: string
-                                                mode?: string
-                                                points?: number
-                                                maxStars?: number
-                                            }>).map((activity, index) => (
-                                                <li
-                                                    key={`${activity.type}-${index}`}
-                                                    className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2"
-                                                >
-                                                    <span className="min-w-0">
-                                                        <span className="block text-xs font-extrabold text-slate-800 truncate">
-                                                            {activity.label || activity.type}
-                                                        </span>
-                                                        <span className="block text-[10px] font-bold text-slate-400 truncate">
-                                                            {activity.slideTitle || "Slide"} · {activity.mode === "live" ? "Live" : "Practice"}
-                                                        </span>
-                                                    </span>
-                                                    <span className="shrink-0 text-[11px] font-black text-slate-600">
-                                                        {activity.points || 0} pts
-                                                        {activity.maxStars ? ` · ${activity.maxStars}★` : ""}
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Action Buttons */}
-                            <DialogFooter className="pt-2 flex flex-col gap-2 sm:flex-col">
-                                <button
-                                    onClick={() => {
-                                        const lesson = selectedLesson
-                                        setSelectedLesson(null)
-                                        launchLesson(lesson)
-                                    }}
-                                    className="w-full h-12 bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:border-b-0 active:translate-y-[2px]"
-                                >
-                                    <Play className="w-4 h-4 fill-white" />
-                                    <span>
-                                        {selectedLesson.completed ? "Review Lesson in Viewer" : (selectedLesson.progress || 0) > 0 ? "Continue Lesson" : "Start Lesson"}
-                                    </span>
-                                </button>
-
-                                <button
-                                    onClick={() => setSelectedLesson(null)}
-                                    className="w-full h-10 text-slate-500 hover:text-slate-700 rounded-xl text-xs font-bold transition-colors"
-                                >
-                                    Close
-                                </button>
-                            </DialogFooter>
-                        </>
-                    )}
-                </DialogContent>
-            </Dialog>
+                    launchLesson(lesson)
+                }}
+                launching={Boolean(selectedLesson && launchingId === (selectedLesson.lessonId || selectedLesson._id))}
+            />
         </div>
     )
 }

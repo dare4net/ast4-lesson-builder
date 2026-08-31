@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch"
 import { Plus, Trash2, Check, Circle, Shuffle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
+import { ReferencePicker } from "@/components/reference/reference-picker"
+import type { ReferenceOption } from "@/lib/reference"
 
 interface QuizOption {
   id: string
@@ -21,6 +23,7 @@ interface QuizQuestion {
   options: QuizOption[]
   explanation?: string
   timeLimit?: number
+  referenceComponentId?: string
 }
 
 interface QuizEditorProps {
@@ -28,13 +31,17 @@ interface QuizEditorProps {
   onChange: (questions: QuizQuestion[]) => void
   shuffleOptions?: boolean
   onShuffleOptionsChange?: (val: boolean) => void
+  referenceOptions?: ReferenceOption[]
+  selfId?: string
 }
 
 export function QuizEditor({
   questions,
   onChange,
   shuffleOptions = true,
-  onShuffleOptionsChange
+  onShuffleOptionsChange,
+  referenceOptions,
+  selfId,
 }: QuizEditorProps) {
   const addQuestion = () => {
     const newQuestion: QuizQuestion = {
@@ -206,6 +213,13 @@ export function QuizEditor({
                 showPreviewToggle={false}
               />
             </div>
+            <ReferencePicker
+              value={question.referenceComponentId || ''}
+              onChange={(id) => updateQuestion(qIndex, "referenceComponentId", id)}
+              options={referenceOptions}
+              selfId={selfId}
+              label="Question reference"
+            />
           </div>
         )}
       />

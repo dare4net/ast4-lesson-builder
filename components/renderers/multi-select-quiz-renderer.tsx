@@ -9,6 +9,7 @@ import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { useFeedback } from "@/hooks/use-feedback"
 import { FormattedText } from "@/components/ui/formatted-text"
+import { ReferenceChip } from "@/components/reference/reference-chip"
 import type { Component } from "@/types/lesson"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -25,6 +26,7 @@ interface MultiSelectQuestion {
     question: string
     options: MultiSelectOption[]
     explanation?: string
+    referenceComponentId?: string
 }
 
 interface MultiSelectQuizRendererProps {
@@ -269,13 +271,14 @@ function MultiSelectContent({
                             <span className="text-[9px] font-black text-violet-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length} · Select all correct</span>
                         </div>
                         <FormattedText content={question.question} as="h2" className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight" />
+                        <ReferenceChip referenceId={question.referenceComponentId} questionId={question.id} sourceId={id} mode={isLive ? 'live' : 'practice'} />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
                         {question.options.map((option, idx) => {
                             const isSelected = selectedOptions.includes(option.id)
                             const isCorrectOpt = option.isCorrect
-                            const showCorrect = showResult && isCorrectOpt
+                            const showCorrect = showResult && isCorrectOpt && (isLive || isSelected)
                             const showIncorrect = showResult && isSelected && !isCorrectOpt
 
                             return (
@@ -343,7 +346,7 @@ function MultiSelectContent({
                                 <p className="text-xs font-black text-slate-900 dark:text-slate-100">Not bad — keep going!</p>
                             </div>
                         )}
-                        {question.explanation && (
+                        {question.explanation && (isPerfect || isLive) && (
                             <FormattedText content={question.explanation} as="p" className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1" />
                         )}
                     </div>

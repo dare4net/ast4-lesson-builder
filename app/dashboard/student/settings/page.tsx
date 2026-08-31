@@ -24,17 +24,26 @@ import { HandleAvatar } from "@/components/pride/handle-avatar"
 import { apiClient } from "@/lib/api-client"
 import { AVATAR_IDS, resolveAvatarId } from "@/lib/avatar"
 import { handleSchema } from "@/lib/contracts"
-import { ACCENT_COLORS, resolveAccentColor } from "@/lib/pride-format"
+import { ACCENT_COLORS, PREMIUM_ACCENT_COLORS, resolveAccentColor } from "@/lib/pride-format"
 import { publicProfilePath } from "@/lib/pride-paths"
+import { queryKeys } from "@/lib/query-keys"
+import { useQuery } from "@tanstack/react-query"
 
 export default function SettingsPage() {
     const { user, logout, updateUser } = useAuth()
+    const storeQuery = useQuery({ queryKey: queryKeys.store, queryFn: () => apiClient.store.get() })
+    const prideQuery = useQuery({ queryKey: queryKeys.prideSummary, queryFn: () => apiClient.pride.summary() })
+    const owned = (sku: string) => Number(storeQuery.data?.inventory?.items?.[sku]?.charges) > 0
+    const pinOptions = Array.isArray(prideQuery.data?.stats) ? prideQuery.data.stats : []
     const defaultDisplayName = user?.full_name || user?.fullName || (user?.email ? user.email.split("@")[0] : "Student")
     const [name, setName] = useState(defaultDisplayName)
     const [handle, setHandle] = useState(user?.handle || "")
     const [isPublic, setIsPublic] = useState(user?.isPublicProfile === true)
     const [accentColor, setAccentColor] = useState<string | null>(user?.accentColor || null)
     const [avatarId, setAvatarId] = useState<string | null>(user?.avatarId || null)
+    const [avatarFrame, setAvatarFrame] = useState<string>(user?.avatarFrame || '')
+    const [nameplate, setNameplate] = useState<string>(user?.nameplate || '')
+    const [pinnedStatKey, setPinnedStatKey] = useState<string>(user?.pinnedStatKey || '')
     const [saving, setSaving] = useState(false)
     const [saved, setSaved] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -50,6 +59,9 @@ export default function SettingsPage() {
             setIsPublic(nextPublic)
             setAccentColor(profile.accentColor || null)
             setAvatarId(profile.avatarId || null)
+            setAvatarFrame(profile.avatarFrame || '')
+            setNameplate(profile.nameplate || '')
+            setPinnedStatKey(profile.pinnedStatKey || '')
             updateUser({
                 full_name: profile.full_name,
                 fullName: profile.full_name,
@@ -57,6 +69,9 @@ export default function SettingsPage() {
                 isPublicProfile: nextPublic,
                 accentColor: profile.accentColor || null,
                 avatarId: profile.avatarId || null,
+                avatarFrame: profile.avatarFrame || null,
+                nameplate: profile.nameplate || null,
+                pinnedStatKey: profile.pinnedStatKey || null,
             })
         }).catch(() => {})
         return () => {
@@ -89,9 +104,12 @@ export default function SettingsPage() {
         setError(null)
         setSaved(false)
         try {
-            const payload: { full_name: string; handle?: string; isPublicProfile: boolean; accentColor?: string; avatarId?: string } = {
+            const payload: { full_name: string; handle?: string; isPublicProfile: boolean; accentColor?: string; avatarId?: string; avatarFrame?: 'gold' | ''; nameplate?: 'duo' | ''; pinnedStatKey?: string | null } = {
                 full_name: fullName,
                 isPublicProfile: isPublic && Boolean(nextHandle),
+                avatarFrame: avatarFrame === 'gold' ? 'gold' : '',
+                nameplate: nameplate === 'duo' ? 'duo' : '',
+                pinnedStatKey: pinnedStatKey || null,
             }
             if (nextHandle) payload.handle = nextHandle
             if (accentColor) payload.accentColor = accentColor
@@ -104,6 +122,9 @@ export default function SettingsPage() {
                 isPublicProfile: result.isPublicProfile === true,
                 accentColor: result.accentColor ?? accentColor,
                 avatarId: result.avatarId ?? avatarId,
+                avatarFrame: result.avatarFrame ?? avatarFrame,
+                nameplate: result.nameplate ?? nameplate,
+                pinnedStatKey: (result.pinnedStatKey ?? pinnedStatKey) || null,
             })
             setIsPublic(result.isPublicProfile === true)
             if (result.handle) setHandle(result.handle)
@@ -133,6 +154,7 @@ export default function SettingsPage() {
                         avatarId={avatarId}
                         displayName={name}
                         accentColor={accentColor}
+                        avatarFrame={avatarFrame}
                         className="h-24 w-24 border-[#1CB0F6]/20 shadow-sm"
                         fallbackClassName="text-2xl"
                     />
@@ -260,6 +282,63 @@ export default function SettingsPage() {
                                             />
                                         )
                                     })}
+                                    {PREMIUM_ACCENT_COLORS.map((color) => {
+                                        const locked = !owned('accent_pack')
+                                        const selected = accentColor === color
+                                        return (
+                                            <button
+                                                key={color}
+                                                type="button"
+                                                aria-label={locked ? 'Buy the accent pack first' : `Choose ${color}`}
+                                                disabled={locked}
+                                                onClick={() => setAccentColor(color)}
+                                                className="h-9 w-9 rounded-full border-2 disabled:opacity-40"
+                                                style={{
+                                                    backgroundColor: color,
+                                                    borderColor: selected ? '#0f172a' : 'transparent',
+                                                    boxShadow: selected ? `0 0 0 2px ${color}` : undefined,
+                                                }}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                                {!owned('accent_pack') ? (
+                                    <p className="text-[11px] font-medium text-slate-400">Extra colors unlock with the Accent Pack in the store.</p>
+                                ) : null}
+                            </div>
+                            <div className="space-y-2 rounded-2xl border-2 border-slate-100 bg-slate-50 px-4 py-3">
+                                <Label className="text-xs font-extrabold text-slate-700">Cosmetics</Label>
+                                <label className="flex items-center justify-between gap-3 text-xs font-bold text-slate-600">
+                                    Gold frame
+                                    <Switch
+                                        checked={avatarFrame === 'gold'}
+                                        disabled={!owned('avatar_frame')}
+                                        onCheckedChange={(on) => setAvatarFrame(on ? 'gold' : '')}
+                                        className="data-[state=checked]:bg-[#FFD700]"
+                                    />
+                                </label>
+                                <label className="flex items-center justify-between gap-3 text-xs font-bold text-slate-600">
+                                    Duo nameplate
+                                    <Switch
+                                        checked={nameplate === 'duo'}
+                                        disabled={!owned('nameplate')}
+                                        onCheckedChange={(on) => setNameplate(on ? 'duo' : '')}
+                                        className="data-[state=checked]:bg-[#58CC02]"
+                                    />
+                                </label>
+                                <div className="space-y-1">
+                                    <p className="text-[11px] font-bold text-slate-500">Pinned pride stat</p>
+                                    <select
+                                        value={pinnedStatKey}
+                                        disabled={!owned('pride_pin')}
+                                        onChange={(event) => setPinnedStatKey(event.target.value)}
+                                        className="h-10 w-full px-3 rounded-xl border-2 border-slate-200 bg-white text-xs font-bold text-slate-800 disabled:opacity-50"
+                                    >
+                                        <option value="">None</option>
+                                        {pinOptions.map((stat: { key: string; label: string }) => (
+                                            <option key={stat.key} value={stat.key}>{stat.label}</option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
                             <div className="flex items-start justify-between gap-4 rounded-2xl border-2 border-slate-100 bg-slate-50 px-4 py-3">

@@ -8,6 +8,7 @@ import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { useFeedback } from "@/hooks/use-feedback"
 import { FormattedText } from "@/components/ui/formatted-text"
+import { ReferenceChip } from "@/components/reference/reference-chip"
 import type { Component } from "@/types/lesson"
 
 interface FlashcardQuizQuestion {
@@ -16,6 +17,7 @@ interface FlashcardQuizQuestion {
     options: string[]
     correctAnswer: number
     explanation?: string
+    referenceComponentId?: string
 }
 
 interface FlashcardQuizRendererProps {
@@ -268,6 +270,9 @@ function FlashcardQuizContent({
                         {/* Back — question text */}
                         <div className="relative w-full h-full min-h-[140px] sm:min-h-[160px] [backface-visibility:hidden] [transform:rotateY(180deg)] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg flex items-center justify-center p-5 sm:p-6">
                             <FormattedText content={question.question} as="p" className="text-white text-base sm:text-lg md:text-xl font-bold text-center leading-relaxed" />
+                            <div className="mt-3">
+                                <ReferenceChip referenceId={question.referenceComponentId} questionId={question.id} sourceId={id} mode={isLive ? 'live' : 'practice'} />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -325,12 +330,12 @@ function FlashcardQuizContent({
                         isCorrect ? "bg-emerald-50 border border-emerald-200 text-emerald-800" : "bg-rose-50 border border-rose-200 text-rose-800"
                     )}>
                         <p className="font-black text-xs sm:text-sm">{isCorrect ? "Correct! 🎉" : "Incorrect!"}</p>
-                        {!isCorrect && (
+                        {!isCorrect && isLive && (
                             <p className="text-xs font-medium mt-0.5">
                                 Correct Answer: <span className="font-black">{question.options[question.correctAnswer]}</span>
                             </p>
                         )}
-                        {question.explanation && (
+                        {question.explanation && (isCorrect || isLive) && (
                             <FormattedText content={question.explanation} as="p" className="text-xs font-medium text-slate-500 mt-1" />
                         )}
                     </div>

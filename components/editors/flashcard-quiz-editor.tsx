@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Check, Circle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
+import { ReferencePicker } from "@/components/reference/reference-picker"
+import type { ReferenceOption } from "@/lib/reference"
 
 interface FlashcardQuizQuestion {
     id: string
@@ -15,11 +17,14 @@ interface FlashcardQuizQuestion {
     options: string[]
     correctAnswer: number
     explanation?: string
+    referenceComponentId?: string
 }
 
 interface FlashcardQuizEditorProps {
     questions: FlashcardQuizQuestion[]
     onQuestionsChange: (questions: FlashcardQuizQuestion[]) => void
+    referenceOptions?: ReferenceOption[]
+    selfId?: string
 }
 
 const MAX_OPTION_CHARS = 50
@@ -28,6 +33,8 @@ const MAX_QUESTION_CHARS = 120
 export function FlashcardQuizEditor({
     questions = [],
     onQuestionsChange,
+    referenceOptions,
+    selfId,
 }: FlashcardQuizEditorProps) {
     const addQuestion = () => {
         onQuestionsChange([
@@ -198,6 +205,13 @@ export function FlashcardQuizEditor({
                             showPreviewToggle={false}
                         />
                     </div>
+                    <ReferencePicker
+                        value={q.referenceComponentId || ''}
+                        onChange={(id) => updateQuestion(qIndex, "referenceComponentId", id)}
+                        options={referenceOptions}
+                        selfId={selfId}
+                        label="Question reference"
+                    />
                 </div>
             )}
         />

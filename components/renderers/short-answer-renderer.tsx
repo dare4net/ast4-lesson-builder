@@ -129,7 +129,7 @@ function ShortAnswerContent({
                 isSubmitted: true,
                 isPendingMarking: true,
                 score: 0,
-                status: "completed"
+                status: "pending"
             }))
             return
         }

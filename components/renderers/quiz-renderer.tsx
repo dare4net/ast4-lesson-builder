@@ -9,6 +9,8 @@ import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
+import { shouldRevealAnswer } from "@/lib/reveal"
+import { ReferenceChip } from "@/components/reference/reference-chip"
 import type { Component } from "@/types/lesson"
 
 interface QuizRendererProps {
@@ -23,6 +25,7 @@ interface QuizRendererProps {
       isCorrect: boolean
     }[]
     explanation?: string
+    referenceComponentId?: string
   }[]
   shuffleOptions?: boolean
   randomizeAnswers?: boolean
@@ -65,6 +68,7 @@ function QuizPlayfield({
   handleRetry,
   recordAttempt,
   isLive,
+  mode,
   question,
   processedQuestions,
   questions,
@@ -262,13 +266,14 @@ function QuizPlayfield({
               <span className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em]">Question {currentQuestion + 1} / {questions.length}</span>
             </div>
             <FormattedText content={question.question} as="h2" className="text-xl md:text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-tight" />
+            <ReferenceChip referenceId={question.referenceComponentId} questionId={question.id} sourceId={componentId} mode={mode} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full">
             {question.options.map((option, idx) => {
               const isSelected = selectedAnswer === option.id
               const isCorrectAnswer = option.isCorrect
-              const showCorrect = isAnswered && isCorrectAnswer
+              const showCorrect = isAnswered && isCorrectAnswer && (shouldRevealAnswer(mode) || isSelected)
               const showIncorrect = isAnswered && isSelected && !isCorrectAnswer
 
               return (
@@ -339,7 +344,7 @@ function QuizPlayfield({
                   ) : (
                     <p className="text-sm font-black text-slate-900 leading-tight">Not quite right — keep going, you can do it!</p>
                   )}
-                  {question.explanation && (
+                  {question.explanation && (selectedAnswer && question.options.find(opt => opt.id === selectedAnswer)?.isCorrect || shouldRevealAnswer(mode)) && (
                     <FormattedText content={question.explanation} as="p" className="text-xs font-bold text-slate-600 leading-tight mt-1" />
                   )}
                 </>

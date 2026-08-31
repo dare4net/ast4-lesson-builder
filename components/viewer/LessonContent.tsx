@@ -21,6 +21,8 @@ import { getSlideTheme, getLessonPattern } from '@/lib/slide-themes';
 import { GraphicBackground } from '@/components/viewer/cue-overlay-shell';
 import { usePollStore } from '@/hooks/use-poll-store';
 import { useLessonPreloader } from '@/hooks/use-lesson-preloader';
+import { ReferenceProvider } from '@/context/reference-context';
+import { ReferencePopup } from '@/components/reference/reference-popup';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -308,6 +310,11 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
       setComponentStates(prev => {
         const currentState = prev[componentId];
+        if (newState?.__replace === true) {
+          const next = { ...prev };
+          delete next[componentId];
+          return next;
+        }
         if (isEqual(currentState, newState)) {
           return prev;
         }
@@ -338,7 +345,15 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
       }
     }, [currentSlideIndex, innerStepIndex, activeComponent, previewMode]);
 
+    const activeMode = (activeComponent?.props?.mode || activeComponent?.mode || 'practice') === 'live' ? 'live' : 'practice';
+
     return (
+      <ReferenceProvider
+        lesson={lesson}
+        mode={activeMode}
+        componentStates={componentStates}
+        setComponentState={handleComponentStateChange}
+      >
       <div className="flex flex-col h-full relative bg-white overflow-hidden font-sans">
         <span className="sr-only" aria-live="polite">{score}</span>
         {!hideChromeHeader && (
@@ -537,7 +552,9 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
             />
           </>
         )}
+        <ReferencePopup />
       </div>
+      </ReferenceProvider>
     );
   }
 );

@@ -146,6 +146,7 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                             handle={user?.handle || user?.user_id}
                             avatarId={user?.avatarId}
                             displayName={user?.full_name || user?.email}
+                            avatarFrame={user?.avatarFrame}
                             className="h-7 w-7"
                         />
                         <div className="flex flex-col min-w-0 leading-tight">
@@ -163,6 +164,7 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                             handle={user?.handle || user?.user_id}
                             avatarId={user?.avatarId}
                             displayName={user?.full_name || user?.email}
+                            avatarFrame={user?.avatarFrame}
                             className="h-8 w-8"
                         />
                     </div>

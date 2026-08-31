@@ -34,6 +34,9 @@ export type PublicProfilePayload = {
         displayName?: string
         accentColor?: string | null
         avatarId?: string | null
+        avatarFrame?: string | null
+        nameplate?: string | null
+        pinnedStatKey?: string | null
         bestCrown?: string | null
         followerCount?: number
         followingCount?: number

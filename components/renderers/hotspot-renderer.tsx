@@ -458,7 +458,7 @@ function HotspotContent({
             setState(prev => ({
                 ...prev,
                 isSubmitted: true,
-                isRevealed: true,
+                isRevealed: isLive,
                 isPendingMarking: true,
                 score: 0,
                 status: "completed",
@@ -482,7 +482,7 @@ function HotspotContent({
         setState(prev => ({
             ...prev,
             isSubmitted: true,
-            isRevealed: true,
+            isRevealed: isLive,
             isPendingMarking: false,
             score: earned,
             status: "completed",
@@ -686,7 +686,7 @@ function HotspotContent({
                         </div>
                     )}
 
-                    {isDiscover && isRevealed && isSubmitted && (
+                    {isDiscover && (isSubmitted || (isPendingMarking && !tutorMarkedFlag)) && (
                         <div
                             className={cn(
                                 "p-4 rounded-xl border-2 animate-in slide-in-from-top-2 duration-500 shadow-sm",

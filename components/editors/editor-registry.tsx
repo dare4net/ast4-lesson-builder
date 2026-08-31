@@ -34,6 +34,7 @@ import { ScaleSliderEditor } from "@/components/editors/scale-slider-editor"
 import { AnnotateImageEditor } from "@/components/editors/annotate-image-editor"
 import { WordCloudEditor } from "@/components/editors/word-cloud-editor"
 import { SpinTheWheelEditor } from "@/components/editors/spin-the-wheel-editor"
+import type { ReferenceOption } from "@/lib/reference"
 
 export type EditorCtx = {
     component: Component
@@ -42,6 +43,7 @@ export type EditorCtx = {
     handleChange: (name: string, value: any) => void
     setProps: Dispatch<SetStateAction<Record<string, any>>>
     setHasDraftChanges: (value: boolean) => void
+    referenceOptions?: ReferenceOption[]
 }
 
 type EditorRenderer = (ctx: EditorCtx) => ReactNode
@@ -304,7 +306,7 @@ const BODY_EDITORS: Partial<Record<string, EditorRenderer>> = {
 }
 
 const ARRAY_FIELD_EDITORS: Record<string, EditorRenderer> = {
-    "quiz:questions": ({ props, handleChange }) => (
+    "quiz:questions": ({ props, handleChange, referenceOptions, component }) => (
         <QuizEditor
             questions={props.questions || []}
             onChange={(questions) => handleChange("questions", questions)}
@@ -313,6 +315,8 @@ const ARRAY_FIELD_EDITORS: Record<string, EditorRenderer> = {
                 handleChange("shuffleOptions", val)
                 handleChange("randomizeAnswers", val)
             }}
+            referenceOptions={referenceOptions}
+            selfId={component.id}
         />
     ),
     "matchingPairs:pairs": ({ props, handleChange }) => (
@@ -370,11 +374,11 @@ const ARRAY_FIELD_EDITORS: Record<string, EditorRenderer> = {
             onOptionsChange={(opts) => handleChange("options", opts)}
         />
     ),
-    "flashcardQuiz:questions": ({ props, handleChange }) => (
-        <FlashcardQuizEditor questions={props.questions || []} onQuestionsChange={(qs) => handleChange("questions", qs)} />
+    "flashcardQuiz:questions": ({ props, handleChange, referenceOptions, component }) => (
+        <FlashcardQuizEditor questions={props.questions || []} onQuestionsChange={(qs) => handleChange("questions", qs)} referenceOptions={referenceOptions} selfId={component.id} />
     ),
-    "multiSelectQuiz:questions": ({ props, handleChange }) => (
-        <MultiSelectQuizEditor questions={props.questions || []} onQuestionsChange={(qs) => handleChange("questions", qs)} />
+    "multiSelectQuiz:questions": ({ props, handleChange, referenceOptions, component }) => (
+        <MultiSelectQuizEditor questions={props.questions || []} onQuestionsChange={(qs) => handleChange("questions", qs)} referenceOptions={referenceOptions} selfId={component.id} />
     ),
     "accordion:items": ({ props, handleChange }) => (
         <AccordionEditor

@@ -6,6 +6,7 @@ import { Sparkles, ArrowLeft, ArrowRight, RefreshCw, CheckCircle2, XCircle, Laye
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
+import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
 
 export interface SwipeCardItem {
@@ -244,7 +245,7 @@ function SwipeDeckContent({
                                     </div>
 
                                     <div className="my-auto py-4 text-center space-y-2">
-                                        <FormattedText content={currentCard.explanation || `Correct answer is ${currentCard.correctSide === "left" ? leftLabel : rightLabel}.`} as="p" className="text-sm sm:text-base font-bold leading-relaxed text-slate-700 dark:text-slate-200" />
+                                        <FormattedText content={currentCard.explanation || (shouldRevealAnswer(mode) ? `Correct answer is ${currentCard.correctSide === "left" ? leftLabel : rightLabel}.` : "Not quite — try the next card.")} as="p" className="text-sm sm:text-base font-bold leading-relaxed text-slate-700 dark:text-slate-200" />
                                     </div>
 
                                     <button

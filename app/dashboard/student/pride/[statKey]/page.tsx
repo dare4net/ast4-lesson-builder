@@ -1,11 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { Crown } from 'lucide-react'
 import { StudentName } from '@/components/pride/student-name'
+import { CertificateStudio } from '@/components/certificates/certificate-studio'
 import { usePrideBoard } from '@/hooks/use-pride'
 import { useAuth } from '@/context/auth-context'
+import { CERTIFICATE_PRINT_COST } from '@/lib/certificates'
 import { crownClass, formatPrideValue, gapCopy } from '@/lib/pride-format'
 import { PRIDE_INDEX_PATH } from '@/lib/pride-paths'
 import { cn } from '@/lib/utils'
@@ -15,6 +18,8 @@ export default function PrideBoardPage() {
     const statKey = decodeURIComponent(String(params?.statKey || ''))
     const { user } = useAuth()
     const { data, isLoading, isFetching, isError, error } = usePrideBoard(statKey)
+    const [showCertificate, setShowCertificate] = useState(false)
+    const studentName = user?.full_name || user?.fullName || data?.you?.handle || 'Student'
 
     const stat = data?.stat
     const board = data?.board || []
@@ -59,6 +64,13 @@ export default function PrideBoardPage() {
                             <p className="text-xs font-bold text-[#FF9600]">{gap}</p>
                         </div>
                     )}
+                    <button
+                        type="button"
+                        onClick={() => setShowCertificate(true)}
+                        className="mt-4 h-11 px-4 rounded-xl bg-[#FF9600] hover:bg-[#e08600] border-b-4 border-[#c46f00] text-white text-xs font-extrabold active:border-b-0 active:translate-y-[2px]"
+                    >
+                        Print pride certificate · {CERTIFICATE_PRINT_COST}★
+                    </button>
                 </div>
             )}
 
@@ -96,6 +108,19 @@ export default function PrideBoardPage() {
                     )}
                 </ol>
             )}
+            <CertificateStudio
+                open={showCertificate}
+                onOpenChange={setShowCertificate}
+                payload={{
+                    kind: 'pride',
+                    statKey,
+                    studentName,
+                    boardLabel: stat?.label || 'Pride board',
+                    valueLabel: formatPrideValue(you?.value, stat?.unit),
+                    rank: you?.rank,
+                    crown: you?.crown,
+                }}
+            />
         </div>
     )
 }

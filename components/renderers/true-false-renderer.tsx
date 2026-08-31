@@ -6,6 +6,7 @@ import { CheckCircle2, XCircle } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
+import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
 
 interface TrueFalseRendererProps {
@@ -41,6 +42,7 @@ function TrueFalseContent({
     isTrue,
     explanation,
     points,
+    mode,
     isEditing,
     disabled,
 }: ScoredRenderProps<TrueFalseState> & {
@@ -57,6 +59,7 @@ function TrueFalseContent({
     const isSelectedTrue = selected === true
     const isSelectedFalse = selected === false
     const isCorrectChoice = selected === isTrue
+    const revealAnswers = shouldRevealAnswer(mode)
 
     const handleSelect = async (userChoice: boolean) => {
         if (submitted || isEditing || disabled) return
@@ -132,7 +135,7 @@ function TrueFalseContent({
                                 "w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 bg-white dark:bg-slate-900 shadow-sm",
                                 "border-b-4 active:border-b-0 active:translate-y-[2px]",
                                 !submitted && "border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-[#58CC02]/60 hover:bg-[#58CC02]/5 hover:shadow-md cursor-pointer",
-                                submitted && isTrue && "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg",
+                                submitted && isTrue && (revealAnswers || isSelectedTrue) && "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg",
                                 submitted && isSelectedTrue && !isTrue && "bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]",
                                 submitted && !isSelectedTrue && !isTrue && "opacity-40 cursor-not-allowed",
                                 submitted && !isSelectedTrue && isTrue && "cursor-not-allowed"
@@ -142,13 +145,13 @@ function TrueFalseContent({
                                 <div className="flex items-center gap-3.5">
                                     <span className={cn(
                                         "w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black border-2 transition-colors shrink-0",
-                                        submitted && isTrue ? "bg-white/30 text-white border-white/30" :
+                                        submitted && isTrue && (revealAnswers || isSelectedTrue) ? "bg-white/30 text-white border-white/30" :
                                             submitted && isSelectedTrue && !isTrue ? "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30" :
                                                 "bg-slate-50 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700"
                                     )}>T</span>
                                     <span className="font-extrabold text-base tracking-tight text-inherit">TRUE</span>
                                 </div>
-                                {submitted && isTrue && <CheckCircle2 className="w-6 h-6 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                {submitted && isTrue && (revealAnswers || isSelectedTrue) && <CheckCircle2 className="w-6 h-6 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                                 {submitted && isSelectedTrue && !isTrue && <XCircle className="w-6 h-6 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                             </div>
                         </button>
@@ -161,7 +164,7 @@ function TrueFalseContent({
                                 "w-full p-4 text-left transition-all duration-200 relative rounded-2xl border-2 bg-white dark:bg-slate-900 shadow-sm",
                                 "border-b-4 active:border-b-0 active:translate-y-[2px]",
                                 !submitted && "border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 hover:border-[#FF4B4B]/60 hover:bg-[#FF4B4B]/5 hover:shadow-md cursor-pointer",
-                                submitted && !isTrue && "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg",
+                                submitted && !isTrue && (revealAnswers || isSelectedFalse) && "bg-[#58CC02] border-[#46a302] border-b-[#3B8C00] text-white shadow-lg",
                                 submitted && isSelectedFalse && isTrue && "bg-[#FF4B4B]/10 border-[#FF4B4B] border-b-[#CC3C3C] text-[#FF4B4B]",
                                 submitted && !isSelectedFalse && isTrue && "opacity-40 cursor-not-allowed",
                                 submitted && !isSelectedFalse && !isTrue && "cursor-not-allowed"
@@ -171,13 +174,13 @@ function TrueFalseContent({
                                 <div className="flex items-center gap-3.5">
                                     <span className={cn(
                                         "w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black border-2 transition-colors shrink-0",
-                                        submitted && !isTrue ? "bg-white/30 text-white border-white/30" :
+                                        submitted && !isTrue && (revealAnswers || isSelectedFalse) ? "bg-white/30 text-white border-white/30" :
                                             submitted && isSelectedFalse && isTrue ? "bg-[#FF4B4B]/20 text-[#FF4B4B] border-[#FF4B4B]/30" :
                                                 "bg-slate-50 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700"
                                     )}>F</span>
                                     <span className="font-extrabold text-base tracking-tight text-inherit">FALSE</span>
                                 </div>
-                                {submitted && !isTrue && <CheckCircle2 className="w-6 h-6 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
+                                {submitted && !isTrue && (revealAnswers || isSelectedFalse) && <CheckCircle2 className="w-6 h-6 text-white stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                                 {submitted && isSelectedFalse && isTrue && <XCircle className="w-6 h-6 text-[#FF4B4B] stroke-[3] animate-in zoom-in-50 duration-500 shrink-0" />}
                             </div>
                         </button>
@@ -198,7 +201,9 @@ function TrueFalseContent({
                                 {isCorrectChoice ? (
                                     <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Correct! +{points} Points</span>
                                 ) : (
-                                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">Incorrect — answer is {isTrue ? "TRUE" : "FALSE"}</span>
+                                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">
+                                        {revealAnswers ? `Incorrect — answer is ${isTrue ? "TRUE" : "FALSE"}` : "Incorrect"}
+                                    </span>
                                 )}
                             </div>
                             {isCorrectChoice ? (
@@ -206,7 +211,7 @@ function TrueFalseContent({
                             ) : (
                                 <p className="text-xs font-black text-slate-900 dark:text-slate-100">Not quite — keep going!</p>
                             )}
-                            {explanation && (
+                            {explanation && (isCorrectChoice || revealAnswers) && (
                                 <FormattedText content={explanation} as="p" className="text-xs font-bold text-slate-600 dark:text-slate-300 mt-1" />
                             )}
                         </div>

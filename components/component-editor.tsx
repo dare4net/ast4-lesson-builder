@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, type Dispatch, type SetStateAction } from "react"
+import { useState, useEffect, useCallback, type Dispatch, type SetStateAction } from "react"
 import { X, Check, Undo2, Eye, SlidersHorizontal, PanelLeftOpen, PanelLeftClose } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import type { Component, PropDefinition } from "@/types/lesson"
+import type { Component, Lesson, PropDefinition } from "@/types/lesson"
 import { componentDefinitions } from "@/lib/component-definitions"
 import { RichTextEditor } from "@/components/rich-text-editor"
 import { ImageUploader } from "@/components/renderers/image-uploader"
@@ -17,6 +17,9 @@ import { SingleItemEditor } from "@/components/editors/base/SingleItemEditor"
 import { renderArrayFieldEditor, renderBodyEditor } from "@/components/editors/editor-registry"
 import { ComponentRenderer } from "@/components/component-renderer"
 import { normalizeHotspotBehavior, resolveHotspotComponentProps } from "@/lib/hotspot-utils"
+import { ReferencePicker } from "@/components/reference/reference-picker"
+import { ReferencePopup } from "@/components/reference/reference-popup"
+import { ReferenceProvider } from "@/context/reference-context"
 
 interface ComponentEditorProps {
   component: Component
@@ -24,6 +27,8 @@ interface ComponentEditorProps {
   onClose: () => void
   isMobile?: boolean
   lessonId?: string
+  lesson?: Lesson | null
+  referenceOptions?: { id: string; type: string; title: string }[]
 }
 
 function SchemaPropField({
@@ -176,12 +181,16 @@ function SchemaPropField({
   )
 }
 
-export function ComponentEditor({ component, updateComponent, onClose, isMobile = false, lessonId }: ComponentEditorProps) {
+export function ComponentEditor({ component, updateComponent, onClose, isMobile = false, lessonId, lesson, referenceOptions }: ComponentEditorProps) {
   const [props, setProps] = useState<Record<string, any>>(() =>
     component.type === "hotspot" ? resolveHotspotComponentProps(component as any) : component.props,
   )
   const [hasDraftChanges, setHasDraftChanges] = useState(false)
   const [propertiesOpen, setPropertiesOpen] = useState(true)
+  const [previewStates, setPreviewStates] = useState<Record<string, any>>({})
+  const setPreviewComponentState = useCallback((componentId: string, state: any) => {
+    setPreviewStates((prev) => ({ ...prev, [componentId]: state }))
+  }, [])
 
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
 
@@ -232,7 +241,7 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
     )
   }
 
-  const editorCtx = { component, props, lessonId, handleChange, setProps, setHasDraftChanges }
+  const editorCtx = { component, props, lessonId, handleChange, setProps, setHasDraftChanges, referenceOptions }
   const bodyEditor = renderBodyEditor(editorCtx)
 
   const renderEditorFields = () => (
@@ -277,15 +286,28 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
       </div>
       <ScrollArea className="flex-1 min-h-0">
         <div className="p-4 sm:p-8 min-h-full">
-          <div className="w-full min-h-[min(70vh,640px)] flex flex-col rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
-            <ComponentRenderer
-              component={{
-                id: component.id,
-                type: component.type,
-                props: props,
-              }}
-            />
-          </div>
+          <ReferenceProvider
+            lesson={lesson || null}
+            mode="practice"
+            preview
+            contained
+            componentStates={previewStates}
+            setComponentState={setPreviewComponentState}
+          >
+            <div className="relative w-full min-h-[min(70vh,640px)] flex flex-col rounded-2xl bg-white border border-slate-200/80 shadow-sm overflow-hidden">
+              <ComponentRenderer
+                component={{
+                  id: component.id,
+                  type: component.type,
+                  props: props,
+                }}
+                savedState={previewStates[component.id]}
+                setComponentState={(state: any) => setPreviewComponentState(component.id, state)}
+                lessonId={lessonId}
+              />
+              <ReferencePopup />
+            </div>
+          </ReferenceProvider>
         </div>
         <ScrollBar orientation="vertical" />
       </ScrollArea>
@@ -294,8 +316,14 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
 
   const propertiesPane = (
     <ScrollArea className="h-full">
-      <div className="p-4 pb-10">
+      <div className="p-4 pb-10 space-y-6">
         {renderEditorFields()}
+        <ReferencePicker
+          value={props.referenceComponentId || ''}
+          onChange={(id) => handleChange('referenceComponentId', id)}
+          options={referenceOptions}
+          selfId={component.id}
+        />
       </div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>

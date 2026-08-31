@@ -73,6 +73,8 @@ export function StudentName({
     displayName,
     accentColor,
     avatarId,
+    avatarFrame,
+    nameplate,
     bestCrown,
     crown,
     following,
@@ -82,6 +84,8 @@ export function StudentName({
     displayName?: string
     accentColor?: string | null
     avatarId?: string | null
+    avatarFrame?: string | null
+    nameplate?: string | null
     bestCrown?: string | null
     crown?: string | null
     following?: boolean
@@ -97,15 +101,21 @@ export function StudentName({
             avatarId={avatarId}
             displayName={name}
             accentColor={color}
+            avatarFrame={avatarFrame}
             className="h-7 w-7"
         />
+    )
+    const nameClass = cn(
+        'text-sm font-extrabold truncate hover:underline',
+        nameplate === 'duo' && 'px-2 py-0.5 rounded-md text-white',
+        className,
     )
     if (!handle) {
         return (
             <span className="inline-flex items-center gap-1.5 min-w-0">
                 {face}
                 {crownIcon}
-                <span className={cn('text-sm font-bold text-slate-800 dark:text-white truncate', className)}>{name}</span>
+                <span className={cn('text-sm font-bold text-slate-800 dark:text-white truncate', nameplate === 'duo' && 'px-2 py-0.5 rounded-md text-white', className)} style={nameplate === 'duo' ? { backgroundColor: color } : undefined}>{name}</span>
             </span>
         )
     }
@@ -115,8 +125,8 @@ export function StudentName({
             {crownIcon}
             <Link
                 href={publicProfilePath(handle)}
-                className={cn('text-sm font-extrabold truncate hover:underline', className)}
-                style={{ color }}
+                className={nameClass}
+                style={nameplate === 'duo' ? { backgroundColor: color, color: '#fff' } : { color }}
             >
                 {name}
             </Link>

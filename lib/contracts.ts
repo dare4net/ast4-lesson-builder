@@ -77,7 +77,7 @@ export const handleSchema = z.string().min(3).max(24).regex(
     'Use a lowercase handle like maya_codes'
 )
 
-export const accentColorSchema = z.enum(['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B'])
+export const accentColorSchema = z.enum(['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B', '#14B8A6', '#F472B6', '#0EA5E9'])
 
 export const avatarIdSchema = z.enum([
     'nova', 'pixel', 'comet', 'mango', 'kiwi', 'blaze',
@@ -92,6 +92,9 @@ export const updateProfileBodySchema = z.object({
     isPublicProfile: z.boolean().optional(),
     accentColor: accentColorSchema.optional(),
     avatarId: avatarIdSchema.optional(),
+    avatarFrame: z.enum(['gold', '']).optional(),
+    nameplate: z.enum(['duo', '']).optional(),
+    pinnedStatKey: z.string().min(1).max(80).nullable().optional(),
 })
 
 export const completeOnboardingBodySchema = z.object({

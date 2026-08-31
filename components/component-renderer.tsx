@@ -9,6 +9,7 @@ import type { PollVotesMap } from "@/hooks/use-poll-store"
 import { COMPONENT_REGISTRY, usesGamifiedRendererProps, usesInteractiveRendererProps } from "@/lib/component-registry"
 import { FALLBACK_RENDERER_LOADER, RENDERER_LOADERS } from "@/lib/component-renderer-loaders"
 import { resolveHotspotComponentProps } from "@/lib/hotspot-utils"
+import { ReferenceChip } from "@/components/reference/reference-chip"
 
 type ComponentRenderers = Record<string, React.ComponentType<any>>;
 
@@ -204,6 +205,14 @@ const ComponentRendererBase = function ComponentRenderer({
           "flex-1 flex flex-col w-full transition-opacity motion-cascade",
           isDisabled && !isTutorView && "opacity-75"
         )}>
+          {component.props?.referenceComponentId ? (
+            <div className="shrink-0 flex items-center justify-end px-3 sm:px-4 pt-3">
+              <ReferenceChip
+                referenceId={component.props.referenceComponentId}
+                sourceId={component.id}
+              />
+            </div>
+          ) : null}
           <Renderer {...props} />
         </div>
       </DiscoveryWrapper>

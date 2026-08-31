@@ -98,6 +98,7 @@ export function DashboardHeader({ sidebarIsCollapsed = true, hasSidebar = true }
                                     handle={user?.handle || user?.user_id}
                                     avatarId={user?.avatarId}
                                     displayName={user?.full_name || user?.email}
+                                    avatarFrame={user?.avatarFrame}
                                     className="h-7 w-7 border-[#1CB0F6]/30"
                                 />
                                 <div className="hidden sm:flex flex-col items-start leading-tight">

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Sparkles, RefreshCw, HelpCircle, CheckCircle2, XCircle, Lightbulb, Shuffle, ArrowRightLeft } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { useHintPack } from "@/hooks/use-hint-pack"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -33,6 +34,7 @@ export type AnagramState = {
     /** Currently selected index for swapping */
     selectedIndex: number | null
     revealedIndices: number[]
+    hintPackBonus?: number
     submitted: boolean
     isCorrect?: boolean
     status?: "active" | "completed"
@@ -75,6 +77,9 @@ function AnagramContent({
     disabled: boolean
 }) {
     const { playFeedback } = useFeedback()
+    const hintPack = useHintPack()
+    const extraHints = state.hintPackBonus || 0
+    const hintLimit = maxRevealsAllowed + extraHints
 
     // Determine target word and hint text with fallback
     const rawTarget = (word || targetWord || "ALGORITHM").trim().toUpperCase()
@@ -161,9 +166,12 @@ function AnagramContent({
         void playFeedback("click", { sound: true, animation: false })
     }
 
-    const handleRevealHint = () => {
+    const handleRevealHint = async () => {
         if (submitted || isEditing || disabled) return
-        if (revealedIndices.length >= maxRevealsAllowed) return
+        const allowed = await hintPack.tryUnlock(revealedIndices.length, maxRevealsAllowed, extraHints, (bonus) => {
+            setState(prev => ({ ...prev, hintPackBonus: (prev.hintPackBonus || 0) + bonus }))
+        })
+        if (!allowed) return
 
         // Find first slot where tile char does not match target char
         const incorrectIdx = targetChars.findIndex(
@@ -264,7 +272,7 @@ function AnagramContent({
                         </button>
                     )}
 
-                    {revealedIndices.length < maxRevealsAllowed && !submitted && (
+                    {(revealedIndices.length < hintLimit || hintPack.charges > 0) && !submitted && (
                         <button
                             type="button"
                             onClick={handleRevealHint}
@@ -272,7 +280,7 @@ function AnagramContent({
                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 border-2 border-b-4 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200 text-xs font-black transition-all active:border-b-2 active:translate-y-[2px] cursor-pointer"
                         >
                             <Lightbulb className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                            <span>Hint ({maxRevealsAllowed - revealedIndices.length})</span>
+                            <span>Hint ({Math.max(0, hintLimit - revealedIndices.length)}{revealedIndices.length >= hintLimit && hintPack.charges > 0 ? ' + pack' : ''})</span>
                         </button>
                     )}
                 </div>

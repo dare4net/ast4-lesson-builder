@@ -29,6 +29,10 @@ export function PublicProfileView({ handle }: { handle: string }) {
     const accent = resolveAccentColor(profile?.handle || handle, profile?.accentColor)
     const headline = profileHeadline(profile)
     const wall = profile?.wall || []
+    const pinned = useMemo(
+        () => wall.find((item) => item.key === profile?.pinnedStatKey) || null,
+        [wall, profile?.pinnedStatKey],
+    )
     const featured = useMemo(() => wall.filter((item) => item.group === 'featured'), [wall])
     const types = useMemo(() => wall.filter((item) => item.group === 'type'), [wall])
     const speeds = useMemo(() => wall.filter((item) => item.group === 'speed'), [wall])
@@ -69,6 +73,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
                             avatarId={profile.avatarId}
                             displayName={displayName}
                             accentColor={accent}
+                            avatarFrame={profile.avatarFrame}
                             className="h-28 w-28 border-4"
                             fallbackClassName="text-3xl"
                         />
@@ -80,7 +85,7 @@ export function PublicProfileView({ handle }: { handle: string }) {
                                 @{profile.handle}
                                 <CrownTier crown={profile.bestCrown} className="w-8 h-8" />
                             </h1>
-                            <p className="text-lg font-extrabold text-slate-800 dark:text-white">{displayName}</p>
+                            <p className={cn('text-lg font-extrabold text-slate-800 dark:text-white', profile.nameplate === 'duo' && 'inline-block px-2 py-0.5 rounded-md text-white')} style={profile.nameplate === 'duo' ? { backgroundColor: accent } : undefined}>{displayName}</p>
                             <p className="text-sm font-bold text-slate-500">{headline}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -194,6 +199,13 @@ export function PublicProfileView({ handle }: { handle: string }) {
                     <CrownColumn title="Bronze" tone="bronze" items={bronzes} empty="No bronzes yet." />
                 </div>
             </section>
+
+            {pinned ? (
+                <section className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[#CE82FF]">Pinned</p>
+                    <WallTile item={pinned} onPrefetch={() => prefetchBoard(pinned.key)} />
+                </section>
+            ) : null}
 
             <section className="space-y-4">
                 <div>

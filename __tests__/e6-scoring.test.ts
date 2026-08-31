@@ -118,6 +118,9 @@ describe('E7 component completion status', () => {
         expect(isComponentCompleted({ hasVoted: true })).toBe(true)
         expect(isComponentCompleted({ status: 'active' })).toBe(false)
         expect(isComponentCompleted(null)).toBe(false)
+        expect(isComponentCompleted({ isSubmitted: true, isPendingMarking: true })).toBe(false)
+        expect(isComponentCompleted({ status: 'completed', isPendingMarking: true, tutorMarked: false })).toBe(false)
+        expect(isComponentCompleted({ isSubmitted: true, isPendingMarking: true, tutorMarked: true })).toBe(true)
     })
 
     it('gates slides and interactive wrappers through the helper', () => {

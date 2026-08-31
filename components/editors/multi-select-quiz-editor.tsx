@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Check, Square } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ArrayItemEditor } from "./base/ArrayItemEditor"
+import { ReferencePicker } from "@/components/reference/reference-picker"
+import type { ReferenceOption } from "@/lib/reference"
 
 interface MultiSelectOption {
     id: string
@@ -21,11 +23,14 @@ interface MultiSelectQuestion {
     question: string
     options: MultiSelectOption[]
     explanation?: string
+    referenceComponentId?: string
 }
 
 interface MultiSelectQuizEditorProps {
     questions: MultiSelectQuestion[]
     onQuestionsChange: (questions: MultiSelectQuestion[]) => void
+    referenceOptions?: ReferenceOption[]
+    selfId?: string
 }
 
 const OPTION_COLORS = ["bg-violet-500", "bg-amber-500", "bg-sky-500", "bg-rose-500"]
@@ -44,7 +49,7 @@ const makeDefaultQuestion = (index: number): MultiSelectQuestion => ({
     explanation: "",
 })
 
-export function MultiSelectQuizEditor({ questions = [], onQuestionsChange }: MultiSelectQuizEditorProps) {
+export function MultiSelectQuizEditor({ questions = [], onQuestionsChange, referenceOptions, selfId }: MultiSelectQuizEditorProps) {
     const addQuestion = () => {
         onQuestionsChange([...questions, makeDefaultQuestion(questions.length)])
     }
@@ -212,6 +217,13 @@ export function MultiSelectQuizEditor({ questions = [], onQuestionsChange }: Mul
                             showPreviewToggle={false}
                         />
                     </div>
+                    <ReferencePicker
+                        value={q.referenceComponentId || ''}
+                        onChange={(id) => updateQuestion(qIndex, "referenceComponentId", id)}
+                        options={referenceOptions}
+                        selfId={selfId}
+                        label="Question reference"
+                    />
                 </div>
             )}
         />

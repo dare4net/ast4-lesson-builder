@@ -174,15 +174,24 @@ function FillInTheBlankContent({
       await playFeedback('incorrect');
     }
 
-    handlePoints(earnedPoints);
-    if (!isPending) {
-      recordAttempt(allCorrect, earnedPoints, totalPossible)
+    if (isPending) {
+      setState(prev => ({
+        ...prev,
+        isSubmitted: true,
+        isPendingMarking: true,
+        score: 0,
+        status: 'pending'
+      }))
+      return
     }
+
+    handlePoints(earnedPoints);
+    recordAttempt(allCorrect, earnedPoints, totalPossible)
 
     setState(prev => ({
       ...prev,
       isSubmitted: true,
-      isPendingMarking: isPending,
+      isPendingMarking: false,
       correctAnswers: results,
       score: earnedPoints,
       status: 'completed'
@@ -290,7 +299,7 @@ function FillInTheBlankContent({
                         )
                       )}
                     />
-                    {isSubmitted && !isBlankCorrect && (
+                    {isSubmitted && !isBlankCorrect && isLive && (
                       <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-white border border-emerald-500 px-2 py-1 rounded shadow-lg z-20 whitespace-nowrap animate-in fade-in zoom-in-95 font-black uppercase text-[8px] tracking-widest text-emerald-600">
                         Answer: <span className="text-slate-900">{blank.answer}</span>
                       </div>

@@ -2,7 +2,10 @@
 
 import { useState, useMemo } from "react"
 import { LessonCard } from "@/components/dashboard/student/lesson-card"
+import { LessonDetailsModal, type LessonDetailsLesson } from "@/components/dashboard/student/lesson-details-modal"
 import { useAuth } from "@/context/auth-context"
+import { apiClient } from "@/lib/api-client"
+import { mergeLessonHunt } from "@/lib/lesson-hunt"
 import { useLessonsList } from "@/hooks/use-lessons-list"
 import { motion, AnimatePresence } from "framer-motion"
 import { BookOpen, ArrowRight, Loader2, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket, Flame } from "lucide-react"
@@ -26,6 +29,9 @@ export default function StudentDashboardPage() {
     const error = lessonsQuery.isError ? 'Failed to fetch lesson list' : null
     const [activeTab, setActiveTab] = useState<FilterTab>('all')
     const [visibleCount, setVisibleCount] = useState<number>(8)
+    const [detailsLesson, setDetailsLesson] = useState<LessonDetailsLesson | null>(null)
+    const [detailsOpen, setDetailsOpen] = useState(false)
+    const [detailsLoading, setDetailsLoading] = useState(false)
     const { starBalance, level, missionStats } = useGamification()
     const loginStreak = Number(missionStats.loginStreak) || 0
     const lifetimeStars = Number(missionStats.lifetimeStarsEarned) || 0
@@ -33,9 +39,46 @@ export default function StudentDashboardPage() {
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
 
-    const handleLessonRedirect = (lessonId: string) => {
+    const handleLessonRedirect = (lessonId: string, moduleId?: string) => {
         const returnUrl = typeof window !== 'undefined' ? window.location.pathname : ''
-        router.push(buildStudentViewerHref(lessonId, { returnUrl }))
+        router.push(buildStudentViewerHref(lessonId, { returnUrl, moduleId }))
+    }
+
+    const openLessonDetails = async (lesson: { lessonId?: string; title?: string; module?: string; program?: string; progress?: number; duration?: number | string; module_id?: string; moduleId?: string }) => {
+        const lessonId = lesson.lessonId
+        if (!lessonId) return
+        setDetailsOpen(true)
+        setDetailsLoading(true)
+        setDetailsLesson(null)
+        try {
+            const full = await apiClient.lessons.getLessonDetails(lessonId)
+            const slides = Array.isArray(full?.slides) ? full.slides : []
+            setDetailsLesson(mergeLessonHunt({
+                ...lesson,
+                ...full,
+                lessonId,
+                titleComputed: full?.title || lesson.title,
+                title: full?.title || lesson.title,
+                description: full?.description || lesson.module || lesson.program,
+                progress: lesson.progress || 0,
+                completed: (lesson.progress || 0) === 100,
+                duration: full?.duration || lesson.duration,
+                module_id: full?.module_id || lesson.module_id || lesson.moduleId,
+            }, slides))
+        } catch {
+            setDetailsLesson({
+                lessonId,
+                title: lesson.title,
+                titleComputed: lesson.title,
+                description: lesson.module || lesson.program,
+                progress: lesson.progress || 0,
+                completed: (lesson.progress || 0) === 100,
+                duration: lesson.duration,
+                module_id: lesson.module_id || lesson.moduleId,
+            })
+        } finally {
+            setDetailsLoading(false)
+        }
     }
 
     const handleTabChange = (tab: FilterTab) => {
@@ -177,7 +220,7 @@ export default function StudentDashboardPage() {
 
                             <button
                                 type="button"
-                                onClick={() => handleLessonRedirect(currentOngoingLesson.lessonId)}
+                                onClick={() => handleLessonRedirect(currentOngoingLesson.lessonId, currentOngoingLesson.module_id || currentOngoingLesson.moduleId)}
                                 className="w-full py-2 px-3 rounded-lg bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
                             >
                                 <span>{currentOngoingLesson.progress > 0 ? "Continue Lesson" : "Start Lesson"}</span>
@@ -364,7 +407,8 @@ export default function StudentDashboardPage() {
                                                     progress: lesson.progress || 0,
                                                     duration: lesson.duration ? String(lesson.duration) : undefined,
                                                 }}
-                                                onClick={() => handleLessonRedirect(lesson.lessonId)}
+                                                onClick={() => handleLessonRedirect(lesson.lessonId, lesson.module_id || lesson.moduleId)}
+                                                onDetails={() => openLessonDetails(lesson)}
                                             />
                                         </motion.div>
                                     ))
@@ -406,6 +450,22 @@ export default function StudentDashboardPage() {
                     </div>
                 )}
             </div>
+
+            <LessonDetailsModal
+                lesson={detailsLesson}
+                open={detailsOpen}
+                loading={detailsLoading}
+                onOpenChange={(open) => {
+                    setDetailsOpen(open)
+                    if (!open) setDetailsLesson(null)
+                }}
+                onLaunch={(lesson) => {
+                    const lessonId = lesson.lessonId || lesson.id
+                    if (!lessonId) return
+                    setDetailsOpen(false)
+                    handleLessonRedirect(lessonId, lesson.module_id || lesson.moduleId)
+                }}
+            />
         </div>
     )
 }

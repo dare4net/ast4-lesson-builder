@@ -223,6 +223,15 @@ export function LessonBuilder() {
 
   // Get the current slide safely
   const currentSlide = lesson.slides[currentSlideIndex] || lesson.slides[0]
+  const referenceOptions = useMemo(() => {
+    return (lesson.slides || []).flatMap((slide) =>
+      (slide.components || []).map((component) => ({
+        id: component.id,
+        type: component.type,
+        title: String(component.props?.title || component.type),
+      })),
+    )
+  }, [lesson.slides])
 
   // Add a new slide
   const addSlide = useCallback(async () => {
@@ -792,6 +801,8 @@ export function LessonBuilder() {
                             updateComponent={(props) => updateComponent(editingComponent.id, props)}
                             onClose={handleCloseInspector}
                             lessonId={currentLessonId || lesson.id}
+                            lesson={lesson}
+                            referenceOptions={referenceOptions}
                           />
                         )}
                       </DialogContent>
@@ -809,6 +820,8 @@ export function LessonBuilder() {
                             onClose={handleCloseInspector}
                             isMobile={true}
                             lessonId={currentLessonId || lesson.id}
+                            lesson={lesson}
+                            referenceOptions={referenceOptions}
                           />
                         )}
                       </SheetContent>

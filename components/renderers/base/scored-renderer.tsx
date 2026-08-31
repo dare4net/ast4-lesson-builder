@@ -6,6 +6,8 @@ import { useScoring as useScoringContext } from "@/context/scoring-context"
 import { useFeedback } from "@/hooks/use-feedback"
 import { useScoring as useBaseScoring, useAttemptTracking, UseAttemptTrackingReturn } from "./hooks"
 import { BestAttemptBadge } from "./best-attempt-badge"
+import { isComponentCompleted } from "@/domain/component-status"
+import { LiveBlockResetBar } from "@/components/store/live-block-reset"
 
 export interface ScoredRenderProps<S> extends InteractiveRenderProps<S>, UseAttemptTrackingReturn {
     handleScore: (isCorrect: boolean) => void
@@ -79,14 +81,18 @@ export function ScoredRenderer<S>({
         recordComponentAttempt
     ])
 
+    const [resetNonce, setResetNonce] = React.useState(0)
+
     return (
         <InteractiveRenderer
+            key={`${interactiveProps.component.id}-${resetNonce}`}
             {...interactiveProps}
             onRender={(renderProps) => {
+                const done = isComponentCompleted(renderProps.state) || Boolean((renderProps.state as { timedOut?: boolean; submitted?: boolean })?.timedOut)
                 return (
                     <div className="flex-1 flex flex-col min-h-0 w-full h-full">
                         {!isLive && (
-                            <div className="shrink-0 flex justify-end px-3 sm:px-6 pt-1">
+                            <div className="shrink-0 flex items-center justify-end gap-2 px-3 sm:px-6 pt-1">
                                 <BestAttemptBadge
                                     bestAttemptCount={attemptTracking.bestAttemptCount}
                                     attemptCount={attemptTracking.attemptCount}
@@ -104,6 +110,17 @@ export function ScoredRenderer<S>({
                                 mode
                             })}
                         </div>
+                        <LiveBlockResetBar
+                            lessonId={contextScoring.lessonId}
+                            componentId={interactiveProps.component.id}
+                            isLive={isLive}
+                            done={done}
+                            onWiped={() => {
+                                handleRetryAndReset()
+                                interactiveProps.setComponentState?.({ __replace: true } as S)
+                                setResetNonce((value) => value + 1)
+                            }}
+                        />
                     </div>
                 )
             }}

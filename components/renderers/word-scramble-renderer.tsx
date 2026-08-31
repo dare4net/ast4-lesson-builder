@@ -10,6 +10,7 @@ import { ACTION_LABELS } from "@/lib/action-labels"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 import { appEventBus } from "@/lib/event-bus"
+import { useHintPack } from "@/hooks/use-hint-pack"
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -56,6 +57,7 @@ interface WordScrambleState {
     revealsUsed: number
     wordSolvesUsed: number
     anchorsUsed: boolean
+    hintPackBonus?: number
     isCorrect?: boolean
     status?: "active" | "completed"
     score?: number
@@ -197,6 +199,9 @@ function SingleWordContent({
     maxLetterReveals?: number
     componentId?: string
 }) {
+    const hintPack = useHintPack()
+    const extraHints = state.hintPackBonus || 0
+    const hintLimit = maxLetterReveals + extraHints
     const { pool, slotGrid, lockedGrid, submitted, showHintText, revealsUsed } = state
     const { playFeedback } = useFeedback()
 
@@ -234,9 +239,12 @@ function SingleWordContent({
         setState(prev => ({ ...prev, pool: shuffle(pool) }))
     }
 
-    const handleRevealLetter = () => {
+    const handleRevealLetter = async () => {
         if (submitted || isEditing || disabled) return
-        if (revealsUsed >= maxLetterReveals) return
+        const allowed = await hintPack.tryUnlock(revealsUsed, maxLetterReveals, extraHints, (bonus) => {
+            setState(prev => ({ ...prev, hintPackBonus: (prev.hintPackBonus || 0) + bonus }))
+        })
+        if (!allowed) return
 
         // Find first empty or incorrect slot
         let targetSlotIdx = -1
@@ -334,12 +342,12 @@ function SingleWordContent({
                         <button
                             type="button"
                             onClick={handleRevealLetter}
-                            disabled={submitted || isEditing || disabled || revealsUsed >= maxLetterReveals}
+                            disabled={submitted || isEditing || disabled || (revealsUsed >= hintLimit && hintPack.charges < 1)}
                             className="flex items-center gap-1 px-3 py-1.5 min-h-11 rounded-xl border-2 bg-sky-50 text-[#1CB0F6] border-sky-200 hover:bg-sky-100 font-bold text-xs transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                            title={`Auto-place 1 correct letter (${maxLetterReveals - revealsUsed} left)`}
+                            title={`Auto-place 1 correct letter (${Math.max(0, hintLimit - revealsUsed)} left)`}
                         >
                             <Wand2 className="w-3.5 h-3.5" />
-                            <span>Reveal ({maxLetterReveals - revealsUsed})</span>
+                            <span>Reveal ({Math.max(0, hintLimit - revealsUsed)})</span>
                         </button>
                     )}
                 </div>
@@ -494,6 +502,9 @@ function MultiWordContent({
     allowFirstLetterAnchors?: boolean
     componentId?: string
 }) {
+    const hintPack = useHintPack()
+    const extraHints = state.hintPackBonus || 0
+    const hintLimit = maxLetterReveals + extraHints
     const { pool, slotGrid, lockedGrid, selectedTileId, submitted, showHintText, revealsUsed, wordSolvesUsed, anchorsUsed } = state
     const { playFeedback } = useFeedback()
 
@@ -538,9 +549,12 @@ function MultiWordContent({
     }
 
     // 🪄 HINT 1: Auto-Place 1 Correct Letter
-    const handleRevealLetter = () => {
+    const handleRevealLetter = async () => {
         if (submitted || isEditing || disabled) return
-        if (revealsUsed >= maxLetterReveals) return
+        const allowed = await hintPack.tryUnlock(revealsUsed, maxLetterReveals, extraHints, (bonus) => {
+            setState(prev => ({ ...prev, hintPackBonus: (prev.hintPackBonus || 0) + bonus }))
+        })
+        if (!allowed) return
 
         let targetWi = -1
         let targetSi = -1
@@ -583,9 +597,12 @@ function MultiWordContent({
     }
 
     // ⚡ HINT 2: Auto-Solve Next Word
-    const handleSolveNextWord = () => {
+    const handleSolveNextWord = async () => {
         if (submitted || isEditing || disabled) return
-        if (wordSolvesUsed >= maxWordSolves) return
+        const allowed = await hintPack.tryUnlock(wordSolvesUsed, maxWordSolves, extraHints, (bonus) => {
+            setState(prev => ({ ...prev, hintPackBonus: (prev.hintPackBonus || 0) + bonus }))
+        })
+        if (!allowed) return
 
         // Find first word that is not 100% correct
         let targetWi = -1
@@ -628,9 +645,14 @@ function MultiWordContent({
     }
 
     // ⚓ HINT 3: Lock First Letter of Every Word
-    const handleFirstLetterAnchors = () => {
+    const handleFirstLetterAnchors = async () => {
         if (submitted || isEditing || disabled) return
-        if (anchorsUsed) return
+        if (anchorsUsed) {
+            const allowed = await hintPack.tryUnlock(1, 1, extraHints, (bonus) => {
+                setState(prev => ({ ...prev, hintPackBonus: (prev.hintPackBonus || 0) + bonus, anchorsUsed: false }))
+            })
+            if (!allowed) return
+        }
 
         let currSlotGrid = slotGrid.map(r => [...r])
         let currLockedGrid = lockedGrid.map(r => [...r])
@@ -727,12 +749,12 @@ function MultiWordContent({
                         <button
                             type="button"
                             onClick={handleRevealLetter}
-                            disabled={submitted || isEditing || disabled || revealsUsed >= maxLetterReveals}
+                            disabled={submitted || isEditing || disabled || (revealsUsed >= hintLimit && hintPack.charges < 1)}
                             className="flex items-center gap-1 px-2.5 py-1 min-h-11 rounded-xl border-2 bg-sky-50 text-[#1CB0F6] border-sky-200 hover:bg-sky-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                            title={`Place 1 letter (${maxLetterReveals - revealsUsed} left)`}
+                            title={`Place 1 letter (${Math.max(0, hintLimit - revealsUsed)} left)`}
                         >
                             <Wand2 className="w-3.5 h-3.5" />
-                            <span>Letter ({maxLetterReveals - revealsUsed})</span>
+                            <span>Letter ({Math.max(0, hintLimit - revealsUsed)})</span>
                         </button>
                     )}
 
@@ -741,9 +763,9 @@ function MultiWordContent({
                         <button
                             type="button"
                             onClick={handleSolveNextWord}
-                            disabled={submitted || isEditing || disabled || wordSolvesUsed >= maxWordSolves}
+                            disabled={submitted || isEditing || disabled || (wordSolvesUsed >= maxWordSolves + extraHints && hintPack.charges < 1)}
                             className="flex items-center gap-1 px-2.5 py-1 min-h-11 rounded-xl border-2 bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100 font-bold text-[11px] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                            title={`Solve next word (${maxWordSolves - wordSolvesUsed} left)`}
+                            title={`Solve next word (${Math.max(0, maxWordSolves + extraHints - wordSolvesUsed)} left)`}
                         >
                             <Zap className="w-3.5 h-3.5" />
                             <span>Word ({maxWordSolves - wordSolvesUsed})</span>
