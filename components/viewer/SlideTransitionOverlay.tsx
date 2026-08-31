@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useAudioPlayer } from "@/hooks/use-audio-player";
 import { cn } from "@/lib/utils";
@@ -38,51 +38,12 @@ export function SlideTransitionOverlay({
     const theme = getSlideTheme(slideIndex);
     const pattern: GraphicPatternStyle = getLessonPattern(lessonId);
     const reduceMotion = useReducedMotion();
-
-    const [canBegin, setCanBegin] = useState(false);
-    const [secondsLeft, setSecondsLeft] = useState(10);
-    const overlayOpenedAtRef = useRef<number>(0);
-
-    const handleAudioEnded = useCallback(() => {
-        if (Date.now() - overlayOpenedAtRef.current >= 2000) {
-            setCanBegin(true);
-            setSecondsLeft(0);
-        }
-    }, []);
+    const [isStarting, setIsStarting] = useState(false);
 
     const { stop } = useAudioPlayer({
         audioUrl: titleAudioUrl,
         autoPlay: isVisible,
-        onEnded: handleAudioEnded,
     });
-
-    useEffect(() => {
-        if (!isVisible) {
-            setCanBegin(false);
-            setSecondsLeft(10);
-            return;
-        }
-
-        overlayOpenedAtRef.current = Date.now();
-        setCanBegin(false);
-        setSecondsLeft(10);
-
-        const interval = setInterval(() => {
-            setSecondsLeft((prev) => {
-                const next = prev - 1;
-                if (next <= 0) {
-                    clearInterval(interval);
-                    setCanBegin(true);
-                    return 0;
-                }
-                return next;
-            });
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [isVisible, slideIndex]);
-
-    const [isStarting, setIsStarting] = useState(false);
 
     if (!isVisible) return null;
 
@@ -172,7 +133,7 @@ export function SlideTransitionOverlay({
                 >
                     <Button
                         variant="duo"
-                        disabled={!canBegin || isStarting}
+                        disabled={isStarting}
                         onClick={handleBegin}
                         className="w-full"
                         style={{
@@ -181,20 +142,15 @@ export function SlideTransitionOverlay({
                             borderColor: theme.btnBgHex,
                         }}
                     >
-                        {canBegin && !isStarting ? (
-                            <>
-                                Begin
-                                <ChevronRight className="w-4 h-4" />
-                            </>
-                        ) : isStarting ? (
+                        {isStarting ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin" />
                                 Starting
                             </>
                         ) : (
                             <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                Get ready {secondsLeft}s
+                                Begin
+                                <ChevronRight className="w-4 h-4" />
                             </>
                         )}
                     </Button>

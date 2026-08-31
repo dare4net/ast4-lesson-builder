@@ -202,3 +202,42 @@ export function evaluateLevelProgress({
         canLevelUp,
     }
 }
+
+export type LevelTimelineNode = {
+    level: number
+    status: 'done' | 'current' | 'locked'
+    completedCount: number
+    totalCount: number
+}
+
+/** Every catalog level plus the student's current one, with mission progress on the active rung. */
+export function evaluateLevelTimeline({
+    currentLevel = 1,
+    completedMissionIds = [],
+    stats = {},
+    catalog = PLATFORM_MISSIONS,
+}: {
+    currentLevel?: number
+    completedMissionIds?: string[]
+    stats?: MissionStats
+    catalog?: Mission[]
+}): LevelTimelineNode[] {
+    const enabled = (catalog || PLATFORM_MISSIONS).filter((m) => m.enabled !== false)
+    const fromCatalog = [...new Set(enabled.map((m) => m.level))]
+    const levels = [...new Set([...fromCatalog, currentLevel])].sort((a, b) => a - b)
+
+    return levels.map((lvl) => {
+        const missions = enabled.filter((m) => m.level === lvl)
+        const completedCount = missions.filter(
+            (m) => completedMissionIds.includes(m.id) || countForMission(m, stats) >= m.targetCount,
+        ).length
+        const status: LevelTimelineNode['status'] =
+            lvl < currentLevel ? 'done' : lvl === currentLevel ? 'current' : 'locked'
+        return {
+            level: lvl,
+            status,
+            completedCount: status === 'done' ? missions.length : completedCount,
+            totalCount: missions.length,
+        }
+    })
+}

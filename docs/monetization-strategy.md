@@ -4,7 +4,7 @@ Stars, the store, pride, certificates, and programs are **engagement loops**, no
 
 Who can pay: **schools / clubs**, **parents**, **tutors who sell**, **tutors who generate**, and later **brands**. Don’t make kids pay to learn.
 
-Related: [`platform-engagement-strategy.md`](./platform-engagement-strategy.md) (why scores must mean something) and [`component-library-100.md`](./component-library-100.md) (what makes clubs more willing to pay — not a SKU).
+Related: [`platform-engagement-strategy.md`](./platform-engagement-strategy.md) (why scores must mean something), [`build-principles.md`](./build-principles.md) (do not add star knobs before the lesson works on a phone), and [`component-library-100.md`](./component-library-100.md) (what makes clubs more willing to pay — not a SKU).
 
 ---
 

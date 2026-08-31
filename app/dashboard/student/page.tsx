@@ -4,6 +4,8 @@ import { useState, useMemo } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { LessonCard } from "@/components/dashboard/student/lesson-card"
 import { LessonDetailsModal, type LessonDetailsLesson } from "@/components/dashboard/student/lesson-details-modal"
+import { StudentEconomyPanels } from "@/components/dashboard/student/economy-panels"
+import { LivePrideShowcase } from "@/components/dashboard/student/live-pride-showcase"
 import { useAuth } from "@/context/auth-context"
 import { apiClient } from "@/lib/api-client"
 import { mergeLessonHunt } from "@/lib/lesson-hunt"
@@ -13,17 +15,15 @@ import { invalidateLessonsListCache } from "@/lib/lesson-data-sync"
 import { SoundEffects } from "@/lib/sound-effects"
 import { LESSON_EARLY_UNLOCK_COST } from "@/lib/lesson-unlock"
 import { motion, AnimatePresence } from "framer-motion"
-import { BookOpen, ArrowRight, Loader2, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket, Flame } from "lucide-react"
+import { BookOpen, ArrowRight, Loader2, Compass, CheckCircle2, PlayCircle, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { buildStudentViewerHref } from "@/lib/viewer-url"
-import { useGamification } from "@/context/gamification-context"
 import { useMyPrograms } from "@/hooks/use-my-programs"
 import { programProgressPercent } from "@/lib/program-progress"
-import { streakHeat } from "@/lib/streak"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
@@ -40,10 +40,6 @@ export default function StudentDashboardPage() {
     const [detailsLoading, setDetailsLoading] = useState(false)
     const [unlockingId, setUnlockingId] = useState<string | null>(null)
     const queryClient = useQueryClient()
-    const { starBalance, level, missionStats } = useGamification()
-    const loginStreak = Number(missionStats.loginStreak) || 0
-    const heat = streakHeat(loginStreak)
-    const lifetimeStars = Number(missionStats.lifetimeStarsEarned) || 0
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
@@ -171,50 +167,6 @@ export default function StudentDashboardPage() {
             <section className="relative overflow-hidden p-6 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-2.5 max-w-xl">
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <div className="flex items-stretch gap-2 w-full sm:w-auto">
-                                <Link
-                                    href="/dashboard/student/streak"
-                                    className={cn('flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 px-3 py-2 transition-colors', heat.chipBorder, heat.chipBg)}
-                                >
-                                    <span className={cn('flex items-center gap-1 text-[10px] font-black uppercase tracking-wider', heat.chipText)}>
-                                        <Flame className="w-3.5 h-3.5" style={{ color: heat.flame, fill: heat.flame }} />
-                                        Streak
-                                    </span>
-                                    <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">
-                                        {loginStreak || 0}
-                                        <span className="ml-1 text-[11px] font-extrabold text-slate-500">days</span>
-                                    </span>
-                                </Link>
-                                <Link
-                                    href="/dashboard/student/progress"
-                                    className="flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 border-amber-300/60 bg-amber-50 px-3 py-2 hover:border-amber-400 transition-colors"
-                                >
-                                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-amber-600">
-                                        <Star className="w-3.5 h-3.5 fill-amber-400" />
-                                        Stars
-                                    </span>
-                                    <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">
-                                        {starBalance}
-                                    </span>
-                                    <span className="block mt-1 text-[10px] font-bold text-amber-700/70">
-                                        {lifetimeStars} lifetime
-                                    </span>
-                                </Link>
-                                <Link
-                                    href="/dashboard/student/progress"
-                                    className="flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 border-cyan-200 bg-cyan-50 px-3 py-2 hover:border-[#1CB0F6] transition-colors"
-                                >
-                                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-cyan-600">
-                                        <Rocket className="w-3.5 h-3.5" />
-                                        Level
-                                    </span>
-                                    <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">
-                                        {level}
-                                    </span>
-                                </Link>
-                            </div>
-                        </div>
                         <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                             Welcome back, <span className="text-[#58CC02] capitalize">{displayName}</span>!
                         </h1>
@@ -267,6 +219,10 @@ export default function StudentDashboardPage() {
                     )}
                 </div>
             </section>
+
+            <StudentEconomyPanels />
+
+            <LivePrideShowcase />
 
             {/* Stats Grid */}
             <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">

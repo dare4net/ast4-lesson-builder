@@ -2,6 +2,8 @@
 
 Reference document capturing product findings and strategic decisions from platform review sessions (August 2026). Use this when making decisions about audience targeting, scoring systems, lesson authoring, and roadmap priorities.
 
+How we ship (freeze economy, server-owned prices, no new renderer types): [`build-principles.md`](./build-principles.md).
+
 ---
 
 ## 1. Executive Summary
@@ -241,6 +243,7 @@ Duolingo empty dopamine (streaks, meaningless points, notification loops)
 
 | File | Purpose |
 |---|---|
+| [`build-principles.md`](./build-principles.md) | How we ship: lesson first, freeze economy/types, server-owned stars |
 | `skills/primary-lesson-generator/SKILL.md` | Authoring rules for Year 4–5 lessons |
 | `skills/curriculum-lesson-generator/SKILL.md` | Authoring rules for KS3+ lessons |
 | `skills/lesson-json/SKILL.md` | JSON schemas and component prop reference |

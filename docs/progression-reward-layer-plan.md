@@ -1,6 +1,6 @@
 # AST Platform — Progression & Reward Layer Plan
 
-Technical audit of the current scoring, completion, and navigation infrastructure, plus a phased plan for building meaningful progression and rewards. Companion to [`platform-engagement-strategy.md`](./platform-engagement-strategy.md).
+Technical audit of the current scoring, completion, and navigation infrastructure, plus a phased plan for building meaningful progression and rewards. Companion to [`platform-engagement-strategy.md`](./platform-engagement-strategy.md) and [`build-principles.md`](./build-principles.md) (lesson first; server-owned wallet and prices).
 
 **Audience:** Product, engineering, and lesson authors  
 **Date:** August 2026

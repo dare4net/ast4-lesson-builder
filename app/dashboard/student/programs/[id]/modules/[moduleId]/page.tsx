@@ -9,7 +9,7 @@ import { buildStudentViewerHref } from "@/lib/viewer-url"
 import { queryKeys } from "@/lib/query-keys"
 import { invalidateLessonsListCache } from "@/lib/lesson-data-sync"
 import { SoundEffects } from "@/lib/sound-effects"
-import { LESSON_EARLY_UNLOCK_COST, withLessonLocks } from "@/lib/lesson-unlock"
+import { LESSON_EARLY_UNLOCK_COST, LESSON_UNLOCK_PROGRESS, withLessonLocks } from "@/lib/lesson-unlock"
 import {
     Folder,
     ArrowLeft,
@@ -321,6 +321,11 @@ export default function StudentModuleDetailPage() {
                                                 )}
                                             </button>
                                         </div>
+                                        {isLocked && (
+                                            <p className="text-[11px] font-semibold leading-snug text-slate-500">
+                                                Finish {LESSON_UNLOCK_PROGRESS}% of previous lesson to unlock for free
+                                            </p>
+                                        )}
                                     </Card>
                                 </motion.div>
                             )

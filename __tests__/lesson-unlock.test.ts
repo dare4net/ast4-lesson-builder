@@ -44,5 +44,7 @@ describe('sequential lesson unlock', () => {
         expect(read('lib/api-client.ts')).toContain("this.post('/store/unlock-lesson'")
         expect(read('components/viewer/LessonViewer.tsx')).toContain('LESSON_PATH_UNLOCKED')
         expect(read('app/dashboard/student/programs/[id]/modules/[moduleId]/page.tsx')).toContain('Unlock ·')
+        expect(read('components/dashboard/student/lesson-card.tsx')).toContain('Finish {LESSON_UNLOCK_PROGRESS}% of previous lesson to unlock for free')
+        expect(read('app/dashboard/student/programs/[id]/modules/[moduleId]/page.tsx')).toContain('LESSON_UNLOCK_PROGRESS')
     })
 })

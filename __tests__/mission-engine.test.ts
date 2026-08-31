@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { evaluateLevelProgress, PLATFORM_MISSIONS } from '@/lib/mission-engine'
+import { evaluateLevelProgress, evaluateLevelTimeline, PLATFORM_MISSIONS } from '@/lib/mission-engine'
 
 describe('evaluateLevelProgress', () => {
     it('returns Level 1 active missions by default', () => {
@@ -130,5 +130,21 @@ describe('evaluateLevelProgress', () => {
             'l2-streak-3',
             'l2-review-lesson',
         ])
+    })
+})
+
+describe('evaluateLevelTimeline', () => {
+    it('marks past levels done, current in progress, and later locked', () => {
+        const timeline = evaluateLevelTimeline({
+            currentLevel: 2,
+            completedMissionIds: ['l2-spend-stars'],
+            stats: { starsSpent: 5, consecutiveCorrect: 1, lessonsReviewed: 0 },
+        })
+        expect(timeline.map((n) => n.level)).toEqual([1, 2])
+        expect(timeline[0].status).toBe('done')
+        expect(timeline[0].completedCount).toBe(timeline[0].totalCount)
+        expect(timeline[1].status).toBe('current')
+        expect(timeline[1].completedCount).toBeGreaterThanOrEqual(1)
+        expect(timeline[1].totalCount).toBe(3)
     })
 })

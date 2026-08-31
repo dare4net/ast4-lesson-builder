@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Clock, ArrowRight, CheckCircle2, Zap, Lock, Star, Loader2 } from "lucide-react"
 import { OptimizedImage } from "@/components/ui/optimized-image"
+import { LESSON_EARLY_UNLOCK_COST, LESSON_UNLOCK_PROGRESS } from "@/lib/lesson-unlock"
 
 interface LessonCardProps {
     lesson: {
@@ -29,7 +30,7 @@ export function LessonCard({ lesson, href, onClick, onDetails, onUnlock, unlocki
     const isLocked = Boolean(lesson.locked)
     const isInProgress = lesson.progress > 0 && lesson.progress < 100;
     const displayThumbnail = lesson.thumbnail || "/logo.webp";
-    const actionLabel = isLocked ? `Unlock · ${lesson.unlockCost || 20}★` : isCompleted ? "Review" : isInProgress ? "Resume" : "Start"
+    const actionLabel = isLocked ? `Unlock · ${lesson.unlockCost || LESSON_EARLY_UNLOCK_COST}★` : isCompleted ? "Review" : isInProgress ? "Resume" : "Start"
 
     const media = (
         <>
@@ -70,7 +71,7 @@ export function LessonCard({ lesson, href, onClick, onDetails, onUnlock, unlocki
                 )}
             </div>
 
-            <div className="p-4 sm:p-5 pb-0 space-y-1.5">
+            <div className="px-4 sm:px-5 pt-4 pb-1 space-y-1.5">
                 <h3 className="text-base font-extrabold text-slate-800 dark:text-white group-hover:text-[#58CC02] transition-colors line-clamp-1 leading-snug">
                     {lesson.title}
                 </h3>
@@ -96,29 +97,29 @@ export function LessonCard({ lesson, href, onClick, onDetails, onUnlock, unlocki
                     </button>
                 )}
 
-                <div className="p-4 sm:p-5 pt-3 flex flex-col flex-1 justify-end">
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
-                        <div className="space-y-1">
-                            <div className="flex justify-between items-center text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                                <span>{isCompleted ? "Completed" : isInProgress ? "In Progress" : "Not Started"}</span>
-                                <span className={isCompleted ? "text-emerald-500 font-bold" : isInProgress ? "text-[#58CC02] font-bold" : "text-slate-400"}>
-                                    {Math.round(lesson.progress)}%
-                                </span>
-                            </div>
-                            <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                <div
-                                    className={`h-full rounded-full transition-all duration-300 ${isCompleted
-                                        ? "bg-emerald-500"
-                                        : isInProgress
-                                            ? "bg-[#58CC02]"
-                                            : "bg-slate-300 dark:bg-slate-700"
-                                        }`}
-                                    style={{ width: `${Math.min(100, Math.max(0, lesson.progress))}%` }}
-                                />
-                            </div>
+                <div className="px-4 sm:px-5 pb-4 sm:pb-5 pt-2 flex flex-col flex-1 gap-2">
+                    <div className="space-y-1">
+                        <div className="flex justify-between items-center text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                            <span>{isCompleted ? "Completed" : isInProgress ? "In Progress" : "Not Started"}</span>
+                            <span className={isCompleted ? "text-emerald-500 font-bold" : isInProgress ? "text-[#58CC02] font-bold" : "text-slate-400"}>
+                                {Math.round(lesson.progress)}%
+                            </span>
                         </div>
+                        <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                                className={`h-full rounded-full transition-all duration-300 ${isCompleted
+                                    ? "bg-emerald-500"
+                                    : isInProgress
+                                        ? "bg-[#58CC02]"
+                                        : "bg-slate-300 dark:bg-slate-700"
+                                    }`}
+                                style={{ width: `${Math.min(100, Math.max(0, lesson.progress))}%` }}
+                            />
+                        </div>
+                    </div>
 
-                        <div className="flex items-center gap-2 pt-1">
+                    <div className="mt-auto space-y-2 pt-1">
+                        <div className="flex items-center gap-2">
                             {onDetails && (
                                 <button
                                     type="button"
@@ -158,6 +159,11 @@ export function LessonCard({ lesson, href, onClick, onDetails, onUnlock, unlocki
                                 </button>
                             )}
                         </div>
+                        {isLocked && (
+                            <p className="text-[11px] font-semibold leading-snug text-slate-500">
+                                Finish {LESSON_UNLOCK_PROGRESS}% of previous lesson to unlock for free
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

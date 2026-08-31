@@ -23,6 +23,7 @@ import { usePollStore } from '@/hooks/use-poll-store';
 import { useLessonPreloader } from '@/hooks/use-lesson-preloader';
 import { ReferenceProvider } from '@/context/reference-context';
 import { ReferencePopup } from '@/components/reference/reference-popup';
+import { seedSeenSlideKeys, shouldPlaySlideCue, slideCueVisitKey } from '@/lib/slide-cue-visits';
 
 interface LessonContentProps {
   lesson: Lesson;
@@ -96,6 +97,10 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
     const [showIncompleteModal, setShowIncompleteModal] = useState(false);
     const hasShownCompletionOverlayRef = useRef(false);
     const prevSlideIndexRef = useRef<number>(-1);
+    const seenSlideKeysRef = useRef<Set<string> | null>(null);
+    if (seenSlideKeysRef.current === null) {
+      seenSlideKeysRef.current = seedSeenSlideKeys(lesson.slides, currentSlideIndex);
+    }
 
     const currentSlideProgress = useMemo(() => {
       if (!currentSlide) return 100;
@@ -129,16 +134,25 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
 
     useEffect(() => {
       setInnerStepIndex(0);
+      const slides = lessonRef.current.slides;
+      const key = slideCueVisitKey(slides[currentSlideIndex], currentSlideIndex);
+      const seen = seenSlideKeysRef.current ?? new Set<string>();
+      seenSlideKeysRef.current = seen;
       if (suppressCues) {
+        seen.add(key);
+        setShowOverlay(false);
         prevSlideIndexRef.current = currentSlideIndex;
         return;
       }
-      // Show overlay whenever we actually change slides (skip first load where prev === current)
-      if (prevSlideIndexRef.current !== -1 && prevSlideIndexRef.current !== currentSlideIndex) {
+      const isSlideChange = prevSlideIndexRef.current !== -1 && prevSlideIndexRef.current !== currentSlideIndex;
+      if (shouldPlaySlideCue(seen, key, isSlideChange)) {
         setShowOverlay(true);
+      } else {
+        seen.add(key);
+        setShowOverlay(false);
       }
       prevSlideIndexRef.current = currentSlideIndex;
-    }, [currentSlideIndex, suppressCues]);
+    }, [currentSlideIndex, suppressCues, lessonRef]);
 
     useImperativeHandle(ref, () => ({
       setCurrentSlideIndex: onSlideChange,
@@ -442,7 +456,11 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
               slideTitle={lesson.slides[currentSlideIndex]?.title || `Slide ${currentSlideIndex + 1}`}
               titleAudioUrl={lesson.slides[currentSlideIndex]?.titleAudioUrl}
               totalSlides={lesson.slides.length}
-              onBegin={() => setShowOverlay(false)}
+              onBegin={() => {
+                const key = slideCueVisitKey(lesson.slides[currentSlideIndex], currentSlideIndex);
+                seenSlideKeysRef.current?.add(key);
+                setShowOverlay(false);
+              }}
             />
           )}
         </main>
