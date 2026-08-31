@@ -49,7 +49,7 @@ export function profileHeadline(profile?: {
     bronzeCrowns?: Array<{ label?: string }>
 } | null) {
     const gold = profile?.goldCrowns?.[0]?.label
-    if (gold) return `Gold on ${gold}`
+    if (gold) return gold
     const silver = profile?.silverCrowns?.[0]?.label
     if (silver) return `Silver on ${silver}`
     const bronze = profile?.bronzeCrowns?.[0]?.label

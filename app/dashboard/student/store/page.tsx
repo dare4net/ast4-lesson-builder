@@ -75,7 +75,7 @@ export default function StudentStorePage() {
     const buy = useMutation({
         mutationFn: (sku: string) => apiClient.store.buy(sku),
         onSuccess: (data) => {
-            void SoundEffects.play('complete')
+            void SoundEffects.play('starsSpent')
             void refresh(data.starBalance)
         },
         onError: (err: any) => setError(err.response?.data?.error || 'Could not buy that.'),
@@ -101,6 +101,7 @@ export default function StudentStorePage() {
         mutationFn: (id: string) => apiClient.store.resetLesson(id),
         onSuccess: (data) => {
             resetStarAwardDedupe()
+            void SoundEffects.play('starsSpent')
             void refresh(data.starBalance)
             void queryClient.invalidateQueries({ queryKey: queryKeys.storeResetLessons })
             setQuote(null)

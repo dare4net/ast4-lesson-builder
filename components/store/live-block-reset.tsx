@@ -8,6 +8,7 @@ import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import { BLOCK_RESET_COST } from '@/lib/store-skus'
 import { resetStarAwardDedupe } from '@/lib/achievement-listener'
+import { SoundEffects } from '@/lib/sound-effects'
 
 export function LiveBlockResetBar({
     lessonId,
@@ -52,6 +53,7 @@ export function LiveBlockResetBar({
                         try {
                             const result = await apiClient.store.resetBlock({ lessonId, componentId })
                             resetStarAwardDedupe()
+                            void SoundEffects.play(charges > 0 ? 'powerupUsed' : 'starsSpent')
                             void queryClient.invalidateQueries({ queryKey: queryKeys.store })
                             void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
                             if (typeof result.starBalance === 'number') {

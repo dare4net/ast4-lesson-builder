@@ -18,6 +18,7 @@ import { buildStudentViewerHref } from "@/lib/viewer-url"
 import { useGamification } from "@/context/gamification-context"
 import { useMyPrograms } from "@/hooks/use-my-programs"
 import { programProgressPercent } from "@/lib/program-progress"
+import { streakHeat } from "@/lib/streak"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
@@ -34,6 +35,7 @@ export default function StudentDashboardPage() {
     const [detailsLoading, setDetailsLoading] = useState(false)
     const { starBalance, level, missionStats } = useGamification()
     const loginStreak = Number(missionStats.loginStreak) || 0
+    const heat = streakHeat(loginStreak)
     const lifetimeStars = Number(missionStats.lifetimeStarsEarned) || 0
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
@@ -138,10 +140,10 @@ export default function StudentDashboardPage() {
                             <div className="flex items-stretch gap-2 w-full sm:w-auto">
                                 <Link
                                     href="/dashboard/student/streak"
-                                    className="flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 border-[#FF9600]/30 bg-orange-50 px-3 py-2 hover:border-[#FF9600] transition-colors"
+                                    className={cn('flex-1 sm:flex-none min-w-[7.5rem] rounded-2xl border-2 px-3 py-2 transition-colors', heat.chipBorder, heat.chipBg)}
                                 >
-                                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[#FF9600]">
-                                        <Flame className="w-3.5 h-3.5 fill-[#FF9600]" />
+                                    <span className={cn('flex items-center gap-1 text-[10px] font-black uppercase tracking-wider', heat.chipText)}>
+                                        <Flame className="w-3.5 h-3.5" style={{ color: heat.flame, fill: heat.flame }} />
                                         Streak
                                     </span>
                                     <span className="block mt-0.5 text-xl font-black tabular-nums text-slate-900 dark:text-white leading-none">

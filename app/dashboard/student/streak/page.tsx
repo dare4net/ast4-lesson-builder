@@ -14,6 +14,7 @@ import {
     inferredStreakDays,
     lastNUtcDays,
     nextStreakMilestone,
+    streakHeat,
     streakMilestoneReward,
     utcDay,
 } from '@/lib/streak'
@@ -53,16 +54,20 @@ export default function StudentStreakPage() {
     const lit = new Set(inferredStreakDays(streak, lastLoginDate))
     const calendar = lastNUtcDays(14, utcDay())
     const daysToNext = nextMark ? Math.max(0, nextMark - streak) : 0
+    const heat = streakHeat(streak)
 
     return (
         <div className="space-y-6 pb-12">
-            <section className="relative overflow-hidden rounded-2xl border-4 border-[#FF9600] bg-gradient-to-br from-[#FF9600] to-[#FF4B4B] p-6 text-white md:p-8">
-                <p className="text-[11px] font-black uppercase tracking-[0.35em] text-white/80">Login streak</p>
+            <section
+                className="relative overflow-hidden rounded-2xl border-4 p-6 text-white md:p-8"
+                style={{ borderColor: heat.border, background: `linear-gradient(to bottom right, ${heat.from}, ${heat.to})` }}
+            >
+                <p className="text-[11px] font-black uppercase tracking-[0.35em] text-white/80">Login streak · {heat.label}</p>
                 <div className="mt-4 flex flex-wrap items-end justify-between gap-6">
                     <div>
                         <div className="flex items-center gap-3">
                             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/15">
-                                <Flame className="h-9 w-9 fill-white text-white" />
+                                <Flame className="h-9 w-9" style={{ color: heat.flame, fill: heat.flame }} />
                             </div>
                             <div>
                                 <p className="text-6xl font-black tabular-nums leading-none">{streak}</p>
@@ -138,21 +143,24 @@ export default function StudentStreakPage() {
                     {STREAK_MILESTONES.map((mark) => {
                         const reward = streakMilestoneReward(mark)
                         const reached = streak >= mark
+                        const isNext = mark === nextMark
+                        const tone = streakHeat(mark)
                         return (
                             <li
                                 key={mark}
                                 className={cn(
                                     'flex items-center justify-between rounded-xl border px-3 py-2.5',
-                                    reached
-                                        ? 'border-[#FF9600]/40 bg-orange-50 dark:bg-orange-950/30'
-                                        : 'border-slate-200 dark:border-slate-800'
+                                    reached || isNext ? 'text-white' : 'border-slate-200 dark:border-slate-800'
                                 )}
+                                style={reached || isNext ? { backgroundColor: tone.from, borderColor: tone.border } : undefined}
                             >
                                 <div className="flex items-center gap-2">
-                                    <Flame className={cn('h-4 w-4', reached ? 'fill-[#FF9600] text-[#FF9600]' : 'text-slate-400')} />
-                                    <span className="text-sm font-extrabold text-slate-800 dark:text-white">{mark} days</span>
+                                    <Flame className={cn('h-4 w-4', !reached && !isNext && 'text-slate-400')} style={reached || isNext ? { color: '#fff', fill: '#fff' } : undefined} />
+                                    <span className={cn('text-sm font-extrabold', reached || isNext ? 'text-white' : 'text-slate-800 dark:text-white')}>{mark} days</span>
+                                    {reached ? <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Claimed</span> : null}
+                                    {isNext ? <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Next</span> : null}
                                 </div>
-                                <span className={cn('inline-flex items-center gap-1 text-sm font-black tabular-nums', reached ? 'text-[#FF9600]' : 'text-slate-500')}>
+                                <span className={cn('inline-flex items-center gap-1 text-sm font-black tabular-nums', reached || isNext ? 'text-white' : 'text-slate-500')}>
                                     <Star className="h-3.5 w-3.5" />
                                     +{reward}
                                 </span>

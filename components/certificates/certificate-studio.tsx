@@ -119,7 +119,7 @@ export function CertificateStudio({
                 }))
             }
             void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
-            void SoundEffects.play('complete')
+            void SoundEffects.play('starsSpent')
         },
         onError: (err: { response?: { data?: { error?: string } } }) => {
             setError(err.response?.data?.error || 'Could not print that. Need more stars?')

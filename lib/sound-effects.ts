@@ -1,6 +1,6 @@
 import { Howl } from 'howler';
 
-export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'timerTick' | 'categorizeSlot' | 'categorizeBucketComplete' | 'softMiss' | 'blockedClick' | 'powerupUsed';
+export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'timerTick' | 'categorizeSlot' | 'categorizeBucketComplete' | 'softMiss' | 'blockedClick' | 'powerupUsed' | 'starsSpent';
 
 // Synthesized tick sound via Web Audio API (no file needed)
 function playTickSound(volume: number = 0.5) {
@@ -90,6 +90,46 @@ export function playPowerupUsedSound(volume: number = 0.5) {
     sparkle.stop(start + 0.5)
 
     setTimeout(() => ctx.close(), 600)
+  } catch (_) { }
+}
+
+/** Falling coin chime when stars leave the wallet. */
+export function playStarsSpentSound(volume: number = 0.5) {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const start = ctx.currentTime
+    const master = ctx.createGain()
+    master.connect(ctx.destination)
+    master.gain.setValueAtTime(volume * 0.5, start)
+
+    const notes = [784, 659.25, 523.25, 392]
+    notes.forEach((freq, index) => {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(master)
+      osc.type = index === 0 ? 'triangle' : 'sine'
+      const t = start + index * 0.055
+      osc.frequency.setValueAtTime(freq, t)
+      gain.gain.setValueAtTime(0.001, t)
+      gain.gain.linearRampToValueAtTime(0.42, t + 0.02)
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18)
+      osc.start(t)
+      osc.stop(t + 0.2)
+    })
+
+    const clink = ctx.createOscillator()
+    const clinkGain = ctx.createGain()
+    clink.connect(clinkGain)
+    clinkGain.connect(master)
+    clink.type = 'square'
+    clink.frequency.setValueAtTime(1244, start)
+    clinkGain.gain.setValueAtTime(0.12, start)
+    clinkGain.gain.exponentialRampToValueAtTime(0.001, start + 0.06)
+    clink.start(start)
+    clink.stop(start + 0.07)
+
+    setTimeout(() => ctx.close(), 500)
   } catch (_) { }
 }
 
@@ -425,6 +465,7 @@ class SoundEffectManager {
     softMiss: 0.35,
     blockedClick: 0.4,
     powerupUsed: 0.9,
+    starsSpent: 0.85,
   };
 
   constructor() {
@@ -521,6 +562,11 @@ class SoundEffectManager {
         html5: false,
         preload: false
       }),
+      starsSpent: new Howl({
+        src: ['/sounds/ui-click.mp3'],
+        html5: false,
+        preload: false
+      }),
     };
 
     this.status = Object.keys(this.sounds).reduce((acc, key) => ({
@@ -574,6 +620,10 @@ class SoundEffectManager {
     }
     if (effect === 'powerupUsed') {
       playPowerupUsedSound(this.volume)
+      return
+    }
+    if (effect === 'starsSpent') {
+      playStarsSpentSound(this.volume)
       return
     }
 

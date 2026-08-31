@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import { useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
+import { SoundEffects } from '@/lib/sound-effects'
 import { findLessonComponent, referencePayKey } from '@/lib/reference'
 import type { Lesson, Component } from '@/types/lesson'
 
@@ -73,6 +74,7 @@ export function ReferenceProvider({
             setPaidKeys((prev) => new Set(prev).add(key))
             setError('')
             setOpenId(referenceId)
+            void SoundEffects.play('starsSpent')
             void queryClient.invalidateQueries({ queryKey: queryKeys.store })
             void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
             if (typeof result.starBalance === 'number') {

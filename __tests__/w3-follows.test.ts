@@ -42,7 +42,7 @@ describe('W3 follows and public handle wall', () => {
     })
 
     it('makes a handle page worth opening', () => {
-        expect(profileHeadline({ goldCrowns: [{ label: 'Quizzes completed' }] })).toBe('Gold on Quizzes completed')
+        expect(profileHeadline({ goldCrowns: [{ label: 'Quizzes completed' }] })).toBe('Quizzes completed')
         expect(profileHeadline({ silverCrowns: [{ label: 'Hangman finished' }] })).toBe('Silver on Hangman finished')
         expect(profileHeadline({})).toBe('Building a pride wall')
         expect(['#58CC02', '#1CB0F6', '#FF9600', '#CE82FF', '#FF4B4B']).toContain(handleAccent('maya_codes'))

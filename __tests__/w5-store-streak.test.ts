@@ -46,6 +46,9 @@ describe('W5 store and login streak', () => {
         expect(read('app/dashboard/student/page.tsx')).not.toContain('href="/dashboard/student/store"')
         expect(read('app/dashboard/student/streak/page.tsx')).toContain('Milestone stars')
         expect(read('lib/streak.ts')).toContain('5 * (2 ** index)')
+        expect(read('lib/streak.ts')).toContain('streakHeat')
+        expect(read('components/store/login-streak-modal.tsx')).toContain('Claim +')
+        expect(read('lib/sound-effects.ts')).toContain('starsSpent')
         expect(read('context/gamification-context.tsx')).toContain('loginStreak')
     })
 
@@ -65,5 +68,6 @@ describe('W5 store and login streak', () => {
         expect(read('components/viewer/TutorLessonContent.tsx')).toContain("'hotspot'")
         expect(read('components/viewer/TutorLessonContent.tsx')).toContain('assignments')
         expect(read('lib/api-client.ts')).toContain('type?: string')
+        expect(read('components/pride/gold-hint.tsx')).not.toContain('shrink-0">Gold</span>')
     })
 })

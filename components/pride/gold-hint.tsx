@@ -19,7 +19,6 @@ export function GoldHint({ gold, unit }: { gold?: GoldHolder | null; unit?: stri
     }
     return (
         <span className="flex items-center gap-2 min-w-0">
-            <span className="text-[11px] font-bold text-[#FF9600] shrink-0">Gold</span>
             <StudentName
                 handle={gold.handle}
                 displayName={gold.displayName}
