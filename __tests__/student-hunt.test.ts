@@ -16,10 +16,12 @@ describe('Student hunt, search, and dashboard hygiene', () => {
     it('awards practice points and counts them in the lesson total', () => {
         expect(read('domain/scoring.ts')).toContain('if (isScoredComponent(component))')
         expect(read('domain/scoring.ts')).toContain('if (!isScoredComponent(component) || !state || typeof state !== \'object\') return 0')
+        expect(read('domain/scoring.ts')).toContain('shiftComponentAward')
         const scoring = read('components/renderers/base/hooks.ts')
-        expect(scoring).toContain('scoreContext?.addPoints(points)')
-        expect(scoring).toContain('scoreContext?.addPoints(p)')
-        expect(scoring).not.toContain('if (isLive) {\n            scoreContext?.addPoints(p)')
+        expect(scoring).toContain('applyAward')
+        expect(scoring).toContain('applyAward(0)')
+        expect(scoring).toContain('shiftComponentAward')
+        expect(read('components/renderers/base/scored-renderer.tsx')).toContain('initialAwarded')
     })
 
     it('searches courses, modules, and lessons from the header', () => {
@@ -65,7 +67,10 @@ describe('Student hunt, search, and dashboard hygiene', () => {
         expect(read('components/renderers/true-false-renderer.tsx')).toContain('revealAnswers')
         expect(read('components/renderers/true-false-renderer.tsx')).toContain('Incorrect')
         expect(read('components/renderers/multi-select-quiz-renderer.tsx')).toContain('isLive || isSelected')
-        expect(read('components/renderers/flashcard-quiz-renderer.tsx')).toContain('!isCorrect && isLive')
+        expect(read('components/renderers/flashcard-quiz-renderer.tsx')).toContain('!isCorrect && revealAnswers')
+        expect(read('components/renderers/flashcard-quiz-renderer.tsx')).toContain('playFlashcardFlipForward')
+        expect(read('components/renderers/flashcard-quiz-renderer.tsx')).toContain('Tap to flip')
+        expect(read('components/renderers/flashcard-quiz-renderer.tsx')).toContain("perspective: '1000px'")
         expect(read('components/renderers/fill-in-the-blank-renderer.tsx')).toContain('!isBlankCorrect && isLive')
         expect(read('components/renderers/swipe-deck-renderer.tsx')).toContain('shouldRevealAnswer(mode)')
         expect(read('components/renderers/spin-the-wheel-renderer.tsx')).toContain('revealAnswers')

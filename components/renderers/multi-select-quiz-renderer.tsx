@@ -152,7 +152,8 @@ function MultiSelectContent({
         }
 
         const allDone = currentQuestion === questions.length - 1
-        handleScore(isPerfect)
+        const running = newScores.reduce((a, b) => a + b, 0)
+        handlePoints(running)
 
         setState(prev => {
             const nextShowResult = [...prev.showResultByQuestion]
@@ -170,9 +171,7 @@ function MultiSelectContent({
         })
 
         if (allDone) {
-            const total = newScores.reduce((a, b) => a + b, 0)
-            handlePoints(total)
-            recordAttempt(newCorrect.every(Boolean), total, pointsPerQ * questions.length)
+            recordAttempt(newCorrect.every(Boolean), running, pointsPerQ * questions.length)
         }
     }
 

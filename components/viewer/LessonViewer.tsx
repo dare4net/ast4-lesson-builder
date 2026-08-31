@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Clock, User, Award, LogOut } from 'lucide-react';
+import { Clock, User, Award, LogOut, Lock, Star, Loader2 } from 'lucide-react';
 import { ScoringProvider } from '@/context/scoring-context';
 import type { ComponentAttemptRecord } from '@/context/scoring-context';
 import { ScoreDisplay } from '@/components/ui/score-display';
@@ -32,6 +32,8 @@ import { apiClient } from '@/lib/api-client';
 import { buildStudentViewerHref } from '@/lib/viewer-url';
 import { resolveLessonModuleId, resolveNextLesson, type NextLesson } from '@/lib/next-lesson';
 import { LivePowerupsProvider } from '@/context/live-powerups-context';
+import { LESSON_EARLY_UNLOCK_COST, LESSON_UNLOCK_PROGRESS } from '@/lib/lesson-unlock';
+import { SoundEffects } from '@/lib/sound-effects';
 export function LessonViewer({ initialLesson, initialInteraction, userId }: { initialLesson?: Lesson, initialInteraction?: any, userId?: string }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -58,6 +60,10 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   const [totalPossibleScore, setTotalPossibleScore] = useState(0);
   const [isHubOpen, setIsHubOpen] = useState(false);
   const [nextLesson, setNextLesson] = useState<NextLesson | null>(null);
+  const [pathLocked, setPathLocked] = useState(() => Boolean((initialLesson as { locked?: boolean } | undefined)?.locked));
+  const [unlocking, setUnlocking] = useState(false);
+  const [unlockError, setUnlockError] = useState('');
+  const notifiedUnlockRef = useRef((Number(initialInteraction?.lessonState?.progress) || 0) >= LESSON_UNLOCK_PROGRESS);
   const { starBalance, level } = useGamification();
   const lessonContentRef = useRef<any>(null);
   const lessonCompletedEmittedRef = useRef(false);
@@ -75,6 +81,46 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
   useEffect(() => { currentScoreRef.current = currentScore; }, [currentScore]);
   useEffect(() => { totalPossibleScoreRef.current = totalPossibleScore; }, [totalPossibleScore]);
   useEffect(() => { lessonDataRef.current = lessonData; }, [lessonData]);
+
+  useEffect(() => {
+    if (!lessonData || pathLocked || notifiedUnlockRef.current) return;
+    const completedSlides = lessonData.slides.filter((slide) => slide.status === 'completed').length;
+    const totalSlides = lessonData.slides.length;
+    const pct = totalSlides > 0 ? Math.round((completedSlides / totalSlides) * 100) : 0;
+    if (pct < LESSON_UNLOCK_PROGRESS) return;
+    notifiedUnlockRef.current = true;
+    appEventBus.emit('LESSON_PATH_UNLOCKED', {
+      title: 'Next lesson unlocked',
+      description: `You reached ${LESSON_UNLOCK_PROGRESS}% — the next lesson is open.`,
+    });
+  }, [lessonData, pathLocked]);
+
+  const handleStarUnlock = async () => {
+    if (!lessonData?.id || unlocking) return;
+    setUnlocking(true);
+    setUnlockError('');
+    try {
+      const result = await apiClient.store.unlockLesson(lessonData.id);
+      if (result?.error) {
+        setUnlockError(result.error);
+        return;
+      }
+      void SoundEffects.play('starsSpent');
+      if (typeof result?.starBalance === 'number') {
+        queryClient.setQueryData(queryKeys.wallet, (prev: { starBalance?: number } | undefined) => ({
+          ...(prev || {}),
+          starBalance: result.starBalance,
+        }));
+      }
+      void queryClient.invalidateQueries({ queryKey: queryKeys.wallet });
+      if (userId) void invalidateLessonsListCache(userId);
+      setPathLocked(false);
+    } catch (err) {
+      setUnlockError(err instanceof Error ? err.message : 'Could not unlock this lesson.');
+    } finally {
+      setUnlocking(false);
+    }
+  };
 
   const handleAttemptsMapChange = useCallback((map: Record<string, ComponentAttemptRecord>) => {
     attemptsMapRef.current = map;
@@ -489,6 +535,40 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
               </div>
             )}
           </div>
+        </Card>
+      </div>
+    );
+  }
+
+  if (pathLocked && lessonData) {
+    const cost = Number((lessonData as { unlockCost?: number }).unlockCost) || LESSON_EARLY_UNLOCK_COST;
+    return (
+      <div className="h-dvh w-screen flex items-center justify-center p-4 bg-gradient-to-b from-sky-50 to-emerald-50">
+        <Card className="p-8 w-full max-w-md bg-white border-2 border-slate-200 shadow-xl rounded-3xl space-y-5 text-center">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-slate-100 border-2 border-slate-200 flex items-center justify-center text-slate-500">
+            <Lock className="h-7 w-7" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-extrabold text-slate-800">Lesson locked</h2>
+            <p className="text-sm text-slate-500 font-medium leading-relaxed">
+              Finish at least {LESSON_UNLOCK_PROGRESS}% of the previous lesson, or spend {cost}★ to open this one now.
+            </p>
+          </div>
+          {unlockError && (
+            <p className="text-xs font-bold text-red-500">{unlockError}</p>
+          )}
+          <Button
+            variant="duo"
+            className="w-full h-12 rounded-2xl"
+            onClick={() => void handleStarUnlock()}
+            disabled={unlocking}
+          >
+            {unlocking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Star className="w-4 h-4 fill-white" />}
+            Unlock with {cost}★
+          </Button>
+          <Button variant="outline" className="w-full h-11 rounded-xl" onClick={() => router.back()}>
+            Go back
+          </Button>
         </Card>
       </div>
     );

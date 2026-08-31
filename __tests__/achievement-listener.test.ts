@@ -60,6 +60,44 @@ describe('initAchievementListener', () => {
         cleanup()
     })
 
+    it('credits more stars for a 3-unit live block than a single-unit one', async () => {
+        awardStars().mockClear()
+        const cleanup = initAchievementListener('user-123')
+        appEventBus.emit('COMPONENT_SUBMITTED', {
+            componentId: 'fib-1',
+            type: 'fillInTheBlank',
+            mode: 'live',
+            score: 15,
+            maxScore: 15,
+            percentage: 100,
+            attemptCount: 1,
+            isFirstAttempt: true,
+            completionTimeMs: 4000,
+            extras: { units: 3 },
+        })
+        await vi.waitFor(() => expect(awardStars()).toHaveBeenCalled())
+        expect(awardStars()).toHaveBeenCalledWith(15, expect.stringContaining('Live completion'), 'fib-1')
+        cleanup()
+    })
+
+    it('credits 5 stars when one of three live units is correct', async () => {
+        const cleanup = initAchievementListener('user-123')
+        appEventBus.emit('COMPONENT_SUBMITTED', {
+            componentId: 'fib-partial',
+            type: 'fillInTheBlank',
+            mode: 'live',
+            score: 5,
+            maxScore: 15,
+            percentage: 33,
+            attemptCount: 1,
+            isFirstAttempt: true,
+            extras: { units: 3 },
+        })
+        await vi.waitFor(() => expect(awardStars()).toHaveBeenCalled())
+        expect(awardStars()).toHaveBeenCalledWith(5, expect.stringContaining('Live completion'), 'fib-partial')
+        cleanup()
+    })
+
     it('does not credit stars for practice submissions but still evaluates', async () => {
         const cleanup = initAchievementListener('user-123')
         appEventBus.emit('COMPONENT_SUBMITTED', {

@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from 'react'
 import { appEventBus } from '@/lib/event-bus'
 import { SoundEffects } from '@/lib/sound-effects'
-import { Star, Trophy, Target, Rocket, X, Crown } from 'lucide-react'
+import { Star, Trophy, Target, Rocket, X, Crown, Unlock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export interface ToastItem {
     id: string
-    type: 'stars' | 'achievement' | 'mission' | 'level' | 'inbox' | 'crown'
+    type: 'stars' | 'achievement' | 'mission' | 'level' | 'inbox' | 'crown' | 'unlock'
     title: string
     description: string
     rewardStars?: number
@@ -109,6 +109,15 @@ export function GamificationToastContainer() {
             })
         })
 
+        const unsubPathUnlock = appEventBus.on('LESSON_PATH_UNLOCKED', (payload) => {
+            void SoundEffects.play('complete')
+            addToast({
+                type: 'unlock',
+                title: payload.title || 'Next lesson unlocked',
+                description: payload.description || 'You passed 50% — the next lesson is open.',
+            })
+        })
+
         return () => {
             unsubSubmitted()
             unsubEarlyFinish()
@@ -118,6 +127,7 @@ export function GamificationToastContainer() {
             unsubLevel()
             unsubCrown()
             unsubInbox()
+            unsubPathUnlock()
         }
     }, [])
 
@@ -144,6 +154,9 @@ export function GamificationToastContainer() {
                 } else if (toast.type === 'crown') {
                     icon = <Crown className="w-6 h-6 text-[#FF9600]" />
                     bgGradient = "from-amber-500/20 to-orange-500/10 border-amber-500/40"
+                } else if (toast.type === 'unlock') {
+                    icon = <Unlock className="w-6 h-6 text-[#58CC02]" />
+                    bgGradient = "from-emerald-500/20 to-lime-500/10 border-emerald-500/40"
                 }
 
                 return (

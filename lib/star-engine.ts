@@ -11,6 +11,8 @@ export interface StarCalculationInput {
     mode: 'practice' | 'live'
     /** Percentage accuracy achieved (0 - 100) */
     percentage: number
+    /** Scoring units (questions, blanks, pairs). Multi-unit live blocks pay 5 stars per unit. */
+    units?: number
     /** Total time limit in milliseconds if component has a timer */
     timeLimitMs?: number | null
     /** Actual time taken in milliseconds */
@@ -38,12 +40,13 @@ export interface StarCalculationResult {
 export function calculateStarReward({
     mode,
     percentage,
+    units = 1,
     timeLimitMs = null,
     completionTimeMs = null,
     isTimeout = false,
 }: StarCalculationInput): StarCalculationResult {
-    // Rule 1: Practice mode NEVER awards stars
-    if (mode === 'practice') {
+    // Rule 1: Only live mode awards stars. Missing/unknown mode is treated as practice.
+    if (mode !== 'live') {
         return {
             totalStars: 0,
             baseStars: 0,
@@ -54,23 +57,34 @@ export function calculateStarReward({
     }
 
     const breakdown: string[] = []
+    const unitCount = Math.max(1, Math.round(Number(units) || 1))
+    const pct = Math.max(0, Math.min(100, Number(percentage) || 0))
 
-    // Rule 2: Base Stars from Accuracy Percentage
+    // Rule 2: Base stars. One-unit blocks keep the 1–5 accuracy table.
+    // Multi-unit blocks (quiz questions, FITB blanks, pairs) pay 5 stars per unit, scaled by how many were correct.
     let baseStars = 0
-    if (percentage >= 90) {
+    if (unitCount > 1) {
+        baseStars = Math.round((pct / 100) * 5 * unitCount)
+        breakdown.push(`${baseStars} Base Stars (${pct}% of ${unitCount} units)`)
+    } else if (pct >= 90) {
         baseStars = 5
-    } else if (percentage >= 75) {
+        breakdown.push(`${baseStars} Base Stars (${pct}% score)`)
+    } else if (pct >= 75) {
         baseStars = 4
-    } else if (percentage >= 55) {
+        breakdown.push(`${baseStars} Base Stars (${pct}% score)`)
+    } else if (pct >= 55) {
         baseStars = 3
-    } else if (percentage >= 35) {
+        breakdown.push(`${baseStars} Base Stars (${pct}% score)`)
+    } else if (pct >= 35) {
         baseStars = 2
-    } else if (percentage > 0) {
+        breakdown.push(`${baseStars} Base Stars (${pct}% score)`)
+    } else if (pct > 0) {
         baseStars = 1
+        breakdown.push(`${baseStars} Base Stars (${pct}% score)`)
     } else {
         baseStars = 0
+        breakdown.push(`${baseStars} Base Stars (${pct}% score)`)
     }
-    breakdown.push(`${baseStars} Base Stars (${percentage}% score)`)
 
     // Rule 3: Speed Bonus Stars (Live mode with timer)
     let speedBonusStars = 0

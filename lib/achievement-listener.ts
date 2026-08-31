@@ -105,6 +105,7 @@ function awardFromSubmitted(payload: ComponentSubmittedPayload) {
     const stars = calculateStarReward({
         mode: payload.mode,
         percentage: payload.percentage,
+        units: Number(payload.extras?.units) || 1,
         completionTimeMs: payload.completionTimeMs,
         timeLimitMs: null,
     }).totalStars

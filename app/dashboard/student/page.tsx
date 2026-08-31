@@ -1,12 +1,17 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import { LessonCard } from "@/components/dashboard/student/lesson-card"
 import { LessonDetailsModal, type LessonDetailsLesson } from "@/components/dashboard/student/lesson-details-modal"
 import { useAuth } from "@/context/auth-context"
 import { apiClient } from "@/lib/api-client"
 import { mergeLessonHunt } from "@/lib/lesson-hunt"
 import { useLessonsList } from "@/hooks/use-lessons-list"
+import { queryKeys } from "@/lib/query-keys"
+import { invalidateLessonsListCache } from "@/lib/lesson-data-sync"
+import { SoundEffects } from "@/lib/sound-effects"
+import { LESSON_EARLY_UNLOCK_COST } from "@/lib/lesson-unlock"
 import { motion, AnimatePresence } from "framer-motion"
 import { BookOpen, ArrowRight, Loader2, Compass, CheckCircle2, PlayCircle, ChevronDown, Sparkles, Star, Rocket, Flame } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -33,6 +38,8 @@ export default function StudentDashboardPage() {
     const [detailsLesson, setDetailsLesson] = useState<LessonDetailsLesson | null>(null)
     const [detailsOpen, setDetailsOpen] = useState(false)
     const [detailsLoading, setDetailsLoading] = useState(false)
+    const [unlockingId, setUnlockingId] = useState<string | null>(null)
+    const queryClient = useQueryClient()
     const { starBalance, level, missionStats } = useGamification()
     const loginStreak = Number(missionStats.loginStreak) || 0
     const heat = streakHeat(loginStreak)
@@ -41,12 +48,36 @@ export default function StudentDashboardPage() {
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
 
-    const handleLessonRedirect = (lessonId: string, moduleId?: string) => {
+    const handleLessonRedirect = (lessonId: string, moduleId?: string, locked?: boolean) => {
+        if (locked) return
         const returnUrl = typeof window !== 'undefined' ? window.location.pathname : ''
         router.push(buildStudentViewerHref(lessonId, { returnUrl, moduleId }))
     }
 
-    const openLessonDetails = async (lesson: { lessonId?: string; title?: string; module?: string; program?: string; progress?: number; duration?: number | string; module_id?: string; moduleId?: string }) => {
+    const unlockDashboardLesson = async (lessonId: string) => {
+        if (!lessonId || unlockingId) return
+        setUnlockingId(lessonId)
+        try {
+            const result = await apiClient.store.unlockLesson(lessonId)
+            if (result?.error) return
+            void SoundEffects.play('starsSpent')
+            if (typeof result?.starBalance === 'number') {
+                queryClient.setQueryData(queryKeys.wallet, (prev: { starBalance?: number } | undefined) => ({
+                    ...(prev || {}),
+                    starBalance: result.starBalance,
+                }))
+            }
+            void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
+            if (user?.user_id) void invalidateLessonsListCache(user.user_id)
+            setDetailsLesson((prev) => prev && String(prev.lessonId || prev.id) === String(lessonId)
+                ? { ...prev, locked: false, unlockedByStars: true }
+                : prev)
+        } finally {
+            setUnlockingId(null)
+        }
+    }
+
+    const openLessonDetails = async (lesson: { lessonId?: string; title?: string; module?: string; program?: string; progress?: number; duration?: number | string; module_id?: string; moduleId?: string; locked?: boolean; unlockCost?: number }) => {
         const lessonId = lesson.lessonId
         if (!lessonId) return
         setDetailsOpen(true)
@@ -66,6 +97,8 @@ export default function StudentDashboardPage() {
                 completed: (lesson.progress || 0) === 100,
                 duration: full?.duration || lesson.duration,
                 module_id: full?.module_id || lesson.module_id || lesson.moduleId,
+                locked: Boolean(full?.locked ?? lesson.locked),
+                unlockCost: full?.unlockCost || lesson.unlockCost || LESSON_EARLY_UNLOCK_COST,
             }, slides))
         } catch {
             setDetailsLesson({
@@ -77,6 +110,8 @@ export default function StudentDashboardPage() {
                 completed: (lesson.progress || 0) === 100,
                 duration: lesson.duration,
                 module_id: lesson.module_id || lesson.moduleId,
+                locked: Boolean(lesson.locked),
+                unlockCost: lesson.unlockCost || LESSON_EARLY_UNLOCK_COST,
             })
         } finally {
             setDetailsLoading(false)
@@ -408,9 +443,13 @@ export default function StudentDashboardPage() {
                                                     thumbnail: lesson.thumbnail,
                                                     progress: lesson.progress || 0,
                                                     duration: lesson.duration ? String(lesson.duration) : undefined,
+                                                    locked: Boolean(lesson.locked),
+                                                    unlockCost: lesson.unlockCost || LESSON_EARLY_UNLOCK_COST,
                                                 }}
-                                                onClick={() => handleLessonRedirect(lesson.lessonId, lesson.module_id || lesson.moduleId)}
+                                                onClick={() => handleLessonRedirect(lesson.lessonId, lesson.module_id || lesson.moduleId, lesson.locked)}
                                                 onDetails={() => openLessonDetails(lesson)}
+                                                onUnlock={() => void unlockDashboardLesson(lesson.lessonId)}
+                                                unlocking={unlockingId === lesson.lessonId}
                                             />
                                         </motion.div>
                                     ))
@@ -463,10 +502,12 @@ export default function StudentDashboardPage() {
                 }}
                 onLaunch={(lesson) => {
                     const lessonId = lesson.lessonId || lesson.id
-                    if (!lessonId) return
+                    if (!lessonId || lesson.locked) return
                     setDetailsOpen(false)
                     handleLessonRedirect(lessonId, lesson.module_id || lesson.moduleId)
                 }}
+                onUnlock={(lesson) => void unlockDashboardLesson(lesson.lessonId || lesson.id || '')}
+                unlocking={Boolean(detailsLesson && unlockingId === (detailsLesson.lessonId || detailsLesson.id))}
             />
         </div>
     )

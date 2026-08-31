@@ -291,6 +291,7 @@ class APIClient {
         quoteReset: (lessonId: string) =>
             this.get(`/store/reset-quote?lessonId=${encodeURIComponent(lessonId)}`),
         resetLesson: (lessonId: string) => this.post('/store/reset-lesson', { lessonId }),
+        unlockLesson: (lessonId: string) => this.post('/store/unlock-lesson', { lessonId }),
         printCertificate: (body: { kind: 'lesson' | 'pride'; lessonId?: string; statKey?: string }) =>
             this.post('/store/print-certificate', body),
         consume: (body: { sku: 'hint_pack' | 'live_block_reset' | 'reference_credit' }) =>

@@ -71,4 +71,16 @@ describe('calculateStarReward', () => {
         })
         expect(r2.totalStars).toBe(0)
     })
+
+    it('does not award stars unless the mode is live', () => {
+        expect(calculateStarReward({ mode: 'practice', percentage: 100 }).totalStars).toBe(0)
+        expect(calculateStarReward({ mode: undefined as unknown as 'live', percentage: 100 }).totalStars).toBe(0)
+    })
+
+    it('scales live stars by scoring units so a 3-blank block pays more than a single true/false', () => {
+        expect(calculateStarReward({ mode: 'live', percentage: 100, units: 3 }).baseStars).toBe(15)
+        expect(calculateStarReward({ mode: 'live', percentage: 100 / 3, units: 3 }).baseStars).toBe(5)
+        expect(calculateStarReward({ mode: 'live', percentage: 0, units: 3 }).baseStars).toBe(0)
+        expect(calculateStarReward({ mode: 'live', percentage: 100, units: 1 }).baseStars).toBe(5)
+    })
 })

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Grid3X3, RefreshCw, CheckCircle2, XCircle, Lightbulb, ArrowRight, ArrowDown } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
@@ -75,6 +75,13 @@ function CrosswordContent({
 }) {
     const { playFeedback } = useFeedback()
     const { userGrid, activeWordId, selectedCell, submitted } = state
+    const captureRef = useRef<HTMLInputElement>(null)
+    const selectedRef = useRef(selectedCell)
+    const userGridRef = useRef(userGrid)
+    const activeWordRef = useRef(activeWordId)
+    const captureValueRef = useRef("\u200b")
+    userGridRef.current = userGrid
+    activeWordRef.current = activeWordId
 
     // Map which cells belong to which words and build cell numbers
     const validCells = new Set<string>()
@@ -93,12 +100,23 @@ function CrosswordContent({
         })
     })
 
+    const resetCaptureValue = (node: HTMLInputElement) => {
+        captureValueRef.current = "\u200b"
+        node.value = "\u200b"
+    }
+
+    const focusCapture = () => {
+        const node = captureRef.current
+        if (!node || submitted || isEditing || disabled) return
+        resetCaptureValue(node)
+        node.focus({ preventScroll: true })
+    }
+
     const handleCellClick = (r: number, c: number) => {
         if (submitted || isEditing || disabled) return
         const key = `${r}-${c}`
         if (!validCells.has(key)) return
 
-        // Find associated word
         const matchedWord = words.find(w => {
             const len = w.word.length
             if (w.direction === "across") {
@@ -108,66 +126,134 @@ function CrosswordContent({
             }
         })
 
+        const nextCell = { row: r, col: c }
+        selectedRef.current = nextCell
+        if (matchedWord) activeWordRef.current = matchedWord.id
         setState(prev => ({
             ...prev,
-            selectedCell: { row: r, col: c },
+            selectedCell: nextCell,
             activeWordId: matchedWord ? matchedWord.id : prev.activeWordId,
         }))
-
+        focusCapture()
         void playFeedback("click", { sound: true, animation: false })
     }
 
-    const handleKeyDown = (r: number, c: number, e: React.KeyboardEvent) => {
+    const selectWord = (w: CrosswordWord) => {
         if (submitted || isEditing || disabled) return
+        const nextCell = { row: w.row, col: w.col }
+        selectedRef.current = nextCell
+        activeWordRef.current = w.id
+        setState(prev => ({ ...prev, activeWordId: w.id, selectedCell: nextCell }))
+        focusCapture()
+    }
 
+    const stepCell = (r: number, c: number, direction: "across" | "down" | undefined, delta: 1 | -1) => {
+        if (direction === "down") {
+            for (let nr = r + delta; nr >= 0 && nr < gridSize.rows; nr += delta) {
+                if (validCells.has(`${nr}-${c}`)) return { row: nr, col: c }
+            }
+        } else {
+            for (let nc = c + delta; nc >= 0 && nc < gridSize.cols; nc += delta) {
+                if (validCells.has(`${r}-${nc}`)) return { row: r, col: nc }
+            }
+        }
+        return { row: r, col: c }
+    }
+
+    const placeLetter = (r: number, c: number, char: string) => {
+        if (submitted || isEditing || disabled) return
         const key = `${r}-${c}`
-        if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
-            const char = e.key.toUpperCase()
-            const nextGrid = { ...userGrid, [key]: char }
-
-            // Find current word direction to move to next cell
-            const currentWord = words.find(w => w.id === activeWordId)
-            let nextR = r
-            let nextC = c
-
-            if (currentWord?.direction === "across") {
-                nextC = Math.min(gridSize.cols - 1, c + 1)
-            } else if (currentWord?.direction === "down") {
-                nextR = Math.min(gridSize.rows - 1, r + 1)
-            } else {
-                nextC = Math.min(gridSize.cols - 1, c + 1)
-            }
-
-            setState(prev => ({
+        if (!validCells.has(key)) return
+        const currentWord = words.find(w => w.id === activeWordRef.current)
+        const next = stepCell(r, c, currentWord?.direction, 1)
+        selectedRef.current = next
+        setState(prev => {
+            const nextGrid = { ...prev.userGrid, [key]: char }
+            userGridRef.current = nextGrid
+            return {
                 ...prev,
                 userGrid: nextGrid,
-                selectedCell: { row: nextR, col: nextC },
-            }))
+                selectedCell: next,
+            }
+        })
+        void playFeedback("click", { sound: true, animation: false })
+    }
 
-            void playFeedback("click", { sound: true, animation: false })
-        } else if (e.key === "Backspace") {
-            const nextGrid = { ...userGrid }
+    const clearLetter = (r: number, c: number, moveBack: boolean) => {
+        if (submitted || isEditing || disabled) return
+        const key = `${r}-${c}`
+        const currentWord = words.find(w => w.id === activeWordRef.current)
+        const prevCell = moveBack ? stepCell(r, c, currentWord?.direction, -1) : { row: r, col: c }
+        selectedRef.current = prevCell
+        setState(prev => {
+            const nextGrid = { ...prev.userGrid }
             delete nextGrid[key]
-
-            const currentWord = words.find(w => w.id === activeWordId)
-            let prevR = r
-            let prevC = c
-
-            if (currentWord?.direction === "across") {
-                prevC = Math.max(0, c - 1)
-            } else if (currentWord?.direction === "down") {
-                prevR = Math.max(0, r - 1)
-            }
-
-            setState(prev => ({
+            userGridRef.current = nextGrid
+            return {
                 ...prev,
                 userGrid: nextGrid,
-                selectedCell: { row: prevR, col: prevC },
-            }))
+                selectedCell: prevCell,
+            }
+        })
+        void playFeedback("click", { sound: true, animation: false })
+    }
 
-            void playFeedback("click", { sound: true, animation: false })
+    const backspaceCell = () => {
+        const cell = selectedRef.current
+        if (!cell) return
+        const key = `${cell.row}-${cell.col}`
+        const hasLetter = Boolean(userGridRef.current[key])
+        clearLetter(cell.row, cell.col, !hasLetter)
+    }
+
+    const handleCaptureChange = (raw: string) => {
+        if (raw === captureValueRef.current) return
+        const cell = selectedRef.current
+        if (!cell) return
+        const letters = raw.replace(/\u200b/g, "").replace(/[^a-zA-Z]/g, "")
+        if (letters) {
+            placeLetter(cell.row, cell.col, letters[letters.length - 1].toUpperCase())
+        } else if (raw.length < captureValueRef.current.length) {
+            backspaceCell()
+        }
+        const node = captureRef.current
+        if (node) resetCaptureValue(node)
+    }
+
+    const handleCaptureKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const cell = selectedRef.current
+        if (!cell || submitted || isEditing || disabled) return
+        // Letters come from onChange so phone keyboards work and desktop
+        // does not double-place (keydown + change).
+        if (e.key === "Backspace" || e.key === "Delete") {
+            e.preventDefault()
+            backspaceCell()
+            const node = captureRef.current
+            if (node) resetCaptureValue(node)
+            return
+        }
+        if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "ArrowLeft" || e.key === "ArrowUp") {
+            e.preventDefault()
+            const dir = e.key === "ArrowDown" || e.key === "ArrowUp" ? "down" : "across"
+            const delta = e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 1
+            const next = stepCell(cell.row, cell.col, dir, delta)
+            selectedRef.current = next
+            setState(prev => ({ ...prev, selectedCell: next }))
         }
     }
+
+    useEffect(() => {
+        selectedRef.current = selectedCell
+        activeWordRef.current = activeWordId
+    }, [selectedCell, activeWordId])
+
+    useEffect(() => {
+        if (!selectedCell || submitted || isEditing || disabled) return
+        const node = captureRef.current
+        if (node && document.activeElement !== node) {
+            node.focus({ preventScroll: true })
+        }
+    }, [selectedCell, submitted, isEditing, disabled])
 
     const handleCheckCrossword = async () => {
         if (submitted || isEditing || disabled) return
@@ -211,6 +297,7 @@ function CrosswordContent({
     const handleReset = () => {
         if (isEditing || mode === "live") return
         handleRetry()
+        selectedRef.current = null
         setState({
             userGrid: {},
             activeWordId: null,
@@ -246,6 +333,24 @@ function CrosswordContent({
             <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center my-3 min-h-[240px]">
                 {/* Grid Stage */}
                 <div className="lg:col-span-6 flex justify-center">
+                    <div className="relative">
+                        <input
+                            ref={captureRef}
+                            type="text"
+                            inputMode="text"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            autoCapitalize="characters"
+                            spellCheck={false}
+                            enterKeyHint="next"
+                            disabled={submitted || isEditing || disabled}
+                            aria-label="Crossword letter"
+                            onChange={e => handleCaptureChange(e.target.value)}
+                            onKeyDown={handleCaptureKeyDown}
+                            onFocus={e => resetCaptureValue(e.currentTarget)}
+                            className="absolute inset-0 z-0 w-full h-full opacity-0 pointer-events-none"
+                            style={{ fontSize: 16, caretColor: "transparent" }}
+                        />
                     <div
                         className="grid gap-1.5 p-3 rounded-3xl bg-slate-900 border-2 border-b-6 border-slate-800 shadow-xl"
                         style={{
@@ -285,9 +390,12 @@ function CrosswordContent({
                                 }
 
                                 return (
-                                    <div
+                                    <button
+                                        type="button"
                                         key={key}
+                                        onMouseDown={e => e.preventDefault()}
                                         onClick={() => handleCellClick(r, c)}
+                                        aria-label={`Crossword cell ${r + 1}, ${c + 1}${userVal ? `, ${userVal}` : ""}`}
                                         className={cn(
                                             "relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl border-2 font-black text-lg sm:text-xl flex items-center justify-center transition-all duration-150 select-none cursor-pointer",
                                             !userVal && !submitted && "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100",
@@ -302,19 +410,12 @@ function CrosswordContent({
                                                 {num}
                                             </span>
                                         )}
-                                        <input
-                                            type="text"
-                                            maxLength={1}
-                                            value={userVal}
-                                            onChange={() => { }}
-                                            onKeyDown={e => handleKeyDown(r, c, e)}
-                                            disabled={submitted || isEditing || disabled}
-                                            className="w-full h-full text-center bg-transparent focus:outline-none uppercase cursor-pointer"
-                                        />
-                                    </div>
+                                        <span className="uppercase">{userVal}</span>
+                                    </button>
                                 )
                             })
                         )}
+                    </div>
                     </div>
                 </div>
 
@@ -331,7 +432,8 @@ function CrosswordContent({
                                 {acrossWords.map((w, idx) => (
                                     <div
                                         key={w.id}
-                                        onClick={() => setState(prev => ({ ...prev, activeWordId: w.id, selectedCell: { row: w.row, col: w.col } }))}
+                                        onMouseDown={e => e.preventDefault()}
+                                        onClick={() => selectWord(w)}
                                         className={cn(
                                             "p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer",
                                             activeWordId === w.id
@@ -357,7 +459,8 @@ function CrosswordContent({
                                 {downWords.map((w, idx) => (
                                     <div
                                         key={w.id}
-                                        onClick={() => setState(prev => ({ ...prev, activeWordId: w.id, selectedCell: { row: w.row, col: w.col } }))}
+                                        onMouseDown={e => e.preventDefault()}
+                                        onClick={() => selectWord(w)}
                                         className={cn(
                                             "p-2 rounded-xl border text-xs font-bold transition-all cursor-pointer",
                                             activeWordId === w.id

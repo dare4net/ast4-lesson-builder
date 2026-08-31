@@ -2,7 +2,7 @@
 
 import { BookOpen } from 'lucide-react'
 import { useReference } from '@/context/reference-context'
-import { REFERENCE_LIVE_COST } from '@/lib/store-skus'
+import { REFERENCE_LIVE_COST, REFERENCE_STORE_COST } from '@/lib/store-skus'
 import { cn } from '@/lib/utils'
 
 export function ReferenceChip({
@@ -37,7 +37,7 @@ export function ReferenceChip({
             )}
         >
             <BookOpen className="w-3.5 h-3.5" />
-            {live ? `Reference · ${REFERENCE_LIVE_COST}★ or credit` : 'Open reference'}
+            {live ? `Reference · ${REFERENCE_LIVE_COST}★ or a ${REFERENCE_STORE_COST}★ credit` : 'Open reference'}
         </button>
     )
 }

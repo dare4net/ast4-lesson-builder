@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { isComponentCompleted } from '@/domain/component-status'
+import { isComponentCompleted, isComponentReadyToAdvance } from '@/domain/component-status'
 import {
     calculateComponentScore,
     calculateLessonScore,
     getComponentMaxPoints,
+    getComponentScoringUnits,
     getTotalPossiblePoints,
+    maxStarsForLiveComponent,
+    shiftComponentAward,
 } from '@/domain/scoring'
 import type { Component, Lesson } from '@/types/lesson'
 
@@ -108,6 +111,32 @@ describe('E6 pull-model scoring', () => {
     })
 })
 
+describe('practice retry does not stack points', () => {
+    it('replaces a block contribution instead of adding it again', () => {
+        const first = shiftComponentAward(0, 10)
+        expect(first).toEqual({ awarded: 10, delta: 10 })
+        const again = shiftComponentAward(10, 10)
+        expect(again).toEqual({ awarded: 10, delta: 0 })
+        const retry = shiftComponentAward(10, 0)
+        expect(retry).toEqual({ awarded: 0, delta: -10 })
+        const better = shiftComponentAward(0, 8)
+        expect(better).toEqual({ awarded: 8, delta: 8 })
+    })
+
+    it('on retry only removes points actually earned on a multi-blank block', () => {
+        // 3 blanks × 5 = 15 max, one correct → 5 earned. Retry must claw back 5, not 15.
+        expect(shiftComponentAward(5, 0)).toEqual({ awarded: 0, delta: -5 })
+        const fib = {
+            id: 'fib',
+            type: 'fillInTheBlank',
+            mode: 'live',
+            props: { points: 5, mode: 'live', blanks: [{}, {}, {}] },
+        } as Component
+        expect(getComponentScoringUnits(fib)).toBe(3)
+        expect(maxStarsForLiveComponent(fib)).toBe(15)
+    })
+})
+
 describe('E7 component completion status', () => {
     it('treats canonical status and legacy flags as complete', () => {
         expect(isComponentCompleted({ status: 'completed' })).toBe(true)
@@ -121,6 +150,14 @@ describe('E7 component completion status', () => {
         expect(isComponentCompleted({ isSubmitted: true, isPendingMarking: true })).toBe(false)
         expect(isComponentCompleted({ status: 'completed', isPendingMarking: true, tutorMarked: false })).toBe(false)
         expect(isComponentCompleted({ isSubmitted: true, isPendingMarking: true, tutorMarked: true })).toBe(true)
+    })
+
+    it('lets students leave a tutor-marked block after they submit, before the tutor scores it', () => {
+        expect(isComponentReadyToAdvance({ isSubmitted: true, isPendingMarking: true, status: 'pending' })).toBe(true)
+        expect(isComponentReadyToAdvance({ status: 'pending' })).toBe(true)
+        expect(isComponentReadyToAdvance({ status: 'active' })).toBe(false)
+        expect(isComponentReadyToAdvance({ isSubmitted: true })).toBe(true)
+        expect(read('components/viewer/LessonContent.tsx')).toContain('isComponentReadyToAdvance')
     })
 
     it('gates slides and interactive wrappers through the helper', () => {

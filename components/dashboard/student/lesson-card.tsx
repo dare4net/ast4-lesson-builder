@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Clock, ArrowRight, CheckCircle2, Zap } from "lucide-react"
+import { Clock, ArrowRight, CheckCircle2, Zap, Lock, Star, Loader2 } from "lucide-react"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 
 interface LessonCardProps {
@@ -14,17 +14,22 @@ interface LessonCardProps {
         thumbnail?: string
         progress: number
         duration?: string
+        locked?: boolean
+        unlockCost?: number
     }
     href?: string
     onClick?: () => void
     onDetails?: () => void
+    onUnlock?: () => void
+    unlocking?: boolean
 }
 
-export function LessonCard({ lesson, href, onClick, onDetails }: LessonCardProps) {
+export function LessonCard({ lesson, href, onClick, onDetails, onUnlock, unlocking = false }: LessonCardProps) {
     const isCompleted = lesson.progress === 100;
+    const isLocked = Boolean(lesson.locked)
     const isInProgress = lesson.progress > 0 && lesson.progress < 100;
     const displayThumbnail = lesson.thumbnail || "/logo.webp";
-    const actionLabel = isCompleted ? "Review" : isInProgress ? "Resume" : "Start"
+    const actionLabel = isLocked ? `Unlock · ${lesson.unlockCost || 20}★` : isCompleted ? "Review" : isInProgress ? "Resume" : "Start"
 
     const media = (
         <>
@@ -38,7 +43,11 @@ export function LessonCard({ lesson, href, onClick, onDetails }: LessonCardProps
                 />
 
                 <div className="absolute top-2.5 right-2.5 flex items-center justify-end pointer-events-none">
-                    {isCompleted ? (
+                    {isLocked ? (
+                        <span className="text-[10px] font-bold text-slate-700 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-slate-200 flex items-center gap-1">
+                            <Lock className="w-3 h-3" /> Locked
+                        </span>
+                    ) : isCompleted ? (
                         <span className="text-[10px] font-bold text-white bg-emerald-500 px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3" /> Done
                         </span>
@@ -77,12 +86,12 @@ export function LessonCard({ lesson, href, onClick, onDetails }: LessonCardProps
     return (
         <div className="group relative h-full text-left">
             <div className="relative h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-200 hover:border-[#58CC02]/40 hover:-translate-y-0.5 hover:shadow-md shadow-sm flex flex-col">
-                {href ? (
+                {href && !isLocked ? (
                     <Link href={href} className="block" onClick={onClick}>
                         {media}
                     </Link>
                 ) : (
-                    <button type="button" onClick={onClick} className="block w-full text-left cursor-pointer">
+                    <button type="button" onClick={isLocked ? onDetails : onClick} className="block w-full text-left cursor-pointer">
                         {media}
                     </button>
                 )}
@@ -123,7 +132,7 @@ export function LessonCard({ lesson, href, onClick, onDetails }: LessonCardProps
                                     Details
                                 </button>
                             )}
-                            {href ? (
+                            {href && !isLocked ? (
                                 <Link
                                     href={href}
                                     onClick={onClick}
@@ -135,11 +144,17 @@ export function LessonCard({ lesson, href, onClick, onDetails }: LessonCardProps
                             ) : (
                                 <button
                                     type="button"
-                                    onClick={onClick}
-                                    className="flex-1 h-9 px-3 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-[11px] font-extrabold flex items-center justify-center gap-1 cursor-pointer"
+                                    onClick={isLocked ? onUnlock : onClick}
+                                    disabled={unlocking}
+                                    className={`flex-1 h-9 px-3 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 cursor-pointer disabled:opacity-60 ${
+                                        isLocked
+                                            ? "bg-[#FFC800] hover:bg-[#e6b400] text-slate-900"
+                                            : "bg-[#58CC02] hover:bg-[#46A302] text-white"
+                                    }`}
                                 >
+                                    {unlocking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : isLocked ? <Star className="w-3.5 h-3.5 fill-current" /> : null}
                                     {actionLabel}
-                                    <ArrowRight className="w-3.5 h-3.5" />
+                                    {!isLocked && <ArrowRight className="w-3.5 h-3.5" />}
                                 </button>
                             )}
                         </div>

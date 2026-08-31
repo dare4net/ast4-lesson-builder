@@ -36,6 +36,45 @@ export function getComponentMaxPoints(component: Component): number {
     }
 }
 
+export const STARS_PER_UNIT = 5
+
+export function getComponentScoringUnits(component: Component): number {
+    const props = component.props || {}
+    switch (component.type) {
+        case 'fillInTheBlank': {
+            const n =
+                (Array.isArray(props.blanks) ? props.blanks.length : 0) ||
+                (String(props.text || '').match(/\[blank\]/g) || []).length
+            return Math.max(1, n)
+        }
+        case 'quiz':
+        case 'flashcardQuiz':
+        case 'multiSelectQuiz':
+            return Math.max(1, Array.isArray(props.questions) ? props.questions.length : 1)
+        case 'matchingPairs':
+            return Math.max(1, Array.isArray(props.pairs) ? props.pairs.length : 1)
+        case 'dragDrop':
+            return Math.max(1, Array.isArray(props.items) ? props.items.length : 1)
+        case 'categorise':
+        case 'spectrumSorter':
+            return Math.max(1, Array.isArray(props.items) ? props.items.length : 1)
+        case 'hotspot':
+            return Math.max(1, Array.isArray(props.hotspots) ? props.hotspots.length : 1)
+        case 'swipeDeck':
+            return Math.max(1, Array.isArray(props.cards) ? props.cards.length : 1)
+        default:
+            return 1
+    }
+}
+
+export function maxStarsForLiveComponent(component: Component): number {
+    if (componentMode(component) !== 'live') return 0
+    if ((Number(component.props?.points) || 0) <= 0 && !isScoredComponent(component)) return 0
+    const maxPoints = getComponentMaxPoints(component)
+    if (maxPoints <= 0) return 0
+    return STARS_PER_UNIT * getComponentScoringUnits(component)
+}
+
 export function getTotalPossiblePoints(lesson: Lesson): number {
     let total = 0
     for (const slide of lesson.slides || []) {
@@ -51,6 +90,13 @@ export function getTotalPossiblePoints(lesson: Lesson): number {
 function clampScore(value: number, max: number): number {
     if (!Number.isFinite(value)) return 0
     return Math.max(0, Math.min(Math.round(value), max > 0 ? max : Math.round(value)))
+}
+
+/** Replace a block's contribution on the lesson total. Retry sets next to 0. */
+export function shiftComponentAward(previousAwarded: number, nextAwarded: number) {
+    const previous = Math.max(0, Number(previousAwarded) || 0)
+    const next = Math.max(0, Number(nextAwarded) || 0)
+    return { awarded: next, delta: next - previous }
 }
 
 function sumNumbers(value: unknown): number {

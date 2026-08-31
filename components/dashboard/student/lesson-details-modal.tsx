@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { Award, ChevronDown, Clock, HelpCircle, Layers, Loader2, Play, Star, Zap } from 'lucide-react'
+import { Award, ChevronDown, Clock, HelpCircle, Layers, Loader2, Lock, Play, Star, Zap } from 'lucide-react'
 import { CertificateStudio } from '@/components/certificates/certificate-studio'
 import { useAuth } from '@/context/auth-context'
 import { CERTIFICATE_PRINT_COST } from '@/lib/certificates'
+import { LESSON_EARLY_UNLOCK_COST, LESSON_UNLOCK_PROGRESS } from '@/lib/lesson-unlock'
 import {
     Dialog,
     DialogContent,
@@ -36,6 +37,9 @@ export type LessonDetailsLesson = {
     obtainableStars?: number
     livePoints?: number
     practicePoints?: number
+    locked?: boolean
+    unlockedByStars?: boolean
+    unlockCost?: number
     activities?: Array<{
         type: string
         label?: string
@@ -53,6 +57,8 @@ export function LessonDetailsModal({
     onLaunch,
     launching = false,
     loading = false,
+    unlocking = false,
+    onUnlock,
 }: {
     lesson: LessonDetailsLesson | null
     open: boolean
@@ -60,12 +66,16 @@ export function LessonDetailsModal({
     onLaunch: (lesson: LessonDetailsLesson) => void
     launching?: boolean
     loading?: boolean
+    unlocking?: boolean
+    onUnlock?: (lesson: LessonDetailsLesson) => void
 }) {
     const [showHunt, setShowHunt] = useState(false)
     const [showCertificate, setShowCertificate] = useState(false)
     const { user } = useAuth()
     const studentName = user?.full_name || user?.fullName || user?.email?.split('@')[0] || 'Student'
     const completed = Boolean(lesson?.completed || (lesson?.progress || 0) === 100)
+    const locked = Boolean(lesson?.locked)
+    const unlockCost = Number(lesson?.unlockCost) || LESSON_EARLY_UNLOCK_COST
 
     return (
         <>
@@ -94,11 +104,13 @@ export function LessonDetailsModal({
                                 </span>
                                 <span className={`text-[11px] font-extrabold px-3 py-1 rounded-full border ${lesson.completed
                                     ? 'bg-[#58CC02]/10 border-[#58CC02]/20 text-[#58CC02]'
-                                    : (lesson.progress || 0) > 0
+                                    : locked
+                                        ? 'bg-slate-100 border-slate-200 text-slate-500'
+                                        : (lesson.progress || 0) > 0
                                         ? 'bg-[#FFC800]/10 border-[#FFC800]/20 text-[#D9A000]'
                                         : 'bg-slate-100 border-slate-200 text-slate-500'
                                     }`}>
-                                    {lesson.completed ? 'Completed' : (lesson.progress || 0) > 0 ? `${lesson.progress}% Done` : 'Not Started'}
+                                    {lesson.completed ? 'Completed' : locked ? 'Locked' : (lesson.progress || 0) > 0 ? `${lesson.progress}% Done` : 'Not Started'}
                                 </span>
                             </div>
                             <DialogTitle className="text-xl font-extrabold text-slate-800 leading-snug">
@@ -201,17 +213,34 @@ export function LessonDetailsModal({
                                     Print certificate · {CERTIFICATE_PRINT_COST}★
                                 </button>
                             )}
-                            <button
-                                type="button"
-                                disabled={launching}
-                                onClick={() => onLaunch(lesson)}
-                                className="w-full h-12 bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:border-b-0 active:translate-y-[2px] disabled:opacity-60"
-                            >
-                                {launching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-white" />}
-                                <span>
-                                    {lesson.completed ? 'Review Lesson in Viewer' : (lesson.progress || 0) > 0 ? 'Continue Lesson' : 'Start Lesson'}
-                                </span>
-                            </button>
+                            {locked ? (
+                                <>
+                                    <p className="text-xs font-bold text-slate-500 text-center">
+                                        Complete {LESSON_UNLOCK_PROGRESS}% of the previous lesson, or skip ahead with stars.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        disabled={unlocking || !onUnlock}
+                                        onClick={() => lesson && onUnlock?.(lesson)}
+                                        className="w-full h-12 bg-[#FFC800] hover:bg-[#e6b400] border-b-4 border-[#D9A000] text-slate-900 rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 active:border-b-0 active:translate-y-[2px] disabled:opacity-60"
+                                    >
+                                        {unlocking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Lock className="w-4 h-4" />}
+                                        Unlock with {unlockCost}★
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    type="button"
+                                    disabled={launching || !lesson}
+                                    onClick={() => lesson && onLaunch(lesson)}
+                                    className="w-full h-12 bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:border-b-0 active:translate-y-[2px] disabled:opacity-60"
+                                >
+                                    {launching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4 fill-white" />}
+                                    <span>
+                                        {lesson.completed ? 'Review Lesson in Viewer' : (lesson.progress || 0) > 0 ? 'Continue Lesson' : 'Start Lesson'}
+                                    </span>
+                                </button>
+                            )}
                             <button
                                 type="button"
                                 onClick={() => onOpenChange(false)}

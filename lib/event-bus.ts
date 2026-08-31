@@ -133,6 +133,11 @@ export interface InboxNoticePayload {
     body: string
 }
 
+export interface LessonPathUnlockedPayload {
+    title?: string
+    description?: string
+}
+
 // ─── Event Map ───────────────────────────────────────────────────────────────
 
 export interface SystemEventMap {
@@ -169,6 +174,8 @@ export interface SystemEventMap {
     CROWN_GOLD: CrownGoldPayload
     /** Inbox garnish for mail from someone else (follows, crowns, curriculum drops) */
     INBOX_NOTICE: InboxNoticePayload
+    /** Emitted when lesson progress crosses the sequential unlock threshold */
+    LESSON_PATH_UNLOCKED: LessonPathUnlockedPayload
 }
 
 export type SystemEventName = keyof SystemEventMap

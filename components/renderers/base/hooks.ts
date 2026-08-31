@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import isEqual from "lodash.isequal"
 import { appEventBus } from "@/lib/event-bus"
+import { shiftComponentAward } from "@/domain/scoring"
 
 export interface UseInteractiveStateProps<S> {
     initialState: S
@@ -126,9 +127,10 @@ export function useAttemptTracking({
         extras?: Record<string, number | boolean | string>
     ) => {
         if (isLive) {
-            if (!isCorrect) return
             const elapsed = completionTimeMs ?? (Date.now() - mountTimeRef.current)
-            const percentage = maxScore > 0 ? Math.round((score / maxScore) * 100) : 100
+            const percentage = maxScore > 0
+                ? Math.round((score / maxScore) * 100)
+                : (isCorrect ? 100 : 0)
             appEventBus.emit('COMPONENT_SUBMITTED', {
                 componentId,
                 type: componentType,
@@ -209,6 +211,8 @@ export interface UseScoringProps {
     mode?: 'practice' | 'live'
     scoreContext?: { addPoints: (p: number) => void }
     playFeedback: (type: any, options?: any) => Promise<any>
+    /** Points this block already contributed (hydrated from saved state). */
+    initialAwarded?: number
 }
 
 /**
@@ -216,29 +220,41 @@ export interface UseScoringProps {
  * 
  * Hook to manage scoring logic and feedback for Scored Components.
  * Handles Practice vs Live mode differences.
+ * Each block owns a running contribution so a practice retry replaces points
+ * instead of stacking them on the lesson total.
  */
 export function useScoring({
     points,
     mode = 'practice',
     scoreContext,
-    playFeedback
+    playFeedback,
+    initialAwarded = 0,
 }: UseScoringProps) {
     const isLive = mode === 'live'
+    const awardedRef = useRef(Math.max(0, Number(initialAwarded) || 0))
+
+    const applyAward = useCallback((nextAwarded: number) => {
+        const { awarded, delta } = shiftComponentAward(awardedRef.current, nextAwarded)
+        awardedRef.current = awarded
+        if (delta !== 0) scoreContext?.addPoints(delta)
+    }, [scoreContext])
 
     const handleScore = useCallback((isCorrect: boolean) => {
         if (isCorrect) {
-            scoreContext?.addPoints(points)
+            applyAward(awardedRef.current + points)
         }
-    }, [points, scoreContext])
+    }, [points, applyAward])
 
     const handlePoints = useCallback((p: number) => {
-        scoreContext?.addPoints(p)
-    }, [scoreContext])
+        applyAward(p)
+    }, [applyAward])
 
     const handleRetry = useCallback(() => {
-        if (isLive) return // No retry in live mode
+        // Zero the points this block actually earned (e.g. 5 of 15 on a 3-blank FITB), never the max.
+        applyAward(0)
+        if (isLive) return
         playFeedback('uiClick')
-    }, [isLive, playFeedback])
+    }, [isLive, playFeedback, applyAward])
 
     return {
         isLive,

@@ -1,22 +1,28 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useQueryClient } from "@tanstack/react-query"
 import { apiClient } from "@/lib/api-client"
 import { useAuth } from "@/context/auth-context"
 import { buildStudentViewerHref } from "@/lib/viewer-url"
+import { queryKeys } from "@/lib/query-keys"
+import { invalidateLessonsListCache } from "@/lib/lesson-data-sync"
+import { SoundEffects } from "@/lib/sound-effects"
+import { LESSON_EARLY_UNLOCK_COST, withLessonLocks } from "@/lib/lesson-unlock"
 import {
     Folder,
     ArrowLeft,
     FileText,
     Play,
-    CheckCircle2,
     Loader2,
     Clock,
     BookOpen,
     Info,
     Layers,
     Zap,
+    Lock,
+    Star,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
@@ -95,17 +101,50 @@ export default function StudentModuleDetailPage() {
         )
     }
 
-    const completedLessonsCount = lessons.filter(l => l.completed).length
-    const progressPct = lessons.length > 0 ? Math.round((completedLessonsCount / lessons.length) * 100) : 0
+    const sequencedLessons = useMemo(() => withLessonLocks(lessons), [lessons])
+    const completedLessonsCount = sequencedLessons.filter(l => l.completed).length
+    const progressPct = sequencedLessons.length > 0 ? Math.round((completedLessonsCount / sequencedLessons.length) * 100) : 0
 
     const [launchingId, setLaunchingId] = useState<string | null>(null)
+    const [unlockingId, setUnlockingId] = useState<string | null>(null)
+    const queryClient = useQueryClient()
 
     const launchLesson = (lesson: any) => {
+        if (lesson?.locked) return
         const id = lesson.lessonId || lesson._id
         if (!id || launchingId) return
         setLaunchingId(id)
         const returnUrl = typeof window !== 'undefined' ? window.location.pathname : ''
         router.push(buildStudentViewerHref(id, { returnUrl, moduleId }))
+    }
+
+    const unlockLesson = async (lesson: any) => {
+        const id = lesson.lessonId || lesson._id
+        if (!id || unlockingId) return
+        setUnlockingId(id)
+        try {
+            const result = await apiClient.store.unlockLesson(id)
+            if (result?.error) return
+            void SoundEffects.play('starsSpent')
+            if (typeof result?.starBalance === 'number') {
+                queryClient.setQueryData(queryKeys.wallet, (prev: { starBalance?: number } | undefined) => ({
+                    ...(prev || {}),
+                    starBalance: result.starBalance,
+                }))
+            }
+            void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
+            if (user?.user_id) void invalidateLessonsListCache(user.user_id)
+            setLessons((prev) => prev.map((row) => {
+                const rowId = row.lessonId || row._id
+                if (String(rowId) !== String(id)) return row
+                return { ...row, locked: false, unlockedByStars: true }
+            }))
+            if (selectedLesson && String(selectedLesson.lessonId || selectedLesson._id) === String(id)) {
+                setSelectedLesson({ ...selectedLesson, locked: false, unlockedByStars: true })
+            }
+        } finally {
+            setUnlockingId(null)
+        }
     }
 
     if (loading) {
@@ -164,11 +203,11 @@ export default function StudentModuleDetailPage() {
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">
                         <BookOpen className="w-5 h-5 text-[#58CC02]" />
-                        <span>Interactive Lessons ({lessons.length})</span>
+                        <span>Interactive Lessons ({sequencedLessons.length})</span>
                     </h2>
                 </div>
 
-                {lessons.length === 0 ? (
+                {sequencedLessons.length === 0 ? (
                     <div className="py-16 text-center border-2 border-dashed border-slate-200 rounded-3xl bg-white space-y-2">
                         <FileText className="w-10 h-10 text-slate-300 mx-auto" />
                         <p className="text-sm font-extrabold text-slate-700">No lessons available yet</p>
@@ -176,10 +215,12 @@ export default function StudentModuleDetailPage() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {lessons.map((lesson, idx) => {
+                        {sequencedLessons.map((lesson, idx) => {
                             const lessonTitle = getLessonTitle(lesson, idx)
                             const isCompleted = lesson.completed
                             const isStarted = (lesson.progress || 0) > 0 && !isCompleted
+                            const isLocked = Boolean(lesson.locked)
+                            const unlockCost = Number(lesson.unlockCost) || LESSON_EARLY_UNLOCK_COST
 
                             return (
                                 <motion.div
@@ -191,8 +232,8 @@ export default function StudentModuleDetailPage() {
                                     <Card className="p-6 rounded-3xl bg-white border-2 border-slate-200 shadow-sm hover:border-[#1CB0F6] transition-all group flex flex-col justify-between h-full space-y-5">
                                         <div className="space-y-3">
                                             <div className="flex justify-between items-start">
-                                                <div className="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs">
-                                                    <FileText className="w-5 h-5 text-[#1CB0F6]" />
+                                                <div className={`w-10 h-10 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs ${isLocked ? 'opacity-70' : ''}`}>
+                                                    {isLocked ? <Lock className="w-5 h-5 text-slate-400" /> : <FileText className="w-5 h-5 text-[#1CB0F6]" />}
                                                 </div>
 
                                                 <div className="flex items-center gap-2">
@@ -205,11 +246,13 @@ export default function StudentModuleDetailPage() {
                                                     </button>
                                                     <span className={`text-[11px] font-extrabold px-3 py-1 rounded-full border ${isCompleted
                                                         ? "bg-[#58CC02]/10 border-[#58CC02]/20 text-[#58CC02]"
-                                                        : isStarted
+                                                        : isLocked
+                                                            ? "bg-slate-100 border-slate-200 text-slate-500"
+                                                            : isStarted
                                                             ? "bg-[#FFC800]/10 border-[#FFC800]/20 text-[#D9A000]"
                                                             : "bg-slate-100 border-slate-200 text-slate-500"
                                                         }`}>
-                                                        {isCompleted ? "Completed" : isStarted ? `${lesson.progress}% Done` : "Ready"}
+                                                        {isCompleted ? "Completed" : isLocked ? "Locked" : isStarted ? `${lesson.progress}% Done` : "Ready"}
                                                     </span>
                                                 </div>
                                             </div>
@@ -255,12 +298,21 @@ export default function StudentModuleDetailPage() {
                                                 Details
                                             </button>
                                             <button
-                                                disabled={(!lesson.lessonId && !lesson._id) || launchingId === (lesson.lessonId || lesson._id)}
-                                                onClick={() => launchLesson(lesson)}
-                                                className="flex-1 h-11 bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all active:border-b-0 active:translate-y-[2px] disabled:opacity-60"
+                                                disabled={(!lesson.lessonId && !lesson._id) || launchingId === (lesson.lessonId || lesson._id) || unlockingId === (lesson.lessonId || lesson._id)}
+                                                onClick={() => isLocked ? unlockLesson(lesson) : launchLesson(lesson)}
+                                                className={`flex-1 h-11 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all disabled:opacity-60 ${
+                                                    isLocked
+                                                        ? "bg-[#FFC800] hover:bg-[#e6b400] border-b-4 border-[#D9A000] text-slate-900 active:border-b-0 active:translate-y-[2px]"
+                                                        : "bg-[#58CC02] hover:bg-[#46a302] border-b-4 border-[#3B8C00] text-white active:border-b-0 active:translate-y-[2px]"
+                                                }`}
                                             >
-                                                {launchingId === (lesson.lessonId || lesson._id) ? (
+                                                {launchingId === (lesson.lessonId || lesson._id) || unlockingId === (lesson.lessonId || lesson._id) ? (
                                                     <Loader2 className="w-4 h-4 animate-spin" />
+                                                ) : isLocked ? (
+                                                    <>
+                                                        <Star className="w-4 h-4 fill-current" />
+                                                        <span>Unlock · {unlockCost}★</span>
+                                                    </>
                                                 ) : (
                                                     <>
                                                         <Play className="w-4 h-4 fill-white" />
@@ -287,7 +339,9 @@ export default function StudentModuleDetailPage() {
                     setSelectedLesson(null)
                     launchLesson(lesson)
                 }}
+                onUnlock={(lesson) => void unlockLesson(lesson)}
                 launching={Boolean(selectedLesson && launchingId === (selectedLesson.lessonId || selectedLesson._id))}
+                unlocking={Boolean(selectedLesson && unlockingId === (selectedLesson.lessonId || selectedLesson._id))}
             />
         </div>
     )

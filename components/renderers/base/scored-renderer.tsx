@@ -7,7 +7,9 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { useScoring as useBaseScoring, useAttemptTracking, UseAttemptTrackingReturn } from "./hooks"
 import { BestAttemptBadge } from "./best-attempt-badge"
 import { isComponentCompleted } from "@/domain/component-status"
+import { getComponentScoringUnits } from "@/domain/scoring"
 import { LiveBlockResetBar } from "@/components/store/live-block-reset"
+import { ScoringService } from "@/services/scoring-service"
 
 export interface ScoredRenderProps<S> extends InteractiveRenderProps<S>, UseAttemptTrackingReturn {
     handleScore: (isCorrect: boolean) => void
@@ -42,11 +44,17 @@ export function ScoredRenderer<S>({
     const { playFeedback } = useFeedback()
     const contextScoring = useScoringContext()
 
+    const initialAwarded = ScoringService.calculateComponentScore(
+        interactiveProps.component,
+        interactiveProps.savedState,
+    )
+
     const { isLive, handleScore, handlePoints, handleRetry } = useBaseScoring({
         points,
         mode,
         scoreContext: contextScoring,
-        playFeedback
+        playFeedback,
+        initialAwarded,
     })
 
     const recordComponentAttempt = contextScoring.recordComponentAttempt
@@ -63,6 +71,19 @@ export function ScoredRenderer<S>({
         attemptTracking.resetAttempts()
         handleRetry()
     }, [attemptTracking.resetAttempts, handleRetry])
+
+    const recordAttempt = React.useCallback<UseAttemptTrackingReturn['recordAttempt']>((
+        isCorrect,
+        score,
+        maxScore,
+        completionTimeMs,
+        extras,
+    ) => {
+        attemptTracking.recordAttempt(isCorrect, score, maxScore, completionTimeMs, {
+            ...extras,
+            units: getComponentScoringUnits(interactiveProps.component),
+        })
+    }, [attemptTracking.recordAttempt, interactiveProps.component])
 
     // Sync attempt records to ScoringContext for user-interactions persistence.
     // Depend on recordComponentAttempt, not the whole context value — that object
@@ -103,6 +124,7 @@ export function ScoredRenderer<S>({
                             {onRender({
                                 ...renderProps,
                                 ...attemptTracking,
+                                recordAttempt,
                                 handleScore,
                                 handlePoints,
                                 handleRetry: handleRetryAndReset,

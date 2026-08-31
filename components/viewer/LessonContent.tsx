@@ -9,7 +9,7 @@ import { useScoring } from '@/context/scoring-context';
 import { useFeedback } from '@/hooks/use-feedback';
 import type { Lesson } from '@/types/lesson';
 import { getComponentCategory, formatSlideTitle, isInteractiveComponent } from '@/lib/lesson-utils';
-import { isComponentCompleted } from '@/domain/component-status';
+import { isComponentCompleted, isComponentReadyToAdvance } from '@/domain/component-status';
 import isEqual from 'lodash.isequal';
 import { cn } from '@/lib/utils';
 import { useNavigationLock } from '@/context/navigation-lock-context';
@@ -177,7 +177,7 @@ export const LessonContent = forwardRef<LessonContentRef, LessonContentProps>(
           return true;
         }
 
-        return isComponentCompleted(componentStates[activeComponent.id]) || isComponentCompleted(activeComponent);
+        return isComponentReadyToAdvance(componentStates[activeComponent.id]) || isComponentReadyToAdvance(activeComponent);
       }
       return true;
     }, [activeComponent, componentStates]);

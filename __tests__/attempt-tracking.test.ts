@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useAttemptTracking } from '@/components/renderers/base/hooks'
+import { useAttemptTracking, useScoring } from '@/components/renderers/base/hooks'
 import { appEventBus } from '@/lib/event-bus'
 
 describe('useAttemptTracking', () => {
@@ -113,6 +113,26 @@ describe('useAttemptTracking', () => {
         )
     })
 
+    it('emits live COMPONENT_SUBMITTED for a partial score so stars can scale', () => {
+        const busListener = vi.fn()
+        appEventBus.on('COMPONENT_SUBMITTED', busListener)
+        const { result } = renderHook(() =>
+            useAttemptTracking({ componentId: 'fib-1', componentType: 'fillInTheBlank', mode: 'live' })
+        )
+
+        act(() => { result.current.recordAttempt(false, 5, 15) })
+
+        expect(busListener).toHaveBeenCalledWith(
+            expect.objectContaining({
+                componentId: 'fib-1',
+                mode: 'live',
+                score: 5,
+                maxScore: 15,
+                percentage: 33,
+            })
+        )
+    })
+
     it('restores sealed attempt counts from a previous session', () => {
         const { result } = renderHook(() =>
             useAttemptTracking({
@@ -151,5 +171,60 @@ describe('useAttemptTracking', () => {
                 type: 'hangman',
             })
         )
+    })
+})
+
+describe('useScoring practice retry', () => {
+    it('does not stack points when the same block is completed again', () => {
+        const addPoints = vi.fn()
+        const playFeedback = vi.fn()
+        const { result } = renderHook(() =>
+            useScoring({
+                points: 10,
+                mode: 'practice',
+                scoreContext: { addPoints },
+                playFeedback,
+            })
+        )
+
+        act(() => { result.current.handlePoints(10) })
+        act(() => { result.current.handleRetry() })
+        act(() => { result.current.handlePoints(10) })
+
+        expect(addPoints.mock.calls.map((call) => call[0])).toEqual([10, -10, 10])
+    })
+
+    it('treats handlePoints as a replace so a double submit is a no-op', () => {
+        const addPoints = vi.fn()
+        const { result } = renderHook(() =>
+            useScoring({
+                points: 10,
+                mode: 'practice',
+                scoreContext: { addPoints },
+                playFeedback: vi.fn(),
+            })
+        )
+
+        act(() => { result.current.handlePoints(8) })
+        act(() => { result.current.handlePoints(8) })
+        expect(addPoints).toHaveBeenCalledTimes(1)
+        expect(addPoints).toHaveBeenCalledWith(8)
+    })
+
+    it('retries a partial fill-in-the-blank without subtracting the max', () => {
+        const addPoints = vi.fn()
+        const { result } = renderHook(() =>
+            useScoring({
+                points: 5,
+                mode: 'practice',
+                scoreContext: { addPoints },
+                playFeedback: vi.fn(),
+                initialAwarded: 5,
+            })
+        )
+
+        act(() => { result.current.handleRetry() })
+        act(() => { result.current.handlePoints(15) })
+        expect(addPoints.mock.calls.map((call) => call[0])).toEqual([-5, 15])
     })
 })

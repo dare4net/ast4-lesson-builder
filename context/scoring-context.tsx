@@ -75,7 +75,7 @@ export function ScoringProvider({
     }, [lesson])
 
     const addPoints = useCallback((points: number) => {
-        setCurrentScore(prev => prev + points)
+        setCurrentScore((prev) => Math.max(0, prev + points))
     }, [])
 
     const resetScore = useCallback(() => {

@@ -6,7 +6,7 @@ import { RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
-import { BLOCK_RESET_COST } from '@/lib/store-skus'
+import { BLOCK_RESET_COST, BLOCK_RESET_STORE_COST } from '@/lib/store-skus'
 import { resetStarAwardDedupe } from '@/lib/achievement-listener'
 import { SoundEffects } from '@/lib/sound-effects'
 
@@ -41,7 +41,7 @@ export function LiveBlockResetBar({
         <div className="shrink-0 px-3 sm:px-6 pb-3">
             <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#FF4B4B]/30 bg-[#FF4B4B]/5 px-3 py-2">
                 <p className="text-[11px] font-bold text-slate-600">
-                    Wipe this live block and try again. Uses a reset charge or {BLOCK_RESET_COST} stars.
+                    Wipe this live block and try again. A store charge is {BLOCK_RESET_STORE_COST}★; buying one here costs {BLOCK_RESET_COST}★.
                 </p>
                 <Button
                     type="button"

@@ -1,4 +1,4 @@
-import { componentMode, getComponentMaxPoints, isScoredComponent } from '@/domain/scoring'
+import { componentMode, getComponentMaxPoints, isScoredComponent, maxStarsForLiveComponent } from '@/domain/scoring'
 import { isScoredComponentType } from '@/lib/component-registry'
 import type { Component } from '@/types/lesson'
 
@@ -50,7 +50,7 @@ export function summarizeLessonHunt(slides: Array<{ title?: string; components?:
             const hunt = isScoredComponent(component) || HUNT_TYPES.has(component.type) || isScoredComponentType(component.type)
             if (!hunt) continue
             if (HUNT_TYPES.has(component.type) || isScoredComponentType(component.type)) interactiveCount += 1
-            const stars = mode === 'live' && maxPoints > 0 ? 5 : 0
+            const stars = maxStarsForLiveComponent(component)
             totalPoints += maxPoints
             if (mode === 'live') livePoints += maxPoints
             else practicePoints += maxPoints

@@ -38,10 +38,10 @@ describe('summarizeLessonHunt', () => {
         expect(hunt.practicePoints).toBe(10)
         expect(hunt.livePoints).toBe(10)
         expect(hunt.totalPoints).toBe(20)
-        expect(hunt.maxStars).toBe(5)
+        expect(hunt.maxStars).toBe(10)
         expect(hunt.activities).toHaveLength(2)
         expect(hunt.activities[0].mode).toBe('practice')
-        expect(hunt.activities[1].maxStars).toBe(5)
+        expect(hunt.activities[1].maxStars).toBe(10)
     })
 })
 
