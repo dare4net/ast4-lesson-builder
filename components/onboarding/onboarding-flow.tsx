@@ -8,15 +8,22 @@ import { SoundEffects } from '@/lib/sound-effects'
 import { useAuth } from '@/context/auth-context'
 import { HandleAvatar } from '@/components/pride/handle-avatar'
 import { FirstWin } from '@/components/onboarding/first-win'
+import { PushPermissionCard } from '@/components/notifications/push-permission-card'
 import { apiClient } from '@/lib/api-client'
 import { AVATAR_IDS, resolveAvatarId } from '@/lib/avatar'
 import { handleSchema } from '@/lib/contracts'
 import { ONBOARDING_BONUS_STARS, safeNextPath, suggestHandle } from '@/lib/onboarding'
+import {
+    enablePushNotifications,
+    getBrowserNotificationPermission,
+    isPushClientConfigured,
+} from '@/lib/push-client'
+import { markPushNudgeDismissed } from '@/lib/push-preferences'
 import { ACCENT_COLORS, resolveAccentColor } from '@/lib/pride-format'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { cn } from '@/lib/utils'
 
-const STEPS = ['name', 'face', 'world', 'lesson', 'win'] as const
+const STEPS = ['name', 'face', 'world', 'lesson', 'win', 'notify'] as const
 
 export function OnboardingFlow() {
     const { user, updateUser } = useAuth()
@@ -36,6 +43,7 @@ export function OnboardingFlow() {
     const [done, setDone] = useState(false)
     const [bonus, setBonus] = useState(0)
     const [lessonPick, setLessonPick] = useState<string | null>(null)
+    const [pushLoading, setPushLoading] = useState(false)
 
     const accent = resolveAccentColor(handle, accentColor)
     const face = resolveAvatarId(handle || user?.user_id, avatarId)
@@ -80,6 +88,38 @@ export function OnboardingFlow() {
             setSaving(false)
         }
     }
+
+    const afterWin = () => {
+        if (isPushClientConfigured()) {
+            setStep(5)
+            return
+        }
+        void finish(false)
+    }
+
+    const skipNotify = () => {
+        if (user?.user_id) markPushNudgeDismissed(user.user_id)
+        void finish(false)
+    }
+
+    const enableNotify = async () => {
+        if (!user?.user_id) {
+            void finish(false)
+            return
+        }
+        setPushLoading(true)
+        setError(null)
+        try {
+            await enablePushNotifications(user.user_id)
+        } catch {
+            /* still complete onboarding */
+        } finally {
+            setPushLoading(false)
+            void finish(false)
+        }
+    }
+
+    const notifyPermission = getBrowserNotificationPermission()
 
     return (
         <div className="min-h-screen bg-[#FAF9F5] flex flex-col relative overflow-hidden">
@@ -268,8 +308,19 @@ export function OnboardingFlow() {
                                         void SoundEffects.play(value === 'live' ? 'correct' : 'incorrect')
                                     }}
                                 />
+                            ) : step === 4 ? (
+                                <FirstWin accent={accent} onWon={afterWin} />
                             ) : (
-                                <FirstWin accent={accent} onWon={() => finish(false)} />
+                                <div className="space-y-4">
+                                    <PushPermissionCard
+                                        accent={accent}
+                                        variant="onboarding"
+                                        permission={notifyPermission === 'unsupported' ? 'unsupported' : notifyPermission}
+                                        loading={pushLoading}
+                                        onEnable={() => void enableNotify()}
+                                        onDismiss={skipNotify}
+                                    />
+                                </div>
                             )}
                         </motion.div>
                     </AnimatePresence>

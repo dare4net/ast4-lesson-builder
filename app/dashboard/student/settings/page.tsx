@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { FeedbackSettings } from "@/components/ui/feedback-settings"
+import { PushNotificationsSettings } from "@/components/notifications/push-notifications-settings"
 import { HandleAvatar } from "@/components/pride/handle-avatar"
 import { apiClient } from "@/lib/api-client"
 import { AVATAR_IDS, resolveAvatarId } from "@/lib/avatar"
@@ -415,6 +416,8 @@ export default function SettingsPage() {
                         </div>
                         <FeedbackSettings showIntro={false} />
                     </Card>
+
+                    <PushNotificationsSettings />
                 </div>
             </div>
         </div>

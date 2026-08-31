@@ -20,4 +20,5 @@ export function programProgressPercent(prog: any): number {
 export const CURRICULUM_INBOX_TYPES = new Set([
     'PROGRAM_LESSON_PUBLISHED',
     'PROGRAM_MODULE_PUBLISHED',
+    'NEXT_LESSON_UNLOCKED',
 ])

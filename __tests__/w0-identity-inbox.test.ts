@@ -38,12 +38,12 @@ describe('W0 identity and inbox', () => {
         expect(read('middleware.ts')).not.toContain("'/u")
     })
 
-    it('header bell is student-only and polls the inbox', () => {
+    it('header bell polls the inbox for students and tutors', () => {
         const header = read('components/dashboard/dashboard-header.tsx')
         const bell = read('components/dashboard/notification-bell.tsx')
         const hook = read('hooks/use-notifications.ts')
         expect(header).toContain('NotificationBell')
-        expect(header).toContain('!isTutor && <NotificationBell')
+        expect(header).toContain('<NotificationBell />')
         expect(header).toContain('PrideSearch')
         expect(header).toContain('HandleAvatar')
         expect(header).toContain('avatarId')

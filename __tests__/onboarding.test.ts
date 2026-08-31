@@ -33,6 +33,8 @@ describe('student onboarding', () => {
         expect(read('components/onboarding/onboarding-flow.tsx')).toContain('AVATAR_IDS')
         expect(read('components/onboarding/onboarding-flow.tsx')).toContain('How a lesson works')
         expect(read('components/onboarding/onboarding-flow.tsx')).toContain('Finishing a live block')
+        expect(read('components/onboarding/onboarding-flow.tsx')).toContain('PushPermissionCard')
+        expect(read('components/onboarding/onboarding-flow.tsx')).toContain("'notify'")
         expect(read('components/onboarding/first-win.tsx')).toContain('Spell STAR')
         expect(read('components/onboarding/onboarding-flow.tsx')).not.toContain('COMPONENT_SUBMITTED')
         expect(read('components/onboarding/first-win.tsx')).not.toContain('appEventBus')

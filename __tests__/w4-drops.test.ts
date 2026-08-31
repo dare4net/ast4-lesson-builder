@@ -32,6 +32,7 @@ describe('W4 curriculum drops', () => {
         expect(bell).toContain('queryKeys.myPrograms')
         expect(CURRICULUM_INBOX_TYPES.has('PROGRAM_LESSON_PUBLISHED')).toBe(true)
         expect(CURRICULUM_INBOX_TYPES.has('PROGRAM_MODULE_PUBLISHED')).toBe(true)
+        expect(CURRICULUM_INBOX_TYPES.has('NEXT_LESSON_UNLOCKED')).toBe(true)
         expect(shouldToastInboxItem({
             id: 'n1',
             actorId: 'tutor-1',

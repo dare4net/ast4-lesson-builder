@@ -372,6 +372,11 @@ class APIClient {
         unreadCount: () => this.get('/notifications/unread-count'),
         markRead: (body: { ids?: string[]; all?: boolean }) => this.post('/notifications/read', body),
     };
+
+    push = {
+        register: (token: string) => this.post('/push/tokens', { token }),
+        unregister: (token: string) => this.delete('/push/tokens', { data: { token } }),
+    };
 }
 
 // Export singleton instance

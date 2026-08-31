@@ -1,6 +1,6 @@
 // Service Worker for AST Lesson Builder PWA
 
-const CACHE_NAME = 'ast-builder-cache-v5';
+const CACHE_NAME = 'ast-builder-cache-v6';
 const SOUND_CACHE_NAME = 'ast-builder-sounds-v3';
 
 const urlsToCache = [
@@ -166,3 +166,10 @@ self.addEventListener('activate', (event) => {
     ])
   );
 });
+
+// FCM background push — same worker as the PWA cache (avoids two workers fighting for scope /).
+try {
+  importScripts('/firebase-messaging-sw.js');
+} catch (err) {
+  console.warn('[SW] Firebase messaging module not loaded:', err);
+}

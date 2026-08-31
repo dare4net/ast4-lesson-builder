@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { apiClient } from "@/lib/api-client"
+import { PushNotificationsSettings } from "@/components/notifications/push-notifications-settings"
 
 export default function TutorSettingsPage() {
     const { user, logout, updateUser } = useAuth()
@@ -158,6 +159,8 @@ export default function TutorSettingsPage() {
                             </div>
                         </form>
                     </Card>
+
+                    <PushNotificationsSettings />
                 </div>
             </div>
         </div>

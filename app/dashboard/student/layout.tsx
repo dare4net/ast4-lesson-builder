@@ -8,6 +8,8 @@ import { StudentSidebar } from "@/components/dashboard/sidebar/student-sidebar"
 import { StudentMobileNav } from "@/components/dashboard/sidebar/student-mobile-nav"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { LoginStreakModal } from "@/components/store/login-streak-modal"
+import { PushRegister } from "@/components/push-register"
+import { PushPermissionNudge } from "@/components/notifications/push-permission-nudge"
 import { useStudentStats } from "@/hooks/use-student-stats"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -43,6 +45,8 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
                 userId={user?.user_id}
                 enabled={!needsOnboarding(user)}
             />
+            <PushRegister />
+            <PushPermissionNudge />
             {/* Navigation */}
             <StudentSidebar isCollapsed={isCollapsed} onToggle={() => setIsCollapsed(!isCollapsed)} />
             <StudentMobileNav />

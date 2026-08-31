@@ -1,14 +1,20 @@
 import type { LucideIcon } from 'lucide-react'
 import {
     Award,
+    BarChart2,
     Bell,
     BookOpen,
+    Cloud,
     Crown,
     Flame,
     Layers,
+    MessageSquare,
+    PenLine,
     Rocket,
+    SlidersHorizontal,
     Star,
     Target,
+    Unlock,
     UserPlus,
 } from 'lucide-react'
 
@@ -20,6 +26,12 @@ const ICONS: Record<string, { icon: LucideIcon; className: string }> = {
     CROWN_GOLD: { icon: Crown, className: 'bg-[#FF9600]/15 text-[#FF9600]' },
     PROGRAM_LESSON_PUBLISHED: { icon: BookOpen, className: 'bg-[#58CC02]/15 text-[#58CC02]' },
     PROGRAM_MODULE_PUBLISHED: { icon: Layers, className: 'bg-[#58CC02]/15 text-[#58CC02]' },
+    TUTOR_MARKED: { icon: PenLine, className: 'bg-[#1CB0F6]/15 text-[#1CB0F6]' },
+    NEXT_LESSON_UNLOCKED: { icon: Unlock, className: 'bg-[#58CC02]/15 text-[#58CC02]' },
+    CLASS_POLL_LIVE: { icon: BarChart2, className: 'bg-[#1CB0F6]/15 text-[#1CB0F6]' },
+    CLASS_CLOUD_LIVE: { icon: Cloud, className: 'bg-[#CE82FF]/15 text-[#CE82FF]' },
+    CLASS_SCALE_LIVE: { icon: SlidersHorizontal, className: 'bg-[#FF9600]/15 text-[#FF9600]' },
+    CLASS_ACTIVITY: { icon: MessageSquare, className: 'bg-[#FF9600]/15 text-[#FF9600]' },
     LOGIN_STREAK: { icon: Flame, className: 'bg-[#FF9600]/15 text-[#FF9600]' },
     STARS_SPENT: { icon: Star, className: 'bg-[#FF9600]/15 text-[#FF9600]' },
 }

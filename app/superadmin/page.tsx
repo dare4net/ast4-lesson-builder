@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { superadminClient } from '@/lib/superadmin-client';
 import { Loader2, LogOut, Plus, Save, Trash2 } from 'lucide-react';
+import { JobsPanel } from '@/components/superadmin/jobs-panel';
 import {
     ACHIEVEMENT_EVENT_LABELS,
     ACHIEVEMENT_EVENT_TYPES,
@@ -90,7 +91,7 @@ function nextMissionFilters(current: MissionFilters, patch: Partial<MissionFilte
 function SuperadminCatalog() {
     const router = useRouter();
     const [ready, setReady] = useState(false);
-    const [tab, setTab] = useState<'missions' | 'achievements'>('missions');
+    const [tab, setTab] = useState<'missions' | 'achievements' | 'jobs'>('missions');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState('');
@@ -291,13 +292,16 @@ function SuperadminCatalog() {
                 <div className="flex items-center gap-3 min-w-0">
                     <div className="min-w-0">
                         <p className="text-[10px] font-black uppercase tracking-widest text-amber-500">Platform Superadmin</p>
-                        <p className="text-sm font-black text-white truncate">Missions, levels & achievements</p>
+                        <p className="text-sm font-black text-white truncate">
+                            {tab === 'jobs' ? 'Manual jobs' : 'Missions, levels & achievements'}
+                        </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1.5 bg-slate-800 p-1 rounded-xl">
                         <button type="button" onClick={() => setTab('missions')} className={`h-8 px-3 rounded-lg text-xs font-bold ${tab === 'missions' ? 'bg-[#58CC02] text-white' : 'text-slate-300'}`}>Missions</button>
                         <button type="button" onClick={() => setTab('achievements')} className={`h-8 px-3 rounded-lg text-xs font-bold ${tab === 'achievements' ? 'bg-purple-600 text-white' : 'text-slate-300'}`}>Achievements</button>
+                        <button type="button" onClick={() => setTab('jobs')} className={`h-8 px-3 rounded-lg text-xs font-bold ${tab === 'jobs' ? 'bg-amber-500 text-slate-950' : 'text-slate-300'}`}>Jobs</button>
                     </div>
                     <button type="button" onClick={logout} className="h-9 w-9 rounded-xl border border-slate-700 text-slate-400 flex items-center justify-center" aria-label="Sign out">
                         <LogOut className="w-4 h-4" />
@@ -306,11 +310,15 @@ function SuperadminCatalog() {
             </header>
 
             <main className="px-4 sm:px-6 py-5 max-w-6xl mx-auto space-y-4">
-                <p className="text-xs font-medium text-slate-400">
-                    Platform-wide catalog. Add a mission at a new level number to create that level. Credentials live in server env only.
-                </p>
-                {error && <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-600">{error}</div>}
-                {loading ? (
+                {tab !== 'jobs' && (
+                    <p className="text-xs font-medium text-slate-400">
+                        Platform-wide catalog. Add a mission at a new level number to create that level. Credentials live in server env only.
+                    </p>
+                )}
+                {error && tab !== 'jobs' && <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs font-bold text-red-600">{error}</div>}
+                {tab === 'jobs' ? (
+                    <JobsPanel />
+                ) : loading ? (
                     <div className="flex items-center gap-2 text-slate-500 text-sm font-bold"><Loader2 className="w-4 h-4 animate-spin" /> Loading catalog…</div>
                 ) : tab === 'missions' ? (
                     <div className="grid lg:grid-cols-[minmax(0,1fr)_400px] gap-4">

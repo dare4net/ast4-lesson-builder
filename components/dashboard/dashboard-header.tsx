@@ -90,7 +90,7 @@ export function DashboardHeader({ sidebarIsCollapsed = true, hasSidebar = true }
 
                 {/* User Menu */}
                 <div className="flex items-center gap-2 shrink-0">
-                    {!isTutor && <NotificationBell />}
+                    <NotificationBell />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" aria-label="Account menu" className="h-9 w-9 sm:w-auto sm:px-3 sm:gap-2.5 rounded-xl hover:bg-slate-100 transition-colors">

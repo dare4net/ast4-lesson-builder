@@ -22,6 +22,7 @@ describe('G4 hygiene', () => {
         expect(existsSync(join(root, '.env.example'))).toBe(true)
         expect(read('.env.example')).toContain('JWT_SECRET=')
         expect(read('.env.example')).toContain('NEXT_PUBLIC_API_URL=')
+        expect(read('.env.example')).toContain('NEXT_PUBLIC_FIREBASE_VAPID_KEY=')
         expect(read('.gitignore')).toContain('!.env.example')
         expect(read('README.md')).toContain('IMPLEMENTATION_ORDER.md')
         expect(read('instrumentation.ts')).toContain('validateFrontendEnv')

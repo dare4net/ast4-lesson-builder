@@ -72,6 +72,10 @@ class SuperadminClient {
         this.api.put(`/superadmin/catalog/achievements/${id}`, data).then((r) => r.data);
     deleteAchievement = (id: string) =>
         this.api.delete(`/superadmin/catalog/achievements/${id}`).then((r) => r.data);
+
+    listJobs = () => this.api.get('/superadmin/jobs').then((r) => r.data);
+    runJob = (id: string, data: { dryRun: boolean }) =>
+        this.api.post(`/superadmin/jobs/${id}/run`, data).then((r) => r.data);
 }
 
 export const superadminClient = new SuperadminClient();
