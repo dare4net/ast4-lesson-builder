@@ -10,6 +10,8 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { LoginStreakModal } from "@/components/store/login-streak-modal"
 import { PushRegister } from "@/components/push-register"
 import { PushPermissionNudge } from "@/components/notifications/push-permission-nudge"
+import { ClubSplashOverlay } from "@/components/dashboard/student/club-splash-overlay"
+import { ClubWelcomeModal } from "@/components/dashboard/student/club-welcome-modal"
 import { useStudentStats } from "@/hooks/use-student-stats"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -24,6 +26,7 @@ interface StudentDashboardLayoutProps {
 
 export default function StudentDashboardLayout({ children }: StudentDashboardLayoutProps) {
     const [isCollapsed, setIsCollapsed] = useState(true)
+    const [splashDone, setSplashDone] = useState(false)
     const statsQuery = useStudentStats()
     const { user, loading } = useAuth()
     const router = useRouter()
@@ -48,6 +51,10 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
         router.replace(next)
     }, [loading, user, pathname, router])
 
+    useEffect(() => {
+        setSplashDone(false)
+    }, [club.activeOrgId])
+
     return (
         <div
             className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-sans"
@@ -56,6 +63,25 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
         >
             <GamificationEventListener />
             <GamificationToastContainer />
+            <ClubSplashOverlay
+                userId={user?.user_id}
+                orgId={inClubLens ? club.activeOrgId : null}
+                orgName={club.activeStudentOrg?.name}
+                logoUrl={club.activeStudentOrg?.branding?.logoUrl}
+                accentColor={clubAccent || resolveOrgAccent(club.activeStudentOrg?.slug, null)}
+                brandingTier={club.activeStudentOrg?.branding?.brandingTier}
+                enabled={!needsOnboarding(user)}
+                onFinished={() => setSplashDone(true)}
+            />
+            <ClubWelcomeModal
+                userId={user?.user_id}
+                orgId={inClubLens ? club.activeOrgId : null}
+                orgName={club.activeStudentOrg?.name}
+                welcomeMessage={club.activeStudentOrg?.branding?.welcomeMessage}
+                brandingTier={club.activeStudentOrg?.branding?.brandingTier}
+                splashDone={splashDone}
+                enabled={!needsOnboarding(user)}
+            />
             <LoginStreakModal
                 stats={statsQuery.data?.stats}
                 userId={user?.user_id}

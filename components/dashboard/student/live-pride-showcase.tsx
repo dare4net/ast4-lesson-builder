@@ -18,6 +18,10 @@ import {
 } from "@/lib/pride-showcase"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { cn } from "@/lib/utils"
+import {
+    clubPrideEyebrow,
+    clubPrideShowcaseDescription,
+} from '@/lib/pride-scope-copy'
 
 const TIER_ORDER = ["gold", "silver", "bronze"] as const
 
@@ -106,12 +110,12 @@ export function LivePrideShowcase() {
                 <div>
                     <p className={cn("inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#FF9600]", !reduceMotion && "animate-pulse")}>
                         <Radio className="h-3.5 w-3.5" />
-                        {clubLens ? 'Class pride' : 'Live pride'}
+                        {clubLens ? clubPrideEyebrow(scope?.type) : 'Live pride'}
                     </p>
                     <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">Who holds the crowns</h2>
                     <p className="text-xs font-medium text-slate-500">
                         {clubLens
-                            ? 'Ranks among your club classmates — not the public board.'
+                            ? clubPrideShowcaseDescription(scope?.type)
                             : 'Gold, silver, and bronze on boards that are moving right now.'}
                     </p>
                 </div>

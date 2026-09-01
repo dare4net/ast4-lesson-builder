@@ -264,6 +264,16 @@ A user may hold **different roles in different orgs** (tutor at A, student at B)
 
 **Existing user joining a second club:** login → accept join → second org membership. No new account.
 
+### B2. Leave a club (student self-serve)
+
+1. Student opens **Settings → Your club** → **Leave club** (confirm).
+2. Server: `POST /api/orgs/:orgId/leave` — verifies active **student** membership (not owner/tutor).
+3. Deactivates `cohort_memberships` for that org; sets `org_memberships.status = removed` (frees seat).
+4. **Does not** delete the user account, Personal library, marketplace registrations, or lesson completions.
+5. Owner/tutor can still remove students from **People** (`DELETE .../membership`) — same outcome.
+
+**Class changes** stay owner-driven (`POST .../members/:userId/cohort`). Students cannot self-move cohort.
+
 ### C. Want the public space
 
 1. Student (or parent later) enables **Public catalog** → `users.public_access = true`.
@@ -385,7 +395,7 @@ GET    /api/orgs/mine
 POST   /api/orgs/:orgId/invites          { email, role }
 POST   /api/orgs/:orgId/cohorts
 POST   /api/cohorts/join                 { code }   // auth required
-GET    /api/orgs/:orgId/roster
+POST   /api/orgs/:orgId/leave              // student self-serve; auth required
 PATCH  /api/programs/:id                 { visibility, org_id, … }
 PATCH  /api/me/public-access             { enabled }
 ```

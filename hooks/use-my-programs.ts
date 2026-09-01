@@ -19,6 +19,18 @@ export function useMyPrograms(orgIdOverride?: string | null) {
     })
 }
 
+/** All enrollments across club + personal — use on Explore to detect existing registrations. */
+export function useAllMyPrograms() {
+    const { isAuthenticated, token, loading: authLoading } = useAuth()
+
+    return useQuery({
+        queryKey: queryKeys.myPrograms(),
+        queryFn: async () => parseProgramList(await apiClient.programs.getMyPrograms()),
+        enabled: !authLoading && (isAuthenticated || Boolean(token)),
+        refetchOnMount: 'always',
+    })
+}
+
 export function useProgramCatalog() {
     const { isAuthenticated, token, loading: authLoading } = useAuth()
     const club = useStudentClubContext()

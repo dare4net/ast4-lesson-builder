@@ -8,7 +8,7 @@ export default function SuperadminOrgsPage() {
         <div className="space-y-6">
             <SuperadminPageHeader
                 title="Organisations"
-                description="Create clubs, copy owner invites, manage cohorts, programs, and vanity subdomains."
+                description="Create clubs, copy owner invites, manage cohorts, programs, vanity subdomains, and branding plans."
             />
             <OrgsPanel />
         </div>

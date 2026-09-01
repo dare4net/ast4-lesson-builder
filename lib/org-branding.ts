@@ -4,6 +4,7 @@ export type OrgBrandingSettings = {
     accentColor?: string | null
     logoUrl?: string | null
     bannerUrl?: string | null
+    faviconUrl?: string | null
     welcomeMessage?: string | null
     prideScope?: 'cohort' | 'org'
     brandingTier?: 'standard' | 'branded' | 'white_label'
@@ -43,6 +44,9 @@ export function orgCanUse(tier: OrgBrandingTier | undefined, feature: string): b
         welcome: 'branded',
         prideScope: 'branded',
         joinLayout: 'white_label',
+        favicon: 'white_label',
+        splash: 'white_label',
+        brandedEmail: 'white_label',
     }
     const need = TIER_RANK[required[feature] || 'standard']
     const have = TIER_RANK[tier || 'standard']

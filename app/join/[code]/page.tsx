@@ -18,6 +18,9 @@ type PreviewOrg = {
     accentColor?: string | null
     welcomeMessage?: string | null
     logoUrl?: string | null
+    bannerUrl?: string | null
+    joinLayout?: 'standard' | 'hero'
+    faviconUrl?: string | null
 }
 
 type Preview = {
@@ -85,6 +88,8 @@ export default function JoinCohortPage() {
     }, [code])
 
     const displayOrg = preview?.org || vanityOrg
+    const joinLayout = displayOrg?.joinLayout || 'standard'
+    const isHero = joinLayout === 'hero'
     const accent = useMemo(
         () =>
             displayOrg
@@ -136,20 +141,51 @@ export default function JoinCohortPage() {
 
     return (
         <main
-            className="min-h-screen px-4 py-10"
+            className="min-h-screen"
             style={{
                 ...clubThemeVars(accent),
-                background: `linear-gradient(180deg, ${accent}18 0%, rgb(248 250 252) 45%, rgb(255 255 255) 100%)`,
+                background: isHero
+                    ? 'rgb(248 250 252)'
+                    : `linear-gradient(180deg, ${accent}18 0%, rgb(248 250 252) 45%, rgb(255 255 255) 100%)`,
             }}
         >
-            <div className="mx-auto max-w-md rounded-3xl border-2 bg-white p-6 shadow-sm space-y-4" style={{ borderColor: `${accent}44` }}>
+            {isHero && displayOrg?.bannerUrl && (
+                <div className="relative h-48 sm:h-56 w-full overflow-hidden">
+                    <img
+                        src={displayOrg.bannerUrl}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            background: `linear-gradient(180deg, ${accent}33 0%, rgb(248 250 252) 100%)`,
+                        }}
+                    />
+                </div>
+            )}
+
+            <div
+                className={
+                    isHero
+                        ? 'mx-auto max-w-lg px-4 pb-10 -mt-10 relative z-10'
+                        : 'px-4 py-10 mx-auto max-w-md'
+                }
+            >
+            <div className="rounded-3xl border-2 bg-white p-6 shadow-sm space-y-4" style={{ borderColor: `${accent}44` }}>
                 <div className="flex items-center gap-3">
+                    {displayOrg?.logoUrl ? (
+                        <div className="w-11 h-11 rounded-2xl overflow-hidden border-2 border-white shadow-sm shrink-0">
+                            <img src={displayOrg.logoUrl} alt="" className="w-full h-full object-cover" />
+                        </div>
+                    ) : (
                     <div
                         className="w-11 h-11 rounded-2xl flex items-center justify-center text-white shrink-0"
                         style={{ backgroundColor: accent }}
                     >
                         <Building2 className="w-5 h-5" />
                     </div>
+                    )}
                     <div>
                         <p className="text-[11px] font-black uppercase tracking-widest" style={{ color: accent }}>
                             {displayOrg?.name || 'Join a class'}
@@ -229,6 +265,7 @@ export default function JoinCohortPage() {
                 ) : null}
 
                 {error && <p className="text-xs font-bold text-red-600">{error}</p>}
+            </div>
             </div>
         </main>
     )

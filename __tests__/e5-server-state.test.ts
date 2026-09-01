@@ -18,7 +18,7 @@ describe('E5 TanStack Query for dashboard fetches', () => {
         expect(read('hooks/use-my-programs.ts')).toContain('queryKeys.myPrograms')
         expect(read('context/gamification-context.tsx')).toContain('useStudentStats')
         expect(read('context/gamification-context.tsx')).not.toContain('apiClient.gamification.getStats')
-        expect(read('app/dashboard/student/catalog/page.tsx')).toContain('useMyPrograms')
+        expect(read('app/dashboard/student/catalog/page.tsx')).toContain('useAllMyPrograms')
         expect(read('app/dashboard/student/programs/page.tsx')).toContain('useMyPrograms')
         expect(read('app/dashboard/student/programs/[id]/page.tsx')).toContain('useMyPrograms')
         expect(read('app/dashboard/student/programs/page.tsx')).not.toContain('getMyPrograms')

@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Nunito, Lexend } from "next/font/google"
 import { FeedbackProvider } from "@/lib/feedback-context"
+import { VanityFavicon } from "@/components/branding/vanity-favicon"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
 import { ErrorTrackingInit } from "@/components/error-tracking-init"
 import { AuthProvider } from "@/context/auth-context"
@@ -81,6 +82,7 @@ export default function RootLayout({
             <QueryProvider>
               <GamificationProvider>
                 <FeedbackProvider>
+                  <VanityFavicon />
                   {children}
                   <Toaster />
                   <PWAInstallPrompt />

@@ -7,6 +7,7 @@ import { usePrefetchPrideBoard, usePrideSummary, type PrideStat } from '@/hooks/
 import { GoldHint } from '@/components/pride/gold-hint'
 import { crownClass, formatPrideValue, hasPrideRecord } from '@/lib/pride-format'
 import { prideBoardPath } from '@/lib/pride-paths'
+import { clubPrideDescription, clubPrideTitle } from '@/lib/pride-scope-copy'
 import { cn } from '@/lib/utils'
 
 export default function PrideIndexPage() {
@@ -24,11 +25,11 @@ export default function PrideIndexPage() {
                 <div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9600]">Pride</p>
                     <h1 className="text-3xl font-extrabold text-slate-800 dark:text-white">
-                        {clubLens ? 'Class crowns and boards' : 'Crowns and boards'}
+                        {clubLens ? clubPrideTitle(scope?.type) : 'Crowns and boards'}
                     </h1>
                     <p className="text-sm font-medium text-slate-500 mt-1">
                         {clubLens
-                            ? 'Ranks among your club classmates. Switch to Personal for the public boards.'
+                            ? clubPrideDescription(scope?.type)
                             : 'Public ranks only. Gold, silver, and bronze are 1st, 2nd, and 3rd.'}
                     </p>
                 </div>

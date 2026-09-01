@@ -5,7 +5,7 @@ import { apiClient } from "@/lib/api-client"
 import { appEventBus } from "@/lib/event-bus"
 import { useQueryClient } from "@tanstack/react-query"
 import { queryKeys } from "@/lib/query-keys"
-import { useMyPrograms, useProgramCatalog } from "@/hooks/use-my-programs"
+import { useAllMyPrograms, useProgramCatalog } from "@/hooks/use-my-programs"
 import { useStudentClubContext } from "@/hooks/use-student-club"
 import { motion, AnimatePresence } from "framer-motion"
 import { BookOpen, Compass, Zap, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw, X } from "lucide-react"
@@ -28,11 +28,11 @@ export default function CatalogPage() {
     const queryClient = useQueryClient()
     const { marketplaceOpen, clubMode } = useStudentClubContext()
     const catalogQuery = useProgramCatalog()
-    const myProgramsQuery = useMyPrograms()
+    const allMyProgramsQuery = useAllMyPrograms()
     const catalog = catalogQuery.data || []
-    const myPrograms = myProgramsQuery.data || []
-    const loading = catalogQuery.isLoading || myProgramsQuery.isLoading
-    const error = catalogQuery.isError || myProgramsQuery.isError
+    const allMyPrograms = allMyProgramsQuery.data || []
+    const loading = catalogQuery.isLoading || allMyProgramsQuery.isLoading
+    const error = catalogQuery.isError || allMyProgramsQuery.isError
         ? "Unable to load course catalog right now. Please try again later."
         : null
     const [registeringId, setRegisteringId] = useState<string | null>(null)
@@ -79,7 +79,7 @@ export default function CatalogPage() {
     }
 
     const isEnrolled = (programId: string) => {
-        return myPrograms.some(p => p._id === programId || p.program_id === programId)
+        return allMyPrograms.some(p => p._id === programId || p.program_id === programId)
     }
 
     const handleRegister = async (programId: string, e?: React.MouseEvent) => {
@@ -230,6 +230,14 @@ export default function CatalogPage() {
 
     return (
         <div className="space-y-6">
+            {clubMode && (
+                <p className="text-xs font-semibold text-slate-600 bg-sky-50 border border-sky-100 rounded-2xl px-4 py-3 leading-relaxed">
+                    Courses you enroll here are saved to your{' '}
+                    <span className="font-extrabold text-sky-800">Personal</span> library. Switch to Personal
+                    in the club switcher to see them under My Courses — they won&apos;t appear in your club list.
+                </p>
+            )}
+
             <PageHero
                 title={<><Compass className="w-6 h-6 text-[#1CB0F6]" /><span>Explore Course Catalog</span></>}
                 description="Discover new learning modules and enroll to build your tech skills."
@@ -253,7 +261,7 @@ export default function CatalogPage() {
                     <Button
                         onClick={() => {
                             void catalogQuery.refetch()
-                            void myProgramsQuery.refetch()
+                            void allMyProgramsQuery.refetch()
                         }}
                         className="bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs h-9 rounded-xl inline-flex items-center gap-2"
                     >

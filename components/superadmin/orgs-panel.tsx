@@ -27,8 +27,19 @@ type OrgRow = {
         vanityEnabled?: boolean;
         allowPublicOptIn?: boolean;
         accentColor?: string | null;
+        brandingTier?: 'standard' | 'branded' | 'white_label';
     };
 };
+
+const BRANDING_TIER_OPTIONS = [
+    { value: 'standard' as const, label: 'Standard' },
+    { value: 'branded' as const, label: 'Branded' },
+    { value: 'white_label' as const, label: 'White-label' },
+];
+
+function brandingTierLabel(tier?: string | null) {
+    return BRANDING_TIER_OPTIONS.find((row) => row.value === tier)?.label || 'Standard';
+}
 
 type MemberRow = {
     id: string;
@@ -266,7 +277,8 @@ export function OrgsPanel() {
                     current.map((row) => (row.id === selectedId ? { ...row, ...data.org } : row)),
                 )
             }
-            await load()
+            if (selectedId) await openOrg(selectedId)
+            else await load()
         } catch (err: unknown) {
             setError(mapSuperadminOrgError(err, 'Could not update organisation.'))
         } finally {
@@ -295,7 +307,11 @@ export function OrgsPanel() {
     }
 
     const toggleVanity = async (enabled: boolean) => {
-        if (!selectedId) return;
+        if (!selectedId || !selected) return;
+        if (enabled && selected.settings?.brandingTier !== 'white_label') {
+            setError('Enable the White-label plan before turning on vanity subdomain.');
+            return;
+        }
         setVanitySaving(true);
         setError('');
         try {
@@ -492,7 +508,8 @@ export function OrgsPanel() {
                                         </span>
                                     </div>
                                     <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-                                        {org.slug} · {org.seatsUsed}/{org.seatCap} seats
+                                        {org.slug} · {org.seatsUsed}/{org.seatCap} seats ·{' '}
+                                        {brandingTierLabel(org.settings?.brandingTier)}
                                     </p>
                                 </button>
                             </li>
@@ -662,6 +679,41 @@ export function OrgsPanel() {
                             {ORG_STATUS_OPTIONS.find((o) => o.value === selected.status)?.hint}
                         </p>
                     </div>
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                            Branding plan
+                        </p>
+                        <p className="text-[11px] text-slate-500 font-medium">
+                            Unlocks logo, banner, welcome message, and pride scope for org owners.
+                            Current: <span className="font-bold text-violet-700">{brandingTierLabel(selected.settings?.brandingTier)}</span>
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {BRANDING_TIER_OPTIONS.map((option) => (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    disabled={orgSettingsSaving || busy}
+                                    onClick={() =>
+                                        void patchOrg({
+                                            settings: {
+                                                brandingTier: option.value,
+                                                ...(option.value === 'white_label'
+                                                    ? { vanityEnabled: true }
+                                                    : {}),
+                                            },
+                                        })
+                                    }
+                                    className={`h-9 px-3 rounded-xl text-xs font-bold border transition-colors disabled:opacity-60 ${
+                                        (selected.settings?.brandingTier || 'standard') === option.value
+                                            ? 'border-violet-400 bg-violet-100 text-violet-900'
+                                            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                                    }`}
+                                >
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </section>
             )}
 
@@ -675,8 +727,9 @@ export function OrgsPanel() {
                             <Label className="text-xs font-extrabold text-slate-700">
                                 Enable {vanityHostForSlug(selected.slug)}
                             </Label>
-                            <p className="text-[11px] text-slate-500 font-medium max-w-md">
-                                When on, students can open branded join links. DNS for the subdomain must point at
+                            <p className="text-[11px] text-slate-500 font-medium">
+                                When on, students can open branded join links. Requires{' '}
+                                <span className="font-bold">White-label</span> plan. DNS for the subdomain must point at
                                 this app.
                             </p>
                         </div>
@@ -684,7 +737,11 @@ export function OrgsPanel() {
                             {vanitySaving && <Loader2 className="w-4 h-4 animate-spin text-slate-400" />}
                             <Switch
                                 checked={selected.settings?.vanityEnabled === true}
-                                disabled={vanitySaving || busy}
+                                disabled={
+                                    vanitySaving ||
+                                    busy ||
+                                    selected.settings?.brandingTier !== 'white_label'
+                                }
                                 onCheckedChange={(next) => void toggleVanity(next)}
                                 aria-label="Enable vanity subdomain"
                                 className="data-[state=checked]:bg-sky-600"

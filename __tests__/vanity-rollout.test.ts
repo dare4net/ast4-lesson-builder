@@ -12,4 +12,11 @@ describe('vanity rollout wiring', () => {
         expect(read('app/join/[code]/page.tsx')).toContain('readVanityOrgSlug')
         expect(read('components/dashboard/org/org-vanity-info.tsx')).toContain('vanityHostForSlug')
     })
+
+    it('wires white-label tier-3 surfaces', () => {
+        expect(read('components/branding/vanity-favicon.tsx')).toContain('faviconUrl')
+        expect(read('components/dashboard/student/club-welcome-modal.tsx')).toContain('ClubWelcomeModal')
+        expect(read('components/dashboard/student/club-splash-overlay.tsx')).toContain('ClubSplashOverlay')
+        expect(read('../afterschool-tech-backend/helpers/brandedEmailTemplates.js')).toContain('buildJoinReminderEmail')
+    })
 })

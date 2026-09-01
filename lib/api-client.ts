@@ -278,7 +278,21 @@ class APIClient {
         getPrograms: (id: string) => this.get(`/orgs/${id}/programs`),
         update: (
             id: string,
-            data: { settings?: Partial<Pick<OrgBrandingSettings, 'allowPublicOptIn' | 'accentColor'>> },
+            data: {
+                settings?: Partial<
+                    Pick<
+                        OrgBrandingSettings,
+                        | 'allowPublicOptIn'
+                        | 'accentColor'
+                        | 'logoUrl'
+                        | 'bannerUrl'
+                        | 'faviconUrl'
+                        | 'welcomeMessage'
+                        | 'prideScope'
+                        | 'joinLayout'
+                    >
+                >
+            },
         ) => this.patch(`/orgs/${id}`, data),
         addMember: (id: string, data: { email?: string; userId?: string; role: string }) =>
             this.post(`/orgs/${id}/members`, data),
@@ -295,6 +309,11 @@ class APIClient {
         ) => this.post(`/orgs/invites/${encodeURIComponent(token)}/complete`, data),
         cancelInvite: (orgId: string, memberId: string) =>
             this.delete(`/orgs/${orgId}/members/${memberId}/invite`),
+        removeMember: (orgId: string, userId: string) =>
+            this.delete(`/orgs/${orgId}/members/${userId}/membership`),
+        leave: (orgId: string) => this.post(`/orgs/${orgId}/leave`),
+        assignMemberCohort: (orgId: string, userId: string, cohortId: string) =>
+            this.post(`/orgs/${orgId}/members/${userId}/cohort`, { cohortId }),
         previewJoin: (code: string) =>
             this.get(`/orgs/join/preview?code=${encodeURIComponent(code)}`),
         getPublicBySlug: (slug: string) =>

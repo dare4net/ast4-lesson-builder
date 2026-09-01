@@ -52,9 +52,17 @@ export function useStudentClubContext() {
                 slug,
                 branding: settings
                     ? {
-                          ...settings,
                           accentColor:
                               settings.accentColor || resolveOrgAccent(slug, null),
+                          logoUrl: settings.logoUrl ?? null,
+                          bannerUrl: settings.bannerUrl ?? null,
+                          welcomeMessage: settings.welcomeMessage ?? null,
+                          prideScope: settings.prideScope,
+                          brandingTier: settings.brandingTier,
+                          joinLayout: settings.joinLayout,
+                          faviconUrl: settings.faviconUrl ?? null,
+                          allowPublicOptIn: settings.allowPublicOptIn,
+                          vanityEnabled: settings.vanityEnabled,
                       }
                     : { accentColor: resolveOrgAccent(slug, null) },
                 cohort: row?.cohort?.id
@@ -108,6 +116,11 @@ export function useStudentClubContext() {
             )
             if (match) {
                 setActiveOrgIdState(match.id)
+                try {
+                    window.localStorage.setItem(STUDENT_ORG_KEY, match.id)
+                } catch {
+                    // ignore
+                }
                 return
             }
         }

@@ -39,7 +39,7 @@ describe('phase 4 student club home', () => {
         expect(read('lib/api-client.ts')).toContain('/pride?org_id=')
         expect(read('lib/api-client.ts')).toContain('org_id')
         expect(read('components/pride/pride-search.tsx')).toContain('clubLens')
-        expect(read('components/dashboard/student/live-pride-showcase.tsx')).toContain('Class pride')
+        expect(read('components/dashboard/student/live-pride-showcase.tsx')).toContain('clubPrideShowcaseDescription')
     })
 
     it('org dashboard assigns programs to cohorts', () => {
@@ -57,6 +57,13 @@ describe('phase 4 student club home', () => {
         expect(read('components/dashboard/student/student-public-catalog-settings.tsx')).toContain('updatePublicAccess')
         expect(read('lib/api-client.ts')).toContain('/profile/public-access')
         expect(read('../afterschool-tech-backend/routes/profileRoutes.js')).toContain('updatePublicAccess')
+    })
+
+    it('students can self-serve leave a club', () => {
+        expect(read('components/dashboard/student/student-club-membership.tsx')).toContain('apiClient.orgs.leave')
+        expect(read('lib/api-client.ts')).toContain('/orgs/${orgId}/leave')
+        expect(read('../afterschool-tech-backend/routes/orgsRoutes.js')).toContain('leaveOrg')
+        expect(read('../afterschool-tech-backend/helpers/orgs.js')).toContain('leaveOrgAsStudent')
     })
 
     it('studio program editor exposes catalog visibility', () => {

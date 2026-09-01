@@ -30,6 +30,7 @@ export type StaffOrg = {
             prideScope?: 'cohort' | 'org'
             brandingTier?: 'standard' | 'branded' | 'white_label'
             joinLayout?: 'standard' | 'hero'
+            faviconUrl?: string | null
         }
     }
     membership: {
@@ -45,6 +46,11 @@ export type MemberRow = {
     status: string
     inviteEmail?: string | null
     inviteToken?: string | null
+    cohort?: {
+        id: string
+        name: string
+        joinCode?: string
+    } | null
 }
 
 export type CohortRow = {

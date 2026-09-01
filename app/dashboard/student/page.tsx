@@ -27,6 +27,7 @@ import { programProgressPercent } from "@/lib/program-progress"
 import { StudentClubSwitcher } from "@/components/dashboard/student/student-club-switcher"
 import { StudentClubStrip } from "@/components/dashboard/student/student-club-strip"
 import { useStudentClubContext } from "@/hooks/use-student-club"
+import { usePrideSummary } from "@/hooks/use-pride"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
@@ -46,7 +47,8 @@ export default function StudentDashboardPage() {
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
-    const { marketplaceOpen, clubMode } = useStudentClubContext()
+    const { marketplaceOpen, clubMode, activeStudentOrg } = useStudentClubContext()
+    const prideSummary = usePrideSummary()
 
     const handleLessonRedirect = (lessonId: string, moduleId?: string, locked?: boolean) => {
         if (locked) return
@@ -167,7 +169,7 @@ export default function StudentDashboardPage() {
 
     return (
         <div className="space-y-6 pb-12">
-            <StudentClubStrip />
+            <StudentClubStrip prideScopeType={prideSummary.scope?.type || activeStudentOrg?.branding?.prideScope} />
 
             {/* Sleek Hero Welcome Banner */}
             <section className="relative overflow-hidden p-6 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">

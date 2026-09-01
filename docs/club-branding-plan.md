@@ -61,49 +61,49 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 
 ## Phase 2 — Tier 2: Owner branding + pride scope (Branded)
 
-- [ ] **2.1** Logo upload (Cloudinary) → `settings.logoUrl`
-- [ ] **2.2** Banner upload → `settings.bannerUrl`
-- [ ] **2.3** Welcome message → `settings.welcomeMessage`
-- [ ] **2.4** Org settings **Branding** section with live preview
-- [ ] **2.5** Student home branded header (logo + welcome + banner)
-- [ ] **2.6** Org setting `prideScope: cohort | org` (default **org**)
-- [ ] **2.7** Wire `clubScope.js` to respect `prideScope` (not auto-only)
-- [ ] **2.8** Pride UI copy — “Your club” vs “Your class” by scope
-- [ ] **2.9** People search uses same scope rules
-- [ ] **2.10** Gate Tier 2 fields by `brandingTier >= branded`
-- [ ] **2.11** Tests — org setting overrides automatic cohort scope
+- [x] **2.1** Logo upload (Cloudinary) → `settings.logoUrl`
+- [x] **2.2** Banner upload → `settings.bannerUrl`
+- [x] **2.3** Welcome message → `settings.welcomeMessage`
+- [x] **2.4** Org settings **Branding** section with live preview
+- [x] **2.5** Student home branded header (logo + welcome + banner)
+- [x] **2.6** Org setting `prideScope: cohort | org` (default **org**)
+- [x] **2.7** Wire `clubScope.js` to respect `prideScope` (not auto-only)
+- [x] **2.8** Pride UI copy — “Your club” vs “Your class” by scope
+- [x] **2.9** People search uses same scope rules
+- [x] **2.10** Gate Tier 2 fields by `brandingTier >= branded`
+- [x] **2.11** Tests — org setting overrides automatic cohort scope
 
 ---
 
 ## Phase 3 — Membership ops (club package)
 
-- [ ] **3.1** Owner: remove student from org (free seat, deactivate cohort membership)
-- [ ] **3.2** Owner: add / move student to cohort → auto-enroll cohort programs
-- [ ] **3.3** Enforce one cohort per org per student (block or require owner move)
-- [ ] **3.4** People page warning: org member without cohort (“no programs assigned”)
-- [ ] **3.5** Student self-serve leave (`POST /orgs/:id/leave`) — post-launch OK
-- [ ] **3.6** Update `org-cohort-model.md` + launch checklist
+- [x] **3.1** Owner: remove student from org (free seat, deactivate cohort membership)
+- [x] **3.2** Owner: add / move student to cohort → auto-enroll cohort programs
+- [x] **3.3** Enforce one cohort per org per student (block or require owner move)
+- [x] **3.4** People page warning: org member without cohort (“no programs assigned”)
+- [x] **3.5** Student self-serve leave (`POST /orgs/:id/leave`)
+- [x] **3.6** Update `org-cohort-model.md` + launch checklist
 
 ---
 
 ## Phase 4 — Tier 3: White-label (Premium)
 
-- [ ] **4.1** Production wildcard DNS `*.after-school.tech`
-- [ ] **4.2** Per-org favicon on vanity host
-- [ ] **4.3** Custom join layout (`standard` \| `hero`)
-- [ ] **4.4** First-visit club welcome modal (skippable, once per org)
-- [ ] **4.5** Optional splash animation (respect `prefers-reduced-motion`)
-- [ ] **4.6** Branded email templates (invite, join reminder)
-- [ ] **4.7** Vanity host preselects club on student dashboard
-- [ ] **4.8** Superadmin: white-label tier + vanity toggle
-- [ ] **4.9** Gate Tier 3 features by `brandingTier === white_label`
+- [ ] **4.1** Production wildcard DNS `*.after-school.tech` *(infra — see launch checklist)*
+- [x] **4.2** Per-org favicon on vanity host
+- [x] **4.3** Custom join layout (`standard` \| `hero`)
+- [x] **4.4** First-visit club welcome modal (skippable, once per org)
+- [x] **4.5** Optional splash animation (respect `prefers-reduced-motion`)
+- [x] **4.6** Branded email templates (invite, join reminder) — render helpers; wire provider later
+- [x] **4.7** Vanity host preselects club on student dashboard
+- [x] **4.8** Superadmin: white-label tier + vanity toggle
+- [x] **4.9** Gate Tier 3 features by `brandingTier === white_label`
 
 ---
 
 ## Phase 5 — Packaging for sale
 
 - [ ] **5.1** Internal pricing / feature matrix doc
-- [ ] **5.2** Superadmin: show and set `brandingTier` on org panel
+- [x] **5.2** Superadmin: show and set `brandingTier` on org panel
 - [ ] **5.3** Org owner “Upgrade” placeholders for locked features
 - [ ] **5.4** Stripe products → `billing.plan` + `brandingTier` (when ready)
 - [ ] **5.5** Extend launch QA for branding + pride scope
@@ -117,7 +117,7 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 - [ ] **6.3** Large org — cohort pride when owner selects it
 - [ ] **6.4** Vanity join shows full branded experience
 - [ ] **6.5** White-label favicon + one-time splash
-- [ ] **6.6** Owner remove student + cohort assign enrolls programs
+- [ ] **6.6** Owner remove student + cohort assign enrolls programs; student self-serve leave frees seat
 - [ ] **6.7** All BE + FE tests green
 
 ---
@@ -127,7 +127,7 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 | Sprint | Phases | Outcome |
 |--------|--------|---------|
 | **A** | 0 + 1 | Sellable Standard look *(code shipped; 1.8 QA pending)* |
-| **B** | 2 + 3 (3.1–3.4) | Branded + pride scope + ops |
+| **B** | 2 + 3 | Branded + pride scope + membership ops |
 | **C** | 4 + 5 + 6 | White-label + sales gates + QA |
 
 ---

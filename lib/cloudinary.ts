@@ -213,5 +213,41 @@ export async function uploadThumbnailToCloudinary(
     return result.secure_url
 }
 
+/**
+ * Uploads org branding images (logo / banner) to Cloudinary.
+ * public_id: ast_org_branding/{orgId}/{kind}
+ */
+export async function uploadOrgBrandingToCloudinary(
+    buffer: Buffer,
+    orgId: string,
+    kind: 'logo' | 'banner' | 'favicon',
+): Promise<string> {
+    const max = kind === 'logo' ? 512 : kind === 'favicon' ? 128 : 1600
+    return new Promise((resolve, reject) => {
+        const publicId = `ast_org_branding/${orgId}/${kind}`
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                public_id: publicId,
+                resource_type: 'image',
+                overwrite: true,
+                invalidate: true,
+                transformation: [
+                    { crop: 'limit', width: max, height: max },
+                    { quality: 'auto:good' },
+                    { fetch_format: 'auto', flags: 'strip_profile' },
+                ],
+            },
+            (error, result) => {
+                if (error || !result?.secure_url) {
+                    console.error(`[Cloudinary] Org branding upload failed for ${orgId}/${kind}:`, error)
+                    return reject(new Error(error?.message || `Org branding upload failed for ${kind}`))
+                }
+                resolve(result.secure_url)
+            },
+        )
+        uploadStream.end(buffer)
+    })
+}
+
 export default cloudinary
 

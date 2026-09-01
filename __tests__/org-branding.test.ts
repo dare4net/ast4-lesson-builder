@@ -17,11 +17,14 @@ describe('org branding', () => {
         expect(vars['--club-accent-muted']).toContain('58CC02')
     })
 
-    it('wires accent picker and themed student shell', () => {
+    it('wires accent picker and branded student surfaces', () => {
         expect(read('components/dashboard/org/org-branding-settings.tsx')).toContain('OrgBrandingSettings')
+        expect(read('components/dashboard/org/org-branding-settings.tsx')).toContain('prideScope')
         expect(read('app/dashboard/student/layout.tsx')).toContain('clubThemeVars')
         expect(read('app/join/[code]/page.tsx')).toContain('Join your class')
         expect(read('components/dashboard/student/student-club-strip.tsx')).toContain('StudentClubStrip')
+        expect(read('lib/pride-scope-copy.ts')).toContain('clubPrideEyebrow')
         expect(read('../afterschool-tech-backend/helpers/orgBranding.js')).toContain('resolveOrgAccent')
+        expect(read('../afterschool-tech-backend/helpers/clubScope.js')).toContain('resolvePrideScopeMode')
     })
 })

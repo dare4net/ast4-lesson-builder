@@ -30,4 +30,11 @@ describe('org dashboard is separate from tutor', () => {
         expect(read('app/dashboard/org/layout.tsx')).toContain('OrgLoginGate')
         expect(read('app/auth/signup/page.tsx')).toContain('invite-only')
     })
+
+    it('supports membership ops on org people page', () => {
+        expect(read('app/dashboard/org/people/page.tsx')).toContain('assignMemberCohort')
+        expect(read('app/dashboard/org/people/page.tsx')).toContain('removeMember')
+        expect(read('app/dashboard/org/people/page.tsx')).toContain('without a class')
+        expect(read('lib/api-client.ts')).toContain('/members/${userId}/cohort')
+    })
 })

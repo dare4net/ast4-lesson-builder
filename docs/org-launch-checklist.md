@@ -21,6 +21,18 @@
 
 Steps 1–8 are **code-complete**. What remains is **QA, ops polish, and first-pilot readiness** — not new architecture.
 
+### Production vanity DNS (Phase 4.1)
+
+Before clubs use `https://<slug>.after-school.tech` in production:
+
+1. **DNS** — Add a wildcard `CNAME` or `A` record: `*.after-school.tech` → your Vercel/host target (same project as the main app).
+2. **Vercel** — Add `*.after-school.tech` as a domain on the frontend project; confirm SSL covers wildcards.
+3. **Env** — Set `VANITY_ROOT_DOMAIN=after-school.tech` (FE + BE) so middleware and CORS allow vanity origins.
+4. **Superadmin** — Set org to **White-label** plan (auto-enables vanity toggle) → turn **Vanity subdomain** on per club.
+5. **Smoke test** — Open `https://<slug>.after-school.tech/join/CODE`, confirm accent/logo/favicon and join flow.
+
+Local dev continues to use `https://<slug>.localhost:3000` without prod DNS.
+
 ---
 
 ## Manual QA (must pass before first paying club)
@@ -79,7 +91,7 @@ Run once on staging/local with a fresh org.
 | Copilot quota on `org_id` | **Next product build** after checklist green |
 | Superadmin Users / Programs | After org launch ([`superadmin-console.md`](./superadmin-console.md) Phase B) |
 | Moderation queue | When marketplace has volume |
-| Leave club / cohort | **Not built** — owner removes member from org dashboard, or superadmin; student self-serve leave planned post-launch |
+| Leave club | **Built** — student self-serve (`POST /orgs/:id/leave`) or owner removes from People / superadmin |
 | Parent portal | Later |
 
 ---
