@@ -125,13 +125,7 @@ From [`monetization-strategy.md`](./monetization-strategy.md) §4:
 
 **Prerequisite:** Orgs and studio `org_id` tagging must work reliably (steps 1–3 above) so usage bills to the right customer.
 
-Suggested Copilot build order (future doc):
-
-1. Studio UI entry + prompt → existing lesson generator skills  
-2. Usage counter collection (`copilot_usage` keyed by `org_id` / `user_id`)  
-3. Quota check middleware on generate endpoints  
-4. Superadmin / org owner usage readout (Phase D superadmin)  
-5. Stripe metered billing or credit packs  
+Suggested Copilot build order: see [`studio-copilot-plan.md`](./studio-copilot-plan.md).
 
 ---
 
