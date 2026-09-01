@@ -12,8 +12,9 @@
 | Topic | Decision |
 |-------|----------|
 | **Surface** | Copilot is a **studio / builder** feature — not an org-dashboard feature |
-| **Who pays** | **Org pool** (club buys quota) + **per-tutor allocation** in superadmin (v1). **Personal pool** for indie tutors |
-| **Default pool** | **Club program** → default **club pool** (org-wide or tutor allocation). **Personal program** → **personal pool only**; club pool not available |
+| **Who pays** | **Org pool** (org-wide **or** per-tutor allocation — org chooses mode) + **personal pool**. Tutor may spend **personal credits on club content** |
+| **Default pool** | **Club program** → default **club pool** (per org mode). **Personal program** → personal pool only |
+| **Org Copilot mode** | **`org_wide`** — shared org bucket for all tutors · **`allocated`** — per-tutor caps; when exhausted, tutor **requests more** (owner/superadmin tops up allocation). No silent overflow to org-wide while in allocated mode |
 | **Attribution** | Usage logged on `user_id` + optional `org_id` from program context — not “org owns Copilot UI” |
 | **Generation context** | Always include **program name + description**, **module name + description**, plus lesson scope |
 | **Images** | **No AI image gen in v1.** Model outputs **image prompts** in component props (same as skills today); tutor sources/uploads assets |
@@ -230,17 +231,20 @@ Validate with zod generated from shared types (long-term: extract `types/lesson`
 
 | Pool | Buyer | When it applies |
 |------|-------|-----------------|
-| **Org-wide pool** | Club | Any tutor on a club program, until allocations override |
-| **Per-tutor allocation** | Club (superadmin sets cap per tutor) | Club program; debits tutor’s slice first, then optionally org-wide (policy TBD) |
-| **Personal pool** | Tutor | Personal programs only — **no club pool access** |
+| **Org-wide pool** | Club | `copilot_mode: org_wide` — any tutor on a club program draws from one shared bucket |
+| **Per-tutor allocation** | Club | `copilot_mode: allocated` — each tutor has a cap; **request more** when empty (mailto / owner action in superadmin) |
+| **Personal pool** | Tutor | Personal programs, or **optional override** on club programs (tutor pays) |
+
+**Org setting (v1):** `settings.copilotMode: 'org_wide' | 'allocated'` (superadmin or org owner when billing UI exists).
 
 **UI rules**
 
-- Program has `org_id` → Copilot defaults to **club credits**; show remaining from org pool or this tutor’s allocation.
-- Program is personal → **personal credits only**; club pool hidden.
-- Tutor with a personal pool editing a club program may **optionally** switch to personal credits (tutor pays); default stays club.
+- Club program → default **club credits** (org-wide or allocation per org mode).
+- Personal program → **personal credits only**; club pool hidden.
+- Club program + tutor has personal balance → **switch to personal** before Generate.
+- Allocated mode, zero left → block generate + **Request more credits** CTA (not auto-debit org-wide).
 
-**Superadmin (v1):** set org-wide monthly builds/edits **and** per-tutor allocation rows on the org panel.
+**Superadmin (v1):** org-wide monthly caps **or** per-tutor allocation table; toggle org mode; top-up on request.
 
 ### `copilot_quota` (Mongo)
 
@@ -361,11 +365,10 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 
 ## 14. Open decisions (remaining)
 
-1. **Allocation debit order** — tutor allocation first, then org-wide? Or org-wide only until allocation rows exist?
-2. **Pilot default numbers** — use 20 builds / 100 edits for first clubs, or different?
-3. **Personal credits on club programs** — allow tutor override to personal pool, or club-only on club programs?
+1. **Pilot default numbers** — e.g. 20 builds / 100 edits for first clubs (ops; set in superadmin).
+2. **“Request more” UX** — mailto owner vs in-app notify (v1 mailto is fine).
 
-**Resolved:** pool default by program type, org-wide + allocation in v1, provider, images, audio, validator, lesson create UX.
+**Resolved:** org-wide vs allocated (org chooses), no overflow when allocated, personal credits on club content OK, pool default by program type, provider, images, audio, validator.
 
 ---
 
