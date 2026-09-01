@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/auth-context';
+import { useAuth, type User } from '@/context/auth-context';
 import { SplashScreen } from '@/components/splash-screen';
 import { AnimatePresence } from 'framer-motion';
 import { IdentitySelection } from '@/components/identity-selection';
 import { needsOnboarding } from '@/lib/onboarding';
 import { homePathForRole } from '@/lib/home-path';
 
-function authenticatedHomePath(user: { role?: string } | null | undefined) {
+function authenticatedHomePath(user: User | null | undefined) {
   const role = user?.role?.toLowerCase();
   if (role === 'organization' || role === 'org' || role === 'tutor' || role === 'teacher' || role === 'admin') {
     return homePathForRole(role);

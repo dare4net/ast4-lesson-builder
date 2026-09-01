@@ -8,6 +8,7 @@ import {
     type InteractionSaveBody,
 } from '@/lib/contracts';
 import { captureException } from '@/lib/error-tracker';
+import type { OrgBrandingSettings } from '@/lib/org-branding';
 import { createRequestId, REQUEST_ID_HEADER } from '@/lib/request-id';
 
 class APIClient {
@@ -275,8 +276,10 @@ class APIClient {
         mine: () => this.get('/orgs/mine'),
         get: (id: string) => this.get(`/orgs/${id}`),
         getPrograms: (id: string) => this.get(`/orgs/${id}/programs`),
-        update: (id: string, data: { settings?: { allowPublicOptIn?: boolean } }) =>
-            this.patch(`/orgs/${id}`, data),
+        update: (
+            id: string,
+            data: { settings?: Pick<OrgBrandingSettings, 'allowPublicOptIn' | 'accentColor'> },
+        ) => this.patch(`/orgs/${id}`, data),
         addMember: (id: string, data: { email?: string; userId?: string; role: string }) =>
             this.post(`/orgs/${id}/members`, data),
         listCohorts: (id: string) => this.get(`/orgs/${id}/cohorts`),
