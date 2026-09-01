@@ -278,7 +278,7 @@ class APIClient {
         getPrograms: (id: string) => this.get(`/orgs/${id}/programs`),
         update: (
             id: string,
-            data: { settings?: Pick<OrgBrandingSettings, 'allowPublicOptIn' | 'accentColor'> },
+            data: { settings?: Partial<Pick<OrgBrandingSettings, 'allowPublicOptIn' | 'accentColor'>> },
         ) => this.patch(`/orgs/${id}`, data),
         addMember: (id: string, data: { email?: string; userId?: string; role: string }) =>
             this.post(`/orgs/${id}/members`, data),
