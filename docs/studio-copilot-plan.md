@@ -124,56 +124,49 @@ Short term: Next.js `app/api/copilot/*` proxies to Express with JWT. Long term: 
 
 | Rule | Detail |
 |------|--------|
-| **Single balance** | `credits_remaining` on org pool, allocation, or personal pool |
-| **Everything costs** | INTAKE chat, PLAN drafts, plan revisions, EXECUTE, validation **repair** — all debit credits |
-| **Our formula, not tokens** | Tutors never see provider token counts. We charge **Copilot credits** tuned for margin + fairness |
-| **Tokens are internal** | Log `prompt_tokens` / `completion_tokens` on each row for COGS — do not pass through 1:1 to users |
-| **Pre-send estimate** | UI shows “~N credits” before tutor sends (formula preview); actual debit after response |
+| **Single balance** | `credits_remaining` on org / allocation / personal pool |
+| **Everything costs** | Every model call debits — chat, plan, apply, repair |
+| **Derived from tokens** | Use **actual** `prompt_tokens` + `completion_tokens` from the provider, then convert via **our formula** |
+| **Not shown to tutors** | No token counts, no per-message cost, no pre-send estimates |
+| **Monitor yourself** | Balance in panel chrome only; optional usage history elsewhere |
 
-### Why not “1 build = 1 credit”
+### Why our formula (not raw tokens, not fixed per turn)
 
-A one-line component tweak and a 12-slide lesson both used to count as “a build.” That is unfair and bad for margin. Usage-based credits align price with **work done**, not button labels.
+- Provider bills us in tokens → we must meter on real usage for margin.  
+- Tutors buy **Copilot credits** — simpler SKU, room for margin and rounding.  
+- A short reply and a huge JSON apply **naturally cost different amounts** because token counts differ.
 
-### Usage formula (v1 — tune in config)
+### Conversion formula (v1 — config in `helpers/copilotCredits.js`)
 
-Stored in `helpers/copilotCredits.js` (or env) — change without shipping new UX:
+```js
+// After each API response:
+const billableTokens =
+  prompt_tokens * INPUT_WEIGHT +
+  completion_tokens * OUTPUT_WEIGHT
+  // optional: CACHE_DISCOUNT if prompt cache hit
 
-```
-credits_charged = ceil(
-  BASE[phase]
-  × SCOPE_MULT[scope]
-  × complexity_mult
-  + REPAIR_ADDON   // if repair pass in same request
+credits_charged = Math.max(
+  MIN_CREDITS,
+  (billableTokens / TOKENS_PER_CREDIT) * PHASE_MULT[internal_phase]
 )
 
-complexity_mult = f(
-  context_chars_bucket,      // program/module/lesson context size
-  plan_slide_count,          // execute only
-  component_types_count,     // execute only
-  thread_turn_depth          // optional: long threads slightly more
-)
+// Log: prompt_tokens, completion_tokens, credits_charged, formula_version
 ```
 
-**Example BASE weights (starting point — ops tunable):**
+| Knob | Purpose |
+|------|---------|
+| `TOKENS_PER_CREDIT` | e.g. 1000 billable token-units = 1 credit (tune for pricing) |
+| `INPUT_WEIGHT` / `OUTPUT_WEIGHT` | Reflect provider $/M asymmetry (output usually heavier) |
+| `PHASE_MULT` | Small bump for `apply` / `repair` vs `clarify` chat if needed |
+| `MIN_CREDITS` | Floor per request (e.g. 0.1) |
 
-| Phase / action | BASE credits |
-|----------------|--------------|
-| `chat_intake` (planner turn) | 0.5 |
-| `chat_plan` (plan draft / revise) | 1 |
-| `plan_approve_ack` | 0.25 |
-| `execute` | 3 |
-| `execute_repair` (validation retry) | +2 |
-| `context_patch` (post-accept memory update) | 0.5 |
-
-**SCOPE_MULT:** `component_edit` 0.6 · `slide_edit` 1 · `lesson_build` 1 · `lesson_rewrite` 1.4
-
-Minimum charge per request: **0.25 credits**. Fractional credits allowed in DB (display rounded to 1 decimal).
+**Example:** 400 prompt + 1200 completion tokens → `(400×1 + 1200×3) / 1000 = 4.0 credits` (with illustrative weights). Next message with 200 + 150 tokens → `0.65 credits`. **Not consistent per turn — by design.**
 
 ### UX copy
 
-- “**847 credits** remaining this month” — not “20 builds left”
-- After each turn: “−1.2 credits” in thread footer
-- At zero: block send + request more (allocated) or buy top-up (later)
+- Panel: **“412 credits remaining”** — updates after each send  
+- **No** “this message will cost…”  
+- At zero: cannot send until top-up / request more
 
 ---
 
@@ -375,7 +368,7 @@ Orgs may still store default monthly quotas for ops; billing is **not** tied to 
 2. **Generating** — streaming status text (not token stream to JSON — too fragile)
 3. **Preview** — side-by-side or slide diff; validation warnings surfaced
 4. **Accept** — merge into `lesson` state; undo via existing `useLessonHistory`
-5. **Credits** — “847 credits left” + per-turn debit in thread header
+5. **Credits** — balance in panel header only; no per-message pricing in chat
 
 Do **not** auto-save to DB on accept — tutor still hits Save.
 
@@ -389,7 +382,7 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 | **C1 — API** | BE `/copilot/generate` + quota stub + usage log | Postman generates valid lesson; quota blocks at 0 |
 | **C2 — Builder UX** | Panel in `/builder`, lesson_build + component_edit only | Tutor accepts patch into builder |
 | **C3 — Edit scopes** | slide_edit + lesson_rewrite + diff preview | Refine loop feels useful |
-| **C4 — Metering prod** | Org quotas in superadmin; owner readout | Pilot club has 20/100 limits |
+| **C4 — Metering prod** | Org quotas in superadmin; owner readout | Pilot club gets e.g. 2,000 credits/mo |
 | **C5 — Billing** | Stripe metered or credit packs | Invoice line matches usage |
 
 **Do not start C5 until C2 is used by a real tutor.**
@@ -413,7 +406,7 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 1. **Pilot default credit caps** — e.g. 2,000 credits/month per org (ops; set in superadmin).
 2. **“Request more” UX** — mailto owner vs in-app notify (v1 mailto is fine).
 
-**Resolved:** org-wide vs allocated (org chooses), no overflow when allocated, personal credits on club content OK, pool default by program type, provider, images, audio, validator.
+**Resolved:** unified credit formula (all phases metered), org-wide vs allocated, personal credits on club content OK, pool default by program type, provider, images, audio, validator.
 
 ---
 
@@ -431,6 +424,6 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 
 - Tutor on a **club or personal** program can build a **new lesson** from a brief and land in builder with valid JSON.
 - Tutor can choose **org pool vs personal pool** when both exist.
-- Quota decrements and blocks further builds when exhausted.
+- Copilot **credits** decrement on every interaction; block when balance ≤ 0.
 - No student sees Copilot UI.
 - Copilot credits are a **separate SKU** from club seat / branding plans.

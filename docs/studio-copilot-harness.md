@@ -19,75 +19,71 @@
 
 ---
 
-## 2. Conversation phases (state machine)
+## 2. Conversation model (tutor-facing vs internal)
+
+### What the tutor sees
+
+**One continuous chat** — no “Intake”, “Plan”, or “Execute” labels, no checklists, no per-message cost preview. It should feel like talking to a curriculum partner who remembers the program.
+
+Internally the harness still runs **clarify → plan → confirm → apply** (§2.1). The AI asks questions in prose, summarises what it heard, and offers *“Want me to build that?”* — not stage banners.
+
+### Credit UX
+
+| Show | Do not show |
+|------|-------------|
+| Remaining balance in panel chrome (updates after each request) | Per-turn “−X credits” in the thread |
+| Usage history in settings (optional later) | “~N credits” before send |
+| Block at zero balance | Token counts or provider names |
+
+**Every request debits credits** (chat and apply). Cost is **variable** — computed from **actual provider token usage** through **our conversion formula** (parent §4.1), not a fixed price per turn.
+
+### Internal phases (never shown in UI)
 
 ```
-┌──────────┐    enough info     ┌──────────┐   tutor approves   ┌──────────┐
-│  INTAKE  │ ────────────────► │   PLAN   │ ─────────────────► │ EXECUTE  │
-│  (chat)  │ ◄──────────────── │ (draft)  │ ◄── edit plan ────── │ (JSON)   │
-└──────────┘   more questions  └──────────┘                    └────┬─────┘
-      ▲              │                │                              │
-      │              │ cancel         │ revise plan                  ▼
-      │              ▼                │                         ┌──────────┐
-      └──────── clarify ──────────────┘                         │  REVIEW  │
-                                                                │ accept?  │
-                                                                └────┬─────┘
-                                                                     │
-                              refine ────────────────────────────────┘
-                              (back to PLAN or scoped EXECUTE)
+clarify ──► plan_ready ──► tutor_confirms ──► apply ──► review_patch
+     ▲            │              │               │
+     └────────────┴── chat continues freely ─────┘
 ```
 
-### Phase rules
+Stored on `copilot_threads.internal_phase` — prompts/tools switch; the composer stays the same.
 
-| Phase | Credits | Model work | Tutor sees |
-|-------|---------|------------|------------|
-| **INTAKE** | **Yes** — per chat turn (formula §4.1 in parent plan) | Clarifying questions — no lesson JSON | Chat thread + debit footer |
-| **PLAN** | **Yes** — per plan draft/revise | Structured plan artifact | Plan cards + “~N credits” before send |
-| **APPROVE** | **Yes** — small ack charge | Confirms snapshot; triggers execute job | “Build this lesson (~X credits)” |
-| **EXECUTE** | **Yes** — largest typical debit | Generate JSON per approved plan | Progress + diff preview |
-| **REVIEW** | **Yes** if repair/context patch runs | Validation repair or memory update | Accept / reject |
-
-**No free pipeline steps.** Chat is part of the product and part of the margin.
-
-**Hard rule:** EXECUTE never runs without an explicit **approved plan** snapshot — but approving still costs credits.
+Apply requires internal confirmation (natural “yes / go ahead” or inline **Apply** on the assistant’s proposal) — not a separate wizard.
 
 ---
 
-## 3. INTAKE — what Copilot must clarify
+## 2.1 @ scope — Cursor-style context attachments
 
-Copilot does **not** assume. It asks until these are filled or explicitly marked “use your judgment”:
+Typing **`@`** in the Copilot composer opens a **scope picker** (same idea as @-mentions in Cursor: attach context to this message).
 
-### Required brief fields
+| Mention | Resolves to | Injected context |
+|---------|-------------|------------------|
+| `@Lesson` | Whole lesson | All slides + metadata (summarise if huge) |
+| `@Slide 3 — States of matter` | `slides[i]` | That slide’s components |
+| `@Quiz — capital cities` | Component by label/type | id + props + live type spec |
 
-| Field | Examples | Notes |
-|-------|----------|-------|
-| **Audience** | Year 4, Year 9, adult beginners, mixed ability | Drives reading load + friction rules |
-| **Outcome** | “Identify three states of matter” / “Use past perfect in a paragraph” | One lesson = one primary outcome |
-| **Style** | Story / academic / simple / gamified / exam-drill / **custom** | Free text allowed; AI may suggest 2–3 options |
-| **Tone** | Playful, calm, competitive, formal | Sub-style |
-| **Length** | ~6 slides, ~15 min, “short opener” | Slide count band, not exact |
-| **Mode** | Practice only / live assessment on finale / mixed | Affects `mode` + `timeLimit` |
-| **Continuity** | “Follows Lesson 2 on rivers” / “standalone” | Pulls module context + prior lesson summaries |
+**Multiple `@` chips** allowed. Chips are removable. Payload: `{ message, attachments: [{ kind, id }] }`.
 
-### Optional but asked once
+**Default scope** when no `@`:
 
-- Vocabulary to include or avoid  
-- SEN / EAL / low-literacy flags  
-- “No horror / no religion” content guardrails  
-- Assessment harshness (gentle retry vs strict)  
-- Image note: **tutor sources assets**; Copilot will write **image prompts** only  
+1. `editingComponentId` set → **component** on current slide  
+2. Else → **current slide** (`currentSlideIndex`)  
+3. Empty lesson → **lesson** (greenfield)
 
-### Intake completion
-
-Planner sets `brief.status: 'ready'` when all required fields are set **or** tutor clicks **“Use your best judgment for the rest”** (logged in thread).
-
-**Pedagogy skills** (`primary-lesson-generator`, `curriculum-lesson-generator`) are **hints at execute time**, not intake gates. Style + audience pick which adapter to inject — they do not lock the tutor into “primary only” UX.
+Builder already tracks `currentSlideIndex` and `editingComponentId` — wire these to focus + @ menu ordering (focused slide’s components first).
 
 ---
 
-## 4. PLAN artifact (permission gate)
+## 3. What the AI must learn (internal only)
 
-Before credits are spent on execute, Copilot outputs a **Plan Document** (structured JSON + human-readable cards):
+Clarify through **conversation**, not a form. Internal `brief` schema tracks: audience, outcome, style, tone, length, mode, continuity. Pedagogy skills inject at **apply** time from audience + style — not visible gates.
+
+---
+
+## 4. Plan artifact (internal + inline in chat)
+
+Before **apply**, the harness stores a structured plan server-side. The tutor sees it as **normal assistant prose** in the thread (slide outline, components, style) — optional collapsible “Plan details” for power users, not a mandatory checklist screen.
+
+Inline actions on that message: **Apply to lesson** | **Keep chatting** (no separate “Plan phase” UI).
 
 ```ts
 type CopilotPlan = {
@@ -114,9 +110,7 @@ type CopilotPlan = {
 }
 ```
 
-**UX:** Full plan shown in a scrollable **Plan Review** panel. Tutor can edit text fields inline. Chat shows the same plan in prose: *“Here’s what I’ll build — confirm to proceed.”*
-
-Buttons: **Build this lesson** | **Keep chatting** | **Reset plan**
+Structured `CopilotPlan` JSON is stored on the thread for execute — the chat rendering is human-friendly only.
 
 ---
 
@@ -214,7 +208,7 @@ Split work for cost + quality:
 
 | Role | When | Model | Output |
 |------|------|-------|--------|
-| **Planner** (chat) | INTAKE + PLAN | `gpt-4o-mini` | Questions, `CopilotPlan`, context patches |
+| **Planner** (chat) | clarify / plan_ready | `gpt-4o-mini` | Conversation + `CopilotPlan` |
 | **Executor** (build) | EXECUTE + repair | `gpt-4o-mini` (upgrade slot for hard lessons) | Lesson JSON patch |
 
 **Optional:** Planner uses slightly higher temperature; Executor uses low temperature + JSON schema.
@@ -228,7 +222,7 @@ Split work for cost + quality:
 | `validate_lesson(json)` | Returns errors/warnings |
 | `emit_lesson_patch(json)` | Final structured output |
 
-Planner tools (INTAKE only):
+Planner tools (chat):
 
 | Tool | Purpose |
 |------|---------|
@@ -278,13 +272,10 @@ Personality stays constant; **pedagogy adapter** shifts.
 │  ┌─────────────────────────────┐  ┌──────────────────────────┐ │
 │  │ Slides / canvas             │  │ Copilot panel              │ │
 │  │                             │  │ ┌────────────────────────┐ │ │
-│  │                             │  │ │ Thread (chat)          │ │ │
+│  │                             │  │ │ Thread + @ attachments   │ │ │
+│  │                             │  │ │ [ Apply ] on proposals │ │ │
 │  │                             │  │ └────────────────────────┘ │ │
-│  │                             │  │ ┌────────────────────────┐ │ │
-│  │                             │  │ │ Plan review (when ready)│ │ │
-│  │                             │  │ │ [ Build ] [ Revise ]   │ │ │
-│  │                             │  │ └────────────────────────┘ │ │
-│  │                             │  │ Credits: 847.5 · pool ▾      │ │
+│  │                             │  │ 412 credits · pool ▾       │ │
 │  └─────────────────────────────┘  └──────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -297,11 +288,11 @@ Personality stays constant; **pedagogy adapter** shifts.
 
 ### Scoped sessions
 
-| Entry | Starting phase |
-|-------|----------------|
-| Empty lesson + “Build with Copilot” | INTAKE |
-| Existing lesson + “Refine” | INTAKE with lesson JSON in context; plan says **patch** not rebuild |
-| Slide / component selection + “Edit with Copilot” | Short INTAKE → small PLAN → EXECUTE patch |
+| Entry | Behaviour |
+|-------|-----------|
+| Open Copilot in builder | Continuous chat; focus from slide/component selection |
+| `@Lesson` / `@Slide` / `@Component` | Explicit scope on message |
+| Assistant proposes changes | Inline **Apply to lesson** on that message |
 
 ---
 

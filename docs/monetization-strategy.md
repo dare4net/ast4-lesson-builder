@@ -80,9 +80,7 @@ That loop is the product. One-shot “generate and dump” is a demo. **Revise-i
 | Independent tutor | **Copilot-only** subscription or pay-as-you-go credits — no student seats required. |
 | Heavy academy | Site licence: larger pool, shared across tutors, still metered. |
 
-**One credit balance** — not “builds” vs “edits.” Every Copilot interaction (chat, plan, execute, repair) debits credits using an **internal usage formula** we control. Provider token counts are for COGS only; tutors see credits, not tokens.
-
-A long intake thread costs less in total than a full lesson execute, but **nothing is free** — chat turns still debit. Show remaining credits and per-turn cost in the studio chrome.
+**One credit balance** — every Copilot model call debits credits computed from **actual token usage** via an internal conversion formula (not shown per message). Tutors monitor balance in the studio panel; provider tokens are COGS only.
 
 Do **not** fold unlimited generation into the base per-learner price. Seats are margin. Copilot is usage.
 
