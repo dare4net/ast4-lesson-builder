@@ -37,24 +37,24 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 
 ## Phase 0 — Shared foundation
 
-- [ ] **0.1** Extend org model: `accentColor`, `logoUrl`, `bannerUrl`, `welcomeMessage`, `prideScope` (`cohort` \| `org`), `brandingTier`, optional `joinLayout`
-- [ ] **0.2** `resolveOrgAccent(slug, accentColor?)` — owner colour or slug-hash fallback (BE + FE)
-- [ ] **0.3** Public org API returns safe branding subset (`GET /orgs/public/:slug`)
-- [ ] **0.4** `/orgs/mine` includes branding for student org rows
-- [ ] **0.5** `orgCanUse(tier, feature)` feature gate helper
-- [ ] **0.6** Tests for model, patch, public API, accent fallback
+- [x] **0.1** Extend org model: `accentColor`, `logoUrl`, `bannerUrl`, `welcomeMessage`, `prideScope` (`cohort` \| `org`), `brandingTier`, optional `joinLayout`
+- [x] **0.2** `resolveOrgAccent(slug, accentColor?)` — owner colour or slug-hash fallback (BE + FE)
+- [x] **0.3** Public org API returns safe branding subset (`GET /orgs/public/:slug`)
+- [x] **0.4** `/orgs/mine` includes branding for student org rows
+- [x] **0.5** `orgCanUse(tier, feature)` feature gate helper
+- [x] **0.6** Tests for model, patch, public API, accent fallback
 
 ---
 
 ## Phase 1 — Tier 1: Launch branding (Standard)
 
-- [ ] **1.1** Org accent colour picker on `/dashboard/org/settings`
-- [ ] **1.2** `--club-accent` CSS variables on student shell when club lens active
-- [ ] **1.3** Themed student chrome (switcher, sidebar active, primary CTAs)
-- [ ] **1.4** Branded join page (accent gradient, org name, cohort card)
-- [ ] **1.5** Join preview “splash” card before confirm (no animation)
-- [ ] **1.6** Student home club strip (org name + class)
-- [ ] **1.7** Superadmin: optional default accent on org create
+- [x] **1.1** Org accent colour picker on `/dashboard/org/settings`
+- [x] **1.2** `--club-accent` CSS variables on student shell when club lens active
+- [x] **1.3** Themed student chrome (switcher, sidebar active, primary CTAs)
+- [x] **1.4** Branded join page (accent gradient, org name, cohort card)
+- [x] **1.5** Join preview “splash” card before confirm (no animation)
+- [x] **1.6** Student home club strip (org name + class)
+- [x] **1.7** Superadmin: optional default accent on org create
 - [ ] **1.8** QA — two orgs, different accents, same student switches clubs
 
 ---
@@ -126,7 +126,7 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 
 | Sprint | Phases | Outcome |
 |--------|--------|---------|
-| **A** | 0 + 1 | Sellable Standard look |
+| **A** | 0 + 1 | Sellable Standard look *(code shipped; 1.8 QA pending)* |
 | **B** | 2 + 3 (3.1–3.4) | Branded + pride scope + ops |
 | **C** | 4 + 5 + 6 | White-label + sales gates + QA |
 

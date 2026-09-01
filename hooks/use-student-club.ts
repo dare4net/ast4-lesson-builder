@@ -6,6 +6,8 @@ import { apiClient } from '@/lib/api-client'
 import { useAuth } from '@/context/auth-context'
 
 import { readVanityOrgSlug } from '@/lib/vanity-cookie'
+import type { OrgBrandingSettings } from '@/lib/org-branding'
+import { resolveOrgAccent } from '@/lib/org-branding'
 
 const STUDENT_ORG_KEY = 'ast_student_active_org_id'
 export const STUDENT_PERSONAL = 'personal'
@@ -14,6 +16,7 @@ export type StudentOrgOption = {
     id: string
     name: string
     slug?: string
+    branding?: OrgBrandingSettings
     cohort?: {
         id: string
         name: string
@@ -33,20 +36,36 @@ export function useStudentClubContext() {
 
     const studentOrgs: StudentOrgOption[] = (Array.isArray(query.data?.studentOrgs) ? query.data.studentOrgs : [])
         .map((row: {
-            org?: { id?: string; name?: string; slug?: string }
+            org?: {
+                id?: string
+                name?: string
+                slug?: string
+                settings?: OrgBrandingSettings
+            }
             cohort?: { id?: string; name?: string; joinCode?: string }
-        }) => ({
-            id: row?.org?.id || '',
-            name: row?.org?.name || 'Club',
-            slug: row?.org?.slug,
-            cohort: row?.cohort?.id
-                ? {
-                      id: row.cohort.id,
-                      name: row.cohort.name || 'Class',
-                      joinCode: row.cohort.joinCode,
-                  }
-                : undefined,
-        }))
+        }) => {
+            const slug = row?.org?.slug
+            const settings = row?.org?.settings
+            return {
+                id: row?.org?.id || '',
+                name: row?.org?.name || 'Club',
+                slug,
+                branding: settings
+                    ? {
+                          ...settings,
+                          accentColor:
+                              settings.accentColor || resolveOrgAccent(slug, null),
+                      }
+                    : { accentColor: resolveOrgAccent(slug, null) },
+                cohort: row?.cohort?.id
+                    ? {
+                          id: row.cohort.id,
+                          name: row.cohort.name || 'Class',
+                          joinCode: row.cohort.joinCode,
+                      }
+                    : undefined,
+            }
+        })
         .filter((row: StudentOrgOption) => row.id)
 
     const activeStudentOrg =

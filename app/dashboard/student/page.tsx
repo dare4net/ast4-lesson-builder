@@ -25,6 +25,7 @@ import { buildStudentViewerHref } from "@/lib/viewer-url"
 import { useMyPrograms } from "@/hooks/use-my-programs"
 import { programProgressPercent } from "@/lib/program-progress"
 import { StudentClubSwitcher } from "@/components/dashboard/student/student-club-switcher"
+import { StudentClubStrip } from "@/components/dashboard/student/student-club-strip"
 import { useStudentClubContext } from "@/hooks/use-student-club"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
@@ -166,6 +167,8 @@ export default function StudentDashboardPage() {
 
     return (
         <div className="space-y-6 pb-12">
+            <StudentClubStrip />
+
             {/* Sleek Hero Welcome Banner */}
             <section className="relative overflow-hidden p-6 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">

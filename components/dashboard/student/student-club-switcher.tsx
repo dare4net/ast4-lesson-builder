@@ -44,15 +44,20 @@ export function StudentClubSwitcher({ className }: StudentClubSwitcherProps) {
         return (
             <div
                 className={cn(
-                    'min-h-9 px-3 py-1.5 rounded-xl border-2 border-sky-200 bg-sky-50 text-xs font-bold text-sky-900 inline-flex items-center gap-2',
+                    'min-h-9 px-3 py-1.5 rounded-xl border-2 text-xs font-bold inline-flex items-center gap-2',
                     className,
                 )}
+                style={{
+                    borderColor: 'var(--club-accent-border, rgb(186 230 253))',
+                    backgroundColor: 'var(--club-accent-muted, rgb(240 249 255))',
+                    color: 'var(--club-accent, #0369a1)',
+                }}
             >
-                <Building2 className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                <Building2 className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--club-accent, #0284c7)' }} />
                 <div className="min-w-0 leading-tight">
                     <p className="truncate">{studentOrgs[0].name}</p>
                     {studentOrgs[0].cohort?.name && (
-                        <p className="text-[10px] font-semibold text-sky-700 truncate flex items-center gap-1">
+                        <p className="text-[10px] font-semibold truncate flex items-center gap-1 opacity-90">
                             <Users className="w-3 h-3 shrink-0" />
                             {studentOrgs[0].cohort.name}
                         </p>
@@ -64,12 +69,20 @@ export function StudentClubSwitcher({ className }: StudentClubSwitcherProps) {
 
     return (
         <label className={cn('relative inline-flex items-center max-w-[16rem]', className)}>
-            <Building2 className="w-3.5 h-3.5 text-sky-600 absolute left-2.5 pointer-events-none z-10" />
+            <Building2
+                className="w-3.5 h-3.5 absolute left-2.5 pointer-events-none z-10"
+                style={{ color: 'var(--club-accent, #0284c7)' }}
+            />
             <select
                 value={activeOrgId}
                 aria-label="Active club"
                 onChange={(e) => setActiveOrgId(e.target.value)}
-                className="h-9 pl-8 pr-8 rounded-xl border-2 border-sky-200 bg-sky-50 text-xs font-bold text-sky-900 appearance-none cursor-pointer w-full truncate"
+                className="h-9 pl-8 pr-8 rounded-xl border-2 text-xs font-bold appearance-none cursor-pointer w-full truncate"
+                style={{
+                    borderColor: 'var(--club-accent-border, rgb(186 230 253))',
+                    backgroundColor: 'var(--club-accent-muted, rgb(240 249 255))',
+                    color: 'var(--club-accent, #0369a1)',
+                }}
             >
                 {studentOrgs.map((org) => (
                     <option key={org.id} value={org.id}>

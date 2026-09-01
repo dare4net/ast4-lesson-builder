@@ -7,6 +7,7 @@ import { OrgPageHeader } from '@/components/dashboard/org/org-page-header'
 import { OrgPageGate } from '@/components/dashboard/org/org-ui'
 import { OrgPublicCatalogPolicy } from '@/components/dashboard/org/org-public-catalog-policy'
 import { OrgVanityInfo } from '@/components/dashboard/org/org-vanity-info'
+import { OrgBrandingSettings } from '@/components/dashboard/org/org-branding-settings'
 
 export default function OrgSettingsPage() {
     const { loading, staffOrgs, selected, membershipRole } = useOrgDashboard()
@@ -44,6 +45,8 @@ export default function OrgSettingsPage() {
                         </div>
                     </dl>
                 </section>
+
+                <OrgBrandingSettings />
 
                 <OrgPublicCatalogPolicy />
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useEffect, useState, type CSSProperties } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { GamificationEventListener } from "@/components/gamification/GamificationEventListener"
 import { GamificationToastContainer } from "@/components/ui/gamification-toast"
@@ -15,6 +15,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/context/auth-context"
 import { needsOnboarding } from "@/lib/onboarding"
+import { useStudentClubContext, STUDENT_PERSONAL } from "@/hooks/use-student-club"
+import { clubThemeVars, resolveOrgAccent } from "@/lib/org-branding"
 
 interface StudentDashboardLayoutProps {
     children: ReactNode
@@ -26,6 +28,16 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
     const { user, loading } = useAuth()
     const router = useRouter()
     const pathname = usePathname()
+    const club = useStudentClubContext()
+    const inClubLens =
+        club.clubMode &&
+        club.activeOrgId &&
+        club.activeOrgId !== STUDENT_PERSONAL &&
+        club.activeStudentOrg
+    const clubAccent = inClubLens
+        ? club.activeStudentOrg?.branding?.accentColor ||
+          resolveOrgAccent(club.activeStudentOrg?.slug, null)
+        : null
 
     useEffect(() => {
         if (loading || !user) return
@@ -37,7 +49,11 @@ export default function StudentDashboardLayout({ children }: StudentDashboardLay
     }, [loading, user, pathname, router])
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-sans">
+        <div
+            className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white font-sans"
+            data-club-theme={clubAccent ? 'active' : 'off'}
+            style={clubAccent ? (clubThemeVars(clubAccent) as CSSProperties) : undefined}
+        >
             <GamificationEventListener />
             <GamificationToastContainer />
             <LoginStreakModal

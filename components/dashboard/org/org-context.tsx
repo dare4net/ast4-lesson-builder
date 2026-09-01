@@ -23,6 +23,13 @@ export type StaffOrg = {
         settings?: {
             allowPublicOptIn?: boolean
             vanityEnabled?: boolean
+            accentColor?: string | null
+            logoUrl?: string | null
+            bannerUrl?: string | null
+            welcomeMessage?: string | null
+            prideScope?: 'cohort' | 'org'
+            brandingTier?: 'standard' | 'branded' | 'white_label'
+            joinLayout?: 'standard' | 'hero'
         }
     }
     membership: {

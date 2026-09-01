@@ -13,6 +13,7 @@ import {
 } from '@/lib/superadmin-org-errors';
 import { superadminClient } from '@/lib/superadmin-client';
 import { CohortProgramsEditor, type OrgProgramOption } from '@/components/dashboard/org/cohort-programs-editor';
+import { ORG_ACCENT_PRESETS, resolveOrgAccent } from '@/lib/org-branding';
 
 type OrgRow = {
     id: string;
@@ -25,6 +26,7 @@ type OrgRow = {
     settings?: {
         vanityEnabled?: boolean;
         allowPublicOptIn?: boolean;
+        accentColor?: string | null;
     };
 };
 
@@ -61,6 +63,7 @@ export function OrgsPanel() {
     const [slug, setSlug] = useState('');
     const [seatCap, setSeatCap] = useState('40');
     const [ownerEmail, setOwnerEmail] = useState('');
+    const [createAccent, setCreateAccent] = useState<string | null>(null);
     const [memberEmail, setMemberEmail] = useState('');
     const [memberRole, setMemberRole] = useState<'owner' | 'tutor' | 'student'>('tutor');
     const [cohortName, setCohortName] = useState('');
@@ -137,6 +140,11 @@ export function OrgsPanel() {
         return counts;
     }, [orgs]);
 
+    const createAccentPreview = useMemo(
+        () => resolveOrgAccent(slug.trim() || name.trim(), createAccent),
+        [slug, name, createAccent],
+    );
+
     const openOrg = async (id: string) => {
         setSelectedId(id);
         setError('');
@@ -180,10 +188,12 @@ export function OrgsPanel() {
                 slug: slug.trim() || undefined,
                 seatCap: Number(seatCap) || 40,
                 ownerEmail: ownerEmail.trim(),
+                settings: createAccent ? { accentColor: createAccent } : undefined,
             });
             setName('');
             setSlug('');
             setOwnerEmail('');
+            setCreateAccent(null);
             await load();
             if (data?.org?.id) await openOrg(data.org.id);
             const token = data?.owner?.inviteToken as string | undefined;
@@ -372,6 +382,43 @@ export function OrgsPanel() {
                         required
                         className="h-10 px-3 rounded-xl border border-slate-200 text-xs font-medium"
                     />
+                    <div className="space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                            Club colour (optional)
+                        </p>
+                        <div className="flex flex-wrap gap-2 items-center">
+                            {ORG_ACCENT_PRESETS.map((color) => (
+                                <button
+                                    key={color}
+                                    type="button"
+                                    aria-label={`Use ${color}`}
+                                    aria-pressed={createAccent === color}
+                                    onClick={() =>
+                                        setCreateAccent((current) => (current === color ? null : color))
+                                    }
+                                    className={`h-8 w-8 rounded-lg border-2 transition-transform hover:scale-105 ${
+                                        createAccent === color
+                                            ? 'border-slate-900 ring-2 ring-offset-1 ring-slate-300'
+                                            : 'border-white shadow-sm'
+                                    }`}
+                                    style={{ backgroundColor: color }}
+                                />
+                            ))}
+                            <span
+                                className="text-[10px] font-bold px-2 py-1 rounded-lg border"
+                                style={{
+                                    borderColor: `${createAccentPreview}55`,
+                                    color: createAccentPreview,
+                                    backgroundColor: `${createAccentPreview}14`,
+                                }}
+                            >
+                                Preview {createAccentPreview}
+                            </span>
+                        </div>
+                        <p className="text-[10px] text-slate-400 font-medium">
+                            Leave unset to auto-pick from slug when the org is created.
+                        </p>
+                    </div>
                 </div>
                 <button
                     type="button"

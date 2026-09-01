@@ -1,21 +1,31 @@
 'use client'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Building2, Loader2, Users } from 'lucide-react'
 import { useAuth } from '@/context/auth-context'
 import { apiClient } from '@/lib/api-client'
 import { readVanityOrgSlug } from '@/lib/vanity-cookie'
+import { clubThemeVars, resolveOrgAccent } from '@/lib/org-branding'
 
 const STUDENT_ORG_KEY = 'ast_student_active_org_id'
 
+type PreviewOrg = {
+    id: string
+    name: string
+    slug: string
+    accentColor?: string | null
+    welcomeMessage?: string | null
+    logoUrl?: string | null
+}
+
 type Preview = {
-    org: { id: string; name: string; slug: string }
+    org: PreviewOrg
     cohort: { id: string; name: string; joinCode: string; memberCount: number }
 }
 
-type VanityOrg = { id: string; name: string; slug: string }
+type VanityOrg = PreviewOrg
 
 export default function JoinCohortPage() {
     const params = useParams<{ code: string }>()
@@ -74,6 +84,15 @@ export default function JoinCohortPage() {
         }
     }, [code])
 
+    const displayOrg = preview?.org || vanityOrg
+    const accent = useMemo(
+        () =>
+            displayOrg
+                ? displayOrg.accentColor || resolveOrgAccent(displayOrg.slug, null)
+                : resolveOrgAccent(null, null),
+        [displayOrg],
+    )
+
     const join = async () => {
         if (!user) {
             router.push(`/auth/login?next=${encodeURIComponent(`/join/${code}`)}`)
@@ -116,15 +135,36 @@ export default function JoinCohortPage() {
     }
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-slate-50 to-sky-50 px-4 py-10">
-            <div className="mx-auto max-w-md rounded-3xl border-2 border-slate-200 bg-white p-6 shadow-sm space-y-4">
-                <p className="text-[11px] font-black uppercase tracking-widest text-sky-600">
-                    {vanityOrg ? vanityOrg.name : 'Join a class'}
-                </p>
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Enter your cohort code</h1>
-                <p className="text-sm font-medium text-slate-500">
-                    Your tutor gives you a code like <span className="font-mono">RIV-THU</span>. Same account works across clubs.
-                </p>
+        <main
+            className="min-h-screen px-4 py-10"
+            style={{
+                ...clubThemeVars(accent),
+                background: `linear-gradient(180deg, ${accent}18 0%, rgb(248 250 252) 45%, rgb(255 255 255) 100%)`,
+            }}
+        >
+            <div className="mx-auto max-w-md rounded-3xl border-2 bg-white p-6 shadow-sm space-y-4" style={{ borderColor: `${accent}44` }}>
+                <div className="flex items-center gap-3">
+                    <div
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center text-white shrink-0"
+                        style={{ backgroundColor: accent }}
+                    >
+                        <Building2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <p className="text-[11px] font-black uppercase tracking-widest" style={{ color: accent }}>
+                            {displayOrg?.name || 'Join a class'}
+                        </p>
+                        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                            {preview ? 'Join your class' : 'Enter your code'}
+                        </h1>
+                    </div>
+                </div>
+
+                {!preview && (
+                    <p className="text-sm font-medium text-slate-500">
+                        Your tutor gives you a code like <span className="font-mono">RIV-THU</span>. Same account works across clubs.
+                    </p>
+                )}
 
                 <form onSubmit={onManual} className="flex gap-2">
                     <input
@@ -143,24 +183,44 @@ export default function JoinCohortPage() {
                         <Loader2 className="w-4 h-4 animate-spin" /> Checking code…
                     </div>
                 ) : preview ? (
-                    <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 space-y-3">
-                        <div>
-                            <p className="text-xs font-bold text-slate-500">{preview.org.name}</p>
-                            <p className="text-lg font-black text-slate-900">{preview.cohort.name}</p>
-                            <p className="text-[11px] font-mono text-sky-700 mt-1">{preview.cohort.joinCode}</p>
+                    <div
+                        className="rounded-2xl border-2 p-5 space-y-4"
+                        style={{
+                            borderColor: `${accent}55`,
+                            backgroundColor: `${accent}0f`,
+                        }}
+                    >
+                        <div className="space-y-1">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                                You are joining
+                            </p>
+                            <p className="text-lg font-black text-slate-900">{preview.org.name}</p>
+                            <p className="text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                                <Users className="w-4 h-4" style={{ color: accent }} />
+                                {preview.cohort.name}
+                            </p>
+                            <p className="text-[11px] font-mono mt-1" style={{ color: accent }}>
+                                {preview.cohort.joinCode}
+                            </p>
+                            {preview.cohort.memberCount > 0 && (
+                                <p className="text-[11px] font-medium text-slate-500">
+                                    {preview.cohort.memberCount} classmates already in this class
+                                </p>
+                            )}
                         </div>
                         <button
                             type="button"
                             disabled={joining}
                             onClick={() => void join()}
-                            className="w-full h-11 rounded-2xl bg-[#58CC02] text-white text-sm font-black disabled:opacity-60"
+                            className="w-full h-12 rounded-2xl text-white text-sm font-black disabled:opacity-60 shadow-sm"
+                            style={{ backgroundColor: accent }}
                         >
                             {joining ? 'Joining…' : user ? 'Join this class' : 'Log in to join'}
                         </button>
                         {!user && (
                             <p className="text-[11px] text-slate-500 font-medium text-center">
                                 No account yet?{' '}
-                                <Link className="font-bold text-sky-700" href={`/auth/signup?next=${encodeURIComponent(`/join/${code}`)}`}>
+                                <Link className="font-bold" style={{ color: accent }} href={`/auth/signup?next=${encodeURIComponent(`/join/${code}`)}`}>
                                     Sign up
                                 </Link>
                             </p>

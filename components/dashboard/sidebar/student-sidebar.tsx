@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
 import { useAuth } from "@/context/auth-context"
 import { HandleAvatar } from "@/components/pride/handle-avatar"
-import { useStudentClubContext } from "@/hooks/use-student-club"
+import { useStudentClubContext, STUDENT_PERSONAL } from "@/hooks/use-student-club"
 
 const NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard/student" },
@@ -44,7 +44,12 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
 
     const pathname = usePathname()
     const { user } = useAuth()
-    const { marketplaceOpen } = useStudentClubContext()
+    const { marketplaceOpen, clubMode, activeOrgId, activeStudentOrg } = useStudentClubContext()
+    const inClubLens =
+        clubMode &&
+        activeOrgId &&
+        activeOrgId !== STUDENT_PERSONAL &&
+        activeStudentOrg
     const navItems = NAV_ITEMS.filter((item) => !('marketplaceOnly' in item && item.marketplaceOnly) || marketplaceOpen)
 
     return (
@@ -84,7 +89,8 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                         <button
                             type="button"
                             onClick={handleToggle}
-                            className="p-1.5 rounded-xl text-slate-400 hover:text-[#58CC02] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group relative flex items-center justify-center cursor-pointer"
+                            className="p-1.5 rounded-xl text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all group relative flex items-center justify-center cursor-pointer"
+                            style={inClubLens ? { color: 'var(--club-accent, #58CC02)' } : undefined}
                             title="Expand sidebar"
                             aria-label="Expand sidebar"
                         >
@@ -95,7 +101,10 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                                 height={28}
                                 className="rounded-lg group-hover:scale-105 transition-transform"
                             />
-                            <div className="absolute -bottom-1 -right-1 bg-[#58CC02] text-white p-0.5 rounded-full shadow-xs">
+                            <div
+                                className="absolute -bottom-1 -right-1 text-white p-0.5 rounded-full shadow-xs"
+                                style={{ backgroundColor: 'var(--club-accent, #58CC02)' }}
+                            >
                                 <PanelLeftOpen className="w-2.5 h-2.5" />
                             </div>
                         </button>
@@ -113,10 +122,12 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
                                 className={cn(
                                     "relative group flex items-center h-10 rounded-xl transition-all duration-150 font-extrabold text-xs",
                                     isActive
-                                        ? "bg-[#58CC02] text-white shadow-xs"
+                                        ? "text-white shadow-xs"
                                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60",
+                                    isActive && !inClubLens && "bg-[#58CC02]",
                                     isCollapsed ? "justify-center px-0" : "px-3 gap-3"
                                 )}
+                                style={isActive && inClubLens ? { backgroundColor: 'var(--club-accent, #58CC02)' } : undefined}
                             >
                                 <item.icon className={cn(
                                     "w-4 h-4 shrink-0 transition-colors",
