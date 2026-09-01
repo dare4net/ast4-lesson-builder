@@ -12,7 +12,8 @@
 | Topic | Decision |
 |-------|----------|
 | **Surface** | Copilot is a **studio / builder** feature — not an org-dashboard feature |
-| **Who pays** | **Org pool** (club buys quota; tutors draw from it) **or** **tutor personal pool** (indie library). Org may **allocate** per-tutor caps later. Tutor picks which pool when both exist |
+| **Who pays** | **Org pool** (club buys quota) + **per-tutor allocation** in superadmin (v1). **Personal pool** for indie tutors |
+| **Default pool** | **Club program** → default **club pool** (org-wide or tutor allocation). **Personal program** → **personal pool only**; club pool not available |
 | **Attribution** | Usage logged on `user_id` + optional `org_id` from program context — not “org owns Copilot UI” |
 | **Generation context** | Always include **program name + description**, **module name + description**, plus lesson scope |
 | **Images** | **No AI image gen in v1.** Model outputs **image prompts** in component props (same as skills today); tutor sources/uploads assets |
@@ -225,15 +226,21 @@ Validate with zod generated from shared types (long-term: extract `types/lesson`
 
 ## 9. Credit pools & data model
 
-### Who pays (three patterns)
+### Who pays (v1)
 
-| Pool | Buyer | Debited when |
-|------|-------|----------------|
-| **Org pool** | Club / academy | Tutor generates on a program with `org_id`, chooses “Club credits” |
-| **Org allocation** | Club assigns cap per tutor | Same, but capped per `user_id` under org (v1.1) |
-| **Personal pool** | Indie tutor | Program has no org **or** tutor explicitly chooses “My credits” |
+| Pool | Buyer | When it applies |
+|------|-------|-----------------|
+| **Org-wide pool** | Club | Any tutor on a club program, until allocations override |
+| **Per-tutor allocation** | Club (superadmin sets cap per tutor) | Club program; debits tutor’s slice first, then optionally org-wide (policy TBD) |
+| **Personal pool** | Tutor | Personal programs only — **no club pool access** |
 
-Tutor UI: if both personal + org pool available → **dropdown** before Generate. Default: org pool when editing a club program.
+**UI rules**
+
+- Program has `org_id` → Copilot defaults to **club credits**; show remaining from org pool or this tutor’s allocation.
+- Program is personal → **personal credits only**; club pool hidden.
+- Tutor with a personal pool editing a club program may **optionally** switch to personal credits (tutor pays); default stays club.
+
+**Superadmin (v1):** set org-wide monthly builds/edits **and** per-tutor allocation rows on the org panel.
 
 ### `copilot_quota` (Mongo)
 
@@ -244,9 +251,22 @@ Tutor UI: if both personal + org pool available → **dropdown** before Generate
 // Tutor personal pool
 { kind: 'user', user_id, builds_remaining, edits_remaining, period_start }
 
-// Optional per-tutor allocation under org
+// Per-tutor allocation under org (v1)
 { kind: 'org_user', org_id, user_id, builds_remaining, edits_remaining, period_start }
 ```
+
+### Pilot quotas (ops defaults, not product logic)
+
+Before Stripe self-serve, you manually set how many Copilot actions each club or tutor gets per month in superadmin — same idea as setting `seatCap` today.
+
+Example starter numbers (from monetization doc — **you can change anytime**):
+
+| Credit type | Suggested pilot default | What counts as 1 |
+|-------------|-------------------------|------------------|
+| **Builds** | 20 / month / org (or per allocation) | Full lesson generate or lesson rewrite |
+| **Edits** | 100 / month | Slide or component scoped edit |
+
+These are **not** hardcoded in the app forever — they’re the numbers you type in when onboarding the first paying club so tutors don’t burn unlimited API spend. Stripe/metered billing replaces manual entry later.
 
 ### `copilot_usage` (Mongo)
 
@@ -341,11 +361,11 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 
 ## 14. Open decisions (remaining)
 
-1. **Org per-tutor allocation** — v1 org-wide pool only, or ship allocations in v1?
-2. **Default pool** when tutor has both — org vs personal?
-3. **Credit pricing** — builds/edits per month for pilot clubs?
+1. **Allocation debit order** — tutor allocation first, then org-wide? Or org-wide only until allocation rows exist?
+2. **Pilot default numbers** — use 20 builds / 100 edits for first clubs, or different?
+3. **Personal credits on club programs** — allow tutor override to personal pool, or club-only on club programs?
 
-**Resolved:** provider (`gpt-4o-mini`), images (prompts only), audio (manual), validator (port to BE first), lesson create (blank → editor).
+**Resolved:** pool default by program type, org-wide + allocation in v1, provider, images, audio, validator, lesson create UX.
 
 ---
 
