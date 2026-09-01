@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { Building2, CreditCard, Settings } from 'lucide-react'
+import { Building2 } from 'lucide-react'
 import { useOrgDashboard } from '@/components/dashboard/org/org-context'
 import { OrgPageHeader } from '@/components/dashboard/org/org-page-header'
 import { OrgPageGate } from '@/components/dashboard/org/org-ui'
 import { OrgPublicCatalogPolicy } from '@/components/dashboard/org/org-public-catalog-policy'
 import { OrgVanityInfo } from '@/components/dashboard/org/org-vanity-info'
 import { OrgBrandingSettings } from '@/components/dashboard/org/org-branding-settings'
+import { OrgPlanSummary } from '@/components/dashboard/org/org-plan-summary'
 
 export default function OrgSettingsPage() {
     const { loading, staffOrgs, selected, membershipRole } = useOrgDashboard()
@@ -46,22 +47,19 @@ export default function OrgSettingsPage() {
                     </dl>
                 </section>
 
+                <OrgPlanSummary
+                    orgName={selected?.org.name || 'Club'}
+                    planId={selected?.org.billing?.plan}
+                    brandingTier={selected?.org.settings?.brandingTier}
+                    seatsUsed={selected?.org.seatsUsed ?? 0}
+                    seatCap={selected?.org.seatCap ?? 0}
+                />
+
                 <OrgBrandingSettings />
 
                 <OrgPublicCatalogPolicy />
 
                 <OrgVanityInfo />
-
-                <section className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-5 space-y-3">
-                    <h2 className="text-sm font-black text-slate-700 flex items-center gap-2">
-                        <Settings className="w-4 h-4" /> Coming soon
-                    </h2>
-                    <ul className="space-y-2 text-sm font-medium text-slate-500">
-                        <li className="flex items-center gap-2">
-                            <CreditCard className="w-4 h-4 text-slate-400" /> Billing and seat upgrades
-                        </li>
-                    </ul>
-                </section>
 
                 <Link href="/dashboard/org" className="inline-flex text-xs font-bold text-sky-700">
                     ← Back to overview

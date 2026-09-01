@@ -14,6 +14,7 @@ import {
 import { superadminClient } from '@/lib/superadmin-client';
 import { CohortProgramsEditor, type OrgProgramOption } from '@/components/dashboard/org/cohort-programs-editor';
 import { ORG_ACCENT_PRESETS, resolveOrgAccent } from '@/lib/org-branding';
+import { CLUB_PLAN_OPTIONS, clubPlanLabel, isClubPlanId } from '@/lib/club-plans';
 
 type OrgRow = {
     id: string;
@@ -28,6 +29,10 @@ type OrgRow = {
         allowPublicOptIn?: boolean;
         accentColor?: string | null;
         brandingTier?: 'standard' | 'branded' | 'white_label';
+    };
+    billing?: {
+        plan?: string | null;
+        externalCustomerId?: string | null;
     };
 };
 
@@ -509,7 +514,7 @@ export function OrgsPanel() {
                                     </div>
                                     <p className="text-[11px] text-slate-500 font-medium mt-0.5">
                                         {org.slug} · {org.seatsUsed}/{org.seatCap} seats ·{' '}
-                                        {brandingTierLabel(org.settings?.brandingTier)}
+                                        {clubPlanLabel(org.billing?.plan, org.settings?.brandingTier)}
                                     </p>
                                 </button>
                             </li>
@@ -678,6 +683,47 @@ export function OrgsPanel() {
                         <p className="text-[11px] text-slate-500 font-medium">
                             {ORG_STATUS_OPTIONS.find((o) => o.value === selected.status)?.hint}
                         </p>
+                    </div>
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                        <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                            Billing plan (Stripe SKU)
+                        </p>
+                        <p className="text-[11px] text-slate-500 font-medium">
+                            Sets <span className="font-bold">branding tier</span> automatically. Use for pilot invoicing
+                            until Stripe checkout ships.
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                disabled={orgSettingsSaving || busy}
+                                onClick={() => void patchOrg({ billing: { plan: null } })}
+                                className={`h-9 px-3 rounded-xl text-xs font-bold border transition-colors disabled:opacity-60 ${
+                                    !selected.billing?.plan
+                                        ? 'border-slate-400 bg-slate-100 text-slate-800'
+                                        : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                                }`}
+                            >
+                                None
+                            </button>
+                            {CLUB_PLAN_OPTIONS.map((option) => (
+                                <button
+                                    key={option.id}
+                                    type="button"
+                                    disabled={orgSettingsSaving || busy}
+                                    onClick={() => void patchOrg({ billing: { plan: option.id } })}
+                                    className={`h-9 px-3 rounded-xl text-xs font-bold border transition-colors disabled:opacity-60 ${
+                                        selected.billing?.plan === option.id
+                                            ? 'border-emerald-400 bg-emerald-50 text-emerald-900'
+                                            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                                    }`}
+                                >
+                                    {option.label}
+                                </button>
+                            ))}
+                        </div>
+                        {selected.billing?.plan && isClubPlanId(selected.billing.plan) && (
+                            <p className="text-[10px] font-mono text-slate-400">{selected.billing.plan}</p>
+                        )}
                     </div>
                     <div className="space-y-2 pt-2 border-t border-slate-100">
                         <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">

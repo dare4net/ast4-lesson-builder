@@ -12,6 +12,8 @@ import {
 } from '@/lib/org-branding'
 import { cn } from '@/lib/utils'
 import { OptimizedImage } from '@/components/ui/optimized-image'
+import { OrgPlanUpgradeCard } from '@/components/dashboard/org/org-plan-summary'
+import { clubPlanLabel } from '@/lib/club-plans'
 
 async function uploadBrandingImage(orgId: string, kind: 'logo' | 'banner' | 'favicon', file: File) {
     const form = new FormData()
@@ -112,6 +114,9 @@ export function OrgBrandingSettings() {
 
     return (
         <div className="space-y-4">
+            <p className="text-[11px] font-bold text-slate-500">
+                Branding on <span className="text-slate-800">{clubPlanLabel(null, tier)}</span> plan
+            </p>
             <section className="rounded-2xl border-2 border-slate-100 bg-white p-5 space-y-4">
                 <div className="flex items-center gap-3">
                     <div
@@ -290,12 +295,7 @@ export function OrgBrandingSettings() {
                     )}
                 </section>
             ) : (
-                <section className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-5 space-y-2">
-                    <h2 className="text-sm font-black text-slate-700">Branded plan</h2>
-                    <p className="text-xs text-slate-500 font-medium">
-                        Upgrade to <span className="font-bold">Branded</span> to add your logo, banner, welcome message, and choose pride scope.
-                    </p>
-                </section>
+                <OrgPlanUpgradeCard orgName={selected.org.name} targetTier="branded" />
             )}
 
             {canWhiteLabel ? (
@@ -364,12 +364,7 @@ export function OrgBrandingSettings() {
                     </div>
                 </section>
             ) : (
-                <section className="rounded-2xl border-2 border-dashed border-violet-100 bg-violet-50/40 p-5 space-y-2">
-                    <h2 className="text-sm font-black text-slate-700">White-label plan</h2>
-                    <p className="text-xs text-slate-500 font-medium">
-                        Upgrade to <span className="font-bold">White-label</span> for hero join pages, vanity favicon, and club splash.
-                    </p>
-                </section>
+                <OrgPlanUpgradeCard orgName={selected.org.name} targetTier="white_label" />
             )}
 
             {localError && (

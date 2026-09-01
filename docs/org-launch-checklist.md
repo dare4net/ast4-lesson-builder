@@ -54,6 +54,23 @@ Run once on staging/local with a fresh org.
 
 ---
 
+## Branding & plan packaging QA (Phase 5.5 / 6)
+
+Run with **two orgs** on different `billing.plan` or `brandingTier` values (superadmin).
+
+| # | Check |
+|---|--------|
+| B1 | **Standard org** — accent only; branded + white-label sections show **Request upgrade** |
+| B2 | **Branded org** — logo/banner/welcome save; pride scope toggle works (org vs cohort) |
+| B3 | **White-label org** — hero join, favicon upload persist after reload |
+| B4 | **Tier downgrade** — superadmin sets `club_standard` → logo fields hidden on student home; vanity turns off |
+| B5 | **Plan sync** — superadmin sets `billing.plan` → `brandingTier` matches without manual tier click |
+| B6 | **Owner settings** — plan summary shows seats + feature list; upgrade mailto opens |
+| B7 | **Student switch** — same student in two orgs sees different accents/logos when switching club |
+| B8 | **Pride copy** — org scope says “club”; cohort scope says “class” on pride surfaces |
+
+---
+
 ## Launch blockers (code/ops)
 
 ### A. Superadmin org ops *(Phase A in superadmin doc)*
@@ -78,8 +95,10 @@ Run once on staging/local with a fresh org.
 
 ### D. Billing *(can be manual for pilot #1)*
 
-- [ ] Invoice first club manually; set `seatCap` in superadmin  
-- [ ] Stripe customer + checkout — **before scale**, not before first friend club  
+- [x] Plan catalog + `billing.plan` → `brandingTier` sync (superadmin)
+- [x] Owner upgrade placeholders + plan summary on settings
+- [ ] Invoice first club manually; set `seatCap` + `billing.plan` in superadmin
+- [ ] Stripe customer + checkout — **before scale**, not before first friend club
 
 ---
 

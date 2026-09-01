@@ -32,6 +32,9 @@ export type StaffOrg = {
             joinLayout?: 'standard' | 'hero'
             faviconUrl?: string | null
         }
+        billing?: {
+            plan?: string | null
+        }
     }
     membership: {
         role: string

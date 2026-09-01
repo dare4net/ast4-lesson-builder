@@ -102,11 +102,11 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 
 ## Phase 5 — Packaging for sale
 
-- [ ] **5.1** Internal pricing / feature matrix doc
+- [x] **5.1** Internal pricing / feature matrix doc — [`club-pricing-matrix.md`](./club-pricing-matrix.md)
 - [x] **5.2** Superadmin: show and set `brandingTier` on org panel
-- [ ] **5.3** Org owner “Upgrade” placeholders for locked features
-- [ ] **5.4** Stripe products → `billing.plan` + `brandingTier` (when ready)
-- [ ] **5.5** Extend launch QA for branding + pride scope
+- [x] **5.3** Org owner “Upgrade” placeholders for locked features
+- [x] **5.4** Stripe products → `billing.plan` + `brandingTier` sync (manual / webhook-ready; checkout later)
+- [x] **5.5** Extend launch QA for branding + pride scope — see launch checklist § branding QA
 
 ---
 
@@ -128,7 +128,7 @@ Store on org as `settings.brandingTier` (`standard` \| `branded` \| `white_label
 |--------|--------|---------|
 | **A** | 0 + 1 | Sellable Standard look *(code shipped; 1.8 QA pending)* |
 | **B** | 2 + 3 | Branded + pride scope + membership ops |
-| **C** | 4 + 5 + 6 | White-label + sales gates + QA |
+| **C** | 4 + 5 + 6 | White-label + sales gates + QA *(5 code-complete; 6 manual)* |
 
 ---
 
