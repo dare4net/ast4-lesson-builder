@@ -1,5 +1,12 @@
 import type { User } from '@/context/auth-context'
 
+/** Minimal user fields used by onboarding checks (avoids requiring full User everywhere). */
+export type OnboardingCheckUser = {
+    role?: string | null
+    onboardingCompletedAt?: string | Date | null
+    onboardingSkippedAt?: string | Date | null
+}
+
 export const ONBOARDING_BONUS_STARS = 5
 
 export function isStudentRole(role?: string | null) {
@@ -18,7 +25,7 @@ export function isOnboardingReplay(search?: string | null) {
     return value === '1' || value === 'true'
 }
 
-export function needsOnboarding(user?: User | null) {
+export function needsOnboarding(user?: OnboardingCheckUser | null) {
     if (!user) return false
     if (!isStudentRole(user.role)) return false
     return !hasExperiencedOnboarding(user)
