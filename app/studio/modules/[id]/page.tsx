@@ -5,7 +5,7 @@ import { apiClient } from '@/lib/api-client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Plus, FileText, ArrowLeft, Trash2, LayoutDashboard, Loader2, Edit3, Clock, BookOpen } from 'lucide-react';
 import ProtectedRoute from '@/components/auth/protected-route';
-import { LessonCreationModal } from '@/components/studio/lesson-creation-modal';
+import { createBlankStudioLesson } from '@/lib/studio/create-blank-lesson';
 import { LessonTimelineItem } from '@/components/studio/lesson-timeline-item';
 import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
 import { EditLessonSettingsModal } from '@/components/studio/edit-lesson-settings-modal';
@@ -22,7 +22,7 @@ function ModuleDetailContent() {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isCreatingLesson, setIsCreatingLesson] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedLessonForSettings, setSelectedLessonForSettings] = useState<Lesson | null>(null);
 
@@ -46,6 +46,18 @@ function ModuleDetailContent() {
             await apiClient.studio.deleteModule(moduleId);
             router.push(`/studio/programs/${module?.program_id}`);
         } catch { alert('Failed to delete module'); }
+    };
+
+    const handleCreateLesson = async () => {
+        if (isCreatingLesson) return;
+        setIsCreatingLesson(true);
+        try {
+            const { lessonId } = await createBlankStudioLesson(moduleId);
+            router.push(`/editor?lessonId=${lessonId}`);
+        } catch {
+            alert('Failed to create lesson');
+            setIsCreatingLesson(false);
+        }
     };
 
     const handleEditLesson = (lessonId: string) => router.push(`/editor?lessonId=${lessonId}`);
@@ -192,11 +204,22 @@ function ModuleDetailContent() {
                                 <p className="text-sm font-black text-slate-700 mb-1">No Lessons Yet</p>
                                 <p className="text-xs text-slate-400 font-medium mb-4 max-w-xs">Add lessons to build out this module's curriculum.</p>
                                 <button
-                                    onClick={() => setIsCreateModalOpen(true)}
-                                    className="h-9 px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                                    onClick={() => void handleCreateLesson()}
+                                    disabled={isCreatingLesson}
+                                    className="h-9 px-4 rounded-xl font-extrabold text-xs text-white flex items-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px disabled:opacity-70"
                                     style={{ backgroundColor: '#1CB0F6', borderColor: '#0E86C0' }}
                                 >
-                                    <Plus className="w-4 h-4" />Add First Lesson
+                                    {isCreatingLesson ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Creating…
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Plus className="w-4 h-4" />
+                                            Add First Lesson
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         ) : (
@@ -225,11 +248,22 @@ function ModuleDetailContent() {
                             </CardHeader>
                             <CardContent className="pt-4 px-4 pb-4 space-y-3">
                                 <button
-                                    onClick={() => setIsCreateModalOpen(true)}
-                                    className="w-full h-10 rounded-xl font-extrabold text-xs text-white flex items-center justify-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px"
+                                    onClick={() => void handleCreateLesson()}
+                                    disabled={isCreatingLesson}
+                                    className="w-full h-10 rounded-xl font-extrabold text-xs text-white flex items-center justify-center gap-2 border-b-[3px] transition-all duration-100 active:border-b-0 active:translate-y-px disabled:opacity-70"
                                     style={{ backgroundColor: '#1CB0F6', borderColor: '#0E86C0' }}
                                 >
-                                    <Plus className="w-4 h-4" />New Lesson
+                                    {isCreatingLesson ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Creating…
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Plus className="w-4 h-4" />
+                                            New Lesson
+                                        </>
+                                    )}
                                 </button>
                                 <div className="grid grid-cols-2 gap-2 pt-1">
                                     <div className="p-3 rounded-xl bg-[#EAF6FE] border border-[#1CB0F6]/20 text-center">
@@ -247,7 +281,6 @@ function ModuleDetailContent() {
                 </div>
             </main>
 
-            <LessonCreationModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} moduleId={moduleId} programId={module.program_id} moduleVoice={module.default_voice} />
             {module && <EditModuleDialog isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} module={module} onSave={handleSaveModule} />}
             <EditLessonSettingsModal
                 isOpen={!!selectedLessonForSettings}

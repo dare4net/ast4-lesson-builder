@@ -1,11 +1,25 @@
 # Studio Copilot — build plan
 
 **Status:** Planning (post club launch + Phase 5 packaging).  
-**Goal:** In-studio AI companion that generates **valid lesson JSON** tutors can edit — metered per org, not unlimited in seat price.
+**Goal:** In-studio AI companion that generates **valid lesson JSON** tutors can edit — metered credits, not unlimited in seat price.
 
 **Companions:** [`monetization-strategy.md`](./monetization-strategy.md) §4, [`org-launch-checklist.md`](./org-launch-checklist.md), [`component-library-100.md`](./component-library-100.md), [`skills/lesson-json/SKILL.md`](../skills/lesson-json/SKILL.md)
 
 ---
+
+## 0. Product decisions (locked)
+
+| Topic | Decision |
+|-------|----------|
+| **Surface** | Copilot is a **studio / builder** feature — not an org-dashboard feature |
+| **Who pays** | **Org pool** (club buys quota; tutors draw from it) **or** **tutor personal pool** (indie library). Org may **allocate** per-tutor caps later. Tutor picks which pool when both exist |
+| **Attribution** | Usage logged on `user_id` + optional `org_id` from program context — not “org owns Copilot UI” |
+| **Generation context** | Always include **program name + description**, **module name + description**, plus lesson scope |
+| **Images** | **No AI image gen in v1.** Model outputs **image prompts** in component props (same as skills today); tutor sources/uploads assets |
+| **Audio** | **Unchanged** — manual “Generate audio” in builder; not part of Copilot generation |
+| **Lesson create UX** | **New lesson** → blank `Untitled lesson` → straight to `/editor`. Title/description in builder **Studio Settings** (or module lesson settings). No create modal, no upfront TTS |
+| **Provider (v1 recommendation)** | **OpenAI `gpt-4o-mini`** — see §8. Kimi is cheap on input but expensive on output; lesson gen is output-heavy |
+| **Validator** | Copy `master-validator` rules into backend for C0/C1; extract shared package later if maintenance hurts |
 
 ## 1. Product definition
 
@@ -17,7 +31,7 @@
 | Edit at **lesson / slide / component** scope | New component types not in catalog |
 | Uses registered component types only | Student-facing hint/chat AI |
 | Routes **primary** vs **KS3+** authoring rules | Image generation inside lesson (optional later) |
-| Quota meter on `org_id` + `user_id` | Unlimited generation in base seat plan |
+| Quota meter on **credit pool** (`org_id` and/or `user_id`) | Unlimited generation in base seat plan |
 
 ### The loop (why tutors pay)
 
@@ -40,8 +54,9 @@ One-shot “generate and dump” is a demo. **Revise-in-place** is the product.
 | JSON schema reference | `skills/lesson-json/SKILL.md` | Structured output spec + examples |
 | Component validators | `lib/validation/master-validator.ts`, `lib/validation/registry` | Post-gen gate; repair loop |
 | Lesson builder | `components/lesson-builder.tsx`, `/builder` | Merge target UI |
-| Studio + org scope | `components/studio/studio-org-switcher.tsx`, `programs.org_id` | Bill to correct org |
-| TTS pipeline | `lib/audio-generator.ts`, `/api/audio/save` | Optional post-accept step (not in v1 gen) |
+| Studio + program context | `programs.org_id` for **club program attribution** when debiting org pool |
+| Lesson metadata in builder | `components/lesson-controls.tsx` — title/description without create modal |
+| TTS pipeline | `lib/audio-generator.ts` — **manual only**; not invoked by Copilot |
 | Time limits (live) | `lib/validation/time-limit-calculator.ts` | Inject on KS3 assessment slides |
 
 **Gap:** No LLM provider, no generation API, no prompt harness in repo yet.
@@ -59,13 +74,15 @@ One-shot “generate and dump” is a demo. **Revise-in-place** is the product.
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  Backend (afterschool-tech-backend)                          │
-│  1. Auth + org staff check                                   │
-│  2. Quota check (copilot_usage)                              │
-│  3. Prompt assembler (skill text + scope + catalog excerpt)    │
-│  4. LLM call (structured JSON mode)                          │
-│  5. validateLesson() equivalent / zod parse                  │
-│  6. Optional repair pass (1 retry on validation errors)      │
-│  7. Log usage + return patch + validation report             │
+│  1. Auth (tutor / org staff)                                 │
+│  2. Resolve credit pool (personal vs org; tutor choice)       │
+│  3. Quota check                                              │
+│  4. Load program + module metadata for prompt context          │
+│  5. Prompt assembler (skill + scope + catalog excerpt)       │
+│  6. LLM call (structured JSON mode)                          │
+│  7. validateLesson() on backend (ported from FE)               │
+│  8. Optional repair pass (1 retry on validation errors)      │
+│  9. Log usage + return patch + validation report             │
 └───────────────────────────┬─────────────────────────────────┘
                             │
                             ▼
@@ -127,14 +144,20 @@ Meter **builds** and **edits** separately (monetization §4). Suggested v1 weigh
 ### User prompt layers
 
 - Scope (build / slide / component)
+- **Program:** `name`, `description`
+- **Module:** `name`, `description`
 - Current lesson JSON (truncated for component scope)
 - Tutor instruction
-- Program context (optional): subject, module title, org name
+- Age band (primary vs curriculum)
+
+### Visual components
+
+For `image`, `hotspot`, `video` poster, etc.: model fills **educational copy + `alt` + `caption`** and a separate **`imagePrompt`** (or skill-style “Asset prompt: …” in description) for the tutor to source art. **No URLs invented** unless using a known placeholder pattern.
 
 ### Repair loop
 
 1. Generate → parse JSON
-2. Run validator (port `master-validator` rules to BE or shared package)
+2. Run validator on backend (same rules as `lib/validation/master-validator.ts` — see §8.1)
 3. If errors: one repair call with error list (max 1 retry in v1)
 4. If still invalid: return errors to UI; do not charge full build (policy TBD)
 
@@ -154,17 +177,32 @@ Track per request: `prompt_tokens`, `completion_tokens`, `model`, `skill_version
 
 ---
 
-## 8. Model & structured output (decisions needed)
+## 8. Model & provider (v1 locked)
 
-### Provider (pick one for v1)
+### Recommendation: **OpenAI `gpt-4o-mini`**
 
-| Option | Notes |
-|--------|--------|
-| **OpenAI** | Strong JSON mode / structured outputs; familiar ops |
-| **Anthropic** | Good long-context for full-lesson gen; tool use |
-| **OpenRouter** | Model flexibility; add routing later |
+| Model | Input / 1M | Output / 1M | Why |
+|-------|------------|-------------|-----|
+| **gpt-4o-mini** | ~$0.15 | ~$0.60 | Best $/quality for **large JSON output**; strong structured JSON mode |
+| Kimi K2.5 | ~$0.60 | ~$3.00 | Cheaper brand, but **output costs ~5×** — hurts full-lesson builds |
+| Kimi K2.6 | ~$0.95 | ~$4.00 | Better quality; still output-heavy vs mini |
 
-**Recommendation:** One provider for v1. Abstract behind `helpers/llmProvider.js` interface.
+**Rough cost per lesson build** (8k output tokens): mini ≈ **$0.005**; Kimi K2.5 ≈ **$0.024**.
+
+Kimi is a fine **second provider** behind `llmProvider` if you want to A/B quality later. For cheapest reliable v1, start with **gpt-4o-mini** + **prompt caching** on the fixed system prompt.
+
+Use **OpenAI structured outputs** (JSON schema) or `response_format: { type: "json_object" }` + repair loop.
+
+Abstract behind `helpers/llmProvider.js` so Kimi/OpenRouter can plug in via OpenAI-compatible base URL.
+
+### 8.1 Validator: duplicate vs shared package (plain English)
+
+Today lesson validation lives only in the **frontend** (`master-validator.ts`). Copilot runs on the **backend**, which must reject bad JSON before returning it to the tutor.
+
+- **Duplicate (v1):** Copy or port the same validation rules into Node on the backend. Two copies to keep in sync when components change.
+- **Shared npm package (later):** Move validators to `@ast/lesson-validation` imported by both FE and BE — one source of truth.
+
+**Plan:** duplicate for C0/C1 spike; extract a package when Copilot ships or when sync pain shows up.
 
 ### Output shape
 
@@ -185,19 +223,46 @@ Validate with zod generated from shared types (long-term: extract `types/lesson`
 
 ---
 
-## 9. Data model
+## 9. Credit pools & data model
+
+### Who pays (three patterns)
+
+| Pool | Buyer | Debited when |
+|------|-------|----------------|
+| **Org pool** | Club / academy | Tutor generates on a program with `org_id`, chooses “Club credits” |
+| **Org allocation** | Club assigns cap per tutor | Same, but capped per `user_id` under org (v1.1) |
+| **Personal pool** | Indie tutor | Program has no org **or** tutor explicitly chooses “My credits” |
+
+Tutor UI: if both personal + org pool available → **dropdown** before Generate. Default: org pool when editing a club program.
+
+### `copilot_quota` (Mongo)
+
+```js
+// Org-wide pool
+{ kind: 'org', org_id, builds_remaining, edits_remaining, period_start }
+
+// Tutor personal pool
+{ kind: 'user', user_id, builds_remaining, edits_remaining, period_start }
+
+// Optional per-tutor allocation under org
+{ kind: 'org_user', org_id, user_id, builds_remaining, edits_remaining, period_start }
+```
 
 ### `copilot_usage` (Mongo)
 
 ```js
 {
-  org_id: ObjectId | null,      // null = indie tutor personal studio
+  pool_kind: 'org' | 'user' | 'org_user',
+  org_id: ObjectId | null,
   user_id: string,
   program_id: string | null,
+  program_name: string | null,
+  module_id: string | null,
+  module_name: string | null,
   lesson_id: string | null,
   scope: 'lesson_build' | 'slide_edit' | 'component_edit' | 'lesson_rewrite',
   credits_charged: 1,
-  model: 'gpt-4.1-mini',
+  model: 'gpt-4o-mini',
   skill_branch: 'primary' | 'curriculum',
   skill_version: '2026-09-01',
   prompt_tokens: 4200,
@@ -207,19 +272,9 @@ Validate with zod generated from shared types (long-term: extract `types/lesson`
 }
 ```
 
-### `org.copilot` (or settings extension)
+### Org `copilot` settings (optional shortcut)
 
-```js
-copilot: {
-  monthly_build_quota: 20,
-  monthly_edit_quota: 100,
-  builds_used_this_period: 0,
-  edits_used_this_period: 0,
-  period_start: Date,
-}
-```
-
-Indie tutors: quota on `user_id` when `org_id` is null.
+Orgs may still store default monthly quotas for ops; billing is **not** tied to `brandingTier`. Copilot SKUs are separate from club seat plans.
 
 ---
 
@@ -284,29 +339,28 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 
 ---
 
-## 14. Open decisions (resolve before C0)
+## 14. Open decisions (remaining)
 
-1. **Provider** — OpenAI vs Anthropic vs other?
-2. **Default model** — cost vs quality (e.g. mini for edits, larger for full builds)?
-3. **Shared validation** — duplicate validator in BE vs publish `@ast/lesson-validation` package?
-4. **Image URLs in generated lessons** — placeholder only, or Cloudinary upload step?
-5. **Audio** — generate TTS automatically after accept, or manual “Generate audio” (current flow)?
-6. **Indie tutor quota** — separate SKUs or free tier with low cap?
+1. **Org per-tutor allocation** — v1 org-wide pool only, or ship allocations in v1?
+2. **Default pool** when tutor has both — org vs personal?
+3. **Credit pricing** — builds/edits per month for pilot clubs?
+
+**Resolved:** provider (`gpt-4o-mini`), images (prompts only), audio (manual), validator (port to BE first), lesson create (blank → editor).
 
 ---
 
 ## 15. Suggested next session
 
-1. Agree §14 decisions (provider + model tiering minimum).
-2. Run **C0 spike**: one Node script calling provider with compressed primary skill + `lesson-json` excerpt; output to `tmp/copilot-spike.json`; run `npx tsx scripts/verify-lesson.ts`.
-3. If spike quality is acceptable, scaffold **C1** API + `copilot_usage` collection.
+1. **C0 spike** — Node script + `gpt-4o-mini` + compressed primary skill + program/module context fixture → `verify-lesson.ts` green.
+2. Scaffold **C1** — `copilot_usage`, quota on `user` + `org` pools, `/copilot/generate`.
+3. **C2** — Copilot panel in `/editor` (builder), not org dashboard.
 
 ---
 
 ## 16. Definition of done (Copilot v1)
 
-- Tutor on a club program can build a **new lesson** from a brief and land in builder with valid JSON.
-- Tutor can **edit one component** via text instruction.
+- Tutor on a **club or personal** program can build a **new lesson** from a brief and land in builder with valid JSON.
+- Tutor can choose **org pool vs personal pool** when both exist.
 - Quota decrements and blocks further builds when exhausted.
 - No student sees Copilot UI.
-- Copilot is **not** included unlimited in `club_standard` seat price.
+- Copilot credits are a **separate SKU** from club seat / branding plans.
