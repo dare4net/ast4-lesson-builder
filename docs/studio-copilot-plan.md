@@ -3,7 +3,7 @@
 **Status:** Planning (post club launch + Phase 5 packaging).  
 **Goal:** In-studio AI companion that generates **valid lesson JSON** tutors can edit — metered credits, not unlimited in seat price.
 
-**Companions:** [`monetization-strategy.md`](./monetization-strategy.md) §4, [`org-launch-checklist.md`](./org-launch-checklist.md), [`component-library-100.md`](./component-library-100.md), [`skills/lesson-json/SKILL.md`](../skills/lesson-json/SKILL.md)
+**Companions:** [`studio-copilot-harness.md`](./studio-copilot-harness.md) (plan/execute UX, memory, live specs), [`monetization-strategy.md`](./monetization-strategy.md) §4, [`org-launch-checklist.md`](./org-launch-checklist.md)
 
 ---
 
@@ -374,9 +374,11 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 
 ## 15. Suggested next session
 
-1. **C0 spike** — Node script + `gpt-4o-mini` + compressed primary skill + program/module context fixture → `verify-lesson.ts` green.
-2. Scaffold **C1** — `copilot_usage`, quota on `user` + `org` pools, `/copilot/generate`.
-3. **C2** — Copilot panel in `/editor` (builder), not org dashboard.
+**Harness first** — see [`studio-copilot-harness.md`](./studio-copilot-harness.md).
+
+1. **H0** — Export `component-specs` from `lib/component-definitions` (live shapes).
+2. **H1** — `studio_context` on program + module (Mongo + simple settings UI).
+3. **H2** — Planner thread API: intake chat → structured `CopilotPlan` (no execute yet).
 
 ---
 
