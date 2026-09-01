@@ -41,13 +41,15 @@
 
 | Phase | Credits | Model work | Tutor sees |
 |-------|---------|------------|------------|
-| **INTAKE** | Free (or cheap) | Clarifying questions only — **no lesson JSON** | Chat thread |
-| **PLAN** | Free (or cheap) | Structured plan artifact | Editable plan cards + full reiteration |
-| **APPROVE** | — | None | “Proceed to build” / “Change plan” |
-| **EXECUTE** | **1 build** (or edit credit) | Generate JSON per approved plan | Progress + then diff preview |
-| **REVIEW** | — | Optional 1 repair pass on validation errors | Accept / reject / “adjust plan” |
+| **INTAKE** | **Yes** — per chat turn (formula §4.1 in parent plan) | Clarifying questions — no lesson JSON | Chat thread + debit footer |
+| **PLAN** | **Yes** — per plan draft/revise | Structured plan artifact | Plan cards + “~N credits” before send |
+| **APPROVE** | **Yes** — small ack charge | Confirms snapshot; triggers execute job | “Build this lesson (~X credits)” |
+| **EXECUTE** | **Yes** — largest typical debit | Generate JSON per approved plan | Progress + diff preview |
+| **REVIEW** | **Yes** if repair/context patch runs | Validation repair or memory update | Accept / reject |
 
-**Hard rule:** EXECUTE never runs without an explicit **approved plan** snapshot (stored server-side with hash).
+**No free pipeline steps.** Chat is part of the product and part of the margin.
+
+**Hard rule:** EXECUTE never runs without an explicit **approved plan** snapshot — but approving still costs credits.
 
 ---
 
@@ -85,7 +87,7 @@ Planner sets `brief.status: 'ready'` when all required fields are set **or** tut
 
 ## 4. PLAN artifact (permission gate)
 
-Before any build credit is spent, Copilot outputs a **Plan Document** (structured JSON + human-readable cards):
+Before credits are spent on execute, Copilot outputs a **Plan Document** (structured JSON + human-readable cards):
 
 ```ts
 type CopilotPlan = {
@@ -282,7 +284,7 @@ Personality stays constant; **pedagogy adapter** shifts.
 │  │                             │  │ │ Plan review (when ready)│ │ │
 │  │                             │  │ │ [ Build ] [ Revise ]   │ │ │
 │  │                             │  │ └────────────────────────┘ │ │
-│  │                             │  │ Credits: 12 builds · pool ▾ │ │
+│  │                             │  │ Credits: 847.5 · pool ▾      │ │
 │  └─────────────────────────────┘  └──────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -320,17 +322,15 @@ Store `approved_plan_hash` on execute jobs for audit.
 
 ---
 
-## 11. Token & cost strategy
+## 11. Token & cost strategy (internal)
 
-| Segment | Cache? | Notes |
-|---------|--------|-------|
-| Personality + phase rules | Yes | Fixed prefix |
-| Program/module context | Yes | Changes infrequently |
-| Component specs | Per execute | Only types in plan |
-| Pedagogy adapter | Per execute | Compressed per style |
-| Full lesson JSON output | — | Largest cost — charge build credit here |
+| Segment | Notes |
+|---------|-------|
+| Provider tokens | Logged per request for **COGS / margin** — never shown to tutors |
+| Product credits | **`credits_charged`** via config formula — see parent plan §4.1 |
+| Pre-send estimate | UI computes same formula client-side for “~N credits” preview |
 
-INTAKE/PLAN stay cheap so tutors iterate freely; **money on EXECUTE**.
+**Every phase debits credits** (chat, plan, execute, repair). Tune formula weights in config so margin stays healthy as models/prices change — without changing tutor-facing SKU.
 
 ---
 
@@ -360,7 +360,7 @@ INTAKE/PLAN stay cheap so tutors iterate freely; **money on EXECUTE**.
 ## 14. Success criteria (harness)
 
 1. Tutor can run **three lessons in one module** without re-explaining style or story.  
-2. Plan always shown and **explicitly approved** before build credit spent.  
+2. Plan always shown and **explicitly approved** before execute (approve step also debits credits).  
 3. Adding a new component in `component-definitions` automatically appears in specs — no prompt doc edit.  
 4. Validator pass rate ≥ 90% after one repair on execute.  
 5. Tutors describe Copilot as **“it remembers my program”** — not “it generates quizzes.”
@@ -369,8 +369,7 @@ INTAKE/PLAN stay cheap so tutors iterate freely; **money on EXECUTE**.
 
 ## 15. Open harness questions
 
-1. **INTAKE/PLAN free?** Recommended yes — charge only EXECUTE (and maybe lesson_rewrite).  
-2. **Thread per lesson or per module?** Per lesson thread; module context shared.  
-3. **Executor model upgrade path** — when mini fails validation twice, offer “High quality build” (2 credits)?
+1. **Thread per lesson or per module?** Per lesson thread; module context shared.  
+2. **Executor model upgrade** — higher-quality execute multiplies `SCOPE_MULT` (e.g. ×1.5 credits)?
 
-**Resolved:** plan-then-execute, chat intake, flexible style, program/module memory, live component specs, personality, images prompt-only, audio manual.
+**Resolved:** plan-then-execute, all phases metered, unified credit balance + internal formula, flexible style, program/module memory, live component specs, personality, images prompt-only, audio manual.

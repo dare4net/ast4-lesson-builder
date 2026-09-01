@@ -76,11 +76,13 @@ That loop is the product. One-shot “generate and dump” is a demo. **Revise-i
 
 | Buyer | What they buy |
 |---|---|
-| Club on a seat plan | A **monthly Copilot quota** (e.g. 20 builds + 100 text-edits). Extra packs of credits. |
-| Independent tutor | **Copilot-only** subscription, or pay-per-build, no student seats required. |
-| Heavy academy | Site licence: higher quota, shared across tutors, still metered. |
+| Club on a seat plan | A **monthly Copilot credit pool** (e.g. 2,000 credits/month). Extra credit packs. |
+| Independent tutor | **Copilot-only** subscription or pay-as-you-go credits — no student seats required. |
+| Heavy academy | Site licence: larger pool, shared across tutors, still metered. |
 
-Meter **builds** and **scoped edits** separately. A lesson-wide rewrite costs more than “fix this quiz stem.” Show remaining credits in the studio chrome so it feels like a tool, not a surprise bill.
+**One credit balance** — not “builds” vs “edits.” Every Copilot interaction (chat, plan, execute, repair) debits credits using an **internal usage formula** we control. Provider token counts are for COGS only; tutors see credits, not tokens.
+
+A long intake thread costs less in total than a full lesson execute, but **nothing is free** — chat turns still debit. Show remaining credits and per-turn cost in the studio chrome.
 
 Do **not** fold unlimited generation into the base per-learner price. Seats are margin. Copilot is usage.
 

@@ -107,18 +107,73 @@ Short term: Next.js `app/api/copilot/*` proxies to Express with JWT. Long term: 
 
 ## 4. Scopes & operations
 
-| Scope | Input | Output patch | Credit weight |
-|-------|--------|--------------|---------------|
-| **lesson_build** | Outcome brief, slide count hint, age band | Full lesson or empty lesson + slides[] | High (1 build) |
-| **slide_edit** | Slide id + instruction | Replace `slides[i].components` | Medium |
-| **component_edit** | Component id + instruction | Replace single component props | Low |
-| **lesson_rewrite** | Tone/length/style on whole lesson | Full lesson replace (with diff) | High |
+| Scope | Input | Output patch |
+|-------|--------|--------------|
+| **lesson_build** | Outcome brief, slide count hint, age band | Full lesson or empty lesson + slides[] |
+| **slide_edit** | Slide id + instruction | Replace `slides[i].components` |
+| **component_edit** | Component id + instruction | Replace single component props |
+| **lesson_rewrite** | Tone/length/style on whole lesson | Full lesson replace (with diff) |
 
-Meter **builds** and **edits** separately (monetization §4). Suggested v1 weights:
+**Metering:** one **credit balance** — not “builds” vs “edits”. Every Copilot request debits credits via our **usage formula** (§4.1). Simple chat turns cost less than full execute; a heavy execute costs more than a light one.
 
-- `lesson_build` / `lesson_rewrite` → 1 build credit
-- `slide_edit` → 1 edit credit
-- `component_edit` → 1 edit credit (or 0.25 — decide in pricing)
+---
+
+## 4.1 Credit system (product metering)
+
+### Principles
+
+| Rule | Detail |
+|------|--------|
+| **Single balance** | `credits_remaining` on org pool, allocation, or personal pool |
+| **Everything costs** | INTAKE chat, PLAN drafts, plan revisions, EXECUTE, validation **repair** — all debit credits |
+| **Our formula, not tokens** | Tutors never see provider token counts. We charge **Copilot credits** tuned for margin + fairness |
+| **Tokens are internal** | Log `prompt_tokens` / `completion_tokens` on each row for COGS — do not pass through 1:1 to users |
+| **Pre-send estimate** | UI shows “~N credits” before tutor sends (formula preview); actual debit after response |
+
+### Why not “1 build = 1 credit”
+
+A one-line component tweak and a 12-slide lesson both used to count as “a build.” That is unfair and bad for margin. Usage-based credits align price with **work done**, not button labels.
+
+### Usage formula (v1 — tune in config)
+
+Stored in `helpers/copilotCredits.js` (or env) — change without shipping new UX:
+
+```
+credits_charged = ceil(
+  BASE[phase]
+  × SCOPE_MULT[scope]
+  × complexity_mult
+  + REPAIR_ADDON   // if repair pass in same request
+)
+
+complexity_mult = f(
+  context_chars_bucket,      // program/module/lesson context size
+  plan_slide_count,          // execute only
+  component_types_count,     // execute only
+  thread_turn_depth          // optional: long threads slightly more
+)
+```
+
+**Example BASE weights (starting point — ops tunable):**
+
+| Phase / action | BASE credits |
+|----------------|--------------|
+| `chat_intake` (planner turn) | 0.5 |
+| `chat_plan` (plan draft / revise) | 1 |
+| `plan_approve_ack` | 0.25 |
+| `execute` | 3 |
+| `execute_repair` (validation retry) | +2 |
+| `context_patch` (post-accept memory update) | 0.5 |
+
+**SCOPE_MULT:** `component_edit` 0.6 · `slide_edit` 1 · `lesson_build` 1 · `lesson_rewrite` 1.4
+
+Minimum charge per request: **0.25 credits**. Fractional credits allowed in DB (display rounded to 1 decimal).
+
+### UX copy
+
+- “**847 credits** remaining this month” — not “20 builds left”
+- After each turn: “−1.2 credits” in thread footer
+- At zero: block send + request more (allocated) or buy top-up (later)
 
 ---
 
@@ -161,7 +216,7 @@ For `image`, `hotspot`, `video` poster, etc.: model fills **educational copy + `
 1. Generate → parse JSON
 2. Run validator on backend (same rules as `lib/validation/master-validator.ts` — see §8.1)
 3. If errors: one repair call with error list (max 1 retry in v1)
-4. If still invalid: return errors to UI; do not charge full build (policy TBD)
+4. If still invalid: return errors to UI; repair pass debits credits separately (still charged — tutor chose to execute)
 
 ---
 
@@ -250,27 +305,18 @@ Validate with zod generated from shared types (long-term: extract `types/lesson`
 
 ```js
 // Org-wide pool
-{ kind: 'org', org_id, builds_remaining, edits_remaining, period_start }
+{ kind: 'org', org_id, credits_remaining, credits_cap, period_start }
 
 // Tutor personal pool
-{ kind: 'user', user_id, builds_remaining, edits_remaining, period_start }
+{ kind: 'user', user_id, credits_remaining, credits_cap, period_start }
 
 // Per-tutor allocation under org (v1)
-{ kind: 'org_user', org_id, user_id, builds_remaining, edits_remaining, period_start }
+{ kind: 'org_user', org_id, user_id, credits_remaining, credits_cap, period_start }
 ```
 
-### Pilot quotas (ops defaults, not product logic)
+### Pilot quotas (ops defaults)
 
-Before Stripe self-serve, you manually set how many Copilot actions each club or tutor gets per month in superadmin — same idea as setting `seatCap` today.
-
-Example starter numbers (from monetization doc — **you can change anytime**):
-
-| Credit type | Suggested pilot default | What counts as 1 |
-|-------------|-------------------------|------------------|
-| **Builds** | 20 / month / org (or per allocation) | Full lesson generate or lesson rewrite |
-| **Edits** | 100 / month | Slide or component scoped edit |
-
-These are **not** hardcoded in the app forever — they’re the numbers you type in when onboarding the first paying club so tutors don’t burn unlimited API spend. Stripe/metered billing replaces manual entry later.
+Superadmin sets **monthly credit cap** per org or tutor (e.g. `500` / `2000`) — not “20 builds”. Same as seatCap: hand-entered until Stripe.
 
 ### `copilot_usage` (Mongo)
 
@@ -284,12 +330,11 @@ These are **not** hardcoded in the app forever — they’re the numbers you typ
   module_id: string | null,
   module_name: string | null,
   lesson_id: string | null,
-  scope: 'lesson_build' | 'slide_edit' | 'component_edit' | 'lesson_rewrite',
-  credits_charged: 1,
-  model: 'gpt-4o-mini',
-  skill_branch: 'primary' | 'curriculum',
-  skill_version: '2026-09-01',
-  prompt_tokens: 4200,
+  phase: 'chat_intake' | 'chat_plan' | 'execute' | 'execute_repair' | 'context_patch',
+  scope: 'lesson_build' | 'slide_edit' | 'component_edit' | 'lesson_rewrite' | null,
+  credits_charged: 1.2,        // product credits (formula output)
+  credits_formula_version: 'v1',
+  prompt_tokens: 4200,           // internal COGS only
   completion_tokens: 3800,
   validation_ok: true,
   created_at: Date,
@@ -307,7 +352,7 @@ Orgs may still store default monthly quotas for ops; billing is **not** tied to 
 | Method | Path | Purpose |
 |--------|------|---------|
 | POST | `/copilot/generate` | Main generation |
-| GET | `/copilot/quota` | Remaining credits for org/user |
+| GET | `/copilot/quota` | Remaining **credits** for org/user |
 | GET | `/copilot/usage` | Owner/superadmin history |
 
 **Auth:** Same JWT as studio. Require org staff or tutor role. Pass `org_id` from studio context (must match program.org_id).
@@ -330,7 +375,7 @@ Orgs may still store default monthly quotas for ops; billing is **not** tied to 
 2. **Generating** — streaming status text (not token stream to JSON — too fragile)
 3. **Preview** — side-by-side or slide diff; validation warnings surfaced
 4. **Accept** — merge into `lesson` state; undo via existing `useLessonHistory`
-5. **Quota** — “12 builds left this month” in panel header
+5. **Credits** — “847 credits left” + per-turn debit in thread header
 
 Do **not** auto-save to DB on accept — tutor still hits Save.
 
@@ -365,7 +410,7 @@ Do **not** auto-save to DB on accept — tutor still hits Save.
 
 ## 14. Open decisions (remaining)
 
-1. **Pilot default numbers** — e.g. 20 builds / 100 edits for first clubs (ops; set in superadmin).
+1. **Pilot default credit caps** — e.g. 2,000 credits/month per org (ops; set in superadmin).
 2. **“Request more” UX** — mailto owner vs in-app notify (v1 mailto is fine).
 
 **Resolved:** org-wide vs allocated (org chooses), no overflow when allocated, personal credits on club content OK, pool default by program type, provider, images, audio, validator.
