@@ -29,11 +29,18 @@ import { ACCENT_COLORS, PREMIUM_ACCENT_COLORS, resolveAccentColor } from "@/lib/
 import { publicProfilePath } from "@/lib/pride-paths"
 import { queryKeys } from "@/lib/query-keys"
 import { useQuery } from "@tanstack/react-query"
+import { StudentPublicCatalogSettings } from "@/components/dashboard/student/student-public-catalog-settings"
+import { StudentClubMembershipCard } from "@/components/dashboard/student/student-club-membership"
+import { useStudentClubContext } from "@/hooks/use-student-club"
 
 export default function SettingsPage() {
     const { user, logout, updateUser } = useAuth()
+    const { orgQueryParam: clubOrgId } = useStudentClubContext()
     const storeQuery = useQuery({ queryKey: queryKeys.store, queryFn: () => apiClient.store.get() })
-    const prideQuery = useQuery({ queryKey: queryKeys.prideSummary, queryFn: () => apiClient.pride.summary() })
+    const prideQuery = useQuery({
+        queryKey: queryKeys.prideSummary(clubOrgId),
+        queryFn: () => apiClient.pride.summary(clubOrgId),
+    })
     const owned = (sku: string) => Number(storeQuery.data?.inventory?.items?.[sku]?.charges) > 0
     const pinOptions = Array.isArray(prideQuery.data?.stats) ? prideQuery.data.stats : []
     const defaultDisplayName = user?.full_name || user?.fullName || (user?.email ? user.email.split("@")[0] : "Student")
@@ -403,6 +410,9 @@ export default function SettingsPage() {
                             </div>
                         </form>
                     </Card>
+
+                    <StudentClubMembershipCard />
+                    <StudentPublicCatalogSettings />
 
                     <Card className="p-6 bg-white border-2 border-slate-200 rounded-3xl shadow-sm">
                         <div className="flex items-center gap-3 mb-5 pb-4 border-b border-slate-100">

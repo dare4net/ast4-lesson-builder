@@ -10,6 +10,9 @@ import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { playCodeRun } from "@/lib/sound-effects"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import type { Component } from "@/types/lesson"
 
 interface CodeEditorRendererProps {
@@ -36,6 +39,7 @@ interface CodeEditorRendererProps {
   setComponentState?: (state: any) => void
   id?: string
   status?: string
+  timeLimit?: number
 }
 
 type CodeEditorState = {
@@ -60,7 +64,9 @@ function CodeEditorContent({
   recordAttempt,
   isLive,
   isDisabled: disabledProp,
-  props
+  props,
+  componentId,
+  timeLimit,
 }: ScoredRenderProps<CodeEditorState> & {
   title: string
   initialCode: string
@@ -70,6 +76,8 @@ function CodeEditorContent({
   points: number
   isDisabled: boolean
   props: CodeEditorRendererProps
+  componentId: string
+  timeLimit: number
 }) {
   const [mounted, setMounted] = useState(false)
   const [isRunning, setIsRunning] = useState(false)
@@ -82,6 +90,12 @@ function CodeEditorContent({
     isSubmitted,
     status
   } = state
+
+  const { showStartScreen, setHasStarted } = useLiveBlock({
+    isLive,
+    isComplete: isSubmitted || status === 'completed',
+    lockId: componentId,
+  })
 
   useEffect(() => {
     setMounted(true)
@@ -233,12 +247,11 @@ function CodeEditorContent({
     })
   }
 
-  if (!mounted) return null
-
-  if (state.status === 'completed' && !isSubmitted) {
-    // Sync local Submitted state if component is completed?
-    // No, let state be source of truth.
+  const onTimeout = () => {
+    if (!isSubmitted) runTests()
   }
+
+  if (!mounted) return null
 
   // Editing Mode
   if (props.isEditing) {
@@ -260,6 +273,22 @@ function CodeEditorContent({
     )
   }
 
+  if (showStartScreen) {
+    const liveMeta = buildLiveStartMeta({
+      type: 'codeEditor',
+      title: title || 'Code challenge',
+      timeLimitSec: timeLimit,
+      points,
+      units: 1,
+    })
+    return (
+      <LiveStartScreen
+        onStart={() => setHasStarted(true)}
+        {...liveMeta}
+      />
+    )
+  }
+
   return (
     <div className={cn(
       "w-full h-full flex-1 flex flex-col bg-white overflow-hidden group/code transition-all duration-300 px-3 sm:px-6 relative",
@@ -276,10 +305,11 @@ function CodeEditorContent({
         </div>
         <div className="flex items-center gap-2">
           {isLive && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 text-blue-600 rounded text-[10px] font-black border border-blue-200 uppercase tracking-widest">
-              <CheckCircle2 className="h-2.5 w-2.5" />
-              <span>Live</span>
-            </div>
+            <LiveTimer
+              isCompleted={isSubmitted || status === 'completed'}
+              duration={timeLimit}
+              onTimeout={onTimeout}
+            />
           )}
           {disabledProp && (
             <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 text-slate-400 rounded text-[10px] font-black uppercase tracking-widest border border-slate-200">
@@ -424,7 +454,8 @@ export function CodeEditorRenderer(props: CodeEditorRendererProps & { code?: str
     savedState,
     setComponentState,
     id = 'code-editor-renderer',
-    status
+    status,
+    timeLimit: timeLimitProp,
   } = props
 
   const initialCode = rawInitialCode ?? legacyCode ?? "// Write your code here\nconsole.log('Hello, world!');"
@@ -466,6 +497,8 @@ export function CodeEditorRenderer(props: CodeEditorRendererProps & { code?: str
           points={points}
           isDisabled={disabled || component.state === 'disabled'}
           props={props}
+          componentId={id}
+          timeLimit={readTimeLimit(timeLimitProp, 30)}
         />
       )}
     />

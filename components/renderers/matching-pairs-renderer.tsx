@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -316,10 +317,17 @@ function MatchingPairsContent({
 
   // Live Start Screen
   if (isLive && !hasStarted && !isEditing && !isChecking && state.status !== 'completed') {
+    const liveMeta = buildLiveStartMeta({
+      type: 'matchingPairs',
+      title: title || 'Matching pairs',
+      timeLimitSec: timeLimit,
+      points: props.points || 15,
+      units: pairs.length,
+    })
     return (
       <LiveStartScreen
         onStart={() => setHasStarted(true)}
-        label={`Start Matching (${timeLimit}s Time Limit)`}
+        {...liveMeta}
       />
     )
   }

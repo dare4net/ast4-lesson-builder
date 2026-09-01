@@ -7,6 +7,15 @@ import { SplashScreen } from '@/components/splash-screen';
 import { AnimatePresence } from 'framer-motion';
 import { IdentitySelection } from '@/components/identity-selection';
 import { needsOnboarding } from '@/lib/onboarding';
+import { homePathForRole } from '@/lib/home-path';
+
+function authenticatedHomePath(user: { role?: string } | null | undefined) {
+  const role = user?.role?.toLowerCase();
+  if (role === 'organization' || role === 'org' || role === 'tutor' || role === 'teacher' || role === 'admin') {
+    return homePathForRole(role);
+  }
+  return needsOnboarding(user) ? '/onboarding' : '/dashboard/student';
+}
 
 export default function Home() {
   const router = useRouter();
@@ -16,20 +25,14 @@ export default function Home() {
   // Trigger route redirect as soon as splash finishes if authenticated
   useEffect(() => {
     if (!showSplash && isAuthenticated) {
-      const targetPath = user?.role === 'tutor'
-        ? '/dashboard/tutor'
-        : needsOnboarding(user) ? '/onboarding' : '/dashboard/student';
-      router.replace(targetPath);
+      router.replace(authenticatedHomePath(user));
     }
   }, [showSplash, isAuthenticated, user, router]);
 
   const handleSplashFinished = () => {
     setShowSplash(false);
     if (isAuthenticated) {
-      const targetPath = user?.role === 'tutor'
-        ? '/dashboard/tutor'
-        : needsOnboarding(user) ? '/onboarding' : '/dashboard/student';
-      router.replace(targetPath);
+      router.replace(authenticatedHomePath(user));
     }
   };
 

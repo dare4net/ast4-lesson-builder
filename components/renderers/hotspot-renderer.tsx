@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ACTION_LABELS } from "@/lib/action-labels"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import {
@@ -540,10 +541,17 @@ function HotspotContent({
     }
 
     if (isLive && isDiscover && !hasStarted && !isSubmitted && state.status !== "completed") {
+        const liveMeta = buildLiveStartMeta({
+            type: 'hotspot',
+            title: title || 'Hotspot challenge',
+            timeLimitSec: timeLimit,
+            points,
+            units: hotspots.length,
+        })
         return (
             <LiveStartScreen
                 onStart={() => setHasStarted(true)}
-                label={`Start Discover Challenge (${timeLimit}s Time Limit)`}
+                {...liveMeta}
             />
         )
     }

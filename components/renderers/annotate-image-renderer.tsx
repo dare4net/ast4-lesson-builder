@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Tag, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -27,6 +30,7 @@ interface AnnotateImageRendererProps {
     isEditing?: boolean
     disabled?: boolean
     status?: string
+    timeLimit?: number
 }
 
 type AnnotateImageState = {
@@ -45,6 +49,7 @@ function AnnotateImageContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     image,
@@ -52,6 +57,8 @@ function AnnotateImageContent({
     points,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<AnnotateImageState> & {
     title: string
     image: string
@@ -59,9 +66,16 @@ function AnnotateImageContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { placements, selectedTag, submitted } = state
     const { playFeedback } = useFeedback()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
 
     const handleTagClick = (labelId: string) => {
         if (submitted || isEditing || disabled) return
@@ -141,6 +155,26 @@ function AnnotateImageContent({
         })
     }
 
+    const onTimeout = () => {
+        if (!submitted) void handleCheckAnswers()
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "annotateImage",
+            title: title || "Annotate diagram",
+            timeLimitSec: timeLimit,
+            points,
+            units: labels.length || 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-auto md:h-full md:flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-6 py-2 relative min-h-0 overflow-hidden text-slate-900">
             <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
@@ -149,6 +183,13 @@ function AnnotateImageContent({
                         Annotate Diagram • {points} Points
                     </span>
                 </div>
+                {isLive && (
+                    <LiveTimer
+                        isCompleted={submitted || state.status === "completed"}
+                        duration={timeLimit}
+                        onTimeout={onTimeout}
+                    />
+                )}
             </div>
 
             <FormattedText content={title} as="h3" className="text-lg font-black mb-3 text-slate-900 tracking-tight shrink-0" />
@@ -258,6 +299,7 @@ export function AnnotateImageRenderer({
     isEditing = false,
     disabled = false,
     status,
+    timeLimit: timeLimitProp,
 }: AnnotateImageRendererProps) {
     const component: Component = {
         id,
@@ -301,6 +343,8 @@ export function AnnotateImageRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 45)}
                 />
             )}
         />

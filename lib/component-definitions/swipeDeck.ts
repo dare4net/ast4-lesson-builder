@@ -17,6 +17,7 @@ export const swipeDeckDefinition: ComponentDefinition = {
       points: 15,
       mode: "practice",
       state: "active",
+      timeLimit: 45,
     },
     propDefinitions: [
       { name: "title", label: "Title", type: "string", required: false, defaultValue: "Myth vs Fact Challenge" },

@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
@@ -16,6 +19,7 @@ interface TrueFalseRendererProps {
     explanation?: string
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: TrueFalseState
     setComponentState?: (state: TrueFalseState) => void
     isEditing?: boolean
@@ -38,6 +42,7 @@ function TrueFalseContent({
     handleScore,
     handlePoints,
     recordAttempt,
+    isLive,
     statement,
     isTrue,
     explanation,
@@ -45,6 +50,8 @@ function TrueFalseContent({
     mode,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<TrueFalseState> & {
     statement: string
     isTrue: boolean
@@ -52,10 +59,16 @@ function TrueFalseContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
-
     const { selected, submitted } = state
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
     const isSelectedTrue = selected === true
     const isSelectedFalse = selected === false
     const isCorrectChoice = selected === isTrue
@@ -89,6 +102,35 @@ function TrueFalseContent({
         }
     }
 
+    const onTimeout = () => {
+        if (submitted || isEditing || disabled) return
+        setState({
+            selected: null,
+            submitted: true,
+            isCorrect: false,
+            status: "completed",
+            score: 0,
+            maxScore: points,
+        })
+        recordAttempt(false, 0, points)
+        handleScore(false)
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: 'trueFalse',
+            title: 'True or false',
+            timeLimitSec: timeLimit,
+            points,
+            units: 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
 
     return (
         <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-2">
@@ -98,6 +140,9 @@ function TrueFalseContent({
                         <span className="text-[8px] font-black text-indigo-600/60 uppercase tracking-[0.2em]">Activity</span>
                         <h3 className="text-base font-black text-slate-900 dark:text-slate-100 tracking-tight uppercase leading-none">True or False</h3>
                     </div>
+                    {isLive ? (
+                        <LiveTimer isCompleted={submitted} duration={timeLimit} onTimeout={onTimeout} />
+                    ) : null}
                 </div>
 
                 <div className="space-y-1">
@@ -229,6 +274,7 @@ export function TrueFalseRenderer({
     explanation = "",
     points = 10,
     mode = "practice",
+    timeLimit: timeLimitProp = 20,
     savedState,
     setComponentState,
     isEditing = false,
@@ -285,6 +331,8 @@ export function TrueFalseRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 20)}
                 />
             )}
         />

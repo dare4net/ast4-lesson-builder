@@ -40,7 +40,7 @@ export function IdentitySelection() {
             href: "/auth/login?role=tutor",
             accentColor: "#58CC02",
             activeBorderColor: "#3B8C00",
-        }
+        },
     ]
 
     return (

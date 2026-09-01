@@ -12,6 +12,9 @@ import {
     type WheelQuestion,
 } from "@/lib/spin-the-wheel-utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
 
@@ -30,6 +33,7 @@ interface SpinTheWheelRendererProps {
     requiredSpins?: number
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: any
     setComponentState?: (state: any) => void
     isEditing?: boolean
@@ -266,9 +270,12 @@ function SpinTheWheelPlayfield({
     handlePoints,
     handleRetry,
     recordAttempt,
-    mode = "practice",
-}: SpinTheWheelRendererProps & Pick<ScoredRenderProps<Record<string, unknown>>, "handlePoints" | "handleRetry" | "recordAttempt">) {
-    const revealAnswers = shouldRevealAnswer(mode)
+    isLive = false,
+    timeLimit = 60,
+}: SpinTheWheelRendererProps & Pick<ScoredRenderProps<Record<string, unknown>>, "handlePoints" | "handleRetry" | "recordAttempt" | "isLive"> & {
+    timeLimit: number
+}) {
+    const revealAnswers = shouldRevealAnswer(isLive ? "live" : "practice")
     const [rotation, setRotation] = useState(savedState?.rotation ?? 0)
     const [isSpinning, setIsSpinning] = useState(false)
     const safeQuestions = React.useMemo(
@@ -287,9 +294,16 @@ function SpinTheWheelPlayfield({
     const [completedIds, setCompletedIds] = useState<string[]>(savedState?.completedIds ?? [])
     const [activityDone, setActivityDone] = useState(savedState?.completed ?? false)
     const [answerSubmitted, setAnswerSubmitted] = useState(savedState?.answerSubmitted ?? false)
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: activityDone,
+        lockId: id,
+    })
 
     const { playFeedback } = useFeedback()
     const spinTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const setComponentStateRef = useRef(setComponentState)
+    setComponentStateRef.current = setComponentState
 
     const activeQuestions = safeQuestions.filter(q => !completedIds.includes(q.id))
     const displayQuestions = activeQuestions.length > 0 ? activeQuestions : safeQuestions
@@ -298,8 +312,8 @@ function SpinTheWheelPlayfield({
 
     // Persist in-progress state so Next → Previous restores mid-activity progress
     useEffect(() => {
-        if (!setComponentState) return
-        setComponentState({
+        if (!setComponentStateRef.current || isEditing) return
+        setComponentStateRef.current({
             status: activityDone ? "completed" : "active",
             score: activityDone ? Math.round((correctCount / requiredSpins) * points) : undefined,
             maxScore: points,
@@ -319,7 +333,7 @@ function SpinTheWheelPlayfield({
         currentQuestion,
         answerSubmitted,
         rotation,
-        setComponentState,
+        isEditing,
         requiredSpins,
         points,
     ])
@@ -397,21 +411,7 @@ function SpinTheWheelPlayfield({
         }
 
         if (newSpins >= requiredSpins) {
-            const earned = Math.round((newCorrect / requiredSpins) * points)
-            setActivityDone(true)
-            handlePoints(earned)
-            recordAttempt(newCorrect === requiredSpins, earned, points)
-            if (setComponentState) {
-                setComponentState({
-                    status: "completed",
-                    score: earned,
-                    maxScore: points,
-                    spinsCompleted: newSpins,
-                    correctCount: newCorrect,
-                    completedIds: newCompletedIds,
-                    completed: true,
-                })
-            }
+            finishActivity(newSpins, newCorrect, newCompletedIds)
         }
     }
 
@@ -432,6 +432,46 @@ function SpinTheWheelPlayfield({
     const canSpin = !isSpinning && !isEditing && safeQuestions.length > 0 && !activityDone
     const spinsLeft = requiredSpins - spinsCompleted
 
+    const finishActivity = (newSpins: number, newCorrect: number, newCompletedIds: string[]) => {
+        const earned = Math.round((newCorrect / requiredSpins) * points)
+        setActivityDone(true)
+        handlePoints(earned)
+        recordAttempt(newCorrect === requiredSpins, earned, points)
+        if (setComponentState) {
+            setComponentState({
+                status: "completed",
+                score: earned,
+                maxScore: points,
+                spinsCompleted: newSpins,
+                correctCount: newCorrect,
+                completedIds: newCompletedIds,
+                completed: true,
+            })
+        }
+    }
+
+    const onTimeout = () => {
+        if (!activityDone) {
+            finishActivity(spinsCompleted, correctCount, completedIds)
+        }
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "spinTheWheel",
+            title: title || "Spin the wheel",
+            timeLimitSec: timeLimit,
+            points,
+            units: requiredSpins,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full py-4 flex flex-col items-center justify-start md:justify-center md:flex-1 md:my-auto">
             <div className="relative w-full bg-white border-2 border-slate-200 border-b-4 rounded-3xl p-6 sm:p-8 shadow-sm text-slate-900 overflow-hidden">
@@ -443,6 +483,13 @@ function SpinTheWheelPlayfield({
                             Spin the Wheel • {points} Points
                         </span>
                     </div>
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={activityDone}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
                 </div>
 
                 {/* Main Content Grid: Landscape Side-by-Side on LG screens */}
@@ -679,6 +726,7 @@ export function SpinTheWheelRenderer(props: SpinTheWheelRendererProps) {
         points = 20,
         savedState,
         mode = "practice",
+        timeLimit: timeLimitProp,
     } = props
 
     const component: Component = {
@@ -699,10 +747,11 @@ export function SpinTheWheelRenderer(props: SpinTheWheelRendererProps) {
             onRender={(renderProps) => (
                 <SpinTheWheelPlayfield
                     {...props}
-                    mode={mode}
                     handlePoints={renderProps.handlePoints}
                     handleRetry={renderProps.handleRetry}
                     recordAttempt={renderProps.recordAttempt}
+                    isLive={renderProps.isLive}
+                    timeLimit={readTimeLimit(timeLimitProp, 60)}
                 />
             )}
         />

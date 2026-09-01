@@ -7,6 +7,9 @@ import { useAudioPlayer } from "@/hooks/use-audio-player"
 import { ListenButton } from "@/components/renderers/listen-button"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -26,6 +29,7 @@ interface TimelineRendererProps {
     interactive?: boolean
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: TimelineState
     setComponentState?: (state: TimelineState) => void
     isEditing?: boolean
@@ -44,19 +48,29 @@ function TimelineContent({
     setState,
     handlePoints,
     recordAttempt,
+    isLive,
     title,
     events,
     interactive,
     points,
     isEditing,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<TimelineState> & {
     title: string
     events: TimelineEvent[]
     interactive: boolean
     points: number
     isEditing: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: state.completed || state.status === "completed",
+        lockId: componentId,
+    })
 
     const { activeEventIndex, completed } = state
     const currentEvent = events[activeEventIndex] || events[0]
@@ -90,6 +104,55 @@ function TimelineContent({
         playAudio()
     }
 
+    const onTimeout = () => {
+        if (completed || isEditing) return
+
+        if (!interactive) {
+            setState(prev => ({
+                ...prev,
+                completed: true,
+                status: "completed",
+                score: 0,
+                maxScore: points,
+            }))
+            recordAttempt(false, 0, points)
+            return
+        }
+
+        const eventsViewed = activeEventIndex + 1
+        const isFullyComplete = activeEventIndex >= events.length - 1
+        const earnedPoints = isFullyComplete
+            ? points
+            : Math.round((eventsViewed / Math.max(events.length, 1)) * points)
+
+        setState(prev => ({
+            ...prev,
+            completed: true,
+            status: "completed",
+            score: earnedPoints,
+            maxScore: points,
+        }))
+
+        handlePoints(earnedPoints)
+        recordAttempt(isFullyComplete, earnedPoints, points)
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "timeline",
+            title: title || "Timeline",
+            timeLimitSec: timeLimit,
+            points,
+            units: events.length,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-auto md:h-full md:flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-6 py-4 relative min-h-0 overflow-hidden text-slate-900">
             <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
@@ -99,7 +162,11 @@ function TimelineContent({
                     </span>
                 </div>
 
-                {hasAudio && (
+                <div className="flex items-center gap-2">
+                    {isLive ? (
+                        <LiveTimer isCompleted={completed} duration={timeLimit} onTimeout={onTimeout} />
+                    ) : null}
+                    {hasAudio && (
                     <ListenButton
                         hasAudio={hasAudio}
                         isPlaying={isPlaying}
@@ -108,6 +175,7 @@ function TimelineContent({
                         iconClassName={cn(isPlaying && "text-amber-600")}
                     />
                 )}
+                </div>
             </div>
 
             <FormattedText content={title} as="h3" className="text-lg font-black mb-4 text-slate-900 tracking-tight shrink-0" />
@@ -199,6 +267,7 @@ export function TimelineRenderer({
     setComponentState,
     isEditing = false,
     mode = "practice",
+    timeLimit: timeLimitProp = 25,
 }: TimelineRendererProps) {
     const component: Component = {
         id,
@@ -230,6 +299,8 @@ export function TimelineRenderer({
                     interactive={interactive}
                     points={points}
                     isEditing={isEditing}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 25)}
                 />
             )}
         />

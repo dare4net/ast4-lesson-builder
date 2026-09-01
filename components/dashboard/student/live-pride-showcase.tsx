@@ -81,11 +81,12 @@ function BoardCard({ stat }: { stat: PrideStat }) {
 }
 
 export function LivePrideShowcase() {
-    const { data: stats = [], isLoading } = usePrideSummary()
+    const { data: stats = [], isLoading, scope } = usePrideSummary()
     const reduceMotion = useReducedMotion()
     const queue = useMemo(() => prideShowcaseQueue(stats), [stats])
     const pages = prideShowcasePageCount(queue.length)
     const [page, setPage] = useState(0)
+    const clubLens = scope?.type === 'cohort' || scope?.type === 'org'
 
     useEffect(() => {
         if (reduceMotion || pages <= 1) return
@@ -105,11 +106,13 @@ export function LivePrideShowcase() {
                 <div>
                     <p className={cn("inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#FF9600]", !reduceMotion && "animate-pulse")}>
                         <Radio className="h-3.5 w-3.5" />
-                        Live pride
+                        {clubLens ? 'Class pride' : 'Live pride'}
                     </p>
                     <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-white">Who holds the crowns</h2>
                     <p className="text-xs font-medium text-slate-500">
-                        Gold, silver, and bronze on boards that are moving right now.
+                        {clubLens
+                            ? 'Ranks among your club classmates — not the public board.'
+                            : 'Gold, silver, and bronze on boards that are moving right now.'}
                     </p>
                 </div>
                 <Link href={PRIDE_INDEX_PATH} className="shrink-0 text-xs font-extrabold text-[#1CB0F6] hover:underline">

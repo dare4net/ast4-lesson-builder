@@ -5,7 +5,7 @@ export default defineConfig({
     plugins: [tsconfigPaths()],
     test: {
         environment: 'happy-dom',
-        include: ['__tests__/**/*.test.ts'],
+        include: ['__tests__/**/*.test.{ts,tsx}'],
         globals: true,
     },
 })

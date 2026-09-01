@@ -12,6 +12,7 @@ import { ACTION_LABELS } from "@/lib/action-labels"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -227,10 +228,17 @@ function FillInTheBlankContent({
 
   // Live Start Screen
   if (isLive && !hasStarted && !isSubmitted && state.status !== 'completed') {
+    const liveMeta = buildLiveStartMeta({
+      type: 'fillInTheBlank',
+      title: title || 'Fill in the blank',
+      timeLimitSec: timeLimit,
+      points,
+      units: blanks.length,
+    })
     return (
       <LiveStartScreen
         onStart={() => setHasStarted(true)}
-        label={`Start Activity (${timeLimit}s Time Limit)`}
+        {...liveMeta}
       />
     )
   }

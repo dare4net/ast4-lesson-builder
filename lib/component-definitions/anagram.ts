@@ -19,5 +19,7 @@ export const anagramDefinition: ComponentDefinition = {
       { name: "word", label: "Target Word", type: "string", required: true, defaultValue: "ALGORITHM" },
       { name: "hint", label: "Hint Text", type: "string", required: false, defaultValue: "" },
       { name: "points", label: "Points", type: "number", required: false, defaultValue: 15 },
+      { name: "mode", label: "Mode", type: "select", required: false, defaultValue: "practice", options: [{ label: "Practice", value: "practice" }, { label: "Live", value: "live" }] },
+      { name: "timeLimit", label: "Time Limit (Seconds)", type: "number", required: false, defaultValue: 25, min: 15, max: 300 },
     ],
   }

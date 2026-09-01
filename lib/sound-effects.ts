@@ -2,22 +2,45 @@ import { Howl } from 'howler';
 
 export type SoundEffect = 'correct' | 'incorrect' | 'complete' | 'click' | 'levelUp' | 'streak' | 'flashcardFlip' | 'uiClick' | 'dngClick' | 'dngSuccess' | 'quizSuccess' | 'finishedLesson' | 'timerTick' | 'categorizeSlot' | 'categorizeBucketComplete' | 'softMiss' | 'blockedClick' | 'powerupUsed' | 'starsSpent';
 
+// Shared Web Audio context for synthesized ticks (avoids per-tick create/close + autoplay blocks)
+let synthAudioContext: AudioContext | null = null
+
+async function ensureSynthAudioContext(): Promise<AudioContext | null> {
+  if (typeof window === 'undefined') return null
+  try {
+    if (!synthAudioContext) {
+      synthAudioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+    }
+    if (synthAudioContext.state === 'suspended') {
+      await synthAudioContext.resume()
+    }
+    if (typeof window !== 'undefined' && (window as any).Howler?.ctx?.state === 'suspended') {
+      await (window as any).Howler.ctx.resume()
+    }
+    return synthAudioContext
+  } catch {
+    return null
+  }
+}
+
 // Synthesized tick sound via Web Audio API (no file needed)
 function playTickSound(volume: number = 0.5) {
-  try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
-    const oscillator = ctx.createOscillator()
-    const gain = ctx.createGain()
-    oscillator.connect(gain)
-    gain.connect(ctx.destination)
-    oscillator.type = 'sine'
-    oscillator.frequency.setValueAtTime(880, ctx.currentTime)
-    gain.gain.setValueAtTime(volume * 0.4, ctx.currentTime)
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08)
-    oscillator.start(ctx.currentTime)
-    oscillator.stop(ctx.currentTime + 0.08)
-    oscillator.onended = () => ctx.close()
-  } catch (_) { }
+  void (async () => {
+    const ctx = await ensureSynthAudioContext()
+    if (!ctx) return
+    try {
+      const oscillator = ctx.createOscillator()
+      const gain = ctx.createGain()
+      oscillator.connect(gain)
+      gain.connect(ctx.destination)
+      oscillator.type = 'sine'
+      oscillator.frequency.setValueAtTime(880, ctx.currentTime)
+      gain.gain.setValueAtTime(Math.min(0.35, volume * 0.75), ctx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1)
+      oscillator.start(ctx.currentTime)
+      oscillator.stop(ctx.currentTime + 0.1)
+    } catch (_) { /* ignore */ }
+  })()
 }
 
 /** Quiet low tap for non-penalty misses (e.g. hotspot decoy / empty click) */
@@ -607,7 +630,7 @@ class SoundEffectManager {
 
     // timerTick / softMiss are synthesized — no Howl playback needed
     if (effect === 'timerTick') {
-      playTickSound(this.volume)
+      playTickSound(this.volume * (this.soundVolumes.timerTick || 0.5))
       return
     }
     if (effect === 'softMiss') {
@@ -651,6 +674,10 @@ class SoundEffectManager {
       console.warn(`[SoundEffectManager] Error playing sound effect ${effect}, using synthesized fallback:`, error);
       this.playFallbackSynthesized(effect, effectVolume);
     }
+  }
+
+  async resumeAudio(): Promise<void> {
+    await ensureSynthAudioContext()
   }
 
   mute(): void {

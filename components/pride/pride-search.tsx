@@ -8,7 +8,7 @@ import { FollowChip, CrownTier } from '@/components/pride/student-name'
 import { usePrideSearch } from '@/hooks/use-pride'
 import { useCurriculumSearch } from '@/hooks/use-curriculum-search'
 import { resolveAccentColor } from '@/lib/pride-format'
-import { prideBoardPath, publicProfilePath } from '@/lib/pride-paths'
+import { prideBoardPath, publicProfilePath, PRIDE_INDEX_PATH } from '@/lib/pride-paths'
 import { cn } from '@/lib/utils'
 
 export function PrideSearch() {
@@ -27,10 +27,13 @@ export function PrideSearch() {
         return () => window.clearTimeout(handle)
     }, [query])
 
-    const { data, isFetching, isError } = usePrideSearch(debounced, open)
-    const curriculum = useCurriculumSearch(debounced, open && debounced.length >= 2)
-    const error = isError && curriculum.isError ? 'Could not search right now.' : ''
-    const loading = (isFetching && !data) || (curriculum.isFetching && !curriculum.data)
+    const { data, isFetching, isError, clubLens, marketplaceOpen } = usePrideSearch(debounced, open)
+    const curriculum = useCurriculumSearch(
+        debounced,
+        open && debounced.length >= 2 && marketplaceOpen,
+    )
+    const error = isError ? 'Could not search right now.' : ''
+    const loading = (isFetching && !data) || (marketplaceOpen && curriculum.isFetching && !curriculum.data)
 
     useEffect(() => {
         setActive(0)
@@ -57,16 +60,16 @@ export function PrideSearch() {
 
     const popular = !query.trim()
 
-    const programs = curriculum.data?.programs || []
-    const modules = curriculum.data?.modules || []
-    const lessons = curriculum.data?.lessons || []
+    const programs = marketplaceOpen ? (curriculum.data?.programs || []) : []
+    const modules = marketplaceOpen ? (curriculum.data?.modules || []) : []
+    const lessons = marketplaceOpen ? (curriculum.data?.lessons || []) : []
 
     const items = useMemo(() => {
         const peopleItems = popular
             ? []
             : (data?.people || []).map((person) => ({
-                id: `person:${person.handle}`,
-                href: publicProfilePath(person.handle),
+                id: `person:${person.handle || person.userId || person.displayName || 'x'}`,
+                href: person.handle ? publicProfilePath(person.handle) : PRIDE_INDEX_PATH,
             }))
         const boardItems = (data?.boards || []).map((board) => ({
             id: `board:${board.key}`,
@@ -111,7 +114,9 @@ export function PrideSearch() {
 
     return (
         <div ref={rootRef} className="relative w-full max-w-xl">
-            <label htmlFor={inputId} className="sr-only">Search courses, lessons, people, and boards</label>
+            <label htmlFor={inputId} className="sr-only">
+                {clubLens ? 'Search classmates and class boards' : 'Search courses, lessons, people, and boards'}
+            </label>
             <div className={cn(
                 'flex items-center gap-2 h-10 px-3 rounded-2xl border-2 bg-slate-50 dark:bg-slate-950 transition-colors',
                 open ? 'border-[#FF9600] bg-white dark:bg-slate-900' : 'border-slate-200 dark:border-slate-800'
@@ -127,7 +132,7 @@ export function PrideSearch() {
                     }}
                     onFocus={() => setOpen(true)}
                     onKeyDown={onKeyDown}
-                    placeholder="Search courses, lessons, people…"
+                    placeholder={clubLens ? 'Search classmates and class boards…' : 'Search courses, lessons, people…'}
                     autoComplete="off"
                     aria-expanded={open}
                     aria-controls={`${inputId}-results`}
@@ -151,7 +156,9 @@ export function PrideSearch() {
                 >
                     <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                         <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9600]">
-                            {popular ? 'Podium and gold boards' : 'Matches'}
+                            {popular
+                                ? (clubLens ? 'Class podium' : 'Podium and gold boards')
+                                : (clubLens ? 'Classmates and boards' : 'Matches')}
                         </p>
                         {loading && <span className="text-[10px] font-bold text-slate-400">Searching…</span>}
                     </div>
@@ -160,34 +167,59 @@ export function PrideSearch() {
 
                     {popular && people.length > 0 && (
                         <div className="px-3 py-3 border-b border-slate-100 dark:border-slate-800">
-                            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2">Popular now</p>
+                            <p className="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-2">
+                                {clubLens ? 'Class leaders' : 'Popular now'}
+                            </p>
                             <div className="flex gap-2 overflow-x-auto pb-1">
                                 {people.map((person) => {
-                                    const color = resolveAccentColor(person.handle, person.accentColor)
+                                    const color = resolveAccentColor(person.handle || person.displayName || 'student', person.accentColor)
+                                    const key = person.handle || person.userId || person.displayName || 'person'
                                     return (
-                                    <div key={person.handle} className="shrink-0 w-[4.5rem] flex flex-col items-center gap-1">
-                                        <button
-                                            type="button"
-                                            onClick={() => go(publicProfilePath(person.handle))}
-                                            className="flex flex-col items-center gap-1 w-full"
-                                        >
-                                            <span className="relative">
-                                                <HandleAvatar
-                                                    handle={person.handle}
-                                                    avatarId={person.avatarId}
-                                                    displayName={person.displayName}
-                                                    accentColor={color}
-                                                    className="h-10 w-10"
-                                                />
-                                                <span className="absolute -bottom-1 -right-1">
-                                                    <CrownTier crown={person.bestCrown} />
+                                    <div key={key} className="shrink-0 w-[4.5rem] flex flex-col items-center gap-1">
+                                        {person.handle ? (
+                                            <button
+                                                type="button"
+                                                onClick={() => go(publicProfilePath(person.handle!))}
+                                                className="flex flex-col items-center gap-1 w-full"
+                                            >
+                                                <span className="relative">
+                                                    <HandleAvatar
+                                                        handle={person.handle}
+                                                        avatarId={person.avatarId}
+                                                        displayName={person.displayName}
+                                                        accentColor={color}
+                                                        className="h-10 w-10"
+                                                    />
+                                                    <span className="absolute -bottom-1 -right-1">
+                                                        <CrownTier crown={person.bestCrown} />
+                                                    </span>
                                                 </span>
-                                            </span>
-                                            <span className="text-[10px] font-extrabold truncate w-full text-center" style={{ color }}>
-                                                @{person.handle}
-                                            </span>
-                                        </button>
-                                        <FollowChip handle={person.handle} accentColor={color} following={person.following} />
+                                                <span className="text-[10px] font-extrabold truncate w-full text-center" style={{ color }}>
+                                                    @{person.handle}
+                                                </span>
+                                            </button>
+                                        ) : (
+                                            <div className="flex flex-col items-center gap-1 w-full">
+                                                <span className="relative">
+                                                    <HandleAvatar
+                                                        handle={undefined}
+                                                        avatarId={person.avatarId}
+                                                        displayName={person.displayName}
+                                                        accentColor={color}
+                                                        className="h-10 w-10"
+                                                    />
+                                                    <span className="absolute -bottom-1 -right-1">
+                                                        <CrownTier crown={person.bestCrown} />
+                                                    </span>
+                                                </span>
+                                                <span className="text-[10px] font-extrabold truncate w-full text-center" style={{ color }}>
+                                                    {person.displayName}
+                                                </span>
+                                            </div>
+                                        )}
+                                        {person.handle && (
+                                            <FollowChip handle={person.handle} accentColor={color} following={person.following} />
+                                        )}
                                     </div>
                                     )
                                 })}
@@ -197,13 +229,14 @@ export function PrideSearch() {
 
                     <div className="max-h-[min(70vh,420px)] overflow-y-auto">
                         {!popular && people.length > 0 && (
-                            <SectionLabel icon={UserRound} label="People" />
+                            <SectionLabel icon={UserRound} label={clubLens ? 'Classmates' : 'People'} />
                         )}
                         {!popular && people.map((person, index) => {
-                            const color = resolveAccentColor(person.handle, person.accentColor)
+                            const color = resolveAccentColor(person.handle || person.displayName || 'student', person.accentColor)
+                            const key = person.handle || person.userId || person.displayName || `person-${index}`
                             return (
                             <div
-                                key={`person:${person.handle}`}
+                                key={key}
                                 role="option"
                                 aria-selected={active === index}
                                 onMouseEnter={() => setActive(index)}
@@ -212,22 +245,42 @@ export function PrideSearch() {
                                     active === index ? 'bg-[#FF9600]/10' : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                                 )}
                             >
-                                <button type="button" onClick={() => go(publicProfilePath(person.handle))} className="flex items-center gap-3 min-w-0 flex-1 text-left">
-                                    <HandleAvatar
-                                        handle={person.handle}
-                                        avatarId={person.avatarId}
-                                        displayName={person.displayName}
-                                        accentColor={color}
-                                    />
-                                    <span className="min-w-0">
-                                        <span className="flex items-center gap-1.5">
-                                            <span className="block text-sm font-extrabold truncate" style={{ color }}>{person.displayName}</span>
-                                            <CrownTier crown={person.bestCrown} />
+                                {person.handle ? (
+                                    <button type="button" onClick={() => go(publicProfilePath(person.handle!))} className="flex items-center gap-3 min-w-0 flex-1 text-left">
+                                        <HandleAvatar
+                                            handle={person.handle}
+                                            avatarId={person.avatarId}
+                                            displayName={person.displayName}
+                                            accentColor={color}
+                                        />
+                                        <span className="min-w-0">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="block text-sm font-extrabold truncate" style={{ color }}>{person.displayName}</span>
+                                                <CrownTier crown={person.bestCrown} />
+                                            </span>
+                                            <span className="block text-[11px] font-bold truncate" style={{ color }}>@{person.handle}</span>
                                         </span>
-                                        <span className="block text-[11px] font-bold truncate" style={{ color }}>@{person.handle}</span>
-                                    </span>
-                                </button>
-                                <FollowChip handle={person.handle} accentColor={color} following={person.following} />
+                                    </button>
+                                ) : (
+                                    <div className="flex items-center gap-3 min-w-0 flex-1 text-left">
+                                        <HandleAvatar
+                                            handle={undefined}
+                                            avatarId={person.avatarId}
+                                            displayName={person.displayName}
+                                            accentColor={color}
+                                        />
+                                        <span className="min-w-0">
+                                            <span className="flex items-center gap-1.5">
+                                                <span className="block text-sm font-extrabold truncate" style={{ color }}>{person.displayName}</span>
+                                                <CrownTier crown={person.bestCrown} />
+                                            </span>
+                                            <span className="block text-[11px] font-bold truncate text-slate-400">Classmate</span>
+                                        </span>
+                                    </div>
+                                )}
+                                {person.handle && (
+                                    <FollowChip handle={person.handle} accentColor={color} following={person.following} />
+                                )}
                             </div>
                             )
                         })}

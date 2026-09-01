@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { Mail, Lock, User, Loader2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AuthShell } from '@/components/auth/auth-shell';
-import { studentPostAuthPath } from '@/lib/onboarding';
+import { studentPostAuthPath, safeNextPath } from '@/lib/onboarding';
 
 function SignupForm() {
     const router = useRouter();
@@ -25,13 +25,18 @@ function SignupForm() {
     const [loading, setLoading] = useState(false);
 
     const isStudent = role === 'student';
-    const accent = isStudent ? '#1CB0F6' : '#58CC02';
-    const accentBorder = isStudent ? '#0090CC' : '#378000';
+    const isOrg = role === 'organization';
+    const accent = isStudent ? '#1CB0F6' : isOrg ? '#0EA5E9' : '#58CC02';
+    const accentBorder = isStudent ? '#0090CC' : isOrg ? '#0284C7' : '#378000';
     const nextQuery = next ? `&next=${encodeURIComponent(next)}` : '';
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        if (isOrg) {
+            setError('Club accounts are invite-only. Sign in with the email After-school.tech invited.');
+            return;
+        }
         if (password.length < 8) {
             setError('Password must be at least 8 characters long.');
             return;
@@ -39,6 +44,7 @@ function SignupForm() {
         setLoading(true);
         try {
             await signup(email, password, fullName, role);
+            const dest = safeNextPath(next);
             if (isStudent) {
                 router.push(studentPostAuthPath({
                     user_id: 'new',
@@ -48,7 +54,7 @@ function SignupForm() {
                     onboardingSkippedAt: null,
                 }, next));
             } else {
-                router.push('/dashboard/tutor');
+                router.push(dest || '/dashboard/tutor');
             }
         } catch (err: any) {
             setError(err.message || 'Registration failed. Please try again.');
@@ -60,12 +66,33 @@ function SignupForm() {
     return (
         <AuthShell role={role} mode="signup" next={next}>
             <div className="mb-6">
-                <h1 className="text-2xl font-black text-slate-900 tracking-tight">Create your run</h1>
+                <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                    {isOrg ? 'Club invite only' : 'Create your run'}
+                </h1>
                 <p className="text-slate-500 text-sm font-semibold mt-1">
-                    {isStudent ? 'A name, a face, then your first stars.' : 'Build courses your students will actually finish.'}
+                    {isStudent
+                        ? 'A name, a face, then your first stars.'
+                        : isOrg
+                          ? 'Organisations are created by After-school.tech. Use Club sign-in once you have an invite.'
+                          : 'Build courses your students will actually finish.'}
                 </p>
             </div>
 
+            {isOrg ? (
+                <div className="space-y-4">
+                    <p className="text-sm font-medium text-slate-600">
+                        Your club dashboard is separate from the teacher studio — cohorts and seats live at{' '}
+                        <span className="font-bold text-slate-800">/dashboard/org</span>.
+                    </p>
+                    <Link
+                        href={`/auth/login?role=organization${nextQuery}`}
+                        className="w-full py-3 px-5 rounded-2xl font-black text-sm text-white flex items-center justify-center gap-2 border-b-4 active:border-b-0 active:translate-y-[2px] uppercase tracking-wider"
+                        style={{ backgroundColor: accent, borderColor: accentBorder }}
+                    >
+                        Club sign in <ArrowRight className="w-4 h-4" />
+                    </Link>
+                </div>
+            ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
                 {error && (
                     <motion.div
@@ -136,6 +163,7 @@ function SignupForm() {
                     </Link>
                 </p>
             </form>
+            )}
         </AuthShell>
     );
 }

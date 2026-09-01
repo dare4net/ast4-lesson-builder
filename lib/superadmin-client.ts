@@ -76,6 +76,24 @@ class SuperadminClient {
     listJobs = () => this.api.get('/superadmin/jobs').then((r) => r.data);
     runJob = (id: string, data: { dryRun: boolean }) =>
         this.api.post(`/superadmin/jobs/${id}/run`, data).then((r) => r.data);
+
+    listOrgs = () => this.api.get('/superadmin/orgs').then((r) => r.data);
+    createOrg = (data: Record<string, unknown>) =>
+        this.api.post('/superadmin/orgs', data).then((r) => r.data);
+    getOrg = (id: string) => this.api.get(`/superadmin/orgs/${id}`).then((r) => r.data);
+    getOrgPrograms = (id: string) => this.api.get(`/superadmin/orgs/${id}/programs`).then((r) => r.data);
+    updateOrg = (id: string, data: Record<string, unknown>) =>
+        this.api.patch(`/superadmin/orgs/${id}`, data).then((r) => r.data);
+    addOrgMember = (id: string, data: Record<string, unknown>) =>
+        this.api.post(`/superadmin/orgs/${id}/members`, data).then((r) => r.data);
+    cancelOrgInvite = (orgId: string, memberId: string) =>
+        this.api.delete(`/superadmin/orgs/${orgId}/members/${memberId}/invite`).then((r) => r.data);
+    listOrgCohorts = (id: string) =>
+        this.api.get(`/superadmin/orgs/${id}/cohorts`).then((r) => r.data);
+    createOrgCohort = (id: string, data: Record<string, unknown>) =>
+        this.api.post(`/superadmin/orgs/${id}/cohorts`, data).then((r) => r.data);
+    updateOrgCohort = (orgId: string, cohortId: string, data: Record<string, unknown>) =>
+        this.api.patch(`/superadmin/orgs/${orgId}/cohorts/${cohortId}`, data).then((r) => r.data);
 }
 
 export const superadminClient = new SuperadminClient();

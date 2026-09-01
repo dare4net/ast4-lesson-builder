@@ -225,8 +225,8 @@ export function LessonViewer({ initialLesson, initialInteraction, userId }: { in
       }
       if (userId) {
         void invalidateLessonsListCache(userId)
-        void queryClient.invalidateQueries({ queryKey: queryKeys.lessonsList })
-        void queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
+        void queryClient.invalidateQueries({ queryKey: ['lessons', 'mine'] })
+        void queryClient.invalidateQueries({ queryKey: ['programs', 'mine'] })
       }
     }
   }, [userId, queryClient]);

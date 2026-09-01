@@ -13,6 +13,7 @@ export const jigsawDefinition: ComponentDefinition = {
       points: 20,
       mode: "practice",
       state: "active",
+      timeLimit: 90,
     },
     propDefinitions: [
       { name: "title", label: "Title", type: "string", required: false, defaultValue: "Jigsaw Diagram Puzzle" },

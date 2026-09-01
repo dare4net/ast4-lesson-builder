@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Flame, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SoundEffects } from '@/lib/sound-effects'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
-import { queryKeys } from '@/lib/query-keys'
+import { pendingStreakBonus } from '@/hooks/use-claim-streak-bonus'
+import { StreakBonusClaimButton } from '@/components/store/streak-bonus-claim'
 import { STREAK_MILESTONE_COPY, STREAK_MILESTONES, nextStreakMilestone, streakHeat, streakMilestoneReward, streakModalStorageKey, utcDay } from '@/lib/streak'
 
 type StreakPayload = {
@@ -18,6 +18,7 @@ type StreakPayload = {
     streakAlreadyCounted?: boolean
     streakUsedFreeze?: number
     streakBonusStars?: number
+    streakBonusClaimed?: boolean
 }
 
 function useCountUp(target: number, active: boolean, durationMs = 900) {
@@ -47,42 +48,50 @@ export function LoginStreakModal({
     stats,
     userId,
     enabled = true,
+    preview = false,
+    replayKey = 0,
 }: {
     stats?: StreakPayload | null
     userId?: string | null
     enabled?: boolean
+    /** Skip once-per-day localStorage gate and always open (for /streak preview). */
+    preview?: boolean
+    /** Bump to replay the animation in preview mode. */
+    replayKey?: number
 }) {
     const [open, setOpen] = useState(false)
     const [claimed, setClaimed] = useState(false)
     const reduceMotion = useReducedMotion()
-    const queryClient = useQueryClient()
+
+    const bonus = pendingStreakBonus(stats)
+    const canClaim = bonus > 0
 
     useEffect(() => {
-        if (!enabled || !stats || !userId) return
+        if (!enabled || !stats) return
         const streak = Number(stats.loginStreak) || 0
         if (streak < 1) return
-        const key = streakModalStorageKey(userId, utcDay())
-        try {
-            if (window.localStorage.getItem(key)) return
-            window.localStorage.setItem(key, '1')
-        } catch {
-            // Private mode — still show once this mount.
+        if (!preview) {
+            if (!userId) return
+            const key = streakModalStorageKey(userId, utcDay())
+            try {
+                if (window.localStorage.getItem(key)) return
+                window.localStorage.setItem(key, '1')
+            } catch {
+                // Private mode — still show once this mount.
+            }
         }
         setOpen(true)
-        setClaimed(false)
+        setClaimed(!canClaim)
         void SoundEffects.play('streak')
-        const bonus = Number(stats.streakBonusStars) || 0
-        if (bonus > 0) {
-            void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
-        }
-        const timer = window.setTimeout(() => setOpen(false), bonus > 0 ? 14000 : 6800)
-        return () => window.clearTimeout(timer)
-    }, [enabled, userId, stats?.loginStreak, stats?.streakBonusStars, queryClient])
+    }, [enabled, userId, stats?.loginStreak, stats?.streakBonusStars, canClaim, preview, replayKey])
+
+    useEffect(() => {
+        if (!canClaim) setClaimed(true)
+    }, [canClaim])
 
     const streak = Number(stats?.loginStreak) || 1
     const broken = Boolean(stats?.streakBroken)
     const freeze = Number(stats?.streakUsedFreeze) || 0
-    const bonus = Number(stats?.streakBonusStars) || 0
     const line = broken
         ? 'New streak. Protect it this time.'
         : (STREAK_MILESTONE_COPY[streak] || 'Come back tomorrow. Do not break this.')
@@ -104,7 +113,12 @@ export function LoginStreakModal({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                 >
-                    <button type="button" className="absolute inset-0" aria-label="Dismiss streak" onClick={() => setOpen(false)} />
+                    <button
+                        type="button"
+                        className="absolute inset-0"
+                        aria-label="Dismiss streak"
+                        onClick={() => setOpen(false)}
+                    />
                     {!reduceMotion && !broken ? (
                         <div className="pointer-events-none absolute inset-0 overflow-hidden">
                             {Array.from({ length: 14 }).map((_, index) => (
@@ -189,30 +203,22 @@ export function LoginStreakModal({
                                         </p>
                                     </div>
                                 ) : (
-                                    <p className="text-[11px] font-extrabold text-white/85">Every streak mark claimed</p>
+                                    <p className="text-[11px] font-extrabold text-white/85">Every streak mark reached</p>
                                 )}
                             </div>
                         ) : null}
-                        {bonus > 0 && !broken ? (
+                        {canClaim && !broken ? (
                             claimed ? (
                                 <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1.5">
                                     <Star className="h-4 w-4 fill-white text-white" />
                                     <span className="text-sm font-black tabular-nums">+{bonus} in your wallet</span>
                                 </div>
                             ) : (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setClaimed(true)
-                                        void SoundEffects.play('complete')
-                                        void queryClient.invalidateQueries({ queryKey: queryKeys.wallet })
-                                    }}
-                                    className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl bg-white text-sm font-black uppercase tracking-wider"
-                                    style={{ color: heat.to }}
-                                >
-                                    <Star className="h-4 w-4 fill-current" />
-                                    Claim +{reduceMotion ? bonus : shownBonus} stars
-                                </button>
+                                <StreakBonusClaimButton
+                                    amount={reduceMotion ? bonus : shownBonus}
+                                    className="mt-4 w-full"
+                                    onClaimed={() => setClaimed(true)}
+                                />
                             )
                         ) : null}
                         <Link
@@ -222,19 +228,23 @@ export function LoginStreakModal({
                         >
                             See your streak
                         </Link>
-                        {bonus <= 0 || claimed || broken ? (
-                        <button
-                            type="button"
-                            onClick={() => setOpen(false)}
-                            className={cn(
-                                'mt-4 h-11 w-full rounded-2xl bg-white text-sm font-black uppercase tracking-wider',
-                                broken ? 'text-slate-800' : ''
-                            )}
-                            style={broken ? undefined : { color: heat.to }}
-                        >
-                            Keep going
-                        </button>
-                        ) : null}
+                        {!canClaim || claimed || broken ? (
+                            <button
+                                type="button"
+                                onClick={() => setOpen(false)}
+                                className={cn(
+                                    'mt-4 h-11 w-full rounded-2xl bg-white text-sm font-black uppercase tracking-wider',
+                                    broken ? 'text-slate-800' : ''
+                                )}
+                                style={broken ? undefined : { color: heat.to }}
+                            >
+                                Keep going
+                            </button>
+                        ) : (
+                            <p className="mt-4 text-[11px] font-bold text-white/75">
+                                Claim your stars here or on your streak page anytime.
+                            </p>
+                        )}
                     </motion.div>
                 </motion.div>
             ) : null}

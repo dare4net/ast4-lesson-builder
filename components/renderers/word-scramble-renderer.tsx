@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { HelpCircle, RefreshCw, Delete, Shuffle, ChevronRight, Wand2, Zap, Anchor, Lightbulb } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { Button } from "@/components/ui/button"
 import { ACTION_LABELS } from "@/lib/action-labels"
 import { FormattedText } from "@/components/ui/formatted-text"
@@ -39,6 +42,7 @@ interface WordScrambleRendererProps {
     allowWordSolve?: boolean
     maxWordSolves?: number
     allowFirstLetterAnchors?: boolean
+    timeLimit?: number
 
     savedState?: WordScrambleState
     setComponentState?: (state: WordScrambleState) => void
@@ -182,6 +186,8 @@ function SingleWordContent({
     allowLetterReveal = true,
     maxLetterReveals = 3,
     componentId = 'word-scramble',
+    isLive = false,
+    timeLimit = 30,
 }: {
     state: WordScrambleState
     setState: (fn: (prev: WordScrambleState) => WordScrambleState) => void
@@ -198,6 +204,8 @@ function SingleWordContent({
     allowLetterReveal?: boolean
     maxLetterReveals?: number
     componentId?: string
+    isLive?: boolean
+    timeLimit?: number
 }) {
     const hintPack = useHintPack()
     const extraHints = state.hintPackBonus || 0
@@ -310,6 +318,12 @@ function SingleWordContent({
         }))
     }
 
+    const onTimeout = () => {
+        if (!submitted && !isEditing && !disabled) {
+            void handleCheck()
+        }
+    }
+
     const isFull = filled.every(v => v !== null)
     const isCorrectGrade = submitted && state.isCorrect
     const isIncorrectGrade = submitted && !state.isCorrect
@@ -320,6 +334,13 @@ function SingleWordContent({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 shrink-0">
                 <FormattedText content={title} as="h3" className="text-sm font-black text-slate-800 uppercase tracking-wider" />
                 <div className="flex flex-wrap items-center gap-1.5">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={submitted || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
                     {/* Text Clue Button */}
                     {allowTextClue && hint && (
                         <button
@@ -481,6 +502,8 @@ function MultiWordContent({
     maxWordSolves = 1,
     allowFirstLetterAnchors = true,
     componentId = 'word-scramble',
+    isLive = false,
+    timeLimit = 30,
 }: {
     state: WordScrambleState
     setState: (fn: (prev: WordScrambleState) => WordScrambleState) => void
@@ -501,6 +524,8 @@ function MultiWordContent({
     maxWordSolves?: number
     allowFirstLetterAnchors?: boolean
     componentId?: string
+    isLive?: boolean
+    timeLimit?: number
 }) {
     const hintPack = useHintPack()
     const extraHints = state.hintPackBonus || 0
@@ -719,6 +744,12 @@ function MultiWordContent({
         }))
     }
 
+    const onTimeout = () => {
+        if (!submitted && !isEditing && !disabled) {
+            void handleCheck()
+        }
+    }
+
     return (
         <div className="flex flex-col h-full p-3 sm:p-4 md:p-5 max-w-2xl mx-auto w-full justify-between overflow-y-auto">
             {/* Header */}
@@ -727,6 +758,13 @@ function MultiWordContent({
 
                 {/* Helper Toolbar */}
                 <div className="flex flex-wrap items-center gap-1.5">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={submitted || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
                     {/* Text Clue Button */}
                     {allowTextClue && hint && (
                         <button
@@ -931,6 +969,128 @@ function MultiWordContent({
     )
 }
 
+// ─── Live Mode Shell ────────────────────────────────────────────────────────
+
+function WordScrambleShell({
+    state,
+    setState,
+    handlePoints,
+    handleRetry,
+    recordAttempt,
+    isLive,
+    variant,
+    title,
+    points,
+    timeLimit,
+    componentId,
+    wordList,
+    hint,
+    isEditing,
+    disabled,
+    allowTextClue,
+    allowLetterReveal,
+    maxLetterReveals,
+    allowWordSolve,
+    maxWordSolves,
+    allowFirstLetterAnchors,
+    word,
+}: {
+    state: WordScrambleState
+    setState: React.Dispatch<React.SetStateAction<WordScrambleState>>
+    handlePoints: (p: number) => void
+    handleRetry: () => void
+    recordAttempt: (isCorrect: boolean, score?: number, maxScore?: number) => void
+    isLive: boolean
+    variant: Variant
+    title: string
+    points: number
+    timeLimit: number
+    componentId: string
+    wordList: string[]
+    hint: string
+    isEditing: boolean
+    disabled: boolean
+    allowTextClue: boolean
+    allowLetterReveal: boolean
+    maxLetterReveals: number
+    allowWordSolve: boolean
+    maxWordSolves: number
+    allowFirstLetterAnchors: boolean
+    word: string
+}) {
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: state.submitted || state.status === "completed",
+        lockId: componentId,
+    })
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "wordScramble",
+            title: title || "Word Scramble",
+            timeLimitSec: timeLimit,
+            points,
+            units: 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
+    if (variant === "single") {
+        return (
+            <SingleWordContent
+                state={state}
+                setState={setState}
+                handlePoints={handlePoints}
+                handleRetry={handleRetry}
+                recordAttempt={recordAttempt}
+                targetWord={wordList[0] ?? word}
+                hint={hint}
+                title={title}
+                points={points}
+                isEditing={isEditing}
+                disabled={disabled}
+                allowTextClue={allowTextClue}
+                allowLetterReveal={allowLetterReveal}
+                maxLetterReveals={maxLetterReveals}
+                componentId={componentId}
+                isLive={isLive}
+                timeLimit={timeLimit}
+            />
+        )
+    }
+
+    return (
+        <MultiWordContent
+            state={state}
+            setState={setState}
+            handlePoints={handlePoints}
+            handleRetry={handleRetry}
+            recordAttempt={recordAttempt}
+            wordList={wordList}
+            hint={hint}
+            title={title}
+            points={points}
+            isEditing={isEditing}
+            disabled={disabled}
+            variant={variant}
+            allowTextClue={allowTextClue}
+            allowLetterReveal={allowLetterReveal}
+            maxLetterReveals={maxLetterReveals}
+            allowWordSolve={allowWordSolve}
+            maxWordSolves={maxWordSolves}
+            allowFirstLetterAnchors={allowFirstLetterAnchors}
+            componentId={componentId}
+            isLive={isLive}
+            timeLimit={timeLimit}
+        />
+    )
+}
+
 // ─── Main Renderer ───────────────────────────────────────────────────────────
 
 export function WordScrambleRenderer({
@@ -949,6 +1109,7 @@ export function WordScrambleRenderer({
     allowWordSolve = true,
     maxWordSolves = 1,
     allowFirstLetterAnchors = true,
+    timeLimit: timeLimitProp = 30,
     savedState,
     setComponentState,
     isEditing = false,
@@ -1001,52 +1162,32 @@ export function WordScrambleRenderer({
             points={points}
             mode={mode}
             disabled={disabled}
-            onRender={({ state, setState, handlePoints, handleRetry, recordAttempt }) => {
-                if (variant === "single") {
-                    return (
-                        <SingleWordContent
-                            state={state}
-                            setState={setState}
-                            handlePoints={handlePoints}
-                            handleRetry={handleRetry}
-                            recordAttempt={recordAttempt}
-                            targetWord={wordList[0] ?? ""}
-                            hint={hint}
-                            title={title}
-                            points={points}
-                            isEditing={isEditing}
-                            disabled={disabled}
-                            allowTextClue={allowTextClue}
-                            allowLetterReveal={allowLetterReveal}
-                            maxLetterReveals={maxLetterReveals}
-                            componentId={id}
-                        />
-                    )
-                }
-                return (
-                    <MultiWordContent
-                        state={state}
-                        setState={setState}
-                        handlePoints={handlePoints}
-                        handleRetry={handleRetry}
-                        recordAttempt={recordAttempt}
-                        wordList={wordList}
-                        hint={hint}
-                        title={title}
-                        points={points}
-                        isEditing={isEditing}
-                        disabled={disabled}
-                        variant={variant}
-                        allowTextClue={allowTextClue}
-                        allowLetterReveal={allowLetterReveal}
-                        maxLetterReveals={maxLetterReveals}
-                        allowWordSolve={allowWordSolve}
-                        maxWordSolves={maxWordSolves}
-                        allowFirstLetterAnchors={allowFirstLetterAnchors}
-                        componentId={id}
-                    />
-                )
-            }}
+            onRender={({ state, setState, handlePoints, handleRetry, recordAttempt, isLive }) => (
+                <WordScrambleShell
+                    state={state}
+                    setState={setState}
+                    handlePoints={handlePoints}
+                    handleRetry={handleRetry}
+                    recordAttempt={recordAttempt}
+                    isLive={isLive}
+                    variant={variant}
+                    title={title}
+                    points={points}
+                    timeLimit={readTimeLimit(timeLimitProp, 30)}
+                    componentId={id}
+                    wordList={wordList}
+                    hint={hint}
+                    isEditing={isEditing}
+                    disabled={disabled}
+                    allowTextClue={allowTextClue}
+                    allowLetterReveal={allowLetterReveal}
+                    maxLetterReveals={maxLetterReveals}
+                    allowWordSolve={allowWordSolve}
+                    maxWordSolves={maxWordSolves}
+                    allowFirstLetterAnchors={allowFirstLetterAnchors}
+                    word={word}
+                />
+            )}
         />
     )
 }

@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Flame, Shield, Star, Trophy } from 'lucide-react'
 import { useStudentStats } from '@/hooks/use-student-stats'
+import { pendingStreakBonus } from '@/hooks/use-claim-streak-bonus'
+import { StreakBonusClaimButton } from '@/components/store/streak-bonus-claim'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
 import { SoundEffects } from '@/lib/sound-effects'
@@ -55,9 +57,27 @@ export default function StudentStreakPage() {
     const calendar = lastNUtcDays(14, utcDay())
     const daysToNext = nextMark ? Math.max(0, nextMark - streak) : 0
     const heat = streakHeat(streak)
+    const pendingBonus = pendingStreakBonus(stats)
+    const pendingMilestone = Number(stats.pendingStreakBonusMilestone) || (pendingBonus > 0 ? streak : 0)
 
     return (
         <div className="space-y-6 pb-12">
+            {pendingBonus > 0 ? (
+                <section className="rounded-2xl border-2 border-[#FF9600]/40 bg-gradient-to-r from-[#FF9600]/15 to-[#58CC02]/10 p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <p className="text-[11px] font-black uppercase tracking-widest text-[#E08600]">Milestone reward waiting</p>
+                            <p className="mt-1 text-lg font-extrabold text-slate-900 dark:text-white">
+                                {pendingMilestone > 0 ? `${pendingMilestone}-day streak bonus` : 'Streak bonus'} · +{pendingBonus}★
+                            </p>
+                            <p className="mt-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                                You hit a streak mark. Claim your stars whenever you are ready.
+                            </p>
+                        </div>
+                        <StreakBonusClaimButton amount={pendingBonus} variant="duo" />
+                    </div>
+                </section>
+            ) : null}
             <section
                 className="relative overflow-hidden rounded-2xl border-4 p-6 text-white md:p-8"
                 style={{ borderColor: heat.border, background: `linear-gradient(to bottom right, ${heat.from}, ${heat.to})` }}
@@ -144,6 +164,8 @@ export default function StudentStreakPage() {
                         const reward = streakMilestoneReward(mark)
                         const reached = streak >= mark
                         const isNext = mark === nextMark
+                        const isPendingClaim = pendingBonus > 0 && pendingMilestone === mark
+                        const isPastClaimed = reached && !isPendingClaim
                         const tone = streakHeat(mark)
                         return (
                             <li
@@ -157,7 +179,11 @@ export default function StudentStreakPage() {
                                 <div className="flex items-center gap-2">
                                     <Flame className={cn('h-4 w-4', !reached && !isNext && 'text-slate-400')} style={reached || isNext ? { color: '#fff', fill: '#fff' } : undefined} />
                                     <span className={cn('text-sm font-extrabold', reached || isNext ? 'text-white' : 'text-slate-800 dark:text-white')}>{mark} days</span>
-                                    {reached ? <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Claimed</span> : null}
+                                    {isPendingClaim ? (
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-white/90">Claim now</span>
+                                    ) : isPastClaimed ? (
+                                        <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Claimed</span>
+                                    ) : null}
                                     {isNext ? <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Next</span> : null}
                                 </div>
                                 <span className={cn('inline-flex items-center gap-1 text-sm font-black tabular-nums', reached || isNext ? 'text-white' : 'text-slate-500')}>

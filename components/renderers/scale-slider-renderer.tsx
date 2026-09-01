@@ -11,6 +11,7 @@ import { playSliderTick } from "@/lib/sound-effects"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 import { apiClient } from "@/lib/api-client"
@@ -180,10 +181,17 @@ function ScaleSliderContent({
     if (!mounted) return null
 
     if (isLive && !hasStarted && !isSubmitted && state.status !== "completed") {
+        const liveMeta = buildLiveStartMeta({
+            type: 'scaleSlider',
+            title: title || 'Scale slider',
+            timeLimitSec: timeLimit,
+            points: props.points || 10,
+            units: 1,
+        })
         return (
             <LiveStartScreen
                 onStart={() => setHasStarted(true)}
-                label={`Start Scale Slider (${timeLimit}s)`}
+                {...liveMeta}
             />
         )
     }

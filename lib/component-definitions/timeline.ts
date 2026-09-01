@@ -15,6 +15,8 @@ export const timelineDefinition: ComponentDefinition = {
       ],
       interactive: true,
       points: 15,
+      mode: "practice",
+      timeLimit: 25,
     },
     propDefinitions: [
       {

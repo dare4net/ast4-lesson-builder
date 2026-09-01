@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { useFeedback } from "@/hooks/use-feedback"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { FormattedText } from "@/components/ui/formatted-text"
 import { shouldRevealAnswer } from "@/lib/reveal"
@@ -76,6 +77,7 @@ function QuizPlayfield({
   isDisabled,
   componentId,
   timeLimit,
+  points = 1,
   playFeedback,
   onScoreUpdate,
   initialState,
@@ -87,6 +89,7 @@ function QuizPlayfield({
   isDisabled: boolean
   componentId: string
   timeLimit: number
+  points?: number
   playFeedback: PlayFeedback
   onScoreUpdate?: (score: number) => void
   initialState: QuizState
@@ -209,10 +212,17 @@ function QuizPlayfield({
   }
 
   if (isLive && !hasStarted && !state.isComplete) {
+    const liveMeta = buildLiveStartMeta({
+      type: 'quiz',
+      title: title || 'Quiz',
+      timeLimitSec: timeLimit,
+      points,
+      units: questions.length,
+    })
     return (
       <LiveStartScreen
         onStart={onLiveStart}
-        label={`Start Quiz (${timeLimit}s Time Limit)`}
+        {...liveMeta}
       />
     )
   }
@@ -501,6 +511,7 @@ export function QuizRenderer(props: QuizRendererProps) {
             isDisabled={disabled || component.state === 'disabled'}
             componentId={id}
             timeLimit={(props as { timeLimit?: number }).timeLimit || 10}
+            points={points}
             playFeedback={playFeedback}
             onScoreUpdate={props.onScoreUpdate}
             initialState={initialState}

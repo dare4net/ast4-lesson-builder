@@ -27,6 +27,7 @@ export default function PrideBoardPage() {
     const gap = gapCopy(you?.gapToNext?.amount, stat?.unit, stat?.sort)
     const showLoading = isLoading && !data
     const unknown = isError && (error as { response?: { status?: number } } | null)?.response?.status === 404
+    const clubLens = data?.scope?.type === 'cohort' || data?.scope?.type === 'org'
 
     return (
         <div className="w-full space-y-6 pb-8">
@@ -35,7 +36,9 @@ export default function PrideBoardPage() {
                     <Link href={PRIDE_INDEX_PATH} className="text-xs font-extrabold text-[#1CB0F6]">All pride boards</Link>
                     <h1 className="text-3xl font-extrabold text-slate-800 dark:text-white mt-2">{stat?.label || 'Pride board'}</h1>
                     <p className="text-sm font-medium text-slate-500 mt-1">
-                        Top 50 public profiles. Crowns are 1st, 2nd, and 3rd.
+                        {clubLens
+                            ? 'Classmates only. Crowns are 1st, 2nd, and 3rd in your club.'
+                            : 'Top 50 public profiles. Crowns are 1st, 2nd, and 3rd.'}
                     </p>
                 </div>
                 {isFetching && data && (
@@ -48,7 +51,13 @@ export default function PrideBoardPage() {
                     <p className="text-[10px] font-black uppercase tracking-wider text-slate-400">You</p>
                     <p className="text-2xl font-extrabold text-slate-800 dark:text-white mt-1">{formatPrideValue(you.value, stat?.unit)}</p>
                     <p className="text-sm font-bold text-slate-600 dark:text-slate-300 mt-1">
-                        {you.rank ? `Rank #${you.rank}` : you.listed === false ? 'Make your profile public to appear here.' : 'Not ranked yet'}
+                        {you.rank
+                            ? `Rank #${you.rank}`
+                            : clubLens
+                                ? 'Not ranked in this class yet'
+                                : you.listed === false
+                                    ? 'Make your profile public to appear here.'
+                                    : 'Not ranked yet'}
                     </p>
                     {gap && you.gapToNext && (
                         <div className="flex items-center gap-2 mt-1">
@@ -82,7 +91,13 @@ export default function PrideBoardPage() {
             ) : (
                 <ol className="bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-2xl divide-y divide-slate-100 dark:divide-slate-800">
                     {board.map((row) => {
-                        const mine = user && you?.handle && row.handle === you.handle
+                        const mine = Boolean(
+                            user?.user_id
+                            && (
+                                (row as { userId?: string }).userId === user.user_id
+                                || (you?.handle && row.handle && row.handle === you.handle)
+                            )
+                        )
                         return (
                             <li key={`${row.rank}-${row.handle || row.displayName}`} className={cn('flex items-center justify-between gap-3 px-4 py-3', mine && 'bg-[#FF9600]/10')}>
                                 <div className="flex items-center gap-3 min-w-0">

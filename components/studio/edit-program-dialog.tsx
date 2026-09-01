@@ -9,10 +9,12 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog"
 import { EntityEditDialog } from "@/components/studio/entity-edit-dialog"
-import { Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2 } from "lucide-react"
+import { Loader2, RefreshCw, Globe, Lock, Image as ImageIcon, Upload, X, Volume2, Building2, EyeOff } from "lucide-react"
 import { generateArtisticThumbnail } from "@/lib/thumbnail-generator"
 import { compressImageFile } from "@/lib/image-compressor"
 import { VoiceSelector } from "@/components/ui/voice-selector"
+
+export type ProgramVisibility = 'org' | 'marketplace' | 'unlisted'
 
 interface EditProgramDialogProps {
     isOpen: boolean
@@ -26,8 +28,17 @@ interface EditProgramDialogProps {
         cover_image?: string
         is_published?: boolean
         default_voice?: string
+        org_id?: string | null
+        visibility?: ProgramVisibility | string | null
     }
-    onSave: (id: string, data: { name: string; description: string; image_url?: string; is_published: boolean; default_voice?: string }) => Promise<void>
+    onSave: (id: string, data: {
+        name: string
+        description: string
+        image_url?: string
+        is_published: boolean
+        default_voice?: string
+        visibility?: ProgramVisibility
+    }) => Promise<void>
 }
 
 export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProgramDialogProps) {
@@ -38,6 +49,10 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
     const [imageUrl, setImageUrl] = useState(program.image_url || program.cover_image || "")
     const [isPublished, setIsPublished] = useState(program.is_published ?? true)
     const [defaultVoice, setDefaultVoice] = useState(program.default_voice || "en-GB-SoniaNeural")
+    const hasOrg = Boolean(program.org_id)
+    const [visibility, setVisibility] = useState<ProgramVisibility>(
+        (program.visibility as ProgramVisibility) || (hasOrg ? 'org' : 'marketplace'),
+    )
     const [isSubmitting, setIsSubmitting] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -48,6 +63,10 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
             setImageUrl(program.image_url || program.cover_image || "")
             setIsPublished(program.is_published ?? true)
             setDefaultVoice(program.default_voice || "en-GB-SoniaNeural")
+            const orgBound = Boolean(program.org_id)
+            setVisibility(
+                (program.visibility as ProgramVisibility) || (orgBound ? 'org' : 'marketplace'),
+            )
         }
     }, [isOpen, program])
 
@@ -106,6 +125,7 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                 image_url: finalImage,
                 is_published: isPublished,
                 default_voice: defaultVoice,
+                visibility,
             })
             onClose()
         } catch (error) {
@@ -176,7 +196,7 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                                             {isPublished ? "Published" : "Draft Status"}
                                         </p>
                                         <p className="text-[10px] text-slate-500 font-medium">
-                                            {isPublished ? "Visible to enrolled students" : "Hidden from catalog"}
+                                            {isPublished ? "Live for enrolled students" : "Hidden until you publish"}
                                         </p>
                                     </div>
                                 </div>
@@ -185,6 +205,67 @@ export function EditProgramDialog({ isOpen, onClose, program, onSave }: EditProg
                                     onCheckedChange={setIsPublished}
                                     className="data-[state=checked]:bg-[#58CC02] data-[state=unchecked]:bg-slate-300"
                                 />
+                            </div>
+
+                            {/* Catalog visibility */}
+                            <div className="space-y-2 p-3.5 bg-slate-50 border-2 border-slate-100 rounded-2xl">
+                                <p className="text-[11px] font-black uppercase text-slate-700 tracking-wider">
+                                    Catalog visibility
+                                </p>
+                                <p className="text-[10px] text-slate-500 font-medium">
+                                    {hasOrg
+                                        ? 'Who can discover this course outside direct enrolment'
+                                        : 'Personal programs can appear on the public Explore catalog'}
+                                </p>
+                                <div className="grid gap-1.5">
+                                    {([
+                                        {
+                                            value: 'org' as const,
+                                            label: 'Club only',
+                                            hint: 'Students in your club via cohort or enrolment',
+                                            icon: Building2,
+                                            show: hasOrg,
+                                        },
+                                        {
+                                            value: 'marketplace' as const,
+                                            label: 'Public Explore',
+                                            hint: 'Listed on the marketplace catalog when published',
+                                            icon: Globe,
+                                            show: true,
+                                        },
+                                        {
+                                            value: 'unlisted' as const,
+                                            label: 'Unlisted',
+                                            hint: 'Direct link only — not in catalog browse',
+                                            icon: EyeOff,
+                                            show: true,
+                                        },
+                                    ]).filter((opt) => opt.show).map((opt) => (
+                                        <label
+                                            key={opt.value}
+                                            className={`flex items-start gap-2.5 rounded-xl border px-3 py-2.5 cursor-pointer transition-colors ${
+                                                visibility === opt.value
+                                                    ? 'border-[#1CB0F6] bg-[#EAF6FE]'
+                                                    : 'border-slate-200 bg-white hover:border-slate-300'
+                                            }`}
+                                        >
+                                            <input
+                                                type="radio"
+                                                name="visibility"
+                                                className="mt-1"
+                                                checked={visibility === opt.value}
+                                                onChange={() => setVisibility(opt.value)}
+                                            />
+                                            <div className="min-w-0">
+                                                <p className="text-xs font-black text-slate-800 flex items-center gap-1.5">
+                                                    <opt.icon className="w-3.5 h-3.5 shrink-0" />
+                                                    {opt.label}
+                                                </p>
+                                                <p className="text-[10px] text-slate-500 font-medium">{opt.hint}</p>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 

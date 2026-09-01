@@ -1,0 +1,61 @@
+/** Components that support the shared live pre-play screen + timer. */
+export const LIVE_CAPABLE_COMPONENT_TYPES = new Set([
+    'quiz',
+    'multiSelectQuiz',
+    'flashcardQuiz',
+    'fillInTheBlank',
+    'matchingPairs',
+    'dragDrop',
+    'hotspot',
+    'wordCloud',
+    'scaleSlider',
+    'shortAnswer',
+    'trueFalse',
+    'categorise',
+    'timeline',
+    'annotateImage',
+    'codeEditor',
+    'anagram',
+    'hangman',
+    'swipeDeck',
+    'spectrumSorter',
+    'jigsaw',
+    'crossword',
+    'wordScramble',
+    'memoryGrid',
+    'spinTheWheel',
+    'annotationBoard',
+])
+
+/** Renderer fallbacks when tutors switch to live mode without a time limit set. */
+export const DEFAULT_LIVE_TIME_LIMITS: Record<string, number> = {
+    quiz: 10,
+    multiSelectQuiz: 15,
+    flashcardQuiz: 15,
+    fillInTheBlank: 20,
+    matchingPairs: 10,
+    dragDrop: 20,
+    hotspot: 45,
+    wordCloud: 20,
+    scaleSlider: 15,
+    shortAnswer: 30,
+    trueFalse: 20,
+    categorise: 30,
+    timeline: 25,
+    annotateImage: 45,
+    codeEditor: 30,
+    anagram: 25,
+    hangman: 30,
+    swipeDeck: 45,
+    spectrumSorter: 45,
+    jigsaw: 90,
+    crossword: 60,
+    wordScramble: 30,
+    memoryGrid: 60,
+    spinTheWheel: 60,
+    annotationBoard: 45,
+}
+
+export function defaultLiveTimeLimit(type: string) {
+    return DEFAULT_LIVE_TIME_LIMITS[type] ?? 15
+}

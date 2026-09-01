@@ -16,6 +16,7 @@ export const crosswordDefinition: ComponentDefinition = {
       points: 15,
       mode: "practice",
       state: "active",
+      timeLimit: 60,
     },
     propDefinitions: [
       { name: "title", label: "Title", type: "string", required: false, defaultValue: "Mini Crossword" },

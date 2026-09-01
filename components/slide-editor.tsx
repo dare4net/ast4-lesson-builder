@@ -31,6 +31,8 @@ interface SlideEditorProps {
   slideIndex: number;
   onSelectComponent: (componentId: string) => void;
   selectedComponentId: string | null;
+  scrollToComponentId?: string | null;
+  onScrollToComponentComplete?: () => void;
   className?: string;
   onOpenLibrary?: () => void;
   onAddLibraryComponent?: (type: string, defaultProps: Record<string, any>) => Promise<void>;
@@ -140,6 +142,8 @@ export function SlideEditor({
   slideIndex,
   onSelectComponent,
   selectedComponentId,
+  scrollToComponentId,
+  onScrollToComponentComplete,
   className,
   onOpenLibrary,
   onAddLibraryComponent,
@@ -162,6 +166,21 @@ export function SlideEditor({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!scrollToComponentId) return;
+    if (!slide.components.some((component) => component.id === scrollToComponentId)) return;
+
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(scrollToComponentId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+      onScrollToComponentComplete?.();
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [scrollToComponentId, slide.components, onScrollToComponentComplete]);
 
   const handleTitleChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     await updateSlide({ ...slide, title: e.target.value });

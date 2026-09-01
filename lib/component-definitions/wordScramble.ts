@@ -22,6 +22,7 @@ export const wordScrambleDefinition: ComponentDefinition = {
       points: 15,
       mode: "practice",
       state: "active",
+      timeLimit: 30,
     },
     propDefinitions: [
       {

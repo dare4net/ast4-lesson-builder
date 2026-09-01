@@ -11,6 +11,8 @@ export const trueFalseDefinition: ComponentDefinition = {
       isTrue: true,
       explanation: "Earth takes 365.25 days to complete an orbit around the Sun.",
       points: 10,
+      mode: "practice",
+      timeLimit: 20,
     },
     propDefinitions: [
       {

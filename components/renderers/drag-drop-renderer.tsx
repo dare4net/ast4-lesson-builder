@@ -8,6 +8,7 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -204,10 +205,17 @@ function DragDropContent({
 
   // Live Start Screen
   if (isLive && !hasStarted && !isEditing && !isSubmitted && state.status !== 'completed') {
+    const liveMeta = buildLiveStartMeta({
+      type: 'dragDrop',
+      title: title || 'Sort and match',
+      timeLimitSec: timeLimit,
+      points: props.points || 15,
+      units: dragItems.length || (props.items?.length ?? 1),
+    })
     return (
       <LiveStartScreen
         onStart={() => setHasStarted(true)}
-        label={`Start Sorting (${timeLimit}s Time Limit)`}
+        {...liveMeta}
       />
     )
   }

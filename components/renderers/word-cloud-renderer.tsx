@@ -10,6 +10,7 @@ import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 import { apiClient } from "@/lib/api-client"
@@ -177,10 +178,17 @@ function WordCloudContent({
     if (!mounted) return null
 
     if (isLive && !hasStarted && !isSubmitted && state.status !== "completed") {
+        const liveMeta = buildLiveStartMeta({
+            type: 'wordCloud',
+            title: title || 'Live word cloud',
+            timeLimitSec: timeLimit,
+            points: props.points || 10,
+            units: 1,
+        })
         return (
             <LiveStartScreen
                 onStart={() => setHasStarted(true)}
-                label={`Start Live Word Cloud (${timeLimit}s)`}
+                {...liveMeta}
             />
         )
     }

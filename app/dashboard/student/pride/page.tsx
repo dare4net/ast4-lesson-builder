@@ -10,21 +10,26 @@ import { prideBoardPath } from '@/lib/pride-paths'
 import { cn } from '@/lib/utils'
 
 export default function PrideIndexPage() {
-    const { data: stats = [], isLoading, isFetching, isError } = usePrideSummary()
+    const { data: stats = [], isLoading, isFetching, isError, scope } = usePrideSummary()
     const prefetchBoard = usePrefetchPrideBoard()
     const featured = useMemo(() => stats.filter((item) => item.group === 'featured'), [stats])
     const types = useMemo(() => stats.filter((item) => item.group === 'type'), [stats])
     const speeds = useMemo(() => stats.filter((item) => item.group === 'speed'), [stats])
     const showLoading = isLoading && stats.length === 0
+    const clubLens = scope?.type === 'cohort' || scope?.type === 'org'
 
     return (
         <div className="w-full space-y-8 pb-8">
             <div className="flex items-end justify-between gap-4">
                 <div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9600]">Pride</p>
-                    <h1 className="text-3xl font-extrabold text-slate-800 dark:text-white">Crowns and boards</h1>
+                    <h1 className="text-3xl font-extrabold text-slate-800 dark:text-white">
+                        {clubLens ? 'Class crowns and boards' : 'Crowns and boards'}
+                    </h1>
                     <p className="text-sm font-medium text-slate-500 mt-1">
-                        Public ranks only. Gold, silver, and bronze are 1st, 2nd, and 3rd.
+                        {clubLens
+                            ? 'Ranks among your club classmates. Switch to Personal for the public boards.'
+                            : 'Public ranks only. Gold, silver, and bronze are 1st, 2nd, and 3rd.'}
                     </p>
                 </div>
                 {isFetching && stats.length > 0 && (

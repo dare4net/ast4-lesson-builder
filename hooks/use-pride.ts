@@ -3,6 +3,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/lib/api-client'
 import { queryKeys } from '@/lib/query-keys'
+import { useStudentClubContext } from '@/hooks/use-student-club'
 
 const PRIDE_STALE_MS = 15_000
 
@@ -17,7 +18,10 @@ export type PrideStat = {
     leaders?: Array<{ rank: number; handle: string | null; displayName: string; value: number; crown: string | null; accentColor?: string | null; avatarId?: string | null; bestCrown?: string | null; following?: boolean }>
 }
 
+export type PrideScope = { type?: string; orgId?: string | null; cohortId?: string | null }
+
 export type PrideBoardPayload = {
+    scope?: PrideScope
     stat?: { key: string; label: string; sort: 'asc' | 'desc'; unit: string }
     board?: Array<{
         rank: number
@@ -40,31 +44,53 @@ export type PrideBoardPayload = {
     } | null
 }
 
+function usePrideOrgParam() {
+    const club = useStudentClubContext()
+    return {
+        orgId: club.orgQueryParam,
+        enabled: Boolean(club.orgQueryParam),
+        clubLens: Boolean(club.clubMode && club.orgQueryParam && club.orgQueryParam !== 'personal'),
+        marketplaceOpen: club.marketplaceOpen,
+    }
+}
+
 export function usePrideSummary() {
-    return useQuery({
-        queryKey: queryKeys.prideSummary,
+    const { orgId, enabled } = usePrideOrgParam()
+    const query = useQuery({
+        queryKey: queryKeys.prideSummary(orgId),
         queryFn: async () => {
-            const data = await apiClient.pride.summary()
-            return Array.isArray(data?.stats) ? (data.stats as PrideStat[]) : []
+            const data = await apiClient.pride.summary(orgId) as { stats?: PrideStat[]; scope?: PrideScope }
+            return {
+                stats: Array.isArray(data?.stats) ? data.stats : [],
+                scope: data?.scope || { type: 'global' },
+            }
         },
+        enabled,
         staleTime: PRIDE_STALE_MS,
         refetchOnMount: 'always',
     })
+    return {
+        ...query,
+        data: query.data?.stats || [],
+        scope: query.data?.scope as PrideScope | undefined,
+    }
 }
 
 export function usePrideBoard(statKey: string) {
+    const { orgId, enabled } = usePrideOrgParam()
     return useQuery({
-        queryKey: queryKeys.prideBoard(statKey),
-        queryFn: () => apiClient.pride.board(statKey) as Promise<PrideBoardPayload>,
-        enabled: Boolean(statKey),
+        queryKey: queryKeys.prideBoard(statKey, orgId),
+        queryFn: () => apiClient.pride.board(statKey, orgId) as Promise<PrideBoardPayload>,
+        enabled: Boolean(statKey) && enabled,
         staleTime: PRIDE_STALE_MS,
         refetchOnMount: 'always',
     })
 }
 
 export type PridePerson = {
-    handle: string
+    handle: string | null
     displayName?: string
+    userId?: string | null
     accentColor?: string | null
     avatarId?: string | null
     bestCrown?: string | null
@@ -83,25 +109,33 @@ export type PrideSearchPayload = {
     people?: PridePerson[]
     boards?: PrideSearchBoard[]
     mode?: string
+    scope?: PrideScope
 }
 
 export function usePrideSearch(query: string, enabled: boolean) {
-    return useQuery({
-        queryKey: queryKeys.peopleSearch(query),
-        queryFn: () => apiClient.people.search(query) as Promise<PrideSearchPayload>,
-        enabled,
+    const { orgId, enabled: orgReady, clubLens, marketplaceOpen } = usePrideOrgParam()
+    const queryResult = useQuery({
+        queryKey: queryKeys.peopleSearch(query, orgId),
+        queryFn: () => apiClient.people.search(query, orgId) as Promise<PrideSearchPayload>,
+        enabled: enabled && orgReady,
         staleTime: PRIDE_STALE_MS,
         placeholderData: (previous) => previous,
     })
+    return {
+        ...queryResult,
+        clubLens,
+        marketplaceOpen,
+    }
 }
 
 export function usePrefetchPrideBoard() {
     const client = useQueryClient()
+    const { orgId } = usePrideOrgParam()
     return (statKey: string) => {
-        if (!statKey) return
+        if (!statKey || !orgId) return
         void client.prefetchQuery({
-            queryKey: queryKeys.prideBoard(statKey),
-            queryFn: () => apiClient.pride.board(statKey),
+            queryKey: queryKeys.prideBoard(statKey, orgId),
+            queryFn: () => apiClient.pride.board(statKey, orgId),
             staleTime: PRIDE_STALE_MS,
         })
     }

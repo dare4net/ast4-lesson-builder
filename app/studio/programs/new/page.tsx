@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiClient } from '@/lib/api-client';
+import { getActiveOrgId, setActiveOrgId, PERSONAL_ORG_ID } from '@/lib/active-org';
+import { StudioOrgSwitcher } from '@/components/studio/studio-org-switcher';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,15 +16,28 @@ function NewProgramContent() {
     const router = useRouter();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [orgId, setOrgId] = useState<string>(PERSONAL_ORG_ID);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        const saved = getActiveOrgId();
+        if (saved) setOrgId(saved);
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setLoading(true);
         try {
-            const result = await apiClient.studio.createProgram({ name, description });
+            const selectedOrg = orgId === PERSONAL_ORG_ID ? null : orgId.trim() || null;
+            setActiveOrgId(orgId === PERSONAL_ORG_ID ? PERSONAL_ORG_ID : selectedOrg);
+            const result = await apiClient.studio.createProgram({
+                name,
+                description,
+                org_id: selectedOrg,
+                visibility: selectedOrg ? 'org' : 'marketplace',
+            });
             router.push(`/studio/programs/${result.program._id}`);
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to create program');
@@ -92,6 +107,19 @@ function NewProgramContent() {
                                     rows={4}
                                     className="rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-800 placeholder:text-slate-400 focus:border-[#58CC02] focus:bg-white transition-all resize-none text-sm"
                                 />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <Label className="text-xs font-bold text-slate-700">
+                                    Organisation context
+                                </Label>
+                                <StudioOrgSwitcher
+                                    onChange={(next) => setOrgId(next)}
+                                    className="w-full [&_select]:w-full [&_select]:max-w-none"
+                                />
+                                <p className="text-[11px] text-slate-400 font-medium">
+                                    Uses your current studio club. Switch above to change where this program lives.
+                                </p>
                             </div>
 
                             <div className="flex gap-3 pt-4 border-t border-slate-100">

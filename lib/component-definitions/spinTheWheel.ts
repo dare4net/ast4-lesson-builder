@@ -63,5 +63,14 @@ export const spinTheWheelDefinition: ComponentDefinition = {
           { label: "Disabled", value: "disabled" },
         ],
       },
+      {
+        name: "timeLimit",
+        label: "Time Limit (Seconds)",
+        type: "number",
+        required: false,
+        defaultValue: 60,
+        min: 15,
+        max: 300,
+      },
     ],
   }

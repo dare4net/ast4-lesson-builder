@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Sparkles, RefreshCw, HelpCircle, CheckCircle2, XCircle, Lightbulb, Shuffle, ArrowRightLeft } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { useHintPack } from "@/hooks/use-hint-pack"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
@@ -53,6 +56,7 @@ function AnagramContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     targetWord = "ALGORITHM",
@@ -64,6 +68,8 @@ function AnagramContent({
     points = 15,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<AnagramState> & {
     title: string
     targetWord?: string
@@ -75,9 +81,16 @@ function AnagramContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
     const hintPack = useHintPack()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: state.submitted || state.status === "completed",
+        lockId: componentId,
+    })
     const extraHints = state.hintPackBonus || 0
     const hintLimit = maxRevealsAllowed + extraHints
 
@@ -203,16 +216,18 @@ function AnagramContent({
         void playFeedback("dngSuccess", { sound: true, animation: false })
     }
 
-    const handleCheckAnswer = async () => {
+    const handleCheckAnswer = async (playSounds = true) => {
         if (submitted || isEditing || disabled) return
 
         const userWord = currentTiles.map(t => t?.char || "").join("")
         const isAllCorrect = userWord === rawTarget
 
-        if (isAllCorrect) {
-            await playFeedback("quizSuccess", { sound: true })
-        } else {
-            await playFeedback("incorrect", { sound: true })
+        if (playSounds) {
+            if (isAllCorrect) {
+                await playFeedback("quizSuccess", { sound: true })
+            } else {
+                await playFeedback("incorrect", { sound: true })
+            }
         }
 
         const earnedPoints = isAllCorrect ? Math.max(points - revealedIndices.length * 2, 5) : 0
@@ -228,6 +243,10 @@ function AnagramContent({
 
         handlePoints(earnedPoints)
         recordAttempt(isAllCorrect, earnedPoints, points)
+    }
+
+    const onTimeout = () => {
+        void handleCheckAnswer(false)
     }
 
     const handleReset = () => {
@@ -248,6 +267,22 @@ function AnagramContent({
         })
     }
 
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "anagram",
+            title: title || "Anagram",
+            timeLimitSec: timeLimit,
+            points,
+            units: 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-3">
             {/* Header */}
@@ -260,6 +295,9 @@ function AnagramContent({
                 </div>
 
                 <div className="flex items-center gap-2">
+                    {isLive ? (
+                        <LiveTimer isCompleted={submitted} duration={timeLimit} onTimeout={onTimeout} />
+                    ) : null}
                     {!submitted && (
                         <button
                             type="button"
@@ -353,7 +391,7 @@ function AnagramContent({
                     {!submitted ? (
                         <button
                             type="button"
-                            onClick={handleCheckAnswer}
+                            onClick={() => void handleCheckAnswer(true)}
                             disabled={isEditing || disabled}
                             className="px-6 py-2.5 rounded-xl bg-[#58CC02] hover:bg-[#46a302] text-white border-2 border-b-4 border-[#58CC02] border-b-[#3B8C00] font-extrabold text-xs uppercase tracking-wider transition-all active:border-b-0 active:translate-y-[2px] shadow-md cursor-pointer"
                         >
@@ -384,7 +422,7 @@ export function AnagramRenderer({
     hint,
     imageUrl,
     maxRevealsAllowed = 3,
-    timeLimit,
+    timeLimit: timeLimitProp = 25,
     points = 15,
     mode = "practice",
     savedState,
@@ -443,6 +481,8 @@ export function AnagramRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 25)}
                 />
             )}
         />

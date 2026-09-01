@@ -67,6 +67,56 @@ describe('edge middleware', () => {
         expect(res.headers.get('location')).toBe('http://localhost/dashboard/tutor')
     })
 
+    it('sends org accounts to the club dashboard, not tutor', async () => {
+        process.env.JWT_SECRET = SECRET
+        const fromStudent = await middleware(
+            await authedRequest('/dashboard/student', { user_id: 'o1', role: 'organization' }),
+        )
+        expect(fromStudent.status).toBe(307)
+        expect(fromStudent.headers.get('location')).toBe('http://localhost/dashboard/org')
+
+        const fromTutor = await middleware(
+            await authedRequest('/dashboard/tutor', { user_id: 'o1', role: 'organization' }),
+        )
+        expect(fromTutor.status).toBe(307)
+        expect(fromTutor.headers.get('location')).toBe('http://localhost/dashboard/org')
+    })
+
+    it('lets org owners open Creator Studio', async () => {
+        process.env.JWT_SECRET = SECRET
+        const res = await middleware(await authedRequest('/studio', { user_id: 'o1', role: 'organization' }))
+        expect(res.status).not.toBe(307)
+        expect(res.status).not.toBe(500)
+    })
+
+    it('lets tutors open the separate org dashboard', async () => {
+        process.env.JWT_SECRET = SECRET
+        const res = await middleware(await authedRequest('/dashboard/org', { user_id: 't1', role: 'tutor' }))
+        expect(res.status).not.toBe(307)
+        expect(res.status).not.toBe(500)
+    })
+
+    it('keeps students out of the org dashboard', async () => {
+        process.env.JWT_SECRET = SECRET
+        const res = await middleware(await authedRequest('/dashboard/org', { user_id: 's1', role: 'student' }))
+        expect(res.status).toBe(307)
+        expect(res.headers.get('location')).toBe('http://localhost/dashboard/student')
+    })
+
+    it('lets unauthenticated users reach the org login gate', async () => {
+        process.env.JWT_SECRET = SECRET
+        const res = await middleware(requestTo('/dashboard/org'))
+        expect(res.status).not.toBe(307)
+        expect(res.status).not.toBe(500)
+    })
+
+    it('sets vanity org cookie on join routes', async () => {
+        process.env.JWT_SECRET = SECRET
+        const request = new NextRequest('http://riverside.localhost/join/RIV-THU')
+        const res = await middleware(request)
+        expect(res.cookies.get('ast_vanity_org_slug')?.value).toBe('riverside')
+    })
+
     it('lets a student through to the student dashboard', async () => {
         process.env.JWT_SECRET = SECRET
         const res = await middleware(await authedRequest('/dashboard/student', { user_id: 's1', role: 'student' }))

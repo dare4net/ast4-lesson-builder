@@ -6,6 +6,7 @@ import { appEventBus } from "@/lib/event-bus"
 import { useQueryClient } from "@tanstack/react-query"
 import { queryKeys } from "@/lib/query-keys"
 import { useMyPrograms, useProgramCatalog } from "@/hooks/use-my-programs"
+import { useStudentClubContext } from "@/hooks/use-student-club"
 import { motion, AnimatePresence } from "framer-motion"
 import { BookOpen, Compass, Zap, CheckCircle2, ArrowRight, Loader2, AlertCircle, RefreshCw, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -13,6 +14,7 @@ import { PageHero } from "@/components/dashboard/page-hero"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 const DUO_THEME_PALETTES = [
     { bg: "bg-[#1CB0F6]/10", border: "border-[#1CB0F6]/20", text: "text-[#1CB0F6]", buttonBg: "bg-[#1CB0F6] hover:bg-[#1899D6] border-[#1482B8]" },
@@ -24,6 +26,7 @@ const DUO_THEME_PALETTES = [
 export default function CatalogPage() {
     const router = useRouter()
     const queryClient = useQueryClient()
+    const { marketplaceOpen, clubMode } = useStudentClubContext()
     const catalogQuery = useProgramCatalog()
     const myProgramsQuery = useMyPrograms()
     const catalog = catalogQuery.data || []
@@ -37,6 +40,23 @@ export default function CatalogPage() {
     const [loadingDetails, setLoadingDetails] = useState(false)
     const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
     const [enrollError, setEnrollError] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (clubMode && !marketplaceOpen) {
+            router.replace('/dashboard/student/programs')
+        }
+    }, [clubMode, marketplaceOpen, router])
+
+    if (clubMode && !marketplaceOpen) {
+        return (
+            <div className="p-8 text-center space-y-3">
+                <p className="text-sm font-bold text-slate-600">Marketplace is hidden while you learn in club mode.</p>
+                <Link href="/dashboard/student/programs" className="text-xs font-bold text-sky-700">
+                    Back to my courses →
+                </Link>
+            </div>
+        )
+    }
 
     useEffect(() => {
         if (catalog.length > 0 && !selectedProgram) {
@@ -68,7 +88,7 @@ export default function CatalogPage() {
         setEnrollError(null)
         try {
             await apiClient.programs.register(programId)
-            await queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
+            await queryClient.invalidateQueries({ queryKey: ['programs', 'mine'] })
 
             // Emit Gamification Event for Level 1 Mission "Program Explorer"
             appEventBus.emit('PROGRAM_ENROLLED', { programId })

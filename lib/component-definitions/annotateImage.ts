@@ -16,6 +16,7 @@ export const annotateImageDefinition: ComponentDefinition = {
       points: 15,
       mode: "practice",
       state: "active",
+      timeLimit: 45,
     },
     propDefinitions: [
       {

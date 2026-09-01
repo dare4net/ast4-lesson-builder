@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Layers, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -26,6 +29,7 @@ interface CategoriseRendererProps {
     items: CategoriseItem[]
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: CategoriseState
     setComponentState?: (state: CategoriseState) => void
     isEditing?: boolean
@@ -58,6 +62,7 @@ function CategoriseContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     categories,
@@ -65,6 +70,8 @@ function CategoriseContent({
     points,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<CategoriseState> & {
     title: string
     categories: Category[]
@@ -72,9 +79,16 @@ function CategoriseContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { assignments, selectedItemId, submitted } = state
     const { playFeedback } = useFeedback()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
 
     const handleSelectItem = (itemId: string) => {
         if (submitted || isEditing || disabled) return
@@ -113,7 +127,7 @@ function CategoriseContent({
         playFeedback("click", { sound: true, animation: false })
     }
 
-    const handleCheckAnswers = async () => {
+    const submitAnswers = async (playSounds = true) => {
         if (submitted || isEditing || disabled) return
 
         let correctCount = 0
@@ -124,10 +138,12 @@ function CategoriseContent({
         const isAllCorrect = correctCount === items.length
         const earnedPoints = Math.round((correctCount / Math.max(items.length, 1)) * points)
 
-        if (isAllCorrect) {
-            await playFeedback("quizSuccess", { sound: true })
-        } else {
-            await playFeedback("incorrect", { sound: true })
+        if (playSounds) {
+            if (isAllCorrect) {
+                await playFeedback("quizSuccess", { sound: true })
+            } else {
+                await playFeedback("incorrect", { sound: true })
+            }
         }
 
         setState(prev => ({
@@ -143,6 +159,12 @@ function CategoriseContent({
         recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
+    const handleCheckAnswers = () => void submitAnswers(true)
+
+    const onTimeout = () => {
+        void submitAnswers(false)
+    }
+
     const handleReset = () => {
         if (isEditing || mode === "live") return
         handleRetry()
@@ -156,6 +178,22 @@ function CategoriseContent({
 
     const unassignedItems = items.filter(it => !assignments[it.id])
 
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "categorise",
+            title: title || "Categorise",
+            timeLimitSec: timeLimit,
+            points,
+            units: items.length,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-2">
             <div className="flex items-center justify-between gap-3 mb-2 shrink-0">
@@ -164,6 +202,9 @@ function CategoriseContent({
                         Categorisation • {points} Points
                     </span>
                 </div>
+                {isLive ? (
+                    <LiveTimer isCompleted={submitted} duration={timeLimit} onTimeout={onTimeout} />
+                ) : null}
             </div>
 
             <FormattedText content={title} as="h3" className="text-xl md:text-2xl font-black mb-3 text-slate-900 dark:text-slate-100 tracking-tight shrink-0" />
@@ -293,6 +334,7 @@ export function CategoriseRenderer({
     items = [],
     points = 20,
     mode = "practice",
+    timeLimit: timeLimitProp = 30,
     savedState,
     setComponentState,
     isEditing = false,
@@ -341,6 +383,8 @@ export function CategoriseRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 30)}
                 />
             )}
         />

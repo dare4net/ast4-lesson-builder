@@ -28,6 +28,7 @@ interface AuthContextType {
     loading: boolean;
     login: (email: string, password: string) => Promise<User>;
     signup: (email: string, password: string, fullName: string, role: string) => Promise<void>;
+    establishSession: (newToken: string, responseUser?: Partial<User> | null) => User;
     logout: () => void;
     updateUser: (partial: Partial<User>) => void;
     isAuthenticated: boolean;
@@ -114,31 +115,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, [token])
 
+    const establishSession = (newToken: string, responseUser?: Partial<User> | null): User => {
+        apiClient.setToken(newToken);
+        const decoded = jwtDecode<User>(newToken);
+        const fullUserData: User = {
+            ...decoded,
+            email: responseUser?.email || decoded.email,
+            full_name: responseUser?.full_name || responseUser?.fullName || decoded.full_name || decoded.fullName,
+            handle: responseUser?.handle ?? null,
+            isPublicProfile: responseUser?.isPublicProfile === true,
+            accentColor: responseUser?.accentColor || null,
+            avatarId: responseUser?.avatarId || null,
+            onboardingCompletedAt: responseUser?.onboardingCompletedAt || null,
+            onboardingSkippedAt: responseUser?.onboardingSkippedAt || null,
+            role: responseUser?.role || decoded.role,
+        };
+        apiClient.setUser(fullUserData);
+        setToken(newToken);
+        setUser(fullUserData);
+        return fullUserData;
+    };
+
     const login = async (email: string, password: string): Promise<User> => {
         try {
             const data = await apiClient.login(email, password);
             const { token: newToken, user: responseUser } = data;
-
-            apiClient.setToken(newToken);
-            const decoded = jwtDecode<User>(newToken);
-
-            // Merge decoded JWT with any extra fields returned in the API login response
-            const fullUserData: User = {
-                ...decoded,
-                email: responseUser?.email || decoded.email || email,
-                full_name: responseUser?.full_name || responseUser?.fullName || decoded.full_name || decoded.fullName,
-                handle: responseUser?.handle || null,
-                isPublicProfile: responseUser?.isPublicProfile === true,
-                accentColor: responseUser?.accentColor || null,
-                avatarId: responseUser?.avatarId || null,
-                onboardingCompletedAt: responseUser?.onboardingCompletedAt || null,
-                onboardingSkippedAt: responseUser?.onboardingSkippedAt || null,
-            };
-
-            apiClient.setUser(fullUserData);
-            setToken(newToken);
-            setUser(fullUserData);
-            return fullUserData;
+            return establishSession(newToken, {
+                ...responseUser,
+                email: responseUser?.email || email,
+            });
         } catch (error: any) {
             console.error('Login failed:', error);
             throw new Error(error.response?.data?.message || 'Login failed');
@@ -149,25 +154,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             const data = await apiClient.signup(email, password, fullName, role);
             const { token: newToken, user: responseUser } = data;
-
-            apiClient.setToken(newToken);
-            const decoded = jwtDecode<User>(newToken);
-
-            const fullUserData: User = {
-                ...decoded,
-                email: responseUser?.email || decoded.email || email,
-                full_name: fullName || responseUser?.full_name || decoded.full_name,
-                handle: responseUser?.handle || null,
-                isPublicProfile: responseUser?.isPublicProfile === true,
-                accentColor: responseUser?.accentColor || null,
-                avatarId: responseUser?.avatarId || null,
-                onboardingCompletedAt: responseUser?.onboardingCompletedAt || null,
-                onboardingSkippedAt: responseUser?.onboardingSkippedAt || null,
-            };
-
-            apiClient.setUser(fullUserData);
-            setToken(newToken);
-            setUser(fullUserData);
+            establishSession(newToken, {
+                ...responseUser,
+                email: responseUser?.email || email,
+                full_name: fullName || responseUser?.full_name,
+            });
         } catch (error: any) {
             console.error('Signup failed:', error);
             throw new Error(error.response?.data?.message || 'Signup failed');
@@ -196,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         login,
         signup,
+        establishSession,
         logout,
         updateUser,
         isAuthenticated: !!token && !!user,

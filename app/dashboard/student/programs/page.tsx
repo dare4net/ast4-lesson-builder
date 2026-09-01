@@ -8,12 +8,15 @@ import { PageHero } from "@/components/dashboard/page-hero"
 import { StudentCard } from "@/components/dashboard/student-card"
 import { useMyPrograms } from "@/hooks/use-my-programs"
 import { programProgressPercent } from "@/lib/program-progress"
+import { StudentClubSwitcher } from "@/components/dashboard/student/student-club-switcher"
+import { useStudentClubContext } from "@/hooks/use-student-club"
 
 export default function StudentProgramsListPage() {
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
     const programs = myProgramsQuery.data || []
     const loading = myProgramsQuery.isLoading
+    const { marketplaceOpen } = useStudentClubContext()
 
     const calculateProgress = (prog: any) => programProgressPercent(prog)
 
@@ -35,9 +38,12 @@ export default function StudentProgramsListPage() {
                     </Button>
                 }
                 badge={
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 text-xs font-bold text-[#1CB0F6] self-start sm:self-auto">
-                        <BookOpen className="w-3.5 h-3.5" />
-                        <span>{programs.length} {programs.length === 1 ? 'Course' : 'Courses'}</span>
+                    <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                        <StudentClubSwitcher />
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1CB0F6]/10 border border-[#1CB0F6]/20 text-xs font-bold text-[#1CB0F6]">
+                            <BookOpen className="w-3.5 h-3.5" />
+                            <span>{programs.length} {programs.length === 1 ? 'Course' : 'Courses'}</span>
+                        </div>
                     </div>
                 }
             />
@@ -52,14 +58,18 @@ export default function StudentProgramsListPage() {
                     <BookOpen className="w-10 h-10 text-slate-300 mx-auto mb-3" />
                     <h3 className="text-base font-extrabold text-slate-800">No enrolled courses yet</h3>
                     <p className="text-slate-400 text-xs font-semibold mt-1 max-w-sm mx-auto">
-                        Browse the catalog to start learning!
+                        {marketplaceOpen
+                            ? 'Browse the catalog to start learning!'
+                            : 'Your club will assign courses here. Check back soon.'}
                     </p>
-                    <Button
-                        onClick={() => router.push('/dashboard/student/catalog')}
-                        className="mt-4 bg-[#1CB0F6] hover:bg-[#1899D6] border-b-4 border-[#1482B8] text-white font-extrabold text-xs rounded-xl px-5 h-10"
-                    >
-                        Browse Catalog
-                    </Button>
+                    {marketplaceOpen && (
+                        <Button
+                            onClick={() => router.push('/dashboard/student/catalog')}
+                            className="mt-4 bg-[#1CB0F6] hover:bg-[#1899D6] border-b-4 border-[#1482B8] text-white font-extrabold text-xs rounded-xl px-5 h-10"
+                        >
+                            Browse Catalog
+                        </Button>
+                    )}
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

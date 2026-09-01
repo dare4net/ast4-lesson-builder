@@ -23,6 +23,9 @@ import {
 } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
@@ -60,6 +63,7 @@ export interface SpectrumSorterRendererProps {
     items?: SpectrumItem[]
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: SpectrumSorterState
     setComponentState?: (state: SpectrumSorterState) => void
     isEditing?: boolean
@@ -466,6 +470,7 @@ function SpectrumSorterContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     leftLabel,
@@ -476,6 +481,8 @@ function SpectrumSorterContent({
     points = 15,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<SpectrumSorterState> & {
     title: string
     leftLabel?: string
@@ -486,9 +493,16 @@ function SpectrumSorterContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
     const { positions, submitted } = state
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
     const globalMinLabel = minLabel || leftLabel || "Low (0%)"
     const globalMaxLabel = maxLabel || rightLabel || "High (100%)"
 
@@ -546,6 +560,11 @@ function SpectrumSorterContent({
         recordAttempt(isAllCorrect, earnedPoints, points)
     }
 
+    const onTimeout = () => {
+        if (submitted || isEditing || disabled) return
+        void handleCheckAnswers()
+    }
+
     const handleReset = () => {
         if (isEditing || mode === "live") return
         handleRetry()
@@ -555,6 +574,22 @@ function SpectrumSorterContent({
             submitted: false,
             status: "active",
         })
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "spectrumSorter",
+            title: title || "Spectrum Sorter",
+            timeLimitSec: timeLimit,
+            points,
+            units: items.length,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
     }
 
     return (
@@ -568,9 +603,18 @@ function SpectrumSorterContent({
                     <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
-                <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#F8FAFC] shadow-[-4px_-4px_10px_#FFFFFF,5px_5px_12px_rgba(148,163,184,0.35)] border border-white text-xs font-bold text-slate-700 dark:text-slate-300">
-                    <Sliders className="w-3.5 h-3.5 text-[#0284C7]" />
-                    <span>{items.length} Controls</span>
+                <div className="flex items-center gap-2">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={submitted || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
+                    <div className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#F8FAFC] shadow-[-4px_-4px_10px_#FFFFFF,5px_5px_12px_rgba(148,163,184,0.35)] border border-white text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <Sliders className="w-3.5 h-3.5 text-[#0284C7]" />
+                        <span>{items.length} Controls</span>
+                    </div>
                 </div>
             </div>
 
@@ -808,6 +852,7 @@ export function SpectrumSorterRenderer({
     items = DEFAULT_ITEMS,
     points = 15,
     mode = "practice",
+    timeLimit: timeLimitProp = 45,
     savedState,
     setComponentState,
     isEditing = false,
@@ -857,6 +902,8 @@ export function SpectrumSorterRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 45)}
                 />
             )}
         />

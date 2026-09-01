@@ -12,7 +12,7 @@ import { EditModuleDialog } from '@/components/studio/edit-module-dialog';
 import { DeleteConfirmDialog } from '@/components/studio/delete-confirm-dialog';
 
 interface Module { _id: string; name: string; description: string; lessons: any[]; order: number; is_published?: boolean; image_url?: string; cover_image?: string; default_voice?: string; }
-interface Program { _id: string; name: string; description: string; modules: string[]; is_published?: boolean; image_url?: string; cover_image?: string; enrolled_students?: string[]; enrolled_count?: number; default_voice?: string; }
+interface Program { _id: string; name: string; description: string; modules: string[]; is_published?: boolean; image_url?: string; cover_image?: string; enrolled_students?: string[]; enrolled_count?: number; default_voice?: string; org_id?: string | null; visibility?: string; }
 
 function ProgramDetailContent() {
     const router = useRouter();
@@ -42,7 +42,14 @@ function ProgramDetailContent() {
         finally { setLoading(false); }
     };
 
-    const handleSaveProgram = async (id: string, data: { name: string; description: string; is_published: boolean; default_voice?: string }) => {
+    const handleSaveProgram = async (id: string, data: {
+        name: string
+        description: string
+        is_published: boolean
+        default_voice?: string
+        image_url?: string
+        visibility?: 'org' | 'marketplace' | 'unlisted'
+    }) => {
         await apiClient.studio.updateProgram(id, data);
         fetchProgramData();
     };

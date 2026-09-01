@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Layers, CheckCircle2, RefreshCw } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -27,6 +30,7 @@ interface MemoryGridRendererProps {
     pairs: MemoryPair[]
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: MemoryGridState
     setComponentState?: (state: MemoryGridState) => void
     isEditing?: boolean
@@ -65,21 +69,54 @@ function MemoryGridContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     pairs,
     points,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<MemoryGridState> & {
     title: string
     pairs: MemoryPair[]
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { cards, flippedCardIds, matchedPairIds, attempts, isChecking, completed } = state
     const { playFeedback } = useFeedback()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: completed || state.status === "completed",
+        lockId: componentId,
+    })
+
+    const forceSubmit = (matchedCount: number) => {
+        const allDone = matchedCount === pairs.length
+        const earnedPoints = allDone
+            ? points
+            : Math.round((matchedCount / Math.max(pairs.length, 1)) * points)
+        handlePoints(earnedPoints)
+        recordAttempt(allDone, earnedPoints, points, undefined, { memoryFlips: attempts })
+        setState(prev => ({
+            ...prev,
+            flippedCardIds: [],
+            isChecking: false,
+            completed: true,
+            status: "completed",
+            score: earnedPoints,
+            maxScore: points,
+        }))
+    }
+
+    const onTimeout = () => {
+        if (completed || isEditing || disabled) return
+        forceSubmit(matchedPairIds.length)
+    }
 
     const handleCardClick = (card: CardTile) => {
         if (isChecking || completed || isEditing || disabled || flippedCardIds.includes(card.id) || matchedPairIds.includes(card.pairId)) {
@@ -152,6 +189,22 @@ function MemoryGridContent({
         }))
     }
 
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "memoryGrid",
+            title: title || "Memory Grid",
+            timeLimitSec: timeLimit,
+            points,
+            units: pairs.length,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-auto md:h-full md:flex-1 flex flex-col justify-start md:justify-center px-4 sm:px-6 py-4 relative min-h-0 overflow-y-auto text-slate-900">
             <div className="flex items-center justify-between gap-3 mb-4 shrink-0">
@@ -161,6 +214,13 @@ function MemoryGridContent({
                     </span>
                 </div>
                 <div className="flex items-center gap-3">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={completed || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
                     <span className="text-xs font-black uppercase tracking-wider text-slate-500">Attempts: {attempts}</span>
                 </div>
             </div>
@@ -216,6 +276,7 @@ export function MemoryGridRenderer({
     pairs = [],
     points = 20,
     mode = "practice",
+    timeLimit: timeLimitProp = 60,
     savedState,
     setComponentState,
     isEditing = false,
@@ -267,6 +328,8 @@ export function MemoryGridRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 60)}
                 />
             )}
         />

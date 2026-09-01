@@ -23,5 +23,7 @@ export const hangmanDefinition: ComponentDefinition = {
       { name: "clue", label: "Clue Text", type: "string", required: false, defaultValue: "" },
       { name: "theme", label: "Visual Theme", type: "select", required: false, defaultValue: "spaceship", options: [{ label: "Spaceship Launch", value: "spaceship" }, { label: "Castle Siege", value: "castle" }, { label: "Classic Hearts", value: "classic" }] },
       { name: "points", label: "Points", type: "number", required: false, defaultValue: 15 },
+      { name: "mode", label: "Mode", type: "select", required: false, defaultValue: "practice", options: [{ label: "Practice", value: "practice" }, { label: "Live", value: "live" }] },
+      { name: "timeLimit", label: "Time Limit (Seconds)", type: "number", required: false, defaultValue: 30, min: 15, max: 300 },
     ],
   }

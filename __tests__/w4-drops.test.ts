@@ -29,7 +29,7 @@ describe('W4 curriculum drops', () => {
     it('toasts tutor publish mail and refreshes course percent', () => {
         const bell = read('components/dashboard/notification-bell.tsx')
         expect(bell).toContain('CURRICULUM_INBOX_TYPES')
-        expect(bell).toContain('queryKeys.myPrograms')
+        expect(bell).toContain("['programs', 'mine']")
         expect(CURRICULUM_INBOX_TYPES.has('PROGRAM_LESSON_PUBLISHED')).toBe(true)
         expect(CURRICULUM_INBOX_TYPES.has('PROGRAM_MODULE_PUBLISHED')).toBe(true)
         expect(CURRICULUM_INBOX_TYPES.has('NEXT_LESSON_UNLOCKED')).toBe(true)

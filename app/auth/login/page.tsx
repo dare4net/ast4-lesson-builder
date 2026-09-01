@@ -9,7 +9,8 @@ import Link from 'next/link';
 import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { AuthShell } from '@/components/auth/auth-shell';
-import { studentPostAuthPath } from '@/lib/onboarding';
+import { studentPostAuthPath, safeNextPath } from '@/lib/onboarding';
+import { homePathForRole } from '@/lib/home-path';
 
 function LoginForm() {
     const router = useRouter();
@@ -24,8 +25,9 @@ function LoginForm() {
     const [loading, setLoading] = useState(false);
 
     const isStudent = role === 'student';
-    const accent = isStudent ? '#1CB0F6' : '#58CC02';
-    const accentBorder = isStudent ? '#0090CC' : '#378000';
+    const isOrg = role === 'organization';
+    const accent = isStudent ? '#1CB0F6' : isOrg ? '#0EA5E9' : '#58CC02';
+    const accentBorder = isStudent ? '#0090CC' : isOrg ? '#0284C7' : '#378000';
     const nextQuery = next ? `&next=${encodeURIComponent(next)}` : '';
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -35,6 +37,18 @@ function LoginForm() {
         try {
             const loggedInUser = await login(email, password);
             const userRole = loggedInUser?.role?.toLowerCase() || 'student';
+            const dest = safeNextPath(next);
+
+            if (isOrg) {
+                if (userRole === 'student') {
+                    logout();
+                    setError('Access denied: Students use the student portal. Club staff should sign in here.');
+                    setLoading(false);
+                    return;
+                }
+                router.push(dest || '/dashboard/org');
+                return;
+            }
 
             if (!isStudent && userRole === 'student') {
                 logout();
@@ -43,7 +57,17 @@ function LoginForm() {
                 return;
             }
 
-            router.push(userRole === 'tutor' ? '/dashboard/tutor' : studentPostAuthPath(loggedInUser, next));
+            if (userRole === 'organization') {
+                router.push(dest || '/dashboard/org');
+                return;
+            }
+
+            if (userRole === 'tutor' || userRole === 'teacher' || userRole === 'admin') {
+                router.push(dest || homePathForRole(userRole));
+                return;
+            }
+
+            router.push(studentPostAuthPath(loggedInUser, next));
         } catch (err: any) {
             setError(err.message || 'Invalid email or password. Please try again.');
             setLoading(false);
@@ -55,7 +79,11 @@ function LoginForm() {
             <div className="mb-6">
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h1>
                 <p className="text-slate-500 text-sm font-semibold mt-1">
-                    {isStudent ? 'Jump back into lessons, stars, and pride.' : 'Open your studio and keep building.'}
+                    {isStudent
+                        ? 'Jump back into lessons, stars, and pride.'
+                        : isOrg
+                          ? 'Manage cohorts, seats, and join codes for your club.'
+                          : 'Open your studio and keep building.'}
                 </p>
             </div>
 
@@ -110,10 +138,16 @@ function LoginForm() {
                 </button>
 
                 <p className="pt-3 border-t border-slate-100 text-center text-xs text-slate-500 font-bold">
-                    Don&apos;t have an account?{' '}
-                    <Link href={`/auth/signup?role=${role}${nextQuery}`} className="font-extrabold hover:underline" style={{ color: accent }}>
-                        Create an Account
-                    </Link>
+                    {isOrg ? (
+                        <>Club access is invite-only. Use the link from your invite email.</>
+                    ) : (
+                        <>
+                            Don&apos;t have an account?{' '}
+                            <Link href={`/auth/signup?role=${role}${nextQuery}`} className="font-extrabold hover:underline" style={{ color: accent }}>
+                                Create an Account
+                            </Link>
+                        </>
+                    )}
                 </p>
             </form>
         </AuthShell>

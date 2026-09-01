@@ -55,7 +55,7 @@ export function NotificationBell() {
                 })
             }
             if (item.type && CURRICULUM_INBOX_TYPES.has(item.type)) {
-                queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
+                queryClient.invalidateQueries({ queryKey: ['programs', 'mine'] })
             }
         }
     }, [notifications, user?.user_id, queryClient])

@@ -55,6 +55,7 @@ export function LessonBuilder() {
   const [activeSidebar, setActiveSidebar] = useState<"components" | "slides">("components")
   const [editingComponentId, setEditingComponentId] = useState<string | null>(null)
   const [isInspectorOpen, setIsInspectorOpen] = useState(false)
+  const [scrollToComponentId, setScrollToComponentId] = useState<string | null>(null)
   const [saveModalOpen, setSaveModalOpen] = useState(false)
   const [loadModalOpen, setLoadModalOpen] = useState(false)
   const [currentLessonId, setCurrentLessonId] = useState<string | null>(null)
@@ -590,7 +591,8 @@ export function LessonBuilder() {
     await updateSlide({ ...currentSlide, components: updatedComponents });
 
     setEditingComponentId(newComponent.id);
-    setIsInspectorOpen(true);
+    setIsInspectorOpen(false);
+    setScrollToComponentId(newComponent.id);
     setSidebarOpen(false);
 
     await playFeedback('click')
@@ -621,6 +623,10 @@ export function LessonBuilder() {
   const handleCloseInspector = useCallback(() => {
     setEditingComponentId(null);
     setIsInspectorOpen(false);
+  }, []);
+
+  const handleScrollToComponentComplete = useCallback(() => {
+    setScrollToComponentId(null);
   }, []);
 
   const openLibrary = useCallback(() => {
@@ -746,6 +752,8 @@ export function LessonBuilder() {
                           slideIndex={currentSlideIndex}
                           onSelectComponent={handleSelectComponent}
                           selectedComponentId={editingComponentId}
+                          scrollToComponentId={scrollToComponentId}
+                          onScrollToComponentComplete={handleScrollToComponentComplete}
                           onOpenLibrary={openLibrary}
                           onAddLibraryComponent={addComponent}
                           className="h-full"

@@ -318,7 +318,8 @@ export function SpinTheWheelEditor({
         if (!hasLegacyItems) return
         migratedLegacyRef.current = true
         onQuestionsChange?.(resolveSpinTheWheelQuestions({ items }))
-    }, [items, onQuestionsChange])
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- migrate once when legacy items exist
+    }, [items])
 
     const handleAddQuestion = (type: QuestionType) => {
         const newQ: WheelQuestion = {

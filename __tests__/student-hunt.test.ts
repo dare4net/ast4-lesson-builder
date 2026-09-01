@@ -7,9 +7,11 @@ const read = (relative: string) => readFileSync(join(process.cwd(), relative), '
 describe('Student hunt, search, and dashboard hygiene', () => {
     it('removes the Active Student pill and shows lifetime stars next to wallet', () => {
         const dashboard = read('app/dashboard/student/page.tsx')
+        const economy = read('components/dashboard/student/economy-panels.tsx')
         expect(dashboard).not.toContain('Active Student')
-        expect(dashboard).toContain('lifetimeStars')
-        expect(dashboard).toContain('lifetime')
+        expect(dashboard).toContain('StudentEconomyPanels')
+        expect(economy).toContain('lifetimeStars')
+        expect(economy).toContain('Earned')
         expect(read('context/gamification-context.tsx')).toContain('starsEarned: stats.lifetimeStarsEarned || 0')
     })
 
@@ -82,7 +84,7 @@ describe('Student hunt, search, and dashboard hygiene', () => {
         expect(read('hooks/use-lessons-list.ts')).toContain("refetchOnWindowFocus: true")
         expect(read('hooks/use-lessons-list.ts')).toContain("refetchOnMount: 'always'")
         expect(read('components/viewer/LessonViewer.tsx')).toContain('invalidateLessonsListCache')
-        expect(read('components/viewer/LessonViewer.tsx')).toContain('queryKeys.lessonsList')
+        expect(read('components/viewer/LessonViewer.tsx')).toContain("['lessons', 'mine']")
         expect(read('app/dashboard/student/page.tsx')).toContain('useLessonsList')
     })
 

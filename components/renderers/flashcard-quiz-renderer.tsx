@@ -6,6 +6,7 @@ import { CheckCircle2, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { useFeedback } from "@/hooks/use-feedback"
 import { FormattedText } from "@/components/ui/formatted-text"
@@ -225,10 +226,17 @@ function FlashcardQuizContent({
 
     // Live Start Screen
     if (isLive && !hasStarted && !isComplete) {
+        const liveMeta = buildLiveStartMeta({
+            type: 'flashcardQuiz',
+            title: 'Flashcard quiz',
+            timeLimitSec: timeLimit,
+            points,
+            units: questions.length,
+        })
         return (
             <LiveStartScreen
                 onStart={() => setHasStarted(true)}
-                label={`Start Flashcard Quiz (${questions.length} Questions)`}
+                {...liveMeta}
             />
         )
     }

@@ -20,6 +20,9 @@ import { normalizeHotspotBehavior, resolveHotspotComponentProps } from "@/lib/ho
 import { ReferencePicker } from "@/components/reference/reference-picker"
 import { ReferencePopup } from "@/components/reference/reference-popup"
 import { ReferenceProvider } from "@/context/reference-context"
+import { LiveModeSettings } from "@/components/editors/live-mode-settings"
+import { hasBodyEditor } from "@/components/editors/editor-registry"
+import { LIVE_CAPABLE_COMPONENT_TYPES } from "@/lib/live-mode-props"
 
 interface ComponentEditorProps {
   component: Component
@@ -189,8 +192,17 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
   const [propertiesOpen, setPropertiesOpen] = useState(true)
   const [previewStates, setPreviewStates] = useState<Record<string, any>>({})
   const setPreviewComponentState = useCallback((componentId: string, state: any) => {
-    setPreviewStates((prev) => ({ ...prev, [componentId]: state }))
+    setPreviewStates((prev) => {
+      const existing = prev[componentId]
+      if (existing && JSON.stringify(existing) === JSON.stringify(state)) return prev
+      return { ...prev, [componentId]: state }
+    })
   }, [])
+
+  const handlePreviewSetComponentState = useCallback(
+    (state: any) => setPreviewComponentState(component.id, state),
+    [component.id, setPreviewComponentState],
+  )
 
   const componentDef = componentDefinitions.find((def) => def.type === component.type)
 
@@ -200,8 +212,13 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
   }, [component])
 
   const handleChange = (name: string, value: any) => {
-    setProps((prev) => ({ ...prev, [name]: value }))
-    setHasDraftChanges(true)
+    let changed = false
+    setProps((prev) => {
+      if (Object.is(prev[name], value)) return prev
+      changed = true
+      return { ...prev, [name]: value }
+    })
+    if (changed) setHasDraftChanges(true)
   }
 
   const handleSaveChanges = () => {
@@ -243,9 +260,20 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
 
   const editorCtx = { component, props, lessonId, handleChange, setProps, setHasDraftChanges, referenceOptions }
   const bodyEditor = renderBodyEditor(editorCtx)
+  const showLiveModeSettings =
+    hasBodyEditor(component.type) && LIVE_CAPABLE_COMPONENT_TYPES.has(component.type)
 
   const renderEditorFields = () => (
     <div className="space-y-6">
+      {showLiveModeSettings && (
+        <LiveModeSettings
+          componentType={component.type}
+          mode={props.mode ?? component.mode}
+          timeLimit={props.timeLimit}
+          onModeChange={(mode) => handleChange("mode", mode)}
+          onTimeLimitChange={(seconds) => handleChange("timeLimit", seconds)}
+        />
+      )}
       <SingleItemEditor
         title={props.title}
         points={props.points}
@@ -302,7 +330,8 @@ export function ComponentEditor({ component, updateComponent, onClose, isMobile 
                   props: props,
                 }}
                 savedState={previewStates[component.id]}
-                setComponentState={(state: any) => setPreviewComponentState(component.id, state)}
+                setComponentState={handlePreviewSetComponentState}
+                isEditing
                 lessonId={lessonId}
               />
               <ReferencePopup />

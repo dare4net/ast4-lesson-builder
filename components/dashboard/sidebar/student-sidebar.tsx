@@ -20,11 +20,12 @@ import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
 import { useAuth } from "@/context/auth-context"
 import { HandleAvatar } from "@/components/pride/handle-avatar"
+import { useStudentClubContext } from "@/hooks/use-student-club"
 
 const NAV_ITEMS = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard/student" },
     { label: "My Courses", icon: BookOpen, href: "/dashboard/student/programs" },
-    { label: "Explore Courses", icon: Compass, href: "/dashboard/student/catalog" },
+    { label: "Explore Courses", icon: Compass, href: "/dashboard/student/catalog", marketplaceOnly: true },
     { label: "My Progress", icon: TrendingUp, href: "/dashboard/student/progress" },
     { label: "Store", icon: Store, href: "/dashboard/student/store" },
     { label: "Pride", icon: Crown, href: "/dashboard/student/pride" },
@@ -43,6 +44,8 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
 
     const pathname = usePathname()
     const { user } = useAuth()
+    const { marketplaceOpen } = useStudentClubContext()
+    const navItems = NAV_ITEMS.filter((item) => !('marketplaceOnly' in item && item.marketplaceOnly) || marketplaceOpen)
 
     return (
         <motion.aside
@@ -102,7 +105,7 @@ export function StudentSidebar({ isCollapsed: controlledIsCollapsed, onToggle }:
 
             {/* Navigation List - overflow-visible allows tooltips to float on top */}
             <div className="flex-1 py-4 px-2.5 space-y-1.5 overflow-visible">
-                {NAV_ITEMS.map((item) => {
+                {navItems.map((item) => {
                     const isActive = isNavActive(pathname, item.href, "/dashboard/student")
                     return (
                         <Link key={item.href} href={item.href} className="block">

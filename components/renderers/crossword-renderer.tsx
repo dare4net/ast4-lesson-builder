@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Grid3X3, RefreshCw, CheckCircle2, XCircle, Lightbulb, ArrowRight, ArrowDown } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -30,6 +33,7 @@ export interface CrosswordRendererProps {
     isEditing?: boolean
     disabled?: boolean
     status?: string
+    timeLimit?: number
 }
 
 export type CrosswordState = {
@@ -56,6 +60,7 @@ function CrosswordContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     gridSize = { rows: 5, cols: 5 },
@@ -64,6 +69,8 @@ function CrosswordContent({
     points = 15,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<CrosswordState> & {
     title: string
     gridSize: { rows: number; cols: number }
@@ -72,9 +79,16 @@ function CrosswordContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
     const { userGrid, activeWordId, selectedCell, submitted } = state
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
     const captureRef = useRef<HTMLInputElement>(null)
     const selectedRef = useRef(selectedCell)
     const userGridRef = useRef(userGrid)
@@ -310,6 +324,26 @@ function CrosswordContent({
     const acrossWords = words.filter(w => w.direction === "across")
     const downWords = words.filter(w => w.direction === "down")
 
+    const onTimeout = () => {
+        if (!submitted) void handleCheckCrossword()
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "crossword",
+            title: title || "Crossword",
+            timeLimitSec: timeLimit,
+            points,
+            units: 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-3">
             {/* Header */}
@@ -321,11 +355,20 @@ function CrosswordContent({
                     <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300">
-                    <Grid3X3 className="w-3.5 h-3.5 text-[#1CB0F6]" />
-                    <span>
-                        {gridSize.rows}x{gridSize.cols} Grid
-                    </span>
+                <div className="flex items-center gap-2">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={submitted || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <Grid3X3 className="w-3.5 h-3.5 text-[#1CB0F6]" />
+                        <span>
+                            {gridSize.rows}x{gridSize.cols} Grid
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -528,6 +571,7 @@ export function CrosswordRenderer({
     isEditing = false,
     disabled = false,
     status,
+    timeLimit: timeLimitProp,
 }: CrosswordRendererProps) {
     const component: Component = {
         id,
@@ -573,6 +617,8 @@ export function CrosswordRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 60)}
                 />
             )}
         />

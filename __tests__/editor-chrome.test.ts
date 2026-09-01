@@ -26,6 +26,10 @@ describe('editor chrome', () => {
         expect(read('components/slide-editor.tsx')).toContain('title="Edit component"')
         expect(read('components/slide-editor.tsx')).not.toMatch(/onClick=\{onSelect\}/)
         expect(read('components/slide-editor.tsx')).not.toContain('max-w-4xl mx-auto')
+        expect(read('components/slide-editor.tsx')).toContain('scrollToComponentId')
+        expect(builder).not.toMatch(/addComponent[\s\S]{0,500}setIsInspectorOpen\(true\)/)
+        expect(read('components/component-editor.tsx')).toContain('LiveModeSettings')
+        expect(read('components/editors/live-mode-settings.tsx')).toContain('Live')
     })
 
     it('hides New Lesson from the chrome and keeps the function', () => {

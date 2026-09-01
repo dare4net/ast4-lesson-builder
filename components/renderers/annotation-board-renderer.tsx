@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Tag, CheckCircle2, XCircle, RefreshCw, Eraser, Info } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 
@@ -37,6 +40,7 @@ export interface AnnotationBoardRendererProps {
     isEditing?: boolean
     disabled?: boolean
     status?: string
+    timeLimit?: number
 }
 
 export type AnnotationBoardState = {
@@ -75,6 +79,7 @@ function AnnotationBoardContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     instruction,
@@ -86,6 +91,8 @@ function AnnotationBoardContent({
     points = 15,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<AnnotationBoardState> & {
     title: string
     instruction?: string
@@ -97,9 +104,16 @@ function AnnotationBoardContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { placements, activeLabelId, submitted } = state
     const { playFeedback } = useFeedback()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
 
     // Derive effective tokens & groups: if passage is provided, auto-split and merge contiguous word groups
     const tokens: AnnotationToken[] = React.useMemo(() => {
@@ -276,6 +290,26 @@ function AnnotationBoardContent({
 
     const activeLabel = labels.find(l => l.id === activeLabelId)
 
+    const onTimeout = () => {
+        if (!submitted) void handleCheckAnswers()
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "annotationBoard",
+            title: title || "Text annotation",
+            timeLimitSec: timeLimit,
+            points,
+            units: tokens.length || 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-6 sm:px-10 md:px-12 py-3">
             {/* Header */}
@@ -288,12 +322,21 @@ function AnnotationBoardContent({
                     </div>
                     <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
-                {instruction && (
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold">
-                        <Info className="w-3.5 h-3.5 text-[#1CB0F6] shrink-0" />
-                        <FormattedText content={instruction} as="span" />
-                    </div>
-                )}
+                <div className="flex items-center gap-2">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={submitted || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
+                    {instruction && (
+                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold">
+                            <Info className="w-3.5 h-3.5 text-[#1CB0F6] shrink-0" />
+                            <FormattedText content={instruction} as="span" />
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Label Palette */}
@@ -465,6 +508,7 @@ export function AnnotationBoardRenderer({
     isEditing = false,
     disabled = false,
     status,
+    timeLimit: timeLimitProp,
 }: AnnotationBoardRendererProps) {
     const component: Component = {
         id,
@@ -512,6 +556,8 @@ export function AnnotationBoardRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 45)}
                 />
             )}
         />

@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Sparkles, ArrowLeft, ArrowRight, RefreshCw, CheckCircle2, XCircle, Layers, HelpCircle } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import { shouldRevealAnswer } from "@/lib/reveal"
 import type { Component } from "@/types/lesson"
@@ -26,6 +29,7 @@ export interface SwipeDeckRendererProps {
     cards?: SwipeCardItem[]
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: SwipeDeckState
     setComponentState?: (state: SwipeDeckState) => void
     isEditing?: boolean
@@ -72,6 +76,7 @@ function SwipeDeckContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     leftLabel = "Myth",
@@ -80,6 +85,8 @@ function SwipeDeckContent({
     points = 15,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<SwipeDeckState> & {
     title: string
     leftLabel: string
@@ -88,12 +95,47 @@ function SwipeDeckContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
     const { currentIndex, decisions, isFlipped, submitted } = state
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: submitted || state.status === "completed",
+        lockId: componentId,
+    })
 
     const currentCard = cards[currentIndex]
     const isEnd = currentIndex >= cards.length
+
+    const finishDeck = async (finalDecisions: Record<string, "left" | "right">) => {
+        let correctCount = 0
+        cards.forEach(c => {
+            if (finalDecisions[c.id] === c.correctSide) correctCount++
+        })
+
+        const isAllCorrect = correctCount === cards.length
+        const earnedPoints = Math.round((correctCount / Math.max(cards.length, 1)) * points)
+
+        if (isAllCorrect) {
+            await playFeedback("quizSuccess", { sound: true })
+        }
+
+        setState(prev => ({
+            ...prev,
+            currentIndex: cards.length,
+            isFlipped: false,
+            submitted: true,
+            isCorrect: isAllCorrect,
+            status: "completed",
+            score: earnedPoints,
+            maxScore: points,
+        }))
+
+        handlePoints(earnedPoints)
+        recordAttempt(isAllCorrect, earnedPoints, points)
+    }
 
     const handleChoice = (side: "left" | "right") => {
         if (submitted || isEnd || isEditing || disabled || isFlipped) return
@@ -122,32 +164,7 @@ function SwipeDeckContent({
         const nextIsEnd = nextIdx >= cards.length
 
         if (nextIsEnd) {
-            // Calculate final deck score
-            let correctCount = 0
-            cards.forEach(c => {
-                if (decisions[c.id] === c.correctSide) correctCount++
-            })
-
-            const isAllCorrect = correctCount === cards.length
-            const earnedPoints = Math.round((correctCount / Math.max(cards.length, 1)) * points)
-
-            if (isAllCorrect) {
-                await playFeedback("quizSuccess", { sound: true })
-            }
-
-            setState(prev => ({
-                ...prev,
-                currentIndex: nextIdx,
-                isFlipped: false,
-                submitted: true,
-                isCorrect: isAllCorrect,
-                status: "completed",
-                score: earnedPoints,
-                maxScore: points,
-            }))
-
-            handlePoints(earnedPoints)
-            recordAttempt(isAllCorrect, earnedPoints, points)
+            await finishDeck(decisions)
         } else {
             setState(prev => ({
                 ...prev,
@@ -155,6 +172,11 @@ function SwipeDeckContent({
                 isFlipped: false,
             }))
         }
+    }
+
+    const onTimeout = () => {
+        if (submitted || isEditing || disabled) return
+        void finishDeck(decisions)
     }
 
     const handleReset = () => {
@@ -167,6 +189,22 @@ function SwipeDeckContent({
             submitted: false,
             status: "active",
         })
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "swipeDeck",
+            title: title || "Swipe Deck",
+            timeLimitSec: timeLimit,
+            points,
+            units: cards.length,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
     }
 
     return (
@@ -182,11 +220,20 @@ function SwipeDeckContent({
                     </h3>
                 </div>
 
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300">
-                    <Layers className="w-3.5 h-3.5 text-[#1CB0F6]" />
-                    <span>
-                        Card {Math.min(currentIndex + 1, cards.length)} of {cards.length}
-                    </span>
+                <div className="flex items-center gap-2">
+                    {isLive && (
+                        <LiveTimer
+                            isCompleted={submitted || state.status === "completed"}
+                            duration={timeLimit}
+                            onTimeout={onTimeout}
+                        />
+                    )}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <Layers className="w-3.5 h-3.5 text-[#1CB0F6]" />
+                        <span>
+                            Card {Math.min(currentIndex + 1, cards.length)} of {cards.length}
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -323,6 +370,7 @@ export function SwipeDeckRenderer({
     cards = DEFAULT_CARDS,
     points = 15,
     mode = "practice",
+    timeLimit: timeLimitProp = 45,
     savedState,
     setComponentState,
     isEditing = false,
@@ -373,6 +421,8 @@ export function SwipeDeckRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 45)}
                 />
             )}
         />

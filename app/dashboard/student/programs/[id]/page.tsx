@@ -60,7 +60,7 @@ export default function StudentCourseDetailPage() {
         setUnenrollError(null)
         try {
             await apiClient.programs.unregister(id)
-            await queryClient.invalidateQueries({ queryKey: queryKeys.myPrograms })
+            await queryClient.invalidateQueries({ queryKey: ['programs', 'mine'] })
             router.push('/dashboard/student/programs')
         } catch (err: any) {
             console.error("Failed to unenroll", err)

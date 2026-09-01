@@ -6,10 +6,10 @@ const read = (relative: string) => readFileSync(join(process.cwd(), relative), '
 
 describe('superadmin manual jobs', () => {
     it('exposes preview and run for reminder jobs behind the console', () => {
-        const page = read('app/superadmin/page.tsx')
-        expect(page).toContain("setTab('jobs')")
+        const page = read('app/superadmin/(console)/jobs/page.tsx')
         expect(page).toContain('JobsPanel')
         expect(page).toContain('Manual jobs')
+        expect(read('lib/superadmin-nav.ts')).toContain('/jobs')
 
         const client = read('lib/superadmin-client.ts')
         expect(client).toContain("this.api.get('/superadmin/jobs')")

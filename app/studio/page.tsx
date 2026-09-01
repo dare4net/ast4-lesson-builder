@@ -7,6 +7,8 @@ import { Plus, BookOpen, Loader2, LogOut, LayoutDashboard, Layers, Search, Globe
 import ProtectedRoute from '@/components/auth/protected-route';
 import { useAuth } from '@/context/auth-context';
 import { ProjectFolder } from '@/components/studio/project-folder';
+import { StudioOrgSwitcher } from '@/components/studio/studio-org-switcher';
+import { getStudioOrgQuery, PERSONAL_ORG_ID } from '@/lib/active-org';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Program {
@@ -16,6 +18,7 @@ interface Program {
     modules: any[];
     is_published?: boolean;
     created_at: string;
+    org_id?: string | null;
 }
 
 function StudioContent() {
@@ -27,9 +30,10 @@ function StudioContent() {
     const [error, setError] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+    const [activeOrgId, setActiveOrgScope] = useState<string | null>(null);
+    const [scopeLabel, setScopeLabel] = useState('My Programs');
 
     useEffect(() => {
-        fetchPrograms();
         // Splash screen loads and leaves automatically after 1.2s
         const timer = setTimeout(() => {
             setShowSplash(false);
@@ -37,15 +41,29 @@ function StudioContent() {
         return () => clearTimeout(timer);
     }, []);
 
-    const fetchPrograms = async () => {
+    useEffect(() => {
+        if (!activeOrgId) return;
+        void fetchPrograms(activeOrgId);
+    }, [activeOrgId]);
+
+    const fetchPrograms = async (orgScope: string) => {
+        setLoading(true);
+        setError('');
         try {
-            const data = await apiClient.studio.getPrograms();
+            const query = getStudioOrgQuery(orgScope);
+            const data = await apiClient.studio.getPrograms(query);
             setPrograms(Array.isArray(data) ? data : []);
         } catch {
             setError('Failed to load programs');
+            setPrograms([]);
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleOrgChange = (orgId: string) => {
+        setActiveOrgScope(orgId);
+        setScopeLabel(orgId === PERSONAL_ORG_ID ? 'Personal library' : 'Club programs');
     };
 
     const handleLogout = () => {
@@ -115,8 +133,12 @@ function StudioContent() {
                     </div>
                     <div className="min-w-0">
                         <p className="text-[10px] font-black uppercase tracking-widest text-[#1CB0F6] hidden sm:block">Creator Studio</p>
-                        <p className="text-sm font-black text-slate-800 leading-tight truncate">My Programs</p>
+                        <p className="text-sm font-black text-slate-800 leading-tight truncate">{scopeLabel}</p>
                     </div>
+                </div>
+
+                <div className="flex-1 flex justify-center px-2 min-w-0">
+                    <StudioOrgSwitcher onChange={handleOrgChange} />
                 </div>
 
                 <div className="flex items-center gap-1.5 shrink-0">
@@ -217,9 +239,15 @@ function StudioContent() {
                         <div className="w-12 h-12 rounded-xl bg-[#EAF6FE] text-[#1CB0F6] flex items-center justify-center mb-3">
                             <BookOpen className="w-6 h-6" />
                         </div>
-                        <p className="text-base font-black text-slate-700 mb-1">No Programs Found</p>
-                        <p className="text-xs text-slate-400 font-medium mb-5 max-w-xs">
-                            {searchQuery ? 'No programs match your search.' : 'Create your first program to start building interactive courses.'}
+                        <p className="text-base font-black text-slate-700 mb-1">
+                            {activeOrgId === PERSONAL_ORG_ID ? 'No personal programs yet' : 'No programs in this club yet'}
+                        </p>
+                        <p className="text-xs text-slate-400 font-medium mb-5 max-w-xs mx-auto">
+                            {searchQuery
+                                ? 'No programs match your search.'
+                                : activeOrgId === PERSONAL_ORG_ID
+                                  ? 'Create a program in your personal library, or switch into a club above.'
+                                  : 'New programs created while this club is selected stay in this club.'}
                         </p>
                         <button
                             onClick={() => handleNavigate('/studio/programs/new')}

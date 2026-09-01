@@ -167,6 +167,11 @@ class APIClient {
         return response.data;
     }
 
+    async patch<T = any>(endpoint: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+        const response = await this.api.patch(endpoint, data, config);
+        return response.data;
+    }
+
     async delete<T = any>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
         const response = await this.api.delete(endpoint, config);
         return response.data;
@@ -175,12 +180,28 @@ class APIClient {
     // Studio-specific endpoints
     studio = {
         // Programs
-        getPrograms: () => this.get('/studio/programs'),
+        getPrograms: (orgId?: string | null) => {
+            if (!orgId) return this.get('/studio/programs');
+            return this.get(`/studio/programs?org_id=${encodeURIComponent(orgId)}`);
+        },
         getProgram: (id: string) => this.get(`/studio/programs/${id}`),
-        createProgram: (data: { name: string; description?: string }) =>
-            this.post('/studio/programs', data),
-        updateProgram: (id: string, data: { name?: string; description?: string }) =>
-            this.put(`/studio/programs/${id}`, data),
+        createProgram: (data: {
+            name: string
+            description?: string
+            org_id?: string | null
+            visibility?: 'org' | 'marketplace' | 'unlisted'
+        }) => this.post('/studio/programs', data),
+        updateProgram: (
+            id: string,
+            data: {
+                name?: string
+                description?: string
+                org_id?: string | null
+                visibility?: 'org' | 'marketplace' | 'unlisted'
+                is_published?: boolean
+                image_url?: string
+            },
+        ) => this.put(`/studio/programs/${id}`, data),
         deleteProgram: (id: string) => this.delete(`/studio/programs/${id}`),
 
         // Modules
@@ -240,15 +261,50 @@ class APIClient {
         getCatalog: () => this.get('/programs'),
         searchCurriculum: (q: string) =>
             this.get(`/programs/search?q=${encodeURIComponent(q)}`),
-        getMyPrograms: () => this.get('/programs/my/programs'),
+        getMyPrograms: (orgId?: string | null) =>
+            orgId
+                ? this.get(`/programs/my/programs?org_id=${encodeURIComponent(orgId)}`)
+                : this.get('/programs/my/programs'),
         getDetails: (id: string) => this.get(`/programs/${id}`),
         getMyProgramProgress: (id: string) => this.get(`/programs/my/programs/${id}/progress`),
         register: (id: string) => this.post(`/programs/${id}/register`),
         unregister: (id: string) => this.delete(`/programs/${id}/unregister`),
     };
 
+    orgs = {
+        mine: () => this.get('/orgs/mine'),
+        get: (id: string) => this.get(`/orgs/${id}`),
+        getPrograms: (id: string) => this.get(`/orgs/${id}/programs`),
+        update: (id: string, data: { settings?: { allowPublicOptIn?: boolean } }) =>
+            this.patch(`/orgs/${id}`, data),
+        addMember: (id: string, data: { email?: string; userId?: string; role: string }) =>
+            this.post(`/orgs/${id}/members`, data),
+        listCohorts: (id: string) => this.get(`/orgs/${id}/cohorts`),
+        createCohort: (id: string, data: Record<string, unknown>) =>
+            this.post(`/orgs/${id}/cohorts`, data),
+        updateCohort: (orgId: string, cohortId: string, data: Record<string, unknown>) =>
+            this.patch(`/orgs/${orgId}/cohorts/${cohortId}`, data),
+        previewInvite: (token: string) =>
+            this.get(`/orgs/invites/${encodeURIComponent(token)}`),
+        completeInvite: (
+            token: string,
+            data: { fullName: string; password: string; cohortName: string },
+        ) => this.post(`/orgs/invites/${encodeURIComponent(token)}/complete`, data),
+        cancelInvite: (orgId: string, memberId: string) =>
+            this.delete(`/orgs/${orgId}/members/${memberId}/invite`),
+        previewJoin: (code: string) =>
+            this.get(`/orgs/join/preview?code=${encodeURIComponent(code)}`),
+        getPublicBySlug: (slug: string) =>
+            this.get(`/orgs/public/${encodeURIComponent(slug)}`),
+        join: (code: string) => this.post('/orgs/join', { code }),
+        acceptInvite: (token: string) => this.post('/orgs/invites/accept', { token }),
+    };
+
     lessons = {
-        listMine: (userId: string) => this.get(`/lessons/my/interactions/${userId}`),
+        listMine: (userId: string, orgId?: string | null) =>
+            orgId
+                ? this.get(`/lessons/my/interactions/${userId}?org_id=${encodeURIComponent(orgId)}`)
+                : this.get(`/lessons/my/interactions/${userId}`),
         getModuleLessons: (moduleId: string) => this.get(`/lessons/module/${moduleId}/lessons`),
         getLessonDetails: async (lessonId: string) => {
             const data = await this.get(`/lessons/${lessonId}`);
@@ -318,6 +374,7 @@ class APIClient {
             this.post('/wallet/spend', spendStarsBodySchema.parse({ amount, itemType })),
         claimMission: (missionId: string) =>
             this.post('/missions/claim', claimMissionBodySchema.parse({ missionId })),
+        claimStreakBonus: () => this.post('/stats/claim-streak-bonus', {}),
         levelUp: () => this.post('/level/up'),
         recordProgressEvent: (eventType: string, payload?: {
             isFirstAttempt?: boolean
@@ -335,14 +392,22 @@ class APIClient {
     };
 
     pride = {
-        summary: () => this.get('/pride'),
-        board: (statKey: string) => this.get(`/pride/${encodeURIComponent(statKey)}`),
+        summary: (orgId?: string | null) =>
+            orgId
+                ? this.get(`/pride?org_id=${encodeURIComponent(orgId)}`)
+                : this.get('/pride'),
+        board: (statKey: string, orgId?: string | null) =>
+            orgId
+                ? this.get(`/pride/${encodeURIComponent(statKey)}?org_id=${encodeURIComponent(orgId)}`)
+                : this.get(`/pride/${encodeURIComponent(statKey)}`),
     };
 
     profile = {
         get: () => this.get('/profile'),
         update: (data: { full_name?: string; handle?: string; isPublicProfile?: boolean; accentColor?: string; avatarId?: string; avatarFrame?: 'gold' | ''; nameplate?: 'duo' | ''; pinnedStatKey?: string | null }) =>
             this.put('/profile', data),
+        updatePublicAccess: (enabled: boolean) =>
+            this.patch('/profile/public-access', { enabled }),
     };
 
     onboarding = {
@@ -352,7 +417,13 @@ class APIClient {
 
     people = {
         getByHandle: (handle: string) => this.get(`/people/${encodeURIComponent(handle)}`),
-        search: (q = '') => this.get(`/people/search?q=${encodeURIComponent(q)}`),
+        search: (q = '', orgId?: string | null) => {
+            const params = new URLSearchParams();
+            if (q) params.set('q', q);
+            if (orgId) params.set('org_id', orgId);
+            const qs = params.toString();
+            return this.get(`/people/search${qs ? `?${qs}` : ''}`);
+        },
         follow: (handle: string) => this.post(`/people/${encodeURIComponent(handle)}/follow`),
         unfollow: (handle: string) => this.delete(`/people/${encodeURIComponent(handle)}/follow`),
         mute: (handle: string, muted: boolean) =>

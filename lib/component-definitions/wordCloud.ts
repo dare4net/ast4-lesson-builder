@@ -65,5 +65,16 @@ export const wordCloudDefinition: ComponentDefinition = {
         min: 5,
         max: 300,
       },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "select",
+        required: false,
+        defaultValue: "practice",
+        options: [
+          { label: "Practice Mode", value: "practice" },
+          { label: "Live Mode", value: "live" },
+        ],
+      },
     ],
   }

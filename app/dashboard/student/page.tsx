@@ -24,6 +24,8 @@ import { OptimizedImage } from "@/components/ui/optimized-image"
 import { buildStudentViewerHref } from "@/lib/viewer-url"
 import { useMyPrograms } from "@/hooks/use-my-programs"
 import { programProgressPercent } from "@/lib/program-progress"
+import { StudentClubSwitcher } from "@/components/dashboard/student/student-club-switcher"
+import { useStudentClubContext } from "@/hooks/use-student-club"
 
 type FilterTab = 'all' | 'new' | 'in_progress' | 'completed';
 
@@ -43,6 +45,7 @@ export default function StudentDashboardPage() {
     const router = useRouter()
     const myProgramsQuery = useMyPrograms()
     const enrolledPrograms = myProgramsQuery.data || []
+    const { marketplaceOpen, clubMode } = useStudentClubContext()
 
     const handleLessonRedirect = (lessonId: string, moduleId?: string, locked?: boolean) => {
         if (locked) return
@@ -167,11 +170,16 @@ export default function StudentDashboardPage() {
             <section className="relative overflow-hidden p-6 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                 <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="space-y-2.5 max-w-xl">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <StudentClubSwitcher />
+                        </div>
                         <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                             Welcome back, <span className="text-[#58CC02] capitalize">{displayName}</span>!
                         </h1>
                         <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-medium leading-relaxed">
-                            Pick up right where you left off or explore your enrolled curriculum modules.
+                            {clubMode && !marketplaceOpen
+                                ? 'Your club courses and lessons are ready when you are.'
+                                : 'Pick up right where you left off or explore your enrolled curriculum modules.'}
                         </p>
                     </div>
 
@@ -416,16 +424,29 @@ export default function StudentDashboardPage() {
                                             {activeTab === 'new' ? "No new unstarted lessons" : activeTab === 'in_progress' ? "No lessons currently in progress" : activeTab === 'completed' ? "No completed lessons yet" : "No active courses yet"}
                                         </h3>
                                         <p className="text-slate-500 text-xs font-medium max-w-sm mx-auto">
-                                            Explore the course catalog to discover and enroll in your next learning module.
+                                            {marketplaceOpen
+                                                ? 'Explore the course catalog to discover and enroll in your next learning module.'
+                                                : 'Ask your club leader for a join code or wait for your next assigned course.'}
                                         </p>
-                                        <Link href="/dashboard/student/catalog">
-                                            <button
-                                                type="button"
-                                                className="mt-2 px-4 py-2 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors cursor-pointer"
-                                            >
-                                                Explore Catalog
-                                            </button>
-                                        </Link>
+                                        {marketplaceOpen ? (
+                                            <Link href="/dashboard/student/catalog">
+                                                <button
+                                                    type="button"
+                                                    className="mt-2 px-4 py-2 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors cursor-pointer"
+                                                >
+                                                    Explore Catalog
+                                                </button>
+                                            </Link>
+                                        ) : (
+                                            <Link href="/dashboard/student/programs">
+                                                <button
+                                                    type="button"
+                                                    className="mt-2 px-4 py-2 rounded-xl bg-[#58CC02] hover:bg-[#46A302] text-white text-xs font-bold transition-colors cursor-pointer"
+                                                >
+                                                    View my courses
+                                                </button>
+                                            </Link>
+                                        )}
                                     </div>
                                 )}
                             </AnimatePresence>

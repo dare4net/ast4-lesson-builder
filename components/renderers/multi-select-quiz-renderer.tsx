@@ -6,6 +6,7 @@ import { Check, CheckCircle2, ChevronRight, RefreshCw, XCircle } from "lucide-re
 import { cn } from "@/lib/utils"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { useFeedback } from "@/hooks/use-feedback"
 import { FormattedText } from "@/components/ui/formatted-text"
@@ -70,6 +71,7 @@ function MultiSelectContent({
     isDisabled,
     isLive,
     id,
+    title,
     questions,
     points,
     timeLimit = 15,
@@ -77,6 +79,7 @@ function MultiSelectContent({
     isDisabled: boolean
     isLive: boolean
     id: string
+    title?: string
     questions: MultiSelectQuestion[]
     points: number
     timeLimit?: number
@@ -211,10 +214,17 @@ function MultiSelectContent({
 
     // Live Start Screen
     if (isLive && !hasStarted && !isComplete) {
+        const liveMeta = buildLiveStartMeta({
+            type: 'multiSelectQuiz',
+            title: title || 'Multi-select quiz',
+            timeLimitSec: timeLimit,
+            points,
+            units: questions.length,
+        })
         return (
             <LiveStartScreen
                 onStart={() => setHasStarted(true)}
-                label={`Start Multi-Select Quiz (${questions.length} Questions)`}
+                {...liveMeta}
             />
         )
     }
@@ -463,6 +473,7 @@ export function MultiSelectQuizRenderer(props: MultiSelectQuizRendererProps) {
                 <MultiSelectContent
                     {...renderProps}
                     id={id}
+                    title={title}
                     questions={questions}
                     points={points}
                     timeLimit={timeLimit}

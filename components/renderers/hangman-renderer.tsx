@@ -5,6 +5,9 @@ import { cn } from "@/lib/utils"
 import { Rocket, Shield, Heart, HelpCircle, RefreshCw, CheckCircle2, XCircle, Tag, Bot, Anchor, Radio, Flame } from "lucide-react"
 import { useFeedback } from "@/hooks/use-feedback"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
+import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
+import { useLiveBlock, readTimeLimit } from "@/hooks/use-live-block"
 import { FormattedText } from "@/components/ui/formatted-text"
 import type { Component } from "@/types/lesson"
 import type { HangmanTheme } from "@/components/editors/hangman-editor"
@@ -24,6 +27,7 @@ export interface HangmanRendererProps {
     theme?: HangmanTheme
     points?: number
     mode?: "practice" | "live"
+    timeLimit?: number
     savedState?: HangmanState
     setComponentState?: (state: HangmanState) => void
     isEditing?: boolean
@@ -236,6 +240,7 @@ function HangmanContent({
     handlePoints,
     handleRetry,
     recordAttempt,
+    isLive,
     mode,
     title,
     secretWord,
@@ -250,6 +255,8 @@ function HangmanContent({
     points = 15,
     isEditing,
     disabled,
+    componentId,
+    timeLimit,
 }: ScoredRenderProps<HangmanState> & {
     title: string
     secretWord?: string
@@ -264,8 +271,15 @@ function HangmanContent({
     points: number
     isEditing: boolean
     disabled: boolean
+    componentId: string
+    timeLimit: number
 }) {
     const { playFeedback } = useFeedback()
+    const { showStartScreen, setHasStarted } = useLiveBlock({
+        isLive,
+        isComplete: state.submitted || state.status === "completed",
+        lockId: componentId,
+    })
     const rawWord = secretWord || word || targetWord || answer || "ASTRONOMY"
     const effectiveClue = clue || hint || ""
     const cleanWord = rawWord.trim().toUpperCase()
@@ -333,6 +347,40 @@ function HangmanContent({
         })
     }
 
+    const onTimeout = () => {
+        if (submitted || isEditing || disabled) return
+
+        const earnedPoints = isWordGuessed ? points : 0
+
+        setState(prev => ({
+            ...prev,
+            submitted: true,
+            isCorrect: isWordGuessed,
+            status: "completed",
+            score: earnedPoints,
+            maxScore: points,
+        }))
+
+        handlePoints(earnedPoints)
+        recordAttempt(isWordGuessed, earnedPoints, points, undefined, { wrongGuesses: wrongCount })
+    }
+
+    if (showStartScreen) {
+        const liveMeta = buildLiveStartMeta({
+            type: "hangman",
+            title: title || "Word Quest",
+            timeLimitSec: timeLimit,
+            points,
+            units: 1,
+        })
+        return (
+            <LiveStartScreen
+                onStart={() => setHasStarted(true)}
+                {...liveMeta}
+            />
+        )
+    }
+
     return (
         <div className="w-full h-full flex-1 flex flex-col bg-transparent text-slate-900 dark:text-slate-100 transition-all duration-300 px-4 sm:px-8 md:px-10 py-3 space-y-3">
             {/* Header */}
@@ -352,8 +400,12 @@ function HangmanContent({
                     <FormattedText content={title} as="h3" className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 tracking-tight" />
                 </div>
 
-                {/* Attempts / Lives Display */}
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2">
+                    {isLive ? (
+                        <LiveTimer isCompleted={submitted} duration={timeLimit} onTimeout={onTimeout} />
+                    ) : null}
+                    {/* Attempts / Lives Display */}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
                     {theme === "mascot" && <Bot className="w-4 h-4 text-[#4FA8DE]" />}
                     {theme === "spaceship" && <Rocket className="w-4 h-4 text-[#1CB0F6]" />}
                     {theme === "castle" && <Shield className="w-4 h-4 text-purple-500" />}
@@ -364,6 +416,7 @@ function HangmanContent({
                     <span className="text-xs font-black text-slate-800 dark:text-slate-100">
                         {remainingAttempts} / {maxAttempts} Lives
                     </span>
+                </div>
                 </div>
             </div>
 
@@ -477,6 +530,7 @@ export function HangmanRenderer({
     theme = "mascot",
     points = 15,
     mode = "practice",
+    timeLimit: timeLimitProp = 30,
     savedState,
     setComponentState,
     isEditing = false,
@@ -535,6 +589,8 @@ export function HangmanRenderer({
                     points={points}
                     isEditing={isEditing}
                     disabled={disabled}
+                    componentId={id}
+                    timeLimit={readTimeLimit(timeLimitProp, 30)}
                 />
             )}
         />

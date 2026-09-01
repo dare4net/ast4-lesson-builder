@@ -19,7 +19,9 @@ export function AuthShell({
 }) {
     const reduceMotion = useReducedMotion()
     const isStudent = role === 'student'
-    const accent = isStudent ? '#1CB0F6' : '#58CC02'
+    const isOrg = role === 'organization'
+    // Org staff use invite / deep links — not a public portal beside student/teacher.
+    const accent = isStudent ? '#1CB0F6' : isOrg ? '#0EA5E9' : '#58CC02'
     const nextQuery = next ? `&next=${encodeURIComponent(next)}` : ''
 
     return (
@@ -48,22 +50,24 @@ export function AuthShell({
                         </div>
                         <span className="text-sm font-black text-slate-800 truncate">After-School Tech</span>
                     </Link>
-                    <div className="flex rounded-full border-2 border-slate-200 bg-white p-0.5 text-[11px] font-black">
-                        <Link
-                            href={`/auth/${mode}?role=student${nextQuery}`}
-                            className={cn('h-8 px-3 rounded-full inline-flex items-center', isStudent && 'text-white')}
-                            style={isStudent ? { backgroundColor: '#1CB0F6' } : undefined}
-                        >
-                            I&apos;m a student
-                        </Link>
-                        <Link
-                            href={`/auth/${mode}?role=tutor${nextQuery}`}
-                            className={cn('h-8 px-3 rounded-full inline-flex items-center', !isStudent && 'text-white')}
-                            style={!isStudent ? { backgroundColor: '#58CC02' } : undefined}
-                        >
-                            I&apos;m a teacher
-                        </Link>
-                    </div>
+                    {!isOrg && (
+                        <div className="flex rounded-full border-2 border-slate-200 bg-white p-0.5 text-[11px] font-black">
+                            <Link
+                                href={`/auth/${mode}?role=student${nextQuery}`}
+                                className={cn('h-8 px-3 rounded-full inline-flex items-center', isStudent && 'text-white')}
+                                style={isStudent ? { backgroundColor: '#1CB0F6' } : undefined}
+                            >
+                                I&apos;m a student
+                            </Link>
+                            <Link
+                                href={`/auth/${mode}?role=tutor${nextQuery}`}
+                                className={cn('h-8 px-3 rounded-full inline-flex items-center', !isStudent && 'text-white')}
+                                style={!isStudent ? { backgroundColor: '#58CC02' } : undefined}
+                            >
+                                I&apos;m a teacher
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-5 items-stretch flex-1">

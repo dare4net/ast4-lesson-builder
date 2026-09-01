@@ -42,7 +42,8 @@ describe('E5 TanStack Query for dashboard fetches', () => {
     })
 
     it('normalizes program list payloads', () => {
-        expect(queryKeys.myPrograms).toEqual(['programs', 'mine'])
+        expect(queryKeys.myPrograms()).toEqual(['programs', 'mine', 'all'])
+        expect(queryKeys.myPrograms('personal')).toEqual(['programs', 'mine', 'personal'])
         expect(parseProgramList([{ _id: '1' }])).toEqual([{ _id: '1' }])
         expect(parseProgramList({ programs: [{ _id: '2' }] })).toEqual([{ _id: '2' }])
         expect(parseProgramList({ data: [{ _id: '3' }] })).toEqual([{ _id: '3' }])

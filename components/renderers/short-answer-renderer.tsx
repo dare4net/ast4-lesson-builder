@@ -11,6 +11,7 @@ import { ACTION_LABELS } from "@/lib/action-labels"
 import { ScoredRenderer, ScoredRenderProps } from "./base/scored-renderer"
 import { useNavigationLock } from "@/context/navigation-lock-context"
 import { LiveStartScreen, LiveTimer } from "@/components/live-mode"
+import { buildLiveStartMeta } from "@/lib/live-start-info"
 import type { Component } from "@/types/lesson"
 import { FormattedText } from "@/components/ui/formatted-text"
 import { isInputDisabled, shouldShowRetry, isItemApproved } from "@/lib/tutor-marking-contract"
@@ -182,10 +183,17 @@ function ShortAnswerContent({
     if (!mounted) return null
 
     if (isLive && !hasStarted && !isSubmitted && state.status !== "completed") {
+        const liveMeta = buildLiveStartMeta({
+            type: 'shortAnswer',
+            title: title || 'Short answer',
+            timeLimitSec: timeLimit,
+            points,
+            units: 1,
+        })
         return (
             <LiveStartScreen
                 onStart={() => setHasStarted(true)}
-                label={`Start Short Answer (${timeLimit}s)`}
+                {...liveMeta}
             />
         )
     }

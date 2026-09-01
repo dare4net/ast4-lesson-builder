@@ -14,7 +14,7 @@ describe('W1 component-specific quests', () => {
     })
 
     it('lets Superadmin target a type, a lesson, then a block', () => {
-        const page = read('app/superadmin/page.tsx')
+        const page = read('components/superadmin/missions-panel.tsx')
         expect(page).toContain('Pick a lesson first')
         expect(page).toContain('!editingMission.filters.componentId')
         expect(page).toContain('filters.lessonId')

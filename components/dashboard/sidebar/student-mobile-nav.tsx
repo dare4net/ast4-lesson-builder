@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -12,11 +12,12 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { isNavActive } from "@/lib/nav-active"
+import { useStudentClubContext } from "@/hooks/use-student-club"
 
 const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard/student" },
     { label: "Courses", icon: BookOpen, href: "/dashboard/student/programs" },
-    { label: "Explore", icon: Compass, href: "/dashboard/student/catalog" },
+    { label: "Explore", icon: Compass, href: "/dashboard/student/catalog", marketplaceOnly: true },
     { label: "Progress", icon: TrendingUp, href: "/dashboard/student/progress" },
     { label: "Store", icon: Store, href: "/dashboard/student/store" },
     { label: "Pride", icon: Crown, href: "/dashboard/student/pride" },
@@ -24,10 +25,12 @@ const navItems = [
 
 export function StudentMobileNav() {
     const pathname = usePathname()
+    const { marketplaceOpen } = useStudentClubContext()
+    const items = navItems.filter((item) => !item.marketplaceOnly || marketplaceOpen)
 
     return (
         <nav className="md:hidden fixed bottom-0 inset-x-0 h-15 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 z-50 flex items-center justify-around px-2 shadow-sm">
-            {navItems.map((item) => {
+            {items.map((item) => {
                 const isActive = isNavActive(pathname, item.href, "/dashboard/student")
                 return (
                     <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-1 group py-1.5 px-3">
